@@ -90,7 +90,7 @@ extends DisposableBase
 		const u = returnSubscribers ? s.map(o => o!.subscriber) : null;
 		_s.clear(); // Reset...
 
-		dispose.these(s);
+		dispose.these.noCopy(s);
 
 		return u;
 	}
@@ -106,7 +106,7 @@ extends DisposableBase
 		this._unsubscribeAll();
 		const s = this.__subscriptions;
 		this.__subscriptions = <any>null;
-		dispose(s);
+		if(s) s.dispose();
 	}
 
 }

@@ -46,7 +46,7 @@ export default class EventDispatcherBase extends DisposableBase {
         return e && e.some((value) => type == value.type && (!listener || listener == value.listener));
     }
     removeEventListener(type, listener) {
-        dispose.these(this._entries.filter(entry => entry.matches(type, listener)));
+        dispose.these.noCopy(this._entries.filter(entry => entry.matches(type, listener)));
     }
     dispatchEvent(e, params) {
         const _ = this;

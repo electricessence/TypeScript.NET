@@ -67,6 +67,7 @@ import {
 	InfiniteValueFactory
 } from "../System/Collections/Enumeration/InfiniteEnumerator";
 import __extendsImport from "../extends";
+import disposeSingle = dispose.single;
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -250,7 +251,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator);
+						if(enumerator) enumerator.dispose();
 					},
 
 					isE
@@ -468,7 +469,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 			() =>
 			{
 				// Dev Note: May want to consider using an actual stack and not an array.
-				let enumeratorStack:IEnumerator<any>[] = [];
+				let enumeratorStack:IEnumerator<any>[];
 				let enumerator:IEnumerator<any>;
 				let len:number;  // Avoid using push/pop since they query .length every time and can be slower.
 
@@ -477,6 +478,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 					{
 						throwIfDisposed(disposed);
 						enumerator = _.getEnumerator();
+						enumeratorStack = [];
 						len = 0;
 					},
 
@@ -507,11 +509,16 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 					{
 						try
 						{
-							dispose(enumerator);
+							if(enumerator) enumerator.dispose();
 						}
 						finally
 						{
-							dispose.these(enumeratorStack);
+							if(enumeratorStack)
+							{
+								dispose.these.noCopy(enumeratorStack);
+								enumeratorStack.length = 0;
+								enumeratorStack = NULL;
+							}
 						}
 					},
 
@@ -661,7 +668,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator, middleEnumerator);
+						if(enumerator) enumerator.dispose();
+						disposeSingle(middleEnumerator);
 						enumerator = NULL;
 						middleEnumerator = null;
 					},
@@ -741,7 +749,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator);
+						if(enumerator) enumerator.dispose();
 					},
 
 					_._isEndless
@@ -844,7 +852,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator);
+						if(enumerator) enumerator.dispose();
 						keys.clear();
 					},
 
@@ -913,7 +921,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator);
+						if(enumerator) enumerator.dispose();
 					},
 
 					isEndless
@@ -973,7 +981,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator);
+						if(enumerator) enumerator.dispose();
+						enumerator = NULL;
 					},
 
 					isEndless
@@ -1015,7 +1024,10 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(firstEnumerator, secondEnumerator);
+						if(firstEnumerator) firstEnumerator.dispose();
+						if(secondEnumerator) secondEnumerator.dispose();
+						firstEnumerator = NULL;
+						secondEnumerator = NULL;
 					}
 				);
 			}
@@ -1083,7 +1095,12 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(firstEnumerator, secondTemp);
+						if(firstEnumerator) firstEnumerator.dispose();
+						if(secondEnumerator) secondEnumerator.dispose();
+						if(secondTemp) secondTemp.dispose();
+						firstEnumerator = NULL;
+						secondEnumerator = NULL;
+						secondTemp = NULL;
 					}
 				);
 			}
@@ -1146,7 +1163,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(outerEnumerator);
+						if(outerEnumerator) outerEnumerator.dispose();
 						innerElements = null;
 						outerEnumerator = NULL;
 						lookup = NULL;
@@ -1190,7 +1207,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator);
+						if(enumerator) enumerator.dispose();
 						enumerator = NULL;
 						lookup = NULL;
 					}
@@ -1249,7 +1266,10 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator, queue); // Just in case this gets disposed early.
+						if(enumerator) enumerator.dispose();
+						enumerator = NULL;
+						if(queue) queue.dispose();
+						queue = NULL;
 					},
 
 					isEndless
@@ -1317,7 +1337,10 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(firstEnumerator, secondEnumerator);
+						if(firstEnumerator) firstEnumerator.dispose();
+						if(secondEnumerator) secondEnumerator.dispose();
+						firstEnumerator = NULL;
+						secondEnumerator = NULL;
 					},
 
 					isEndless
@@ -1379,7 +1402,10 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(firstEnumerator, secondEnumerator);
+						if(firstEnumerator) firstEnumerator.dispose();
+						firstEnumerator = NULL;
+						if(secondEnumerator) secondEnumerator.dispose();
+						secondEnumerator = NULL;
 					},
 
 					isEndless
@@ -1458,7 +1484,10 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator, alternateEnumerator);
+						if(enumerator) enumerator.dispose();
+						if(alternateEnumerator) alternateEnumerator.dispose();
+						enumerator = NULL;
+						alternateEnumerator = NULL;
 					},
 
 					isEndless
@@ -1507,7 +1536,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					(yielder) =>
 					{
-						try
+						if(enumerator) try
 						{
 							throwIfDisposed(disposed);
 							if(enumerator.moveNext())
@@ -1522,7 +1551,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator);
+						if(enumerator) enumerator.dispose();
+						enumerator = NULL;
 					}
 				);
 			}
@@ -1558,7 +1588,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 					{
 						try
 						{
-							dispose(enumerator);
+							if(enumerator) enumerator.dispose();
+							enumerator = NULL;
 						}
 						finally
 						{
@@ -1608,7 +1639,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator);
+						if(enumerator) enumerator.dispose();
+						enumerator = NULL;
 					},
 
 					isEndless
@@ -1635,7 +1667,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 			() =>
 			{
-				dispose(sharedEnumerator);
+				if(sharedEnumerator) sharedEnumerator.dispose();
+				sharedEnumerator = NULL;
 			},
 
 			_._isEndless
@@ -1826,7 +1859,8 @@ extends InfiniteLinqEnumerable<T> implements ILinqEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator);
+						if(enumerator) enumerator.dispose();
+						enumerator = NULL;
 						buffer.length = 0;
 					},
 
@@ -2000,7 +2034,10 @@ extends InfiniteLinqEnumerable<T> implements ILinqEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator, q);
+						if(enumerator) enumerator.dispose();
+						enumerator = NULL;
+						if(q) q.dispose();
+						q = NULL;
 					}
 				);
 			}
@@ -2329,7 +2366,12 @@ extends InfiniteLinqEnumerable<T> implements ILinqEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator, keys, outs);
+						if(enumerator) enumerator.dispose();
+						if(keys) enumerator.dispose();
+						if(outs) enumerator.dispose();
+						enumerator = NULL;
+						keys = NULL;
+						outs = NULL;
 					},
 					isEndless
 				);
@@ -2578,7 +2620,8 @@ extends InfiniteLinqEnumerable<T> implements ILinqEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator);
+						if(enumerator) enumerator.dispose();
+						enumerator = NULL;
 						group = null;
 					}
 				);
@@ -2856,7 +2899,7 @@ extends InfiniteLinqEnumerable<T> implements ILinqEnumerable<T>
 					cache.length = 0;
 				cache = NULL;
 
-				dispose(enumerator);
+				if(enumerator) enumerator.dispose();
 				enumerator = NULL;
 			}
 		);
@@ -3167,7 +3210,7 @@ implements ILookup<TKey, TElement>
 			},
 			() =>
 			{
-				dispose(enumerator);
+				if(enumerator) enumerator.dispose();
 				enumerator = NULL;
 			}
 		);
@@ -3284,7 +3327,7 @@ function nextEnumerator<T>(queue:Queue<IEnumerator<T>>, e:IEnumerator<T>):IEnume
 		}
 		else
 		{
-			dispose(e);
+			if(e) e.dispose();
 			return null;
 		}
 	}
@@ -4056,10 +4099,13 @@ export module Enumerable
 
 					() =>
 					{
-						dispose.these(queue.dump());
-						dispose(mainEnumerator, queue);
+						if(queue)
+						{
+							dispose.these.noCopy(queue.dump());
+							queue = NULL;
+						}
+						if(mainEnumerator) mainEnumerator.dispose();
 						mainEnumerator = null;
-						queue = NULL;
 					}
 				);
 			},

@@ -22,6 +22,17 @@ function dispose() {
 }
 exports.dispose = dispose;
 (function (dispose) {
+    /**
+     * Use this when only disposing one object to avoid creation of arrays.
+     * @param disposable
+     * @param trapExceptions
+     */
+    function single(disposable, trapExceptions) {
+        if (trapExceptions === void 0) { trapExceptions = false; }
+        if (disposable)
+            disposeSingle(disposable, trapExceptions);
+    }
+    dispose.single = single;
     function deferred() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -67,6 +78,18 @@ exports.dispose = dispose;
             }
         }
         these.deferred = deferred;
+        /**
+         * Use this unsafe method when guaranteed not to cause events that will make modifications to the disposables array.
+         * @param disposables
+         * @param trapExceptions
+         * @returns {any[]}
+         */
+        function noCopy(disposables, trapExceptions) {
+            return disposables && disposables.length
+                ? disposeTheseInternal(disposables, trapExceptions)
+                : void 0;
+        }
+        these.noCopy = noCopy;
     })(these = dispose.these || (dispose.these = {}));
 })(dispose = exports.dispose || (exports.dispose = {}));
 /**
@@ -99,9 +122,8 @@ exports.using = using;
  */
 function disposeSingle(disposable, trapExceptions) {
     if (disposable
-        && Types_1.Type.of(disposable)
-            .member('dispose')
-            .isFunction) {
+        && typeof disposable == Types_1.Type.OBJECT
+        && typeof disposable['dispose'] == "function") {
         if (trapExceptions) {
             try {
                 disposable.dispose();

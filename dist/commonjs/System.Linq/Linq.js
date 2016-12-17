@@ -18,6 +18,7 @@ var EnumeratorBase_1 = require("../System/Collections/Enumeration/EnumeratorBase
 var Dictionary_1 = require("../System/Collections/Dictionaries/Dictionary");
 var Queue_1 = require("../System/Collections/Queue");
 var dispose_1 = require("../System/Disposable/dispose");
+var disposeSingle = dispose_1.dispose.single;
 var DisposableBase_1 = require("../System/Disposable/DisposableBase");
 var UnsupportedEnumerableException_1 = require("../System/Collections/Enumeration/UnsupportedEnumerableException");
 var ObjectDisposedException_1 = require("../System/Disposable/ObjectDisposedException");
@@ -140,7 +141,8 @@ var InfiniteLinqEnumerable = (function (_super) {
                     onComplete(index);
                 return false;
             }, function () {
-                dispose_1.dispose(enumerator);
+                if (enumerator)
+                    enumerator.dispose();
             }, isE);
         }, 
         // Using a finalizer value reduces the chance of a circular reference
@@ -257,12 +259,13 @@ var InfiniteLinqEnumerable = (function (_super) {
         var isEndless = _._isEndless; // Is endless is not affirmative if false.
         return new LinqEnumerable(function () {
             // Dev Note: May want to consider using an actual stack and not an array.
-            var enumeratorStack = [];
+            var enumeratorStack;
             var enumerator;
             var len; // Avoid using push/pop since they query .length every time and can be slower.
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 throwIfDisposed(disposed);
                 enumerator = _.getEnumerator();
+                enumeratorStack = [];
                 len = 0;
             }, function (yielder) {
                 throwIfDisposed(disposed);
@@ -283,10 +286,15 @@ var InfiniteLinqEnumerable = (function (_super) {
                 }
             }, function () {
                 try {
-                    dispose_1.dispose(enumerator);
+                    if (enumerator)
+                        enumerator.dispose();
                 }
                 finally {
-                    dispose_1.dispose.these(enumeratorStack);
+                    if (enumeratorStack) {
+                        dispose_1.dispose.these.noCopy(enumeratorStack);
+                        enumeratorStack.length = 0;
+                        enumeratorStack = NULL;
+                    }
                 }
             }, isEndless);
         }, function () {
@@ -370,7 +378,9 @@ var InfiniteLinqEnumerable = (function (_super) {
                 } while (enumerator.moveNext());
                 return false;
             }, function () {
-                dispose_1.dispose(enumerator, middleEnumerator);
+                if (enumerator)
+                    enumerator.dispose();
+                disposeSingle(middleEnumerator);
                 enumerator = NULL;
                 middleEnumerator = null;
             }, isEndless);
@@ -404,7 +414,8 @@ var InfiniteLinqEnumerable = (function (_super) {
                 }
                 return false;
             }, function () {
-                dispose_1.dispose(enumerator);
+                if (enumerator)
+                    enumerator.dispose();
             }, _._isEndless);
         }, function () {
             disposed = false;
@@ -466,7 +477,8 @@ var InfiniteLinqEnumerable = (function (_super) {
                 }
                 return false;
             }, function () {
-                dispose_1.dispose(enumerator);
+                if (enumerator)
+                    enumerator.dispose();
                 keys.clear();
             }, isEndless);
         }, function () {
@@ -504,7 +516,8 @@ var InfiniteLinqEnumerable = (function (_super) {
                 }
                 return false;
             }, function () {
-                dispose_1.dispose(enumerator);
+                if (enumerator)
+                    enumerator.dispose();
             }, isEndless);
         }, function () {
             disposed = true;
@@ -538,7 +551,9 @@ var InfiniteLinqEnumerable = (function (_super) {
                 }
                 return false;
             }, function () {
-                dispose_1.dispose(enumerator);
+                if (enumerator)
+                    enumerator.dispose();
+                enumerator = NULL;
             }, isEndless);
         }, null, isEndless);
     };
@@ -556,7 +571,12 @@ var InfiniteLinqEnumerable = (function (_super) {
             }, function (yielder) { return firstEnumerator.moveNext()
                 && secondEnumerator.moveNext()
                 && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++)); }, function () {
-                dispose_1.dispose(firstEnumerator, secondEnumerator);
+                if (firstEnumerator)
+                    firstEnumerator.dispose();
+                if (secondEnumerator)
+                    secondEnumerator.dispose();
+                firstEnumerator = NULL;
+                secondEnumerator = NULL;
             });
         });
     };
@@ -595,7 +615,15 @@ var InfiniteLinqEnumerable = (function (_super) {
                 }
                 return yielder.yieldBreak();
             }, function () {
-                dispose_1.dispose(firstEnumerator, secondTemp);
+                if (firstEnumerator)
+                    firstEnumerator.dispose();
+                if (secondEnumerator)
+                    secondEnumerator.dispose();
+                if (secondTemp)
+                    secondTemp.dispose();
+                firstEnumerator = NULL;
+                secondEnumerator = NULL;
+                secondTemp = NULL;
             });
         });
     };
@@ -630,7 +658,8 @@ var InfiniteLinqEnumerable = (function (_super) {
                     }
                 }
             }, function () {
-                dispose_1.dispose(outerEnumerator);
+                if (outerEnumerator)
+                    outerEnumerator.dispose();
                 innerElements = null;
                 outerEnumerator = NULL;
                 lookup = NULL;
@@ -651,7 +680,8 @@ var InfiniteLinqEnumerable = (function (_super) {
                 return enumerator.moveNext()
                     && yielder.yieldReturn(resultSelector(enumerator.current, lookup.get(outerKeySelector(enumerator.current))));
             }, function () {
-                dispose_1.dispose(enumerator);
+                if (enumerator)
+                    enumerator.dispose();
                 enumerator = NULL;
                 lookup = NULL;
             });
@@ -684,7 +714,12 @@ var InfiniteLinqEnumerable = (function (_super) {
                     return yielder.yieldBreak();
                 }
             }, function () {
-                dispose_1.dispose(enumerator, queue); // Just in case this gets disposed early.
+                if (enumerator)
+                    enumerator.dispose();
+                enumerator = NULL;
+                if (queue)
+                    queue.dispose();
+                queue = NULL;
             }, isEndless);
         }, null, isEndless);
     };
@@ -727,7 +762,12 @@ var InfiniteLinqEnumerable = (function (_super) {
                 }
                 return false;
             }, function () {
-                dispose_1.dispose(firstEnumerator, secondEnumerator);
+                if (firstEnumerator)
+                    firstEnumerator.dispose();
+                if (secondEnumerator)
+                    secondEnumerator.dispose();
+                firstEnumerator = NULL;
+                secondEnumerator = NULL;
             }, isEndless);
         }, null, isEndless);
     };
@@ -761,7 +801,12 @@ var InfiniteLinqEnumerable = (function (_super) {
                     && secondEnumerator.moveNext()
                     && yielder.yieldReturn(secondEnumerator.current);
             }, function () {
-                dispose_1.dispose(firstEnumerator, secondEnumerator);
+                if (firstEnumerator)
+                    firstEnumerator.dispose();
+                firstEnumerator = NULL;
+                if (secondEnumerator)
+                    secondEnumerator.dispose();
+                secondEnumerator = NULL;
             }, isEndless);
         }, null, isEndless);
     };
@@ -802,7 +847,12 @@ var InfiniteLinqEnumerable = (function (_super) {
                     buffer = enumerator.current;
                 return yielder.yieldReturn(latest);
             }, function () {
-                dispose_1.dispose(enumerator, alternateEnumerator);
+                if (enumerator)
+                    enumerator.dispose();
+                if (alternateEnumerator)
+                    alternateEnumerator.dispose();
+                enumerator = NULL;
+                alternateEnumerator = NULL;
             }, isEndless);
         }, null, isEndless);
     };
@@ -830,17 +880,20 @@ var InfiniteLinqEnumerable = (function (_super) {
                 catch (e) {
                 }
             }, function (yielder) {
-                try {
-                    throwIfDisposed(disposed);
-                    if (enumerator.moveNext())
-                        return yielder.yieldReturn(enumerator.current);
-                }
-                catch (e) {
-                    handler(e);
-                }
+                if (enumerator)
+                    try {
+                        throwIfDisposed(disposed);
+                        if (enumerator.moveNext())
+                            return yielder.yieldReturn(enumerator.current);
+                    }
+                    catch (e) {
+                        handler(e);
+                    }
                 return false;
             }, function () {
-                dispose_1.dispose(enumerator);
+                if (enumerator)
+                    enumerator.dispose();
+                enumerator = NULL;
             });
         });
     };
@@ -859,7 +912,9 @@ var InfiniteLinqEnumerable = (function (_super) {
                     : false;
             }, function () {
                 try {
-                    dispose_1.dispose(enumerator);
+                    if (enumerator)
+                        enumerator.dispose();
+                    enumerator = NULL;
                 }
                 finally {
                     action();
@@ -888,7 +943,9 @@ var InfiniteLinqEnumerable = (function (_super) {
                 array.length = len;
                 return !!len && yielder.yieldReturn(array);
             }, function () {
-                dispose_1.dispose(enumerator);
+                if (enumerator)
+                    enumerator.dispose();
+                enumerator = NULL;
             }, isEndless);
         }, null, isEndless);
     };
@@ -899,7 +956,9 @@ var InfiniteLinqEnumerable = (function (_super) {
         return new LinqEnumerable(function () {
             return sharedEnumerator || (sharedEnumerator = _.getEnumerator());
         }, function () {
-            dispose_1.dispose(sharedEnumerator);
+            if (sharedEnumerator)
+                sharedEnumerator.dispose();
+            sharedEnumerator = NULL;
         }, _._isEndless);
     };
     return InfiniteLinqEnumerable;
@@ -1010,7 +1069,9 @@ var LinqEnumerable = (function (_super) {
                     }
                 }
             }, function () {
-                dispose_1.dispose(enumerator);
+                if (enumerator)
+                    enumerator.dispose();
+                enumerator = NULL;
                 buffer.length = 0;
             }, isEndless);
         }, function () {
@@ -1123,7 +1184,12 @@ var LinqEnumerable = (function (_super) {
                 }
                 return false;
             }, function () {
-                dispose_1.dispose(enumerator, q);
+                if (enumerator)
+                    enumerator.dispose();
+                enumerator = NULL;
+                if (q)
+                    q.dispose();
+                q = NULL;
             });
         });
     };
@@ -1321,7 +1387,15 @@ var LinqEnumerable = (function (_super) {
                 }
                 return yielder.yieldBreak();
             }, function () {
-                dispose_1.dispose(enumerator, keys, outs);
+                if (enumerator)
+                    enumerator.dispose();
+                if (keys)
+                    enumerator.dispose();
+                if (outs)
+                    enumerator.dispose();
+                enumerator = NULL;
+                keys = NULL;
+                outs = NULL;
             }, isEndless);
         }, function () {
             second = NULL;
@@ -1464,7 +1538,9 @@ var LinqEnumerable = (function (_super) {
                 }
                 return yielder.yieldReturn(result);
             }, function () {
-                dispose_1.dispose(enumerator);
+                if (enumerator)
+                    enumerator.dispose();
+                enumerator = NULL;
                 group = null;
             });
         }, function () {
@@ -1635,7 +1711,8 @@ var LinqEnumerable = (function (_super) {
             if (cache)
                 cache.length = 0;
             cache = NULL;
-            dispose_1.dispose(enumerator);
+            if (enumerator)
+                enumerator.dispose();
             enumerator = NULL;
         });
     };
@@ -1850,7 +1927,8 @@ var Lookup = (function () {
             var current = enumerator.current;
             return yielder.yieldReturn(new Grouping(current.key, current.value));
         }, function () {
-            dispose_1.dispose(enumerator);
+            if (enumerator)
+                enumerator.dispose();
             enumerator = NULL;
         });
     };
@@ -1929,7 +2007,8 @@ function nextEnumerator(queue, e) {
             queue.enqueue(e);
         }
         else {
-            dispose_1.dispose(e);
+            if (e)
+                e.dispose();
             return null;
         }
     }
@@ -2398,10 +2477,13 @@ function enumerableFrom(source, additional) {
                     ? yielder.yieldReturn(e.current)
                     : yielder.yieldBreak();
             }, function () {
-                dispose_1.dispose.these(queue.dump());
-                dispose_1.dispose(mainEnumerator, queue);
+                if (queue) {
+                    dispose_1.dispose.these.noCopy(queue.dump());
+                    queue = NULL;
+                }
+                if (mainEnumerator)
+                    mainEnumerator.dispose();
                 mainEnumerator = null;
-                queue = NULL;
             });
         }, function () {
             disposed = true;

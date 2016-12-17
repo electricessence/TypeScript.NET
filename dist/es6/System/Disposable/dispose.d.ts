@@ -11,6 +11,12 @@ export declare type DisposableItemArray = Array<DisposableItem> | null | undefin
  */
 export declare function dispose(...disposables: DisposableItem[]): void;
 export declare module dispose {
+    /**
+     * Use this when only disposing one object to avoid creation of arrays.
+     * @param disposable
+     * @param trapExceptions
+     */
+    function single(disposable: DisposableItem, trapExceptions?: boolean): void;
     function deferred(...disposables: DisposableItem[]): void;
     /**
      * Takes any number of disposables and traps any errors that occur when disposing.
@@ -28,6 +34,13 @@ export declare module dispose {
     function these(disposables: DisposableItemArray, trapExceptions?: boolean): any[] | undefined;
     module these {
         function deferred(disposables: DisposableItemArray, delay?: number): void;
+        /**
+         * Use this unsafe method when guaranteed not to cause events that will make modifications to the disposables array.
+         * @param disposables
+         * @param trapExceptions
+         * @returns {any[]}
+         */
+        function noCopy(disposables: DisposableItemArray, trapExceptions?: boolean): any[] | undefined;
     }
 }
 /**

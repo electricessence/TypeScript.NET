@@ -21,7 +21,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                 queue.enqueue(e);
             }
             else {
-                dispose_1.dispose(e);
+                if (e)
+                    e.dispose();
                 return null;
             }
         }
@@ -61,7 +62,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
             ? e.merge(additional)
             : e;
     }
-    var Compare_1, copy_1, Arrays, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, IndexEnumerator_1, IteratorEnumerator_1, initialize_1, Random_1, InfiniteEnumerator_1, extends_1, __extends, INVALID_DEFAULT, VOID0, NULL, LinqFunctions, Functions, InfiniteLinqEnumerable, LinqEnumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
+    var Compare_1, copy_1, Arrays, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, disposeSingle, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, IndexEnumerator_1, IteratorEnumerator_1, initialize_1, Random_1, InfiniteEnumerator_1, extends_1, __extends, INVALID_DEFAULT, VOID0, NULL, LinqFunctions, Functions, InfiniteLinqEnumerable, LinqEnumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
     return {
         setters: [
             function (Compare_1_1) {
@@ -142,6 +143,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
             }
         ],
         execute: function () {
+            disposeSingle = dispose_1.dispose.single;
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             // #region Local Constants.
@@ -239,7 +241,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                                 onComplete(index);
                             return false;
                         }, function () {
-                            dispose_1.dispose(enumerator);
+                            if (enumerator)
+                                enumerator.dispose();
                         }, isE);
                     }, 
                     // Using a finalizer value reduces the chance of a circular reference
@@ -356,12 +359,13 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                     var isEndless = _._isEndless; // Is endless is not affirmative if false.
                     return new LinqEnumerable(function () {
                         // Dev Note: May want to consider using an actual stack and not an array.
-                        var enumeratorStack = [];
+                        var enumeratorStack;
                         var enumerator;
                         var len; // Avoid using push/pop since they query .length every time and can be slower.
                         return new EnumeratorBase_1.EnumeratorBase(function () {
                             throwIfDisposed(disposed);
                             enumerator = _.getEnumerator();
+                            enumeratorStack = [];
                             len = 0;
                         }, function (yielder) {
                             throwIfDisposed(disposed);
@@ -382,10 +386,15 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             }
                         }, function () {
                             try {
-                                dispose_1.dispose(enumerator);
+                                if (enumerator)
+                                    enumerator.dispose();
                             }
                             finally {
-                                dispose_1.dispose.these(enumeratorStack);
+                                if (enumeratorStack) {
+                                    dispose_1.dispose.these.noCopy(enumeratorStack);
+                                    enumeratorStack.length = 0;
+                                    enumeratorStack = NULL;
+                                }
                             }
                         }, isEndless);
                     }, function () {
@@ -469,7 +478,9 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             } while (enumerator.moveNext());
                             return false;
                         }, function () {
-                            dispose_1.dispose(enumerator, middleEnumerator);
+                            if (enumerator)
+                                enumerator.dispose();
+                            disposeSingle(middleEnumerator);
                             enumerator = NULL;
                             middleEnumerator = null;
                         }, isEndless);
@@ -503,7 +514,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             }
                             return false;
                         }, function () {
-                            dispose_1.dispose(enumerator);
+                            if (enumerator)
+                                enumerator.dispose();
                         }, _._isEndless);
                     }, function () {
                         disposed = false;
@@ -565,7 +577,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             }
                             return false;
                         }, function () {
-                            dispose_1.dispose(enumerator);
+                            if (enumerator)
+                                enumerator.dispose();
                             keys.clear();
                         }, isEndless);
                     }, function () {
@@ -603,7 +616,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             }
                             return false;
                         }, function () {
-                            dispose_1.dispose(enumerator);
+                            if (enumerator)
+                                enumerator.dispose();
                         }, isEndless);
                     }, function () {
                         disposed = true;
@@ -637,7 +651,9 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             }
                             return false;
                         }, function () {
-                            dispose_1.dispose(enumerator);
+                            if (enumerator)
+                                enumerator.dispose();
+                            enumerator = NULL;
                         }, isEndless);
                     }, null, isEndless);
                 };
@@ -655,7 +671,12 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                         }, function (yielder) { return firstEnumerator.moveNext()
                             && secondEnumerator.moveNext()
                             && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++)); }, function () {
-                            dispose_1.dispose(firstEnumerator, secondEnumerator);
+                            if (firstEnumerator)
+                                firstEnumerator.dispose();
+                            if (secondEnumerator)
+                                secondEnumerator.dispose();
+                            firstEnumerator = NULL;
+                            secondEnumerator = NULL;
                         });
                     });
                 };
@@ -694,7 +715,15 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             }
                             return yielder.yieldBreak();
                         }, function () {
-                            dispose_1.dispose(firstEnumerator, secondTemp);
+                            if (firstEnumerator)
+                                firstEnumerator.dispose();
+                            if (secondEnumerator)
+                                secondEnumerator.dispose();
+                            if (secondTemp)
+                                secondTemp.dispose();
+                            firstEnumerator = NULL;
+                            secondEnumerator = NULL;
+                            secondTemp = NULL;
                         });
                     });
                 };
@@ -729,7 +758,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                                 }
                             }
                         }, function () {
-                            dispose_1.dispose(outerEnumerator);
+                            if (outerEnumerator)
+                                outerEnumerator.dispose();
                             innerElements = null;
                             outerEnumerator = NULL;
                             lookup = NULL;
@@ -750,7 +780,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             return enumerator.moveNext()
                                 && yielder.yieldReturn(resultSelector(enumerator.current, lookup.get(outerKeySelector(enumerator.current))));
                         }, function () {
-                            dispose_1.dispose(enumerator);
+                            if (enumerator)
+                                enumerator.dispose();
                             enumerator = NULL;
                             lookup = NULL;
                         });
@@ -783,7 +814,12 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                                 return yielder.yieldBreak();
                             }
                         }, function () {
-                            dispose_1.dispose(enumerator, queue); // Just in case this gets disposed early.
+                            if (enumerator)
+                                enumerator.dispose();
+                            enumerator = NULL;
+                            if (queue)
+                                queue.dispose();
+                            queue = NULL;
                         }, isEndless);
                     }, null, isEndless);
                 };
@@ -826,7 +862,12 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             }
                             return false;
                         }, function () {
-                            dispose_1.dispose(firstEnumerator, secondEnumerator);
+                            if (firstEnumerator)
+                                firstEnumerator.dispose();
+                            if (secondEnumerator)
+                                secondEnumerator.dispose();
+                            firstEnumerator = NULL;
+                            secondEnumerator = NULL;
                         }, isEndless);
                     }, null, isEndless);
                 };
@@ -860,7 +901,12 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                                 && secondEnumerator.moveNext()
                                 && yielder.yieldReturn(secondEnumerator.current);
                         }, function () {
-                            dispose_1.dispose(firstEnumerator, secondEnumerator);
+                            if (firstEnumerator)
+                                firstEnumerator.dispose();
+                            firstEnumerator = NULL;
+                            if (secondEnumerator)
+                                secondEnumerator.dispose();
+                            secondEnumerator = NULL;
                         }, isEndless);
                     }, null, isEndless);
                 };
@@ -901,7 +947,12 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                                 buffer = enumerator.current;
                             return yielder.yieldReturn(latest);
                         }, function () {
-                            dispose_1.dispose(enumerator, alternateEnumerator);
+                            if (enumerator)
+                                enumerator.dispose();
+                            if (alternateEnumerator)
+                                alternateEnumerator.dispose();
+                            enumerator = NULL;
+                            alternateEnumerator = NULL;
                         }, isEndless);
                     }, null, isEndless);
                 };
@@ -929,17 +980,20 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             catch (e) {
                             }
                         }, function (yielder) {
-                            try {
-                                throwIfDisposed(disposed);
-                                if (enumerator.moveNext())
-                                    return yielder.yieldReturn(enumerator.current);
-                            }
-                            catch (e) {
-                                handler(e);
-                            }
+                            if (enumerator)
+                                try {
+                                    throwIfDisposed(disposed);
+                                    if (enumerator.moveNext())
+                                        return yielder.yieldReturn(enumerator.current);
+                                }
+                                catch (e) {
+                                    handler(e);
+                                }
                             return false;
                         }, function () {
-                            dispose_1.dispose(enumerator);
+                            if (enumerator)
+                                enumerator.dispose();
+                            enumerator = NULL;
                         });
                     });
                 };
@@ -958,7 +1012,9 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                                 : false;
                         }, function () {
                             try {
-                                dispose_1.dispose(enumerator);
+                                if (enumerator)
+                                    enumerator.dispose();
+                                enumerator = NULL;
                             }
                             finally {
                                 action();
@@ -987,7 +1043,9 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             array.length = len;
                             return !!len && yielder.yieldReturn(array);
                         }, function () {
-                            dispose_1.dispose(enumerator);
+                            if (enumerator)
+                                enumerator.dispose();
+                            enumerator = NULL;
                         }, isEndless);
                     }, null, isEndless);
                 };
@@ -998,7 +1056,9 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                     return new LinqEnumerable(function () {
                         return sharedEnumerator || (sharedEnumerator = _.getEnumerator());
                     }, function () {
-                        dispose_1.dispose(sharedEnumerator);
+                        if (sharedEnumerator)
+                            sharedEnumerator.dispose();
+                        sharedEnumerator = NULL;
                     }, _._isEndless);
                 };
                 return InfiniteLinqEnumerable;
@@ -1109,7 +1169,9 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                                 }
                             }
                         }, function () {
-                            dispose_1.dispose(enumerator);
+                            if (enumerator)
+                                enumerator.dispose();
+                            enumerator = NULL;
                             buffer.length = 0;
                         }, isEndless);
                     }, function () {
@@ -1222,7 +1284,12 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             }
                             return false;
                         }, function () {
-                            dispose_1.dispose(enumerator, q);
+                            if (enumerator)
+                                enumerator.dispose();
+                            enumerator = NULL;
+                            if (q)
+                                q.dispose();
+                            q = NULL;
                         });
                     });
                 };
@@ -1420,7 +1487,15 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             }
                             return yielder.yieldBreak();
                         }, function () {
-                            dispose_1.dispose(enumerator, keys, outs);
+                            if (enumerator)
+                                enumerator.dispose();
+                            if (keys)
+                                enumerator.dispose();
+                            if (outs)
+                                enumerator.dispose();
+                            enumerator = NULL;
+                            keys = NULL;
+                            outs = NULL;
                         }, isEndless);
                     }, function () {
                         second = NULL;
@@ -1563,7 +1638,9 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                             }
                             return yielder.yieldReturn(result);
                         }, function () {
-                            dispose_1.dispose(enumerator);
+                            if (enumerator)
+                                enumerator.dispose();
+                            enumerator = NULL;
                             group = null;
                         });
                     }, function () {
@@ -1734,7 +1811,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                         if (cache)
                             cache.length = 0;
                         cache = NULL;
-                        dispose_1.dispose(enumerator);
+                        if (enumerator)
+                            enumerator.dispose();
                         enumerator = NULL;
                     });
                 };
@@ -1949,7 +2027,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                         var current = enumerator.current;
                         return yielder.yieldReturn(new Grouping(current.key, current.value));
                     }, function () {
-                        dispose_1.dispose(enumerator);
+                        if (enumerator)
+                            enumerator.dispose();
                         enumerator = NULL;
                     });
                 };
@@ -2450,10 +2529,13 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                                 ? yielder.yieldReturn(e.current)
                                 : yielder.yieldBreak();
                         }, function () {
-                            dispose_1.dispose.these(queue.dump());
-                            dispose_1.dispose(mainEnumerator, queue);
+                            if (queue) {
+                                dispose_1.dispose.these.noCopy(queue.dump());
+                                queue = NULL;
+                            }
+                            if (mainEnumerator)
+                                mainEnumerator.dispose();
                             mainEnumerator = null;
-                            queue = NULL;
                         });
                     }, function () {
                         disposed = true;

@@ -1,6 +1,6 @@
 {
   "name": "typescript-dotnet-commonjs",
-  "version": "4.7.12",
+  "version": "4.7.13",
   "license": "MIT",
   "author": "electricessence <npm@electrified.net>",
   "description": "A JavaScript-Friendly .NET Based TypeScript Library.",

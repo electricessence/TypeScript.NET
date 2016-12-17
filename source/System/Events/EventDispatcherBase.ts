@@ -101,7 +101,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 		type:string,
 		listener:IEventListener):void
 	{
-		dispose.these(this._entries.filter(entry=> entry.matches(type, listener)));
+		dispose.these.noCopy(this._entries.filter(entry=> entry.matches(type, listener)));
 	}
 
 	dispatchEvent(type:string, params?:any):boolean;

@@ -26,6 +26,17 @@ export function dispose(...disposables:DisposableItem[]):void
 export module dispose
 {
 
+	/**
+	 * Use this when only disposing one object to avoid creation of arrays.
+	 * @param disposable
+	 * @param trapExceptions
+	 */
+	export function single(disposable:DisposableItem, trapExceptions:boolean = false):void
+	{
+		if(disposable)
+			disposeSingle(disposable,trapExceptions);
+	}
+
 	export function deferred(...disposables:DisposableItem[]):void
 	{
 		these.deferred(disposables);
@@ -66,6 +77,19 @@ export module dispose
 				if(!(delay>=0)) delay = 0;
 				setTimeout(disposeTheseInternal, delay, disposables.slice(), true);
 			}
+		}
+
+		/**
+		 * Use this unsafe method when guaranteed not to cause events that will make modifications to the disposables array.
+		 * @param disposables
+		 * @param trapExceptions
+		 * @returns {any[]}
+		 */
+		export function noCopy(disposables:DisposableItemArray, trapExceptions?:boolean):any[]|undefined
+		{
+			return disposables && disposables.length
+				? disposeTheseInternal(disposables, trapExceptions)
+				: void 0;
 		}
 	}
 
@@ -111,9 +135,8 @@ function disposeSingle(
 {
 	if(
 		disposable
-		&& Type.of(disposable)
-			.member('dispose')
-			.isFunction
+		&& typeof disposable==Type.OBJECT
+		&& typeof disposable['dispose'] == "function"
 	)
 	{
 		if(trapExceptions)

@@ -70,7 +70,7 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
                     });
                 };
                 EventDispatcherBase.prototype.removeEventListener = function (type, listener) {
-                    dispose_1.dispose.these(this._entries.filter(function (entry) { return entry.matches(type, listener); }));
+                    dispose_1.dispose.these.noCopy(this._entries.filter(function (entry) { return entry.matches(type, listener); }));
                 };
                 EventDispatcherBase.prototype.dispatchEvent = function (e, params) {
                     var _this = this;

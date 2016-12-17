@@ -74,7 +74,7 @@
             var s = _s.map(function (n) { return n.value; });
             var u = returnSubscribers ? s.map(function (o) { return o.subscriber; }) : null;
             _s.clear(); // Reset...
-            dispose_1.dispose.these(s);
+            dispose_1.dispose.these.noCopy(s);
             return u;
         };
         SubscribableBase.prototype.unsubscribeAll = function () {
@@ -85,7 +85,8 @@
             this._unsubscribeAll();
             var s = this.__subscriptions;
             this.__subscriptions = null;
-            dispose_1.dispose(s);
+            if (s)
+                s.dispose();
         };
         return SubscribableBase;
     }(DisposableBase_1.DisposableBase));

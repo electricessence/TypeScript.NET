@@ -52,7 +52,7 @@ export class ObjectPool extends DisposableBase {
     _trim() {
         const pool = this._pool;
         while (pool.length > this._maxSize) {
-            dispose.withoutException(pool.pop());
+            dispose.single(pool.pop(), true);
         }
     }
     /**
@@ -69,7 +69,7 @@ export class ObjectPool extends DisposableBase {
         _._trimmer.cancel();
         _._flusher.cancel();
         _._autoFlusher.cancel();
-        dispose.these(p, true);
+        dispose.these.noCopy(p, true);
         p.length = 0;
     }
     /**

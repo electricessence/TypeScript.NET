@@ -65,7 +65,7 @@ var ObjectPool = (function (_super) {
     ObjectPool.prototype._trim = function () {
         var pool = this._pool;
         while (pool.length > this._maxSize) {
-            dispose_1.dispose.withoutException(pool.pop());
+            dispose_1.dispose.single(pool.pop(), true);
         }
     };
     /**
@@ -82,7 +82,7 @@ var ObjectPool = (function (_super) {
         _._trimmer.cancel();
         _._flusher.cancel();
         _._autoFlusher.cancel();
-        dispose_1.dispose.these(p, true);
+        dispose_1.dispose.these.noCopy(p, true);
         p.length = 0;
     };
     /**

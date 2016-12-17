@@ -60,7 +60,7 @@ export class SubscribableBase extends DisposableBase {
         const s = _s.map(n => n.value);
         const u = returnSubscribers ? s.map(o => o.subscriber) : null;
         _s.clear(); // Reset...
-        dispose.these(s);
+        dispose.these.noCopy(s);
         return u;
     }
     unsubscribeAll() {
@@ -71,7 +71,8 @@ export class SubscribableBase extends DisposableBase {
         this._unsubscribeAll();
         const s = this.__subscriptions;
         this.__subscriptions = null;
-        dispose(s);
+        if (s)
+            s.dispose();
     }
 }
 export default SubscribableBase;
