@@ -295,8 +295,9 @@ export class Parallel
 	startNew<T,U>(data:T, task:(data:T) => U, env?:any):Promise<U>
 	{
 		const _ = this;
+		const maxConcurrency = this.ensureClampedMaxConcurrency();
 
-		let worker = _._spawnWorker(task, extend(_.options.env, env || {}));
+		const worker = maxConcurrency ? _._spawnWorker(task, extend(_.options.env, env || {})) : null;
 		if(worker)
 		{
 			return new WorkerPromise<U>(worker, data)
@@ -304,20 +305,11 @@ export class Parallel
 		}
 
 		if(_.options.allowSynchronous)
-			return new Promise<U>(
-				(resolve, reject) =>
-				{
-					try
-					{
-						resolve(task(data));
-					}
-					catch(e)
-					{
-						reject(e);
-					}
-				});
+			return this.startLocal(data, task);
 
-		throw new Error('Workers do not exist and synchronous operation not allowed!');
+		throw new Error(maxConcurrency
+			?"Workers do not exist and synchronous operation not allowed!"
+			:"'maxConcurrency' set to 0 but 'allowSynchronous' is false.");
 	}
 
 	/**
@@ -361,16 +353,19 @@ export class Parallel
 		{
 			const len = data.length;
 			const taskString = task.toString();
-			let maxConcurrency = this.ensureClampedMaxConcurrency(), error:any;
+			const maxConcurrency = this.ensureClampedMaxConcurrency();
+			let error:any;
 			let i = 0;
 			for(let w = 0; !error && i<Math.min(len, maxConcurrency); w++)
 			{
-				let worker:WorkerLike|null|undefined = this._spawnWorker(taskString, env);
+				let worker:WorkerLike|null|undefined = maxConcurrency ? this._spawnWorker(taskString, env) : null;
 
 				if(!worker)
 				{
 					if(!this.options.allowSynchronous)
-						throw new Error('Workers do not exist and synchronous operation not allowed!');
+						throw new Error(maxConcurrency
+							?"Workers do not exist and synchronous operation not allowed!"
+							:"'maxConcurrency' set to 0 but 'allowSynchronous' is false.");
 
 					// Concurrency doesn't matter in a single thread... Just queue it all up.
 					return Promise.map(data, task);

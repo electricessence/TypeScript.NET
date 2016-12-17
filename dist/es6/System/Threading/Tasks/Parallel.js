@@ -187,21 +187,17 @@ export class Parallel {
      */
     startNew(data, task, env) {
         const _ = this;
-        let worker = _._spawnWorker(task, extend(_.options.env, env || {}));
+        const maxConcurrency = this.ensureClampedMaxConcurrency();
+        const worker = maxConcurrency ? _._spawnWorker(task, extend(_.options.env, env || {})) : null;
         if (worker) {
             return new WorkerPromise(worker, data)
                 .finallyThis(() => workers.recycle(worker));
         }
         if (_.options.allowSynchronous)
-            return new Promise((resolve, reject) => {
-                try {
-                    resolve(task(data));
-                }
-                catch (e) {
-                    reject(e);
-                }
-            });
-        throw new Error('Workers do not exist and synchronous operation not allowed!');
+            return this.startLocal(data, task);
+        throw new Error(maxConcurrency
+            ? "Workers do not exist and synchronous operation not allowed!"
+            : "'maxConcurrency' set to 0 but 'allowSynchronous' is false.");
     }
     /**
      * Runs the task within the local thread/process.
@@ -234,13 +230,16 @@ export class Parallel {
         if (data && data.length) {
             const len = data.length;
             const taskString = task.toString();
-            let maxConcurrency = this.ensureClampedMaxConcurrency(), error;
+            const maxConcurrency = this.ensureClampedMaxConcurrency();
+            let error;
             let i = 0;
             for (let w = 0; !error && i < Math.min(len, maxConcurrency); w++) {
-                let worker = this._spawnWorker(taskString, env);
+                let worker = maxConcurrency ? this._spawnWorker(taskString, env) : null;
                 if (!worker) {
                     if (!this.options.allowSynchronous)
-                        throw new Error('Workers do not exist and synchronous operation not allowed!');
+                        throw new Error(maxConcurrency
+                            ? "Workers do not exist and synchronous operation not allowed!"
+                            : "'maxConcurrency' set to 0 but 'allowSynchronous' is false.");
                     // Concurrency doesn't matter in a single thread... Just queue it all up.
                     return Promise.map(data, task);
                 }
