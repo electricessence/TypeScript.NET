@@ -33,7 +33,22 @@ export declare class Parallel {
     require(...required: RequireType[]): this;
     requireThese(required: RequireType[]): this;
     protected _spawnWorker(task: Function | string, env?: any): WorkerLike | undefined;
+    /**
+     * Schedules the task to be run in the worker pool.
+     * @param data
+     * @param task
+     * @param env
+     * @returns {Promise<U>|Promise}
+     */
     startNew<T, U>(data: T, task: (data: T) => U, env?: any): Promise<U>;
+    /**
+     * Runs the task within the local thread/process.
+     * Is good for use with testing.
+     * @param data
+     * @param task
+     * @returns {Promise<U>|Promise}
+     */
+    startLocal<T, U>(data: T, task: (data: T) => U): Promise<U>;
     /**
      * Returns an array of promises that each resolve after their task completes.
      * Provides a potential performance benefit by not waiting for all promises to resolve before proceeding to next step.

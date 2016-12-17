@@ -199,6 +199,13 @@
             }
             return worker;
         };
+        /**
+         * Schedules the task to be run in the worker pool.
+         * @param data
+         * @param task
+         * @param env
+         * @returns {Promise<U>|Promise}
+         */
         Parallel.prototype.startNew = function (data, task, env) {
             var _ = this;
             var worker = _._spawnWorker(task, extend(_.options.env, env || {}));
@@ -216,6 +223,23 @@
                     }
                 });
             throw new Error('Workers do not exist and synchronous operation not allowed!');
+        };
+        /**
+         * Runs the task within the local thread/process.
+         * Is good for use with testing.
+         * @param data
+         * @param task
+         * @returns {Promise<U>|Promise}
+         */
+        Parallel.prototype.startLocal = function (data, task) {
+            return new Promise_1.Promise(function (resolve, reject) {
+                try {
+                    resolve(task(data));
+                }
+                catch (e) {
+                    reject(e);
+                }
+            });
         };
         /**
          * Returns an array of promises that each resolve after their task completes.

@@ -285,6 +285,13 @@ export class Parallel
 		return worker;
 	}
 
+	/**
+	 * Schedules the task to be run in the worker pool.
+	 * @param data
+	 * @param task
+	 * @param env
+	 * @returns {Promise<U>|Promise}
+	 */
 	startNew<T,U>(data:T, task:(data:T) => U, env?:any):Promise<U>
 	{
 		const _ = this;
@@ -311,6 +318,29 @@ export class Parallel
 				});
 
 		throw new Error('Workers do not exist and synchronous operation not allowed!');
+	}
+
+	/**
+	 * Runs the task within the local thread/process.
+	 * Is good for use with testing.
+	 * @param data
+	 * @param task
+	 * @returns {Promise<U>|Promise}
+	 */
+	startLocal<T,U>(data:T, task:(data:T) => U):Promise<U>
+	{
+		return new Promise<U>(
+			(resolve, reject) =>
+			{
+				try
+				{
+					resolve(task(data));
+				}
+				catch(e)
+				{
+					reject(e);
+				}
+			});
 	}
 
 	/**
