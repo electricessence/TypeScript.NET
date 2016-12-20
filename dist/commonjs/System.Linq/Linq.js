@@ -18,7 +18,6 @@ var EnumeratorBase_1 = require("../System/Collections/Enumeration/EnumeratorBase
 var Dictionary_1 = require("../System/Collections/Dictionaries/Dictionary");
 var Queue_1 = require("../System/Collections/Queue");
 var dispose_1 = require("../System/Disposable/dispose");
-var disposeSingle = dispose_1.dispose.single;
 var DisposableBase_1 = require("../System/Disposable/DisposableBase");
 var UnsupportedEnumerableException_1 = require("../System/Collections/Enumeration/UnsupportedEnumerableException");
 var ObjectDisposedException_1 = require("../System/Disposable/ObjectDisposedException");
@@ -31,6 +30,8 @@ var initialize_1 = require("../System/Collections/Array/initialize");
 var Random_1 = require("../System/Random");
 var InfiniteEnumerator_1 = require("../System/Collections/Enumeration/InfiniteEnumerator");
 var extends_1 = require("../extends");
+var LazyList_1 = require("../System/Collections/LazyList");
+var disposeSingle = dispose_1.dispose.single;
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 // #region Local Constants.
@@ -1683,38 +1684,8 @@ var LinqEnumerable = (function (_super) {
     };
     // #endregion
     LinqEnumerable.prototype.memoize = function () {
-        var _ = this;
-        var disposed = !_.throwIfDisposed();
-        var cache;
-        var enumerator;
-        return new LinqEnumerable(function () {
-            var index = 0;
-            return new EnumeratorBase_1.EnumeratorBase(function () {
-                throwIfDisposed(disposed);
-                if (!enumerator)
-                    enumerator = _.getEnumerator();
-                if (!cache)
-                    cache = [];
-                index = 0;
-            }, function (yielder) {
-                throwIfDisposed(disposed);
-                var i = index++;
-                if (i >= cache.length) {
-                    return (enumerator.moveNext())
-                        ? yielder.yieldReturn(cache[i] = enumerator.current)
-                        : false;
-                }
-                return yielder.yieldReturn(cache[i]);
-            });
-        }, function () {
-            disposed = true;
-            if (cache)
-                cache.length = 0;
-            cache = NULL;
-            if (enumerator)
-                enumerator.dispose();
-            enumerator = NULL;
-        });
+        var source = new LazyList_1.LazyList(this);
+        return (new LinqEnumerable(function () { return source.getEnumerator(); }, function () { source.dispose(); source = null; }, this.isEndless));
     };
     LinqEnumerable.prototype.throwWhenEmpty = function () {
         return this.doAction(RETURN, null, this.isEndless, function (count) {

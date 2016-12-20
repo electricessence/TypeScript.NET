@@ -4,15 +4,37 @@
  */
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { ReadOnlyCollectionBase } from "./ReadOnlyCollectionBase";
+import { from as enumeratorFrom } from "./Enumeration/Enumerator";
+import { Type } from "../Types";
 // noinspection JSUnusedLocalSymbols
 export default class ReadOnlyCollectionWrapper extends ReadOnlyCollectionBase {
-    constructor(c) {
+    constructor(collection) {
         super();
-        if (!c)
+        if (!collection)
             throw new ArgumentNullException('collection');
         const _ = this;
-        _._getCount = () => c.count;
-        _.getEnumerator = () => c.getEnumerator();
+        // Attempting to avoid contact with the original collection.
+        if (Type.isArrayLike(collection)) {
+            _._getCount = () => collection.length;
+            _._getEnumerator = () => enumeratorFrom(collection);
+        }
+        else {
+            _._getCount = () => collection.count;
+            _._getEnumerator = () => collection.getEnumerator();
+        }
+    }
+    _getCount() {
+        this.throwIfDisposed();
+        return this.__getCount();
+    }
+    _getEnumerator() {
+        this.throwIfDisposed();
+        return this.__getEnumerator();
+    }
+    _onDispose() {
+        super._onDispose();
+        this.__getCount = null;
+        this.__getEnumerator = null;
     }
 }
 //# sourceMappingURL=ReadOnlyCollectionWrapper.js.map

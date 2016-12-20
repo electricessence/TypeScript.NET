@@ -17,7 +17,6 @@ import { EnumeratorBase } from "../System/Collections/Enumeration/EnumeratorBase
 import { Dictionary } from "../System/Collections/Dictionaries/Dictionary";
 import { Queue } from "../System/Collections/Queue";
 import { dispose, using } from "../System/Disposable/dispose";
-var disposeSingle = dispose.single;
 import { DisposableBase } from "../System/Disposable/DisposableBase";
 import { UnsupportedEnumerableException } from "../System/Collections/Enumeration/UnsupportedEnumerableException";
 import { ObjectDisposedException } from "../System/Disposable/ObjectDisposedException";
@@ -29,6 +28,8 @@ import { IteratorEnumerator } from "../System/Collections/Enumeration/IteratorEn
 import { initialize } from "../System/Collections/Array/initialize";
 import { Random } from "../System/Random";
 import { InfiniteEnumerator } from "../System/Collections/Enumeration/InfiniteEnumerator";
+import { LazyList } from "../System/Collections/LazyList";
+var disposeSingle = dispose.single;
 // noinspection JSUnusedLocalSymbols
 // #region Local Constants.
 const INVALID_DEFAULT = {}; // create a private unique instance for referencing.
@@ -1618,38 +1619,8 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
     }
     // #endregion
     memoize() {
-        const _ = this;
-        let disposed = !_.throwIfDisposed();
-        let cache;
-        let enumerator;
-        return new LinqEnumerable(() => {
-            let index = 0;
-            return new EnumeratorBase(() => {
-                throwIfDisposed(disposed);
-                if (!enumerator)
-                    enumerator = _.getEnumerator();
-                if (!cache)
-                    cache = [];
-                index = 0;
-            }, (yielder) => {
-                throwIfDisposed(disposed);
-                let i = index++;
-                if (i >= cache.length) {
-                    return (enumerator.moveNext())
-                        ? yielder.yieldReturn(cache[i] = enumerator.current)
-                        : false;
-                }
-                return yielder.yieldReturn(cache[i]);
-            });
-        }, () => {
-            disposed = true;
-            if (cache)
-                cache.length = 0;
-            cache = NULL;
-            if (enumerator)
-                enumerator.dispose();
-            enumerator = NULL;
-        });
+        let source = new LazyList(this);
+        return (new LinqEnumerable(() => source.getEnumerator(), () => { source.dispose(); source = null; }, this.isEndless));
     }
     throwWhenEmpty() {
         return this.doAction(RETURN, null, this.isEndless, count => {

@@ -1,4 +1,4 @@
-System.register(["../System/Compare", "../System/Collections/Array/copy", "../System/Collections/Array/Compare", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../System/Collections/Enumeration/IteratorEnumerator", "../System/Collections/Array/initialize", "../System/Random", "../System/Collections/Enumeration/InfiniteEnumerator", "../extends"], function (exports_1, context_1) {
+System.register(["../System/Compare", "../System/Collections/Array/copy", "../System/Collections/Array/Compare", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../System/Collections/Enumeration/IteratorEnumerator", "../System/Collections/Array/initialize", "../System/Random", "../System/Collections/Enumeration/InfiniteEnumerator", "../extends", "../System/Collections/LazyList"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function BREAK() {
@@ -62,7 +62,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
             ? e.merge(additional)
             : e;
     }
-    var Compare_1, copy_1, Arrays, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, disposeSingle, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, IndexEnumerator_1, IteratorEnumerator_1, initialize_1, Random_1, InfiniteEnumerator_1, extends_1, __extends, INVALID_DEFAULT, VOID0, NULL, LinqFunctions, Functions, InfiniteLinqEnumerable, LinqEnumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
+    var Compare_1, copy_1, Arrays, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, IndexEnumerator_1, IteratorEnumerator_1, initialize_1, Random_1, InfiniteEnumerator_1, extends_1, LazyList_1, disposeSingle, __extends, INVALID_DEFAULT, VOID0, NULL, LinqFunctions, Functions, InfiniteLinqEnumerable, LinqEnumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
     return {
         setters: [
             function (Compare_1_1) {
@@ -140,6 +140,9 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
+            },
+            function (LazyList_1_1) {
+                LazyList_1 = LazyList_1_1;
             }
         ],
         execute: function () {
@@ -1783,38 +1786,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                 };
                 // #endregion
                 LinqEnumerable.prototype.memoize = function () {
-                    var _ = this;
-                    var disposed = !_.throwIfDisposed();
-                    var cache;
-                    var enumerator;
-                    return new LinqEnumerable(function () {
-                        var index = 0;
-                        return new EnumeratorBase_1.EnumeratorBase(function () {
-                            throwIfDisposed(disposed);
-                            if (!enumerator)
-                                enumerator = _.getEnumerator();
-                            if (!cache)
-                                cache = [];
-                            index = 0;
-                        }, function (yielder) {
-                            throwIfDisposed(disposed);
-                            var i = index++;
-                            if (i >= cache.length) {
-                                return (enumerator.moveNext())
-                                    ? yielder.yieldReturn(cache[i] = enumerator.current)
-                                    : false;
-                            }
-                            return yielder.yieldReturn(cache[i]);
-                        });
-                    }, function () {
-                        disposed = true;
-                        if (cache)
-                            cache.length = 0;
-                        cache = NULL;
-                        if (enumerator)
-                            enumerator.dispose();
-                        enumerator = NULL;
-                    });
+                    var source = new LazyList_1.LazyList(this);
+                    return (new LinqEnumerable(function () { return source.getEnumerator(); }, function () { source.dispose(); source = null; }, this.isEndless));
                 };
                 LinqEnumerable.prototype.throwWhenEmpty = function () {
                     return this.doAction(RETURN, null, this.isEndless, function (count) {

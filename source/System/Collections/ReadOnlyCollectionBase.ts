@@ -12,7 +12,7 @@ export abstract class ReadOnlyCollectionBase<T>
 extends CollectionBase<T>
 {
 
-	protected _getCount:()=>number;
+	protected abstract _getCount():number;
 
 	protected getCount():number
 	{
@@ -41,7 +41,7 @@ extends CollectionBase<T>
 		return 0;
 	}
 
-	protected _getEnumerator:()=>IEnumerator<T>;
+	protected abstract _getEnumerator():IEnumerator<T>;
 
 	getEnumerator():IEnumerator<T>
 	{

@@ -2,10 +2,16 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {ICollection} from "./ICollection";
+import {IReadOnlyCollection} from "./IReadOnlyCollection";
 
-export interface IList<T> extends ICollection<T>
+export interface IReadOnlyList<T> extends IReadOnlyCollection<T>
+{
+	get(index:number):T;
+	indexOf(item:T):number;
+}
+
+export interface IList<T> extends ICollection<T>, IReadOnlyList<T>
 {
 
 	/* From ICollection<T>:
@@ -19,10 +25,8 @@ export interface IList<T> extends ICollection<T>
 	 remove(item: T): number;
 	 */
 
-	get(index:number):T;
 	set(index:number, value:T):boolean;
 
-	indexOf(item:T):number;
 	insert(index:number, value:T):void;
 
 	removeAt(index:number):boolean;

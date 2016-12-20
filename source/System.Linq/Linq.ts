@@ -67,6 +67,7 @@ import {
 	InfiniteValueFactory
 } from "../System/Collections/Enumeration/InfiniteEnumerator";
 import __extendsImport from "../extends";
+import {LazyList} from "../System/Collections/LazyList";
 import disposeSingle = dispose.single;
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -2851,58 +2852,8 @@ extends InfiniteLinqEnumerable<T> implements ILinqEnumerable<T>
 
 	memoize():this
 	{
-		const _ = this;
-		let disposed:boolean = !_.throwIfDisposed();
-
-		let cache:T[];
-		let enumerator:IEnumerator<T>;
-
-		return <any> new LinqEnumerable<T>(
-			() =>
-			{
-
-				let index:number = 0;
-
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						throwIfDisposed(disposed);
-						if(!enumerator)
-							enumerator = _.getEnumerator();
-						if(!cache)
-							cache = [];
-						index = 0;
-					},
-
-					(yielder) =>
-					{
-						throwIfDisposed(disposed);
-
-						let i = index++;
-
-						if(i>=cache.length)
-						{
-							return (enumerator.moveNext())
-								? yielder.yieldReturn(cache[i] = <T>enumerator.current)
-								: false;
-						}
-
-						return yielder.yieldReturn(cache[i]);
-					}
-				);
-			},
-
-			() =>
-			{
-				disposed = true;
-				if(cache)
-					cache.length = 0;
-				cache = NULL;
-
-				if(enumerator) enumerator.dispose();
-				enumerator = NULL;
-			}
-		);
+		let source = new LazyList(this);
+		return <this>(new LinqEnumerable(()=>source.getEnumerator(),()=>{source.dispose(); source = <any>null},this.isEndless));
 	}
 
 	throwWhenEmpty():NotEmptyEnumerable<T>

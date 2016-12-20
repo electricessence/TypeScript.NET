@@ -2,27 +2,29 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
-import {ReadOnlyCollectionBase} from "../ReadOnlyCollectionBase";
-import {from as enumeratorFrom} from "../Enumeration/Enumerator";
+import ReadOnlyCollectionWrapper from "../ReadOnlyCollectionWrapper";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-export default class ReadOnlyArrayWrapper<T> extends ReadOnlyCollectionBase<T>
+export default class ReadOnlyArrayWrapper<T> extends ReadOnlyCollectionWrapper<T>
 {
 
 	constructor(array:ArrayLike<T>)
 	{
-		super();
-		if(!array)
-			throw new ArgumentNullException('array');
-
-		const _ = this;
-		_._getCount = () => array.length;
-		_.getEnumerator = () => enumeratorFrom(array);
-		_.getValueAt = i => array[i];
+		super(array);
+		this.__getValueAt = i => array[i];
 	}
 
-	getValueAt:(index:number)=>T;
+	protected _onDispose()
+	{
+		super._onDispose();
+		this.__getValueAt = <any>null;
+	}
+
+	private __getValueAt:(i:number)=>T;
+	getValueAt(index:number):T {
+		this.throwIfDisposed();
+		return this.__getValueAt(index);
+	}
 }
