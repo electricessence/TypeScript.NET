@@ -430,7 +430,11 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 		if(!e)
 		{
-			this._linq = e = eval("require")(LINQ_PATH).default.from(this);
+
+			let r:any;
+			try { r = eval('require'); } catch (ex) {}
+
+			this._linq = e = r && r(LINQ_PATH).default.from(this);
 			if(!e)
 			{
 				throw isRequireJS

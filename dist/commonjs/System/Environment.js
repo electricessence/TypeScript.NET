@@ -4,7 +4,11 @@
  */
 "use strict";
 // Need to spoof this so WebPack doesn't panic (warnings).
-var r = eval('require');
+var r;
+try {
+    r = eval('require');
+}
+catch (ex) { }
 //noinspection JSUnusedGlobalSymbols
 exports.isCommonJS = !!(r && r.resolve);
 //noinspection JSUnusedGlobalSymbols

@@ -351,7 +351,12 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                         this.throwIfDisposed();
                         var e = this._linq;
                         if (!e) {
-                            this._linq = e = eval("require")(LINQ_PATH).default.from(this);
+                            var r = void 0;
+                            try {
+                                r = eval('require');
+                            }
+                            catch (ex) { }
+                            this._linq = e = r && r(LINQ_PATH).default.from(this);
                             if (!e) {
                                 throw Environment_1.isRequireJS
                                     ? "using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.\nImport System.Linq/Linq and use Enumerable.from(e) instead.\nYou can also preload the Linq module as a dependency or use .linqAsync(callback) for AMD/RequireJS."

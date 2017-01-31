@@ -12,8 +12,10 @@ System.register([], function (exports_1, context_1) {
              * @author electricessence / https://github.com/electricessence/
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
-            // Need to spoof this so WebPack doesn't panic (warnings).
-            r = eval('require');
+            try {
+                r = eval('require');
+            }
+            catch (ex) { }
             //noinspection JSUnusedGlobalSymbols
             exports_1("isCommonJS", isCommonJS = !!(r && r.resolve));
             //noinspection JSUnusedGlobalSymbols

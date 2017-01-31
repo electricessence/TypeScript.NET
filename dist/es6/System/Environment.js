@@ -3,7 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 // Need to spoof this so WebPack doesn't panic (warnings).
-const r = eval('require');
+let r;
+try {
+    r = eval('require');
+}
+catch (ex) { }
 //noinspection JSUnusedGlobalSymbols
 export const isCommonJS = !!(r && r.resolve);
 //noinspection JSUnusedGlobalSymbols

@@ -311,7 +311,12 @@ export class CollectionBase extends DisposableBase {
         this.throwIfDisposed();
         let e = this._linq;
         if (!e) {
-            this._linq = e = eval("require")(LINQ_PATH).default.from(this);
+            let r;
+            try {
+                r = eval('require');
+            }
+            catch (ex) { }
+            this._linq = e = r && r(LINQ_PATH).default.from(this);
             if (!e) {
                 throw isRequireJS
                     ? `using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.

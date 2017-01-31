@@ -6,7 +6,12 @@
 declare const process:any;
 
 // Need to spoof this so WebPack doesn't panic (warnings).
-const r:any = eval('require');
+let r:any;
+try {
+	r = eval('require');
+}
+catch (ex) {}
+
 
 //noinspection JSUnusedGlobalSymbols
 export const
