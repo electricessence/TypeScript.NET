@@ -43,3 +43,18 @@ describe(".between(first,last)",()=>{
 		assert.ok(DateTime.between(new Date("2016-06-06"),new Date("2016-07-06")).total.milliseconds>0);
 	});
 });
+
+describe(".equals",()=>{
+	const d1 = "2016-06-06", d2 = "2016-06-07";
+	it("should match",()=>{
+		const x = new DateTime(d1), y = new DateTime(d1);
+		assert.ok(x.equals(y));
+	});
+
+	it("should not match",()=>{
+		const x = new DateTime(d1), y = new DateTime(d2);
+		assert.ok(!x.equals(null));
+		assert.ok(!x.equals(y));
+	});
+
+});

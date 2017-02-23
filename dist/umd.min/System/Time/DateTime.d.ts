@@ -4,7 +4,8 @@ import { ClockTime } from "./ClockTime";
 import { IDateTime } from "./IDateTime";
 import { Gregorian } from "./Calendars";
 import { ITimeQuantity } from "./ITimeQuantity";
-export declare class DateTime implements ICalendarDate, IDateTime {
+import { IEquatable } from "../IEquatable";
+export declare class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime> {
     private readonly _value;
     toJsDate(): Date;
     constructor();
@@ -90,6 +91,20 @@ export declare class DateTime implements ICalendarDate, IDateTime {
      * @returns {DateTime}
      */
     readonly toUniversalTime: DateTime;
+    /**
+     * Compares a JS Date with the current instance.  Does not evaluate the kind.
+     * @param other
+     * @returns {boolean}
+     */
+    equals(other: Date): boolean;
+    /**
+     * Compares another IDateTime object and returns true if they or their value are equal.
+     * @param other The other IDateTime object.
+     * @param strict When strict is true, the 'kind' also must match.
+     * @returns {boolean}
+     */
+    equals(other: IDateTime, strict?: boolean): boolean;
+    equivalent(other: IDateTime | Date): boolean;
     /**
      * The date component for now.
      * @returns {DateTime}

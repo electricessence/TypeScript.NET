@@ -1,18 +1,22 @@
 import { TimeSpan } from "./TimeSpan";
 import { ClockTime } from "./ClockTime";
 import { TimeStamp } from "./TimeStamp";
+const VOID0 = void 0;
 export class DateTime {
     toJsDate() {
         return new Date(this._value.getTime()); // return a clone.
     }
     constructor(value = new Date(), kind = 1 /* Local */) {
         this._kind = kind;
-        if (value instanceof DateTime)
+        if (value instanceof DateTime) {
             this._value = value.toJsDate();
+            if (kind === VOID0)
+                this._kind = value._kind;
+        }
         else if (value instanceof Date)
             this._value = new Date(value.getTime());
         else
-            this._value = value === void 0
+            this._value = value === VOID0
                 ? new Date()
                 : new Date(value);
     }
@@ -163,6 +167,43 @@ export class DateTime {
             return new DateTime(_, _._kind);
         const d = _._value;
         return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), 2 /* Utc */);
+    }
+    equals(other, strict = false) {
+        if (!other)
+            return false;
+        if (other == this)
+            return true;
+        if (other instanceof Date) {
+            let v = this._value;
+            return other == v || other.getTime() == v.getTime();
+        }
+        if (other instanceof DateTime) {
+            if (strict) {
+                let ok = other._kind;
+                if (!ok && this._kind || ok != this._kind)
+                    return false;
+            }
+            return this.equals(other._value);
+        }
+        else if (strict)
+            return false;
+        return this.equals(other.toJsDate());
+    }
+    equivalent(other) {
+        if (!other)
+            return false;
+        if (other == this)
+            return true;
+        if (other instanceof Date) {
+            let v = this._value;
+            // TODO: What is the best way to handle this when kinds match or don't?
+            return v.toUTCString() == other.toUTCString();
+        }
+        if (other instanceof DateTime) {
+            if (this.equals(other, true))
+                return true;
+        }
+        return this.equivalent(other.toJsDate());
     }
     /**
      * The date component for now.

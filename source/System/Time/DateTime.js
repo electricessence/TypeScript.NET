@@ -10,17 +10,21 @@
     var TimeSpan_1 = require("./TimeSpan");
     var ClockTime_1 = require("./ClockTime");
     var TimeStamp_1 = require("./TimeStamp");
+    var VOID0 = void 0;
     var DateTime = (function () {
         function DateTime(value, kind) {
             if (value === void 0) { value = new Date(); }
             if (kind === void 0) { kind = 1 /* Local */; }
             this._kind = kind;
-            if (value instanceof DateTime)
+            if (value instanceof DateTime) {
                 this._value = value.toJsDate();
+                if (kind === VOID0)
+                    this._kind = value._kind;
+            }
             else if (value instanceof Date)
                 this._value = new Date(value.getTime());
             else
-                this._value = value === void 0
+                this._value = value === VOID0
                     ? new Date()
                     : new Date(value);
         }
@@ -223,6 +227,44 @@
             enumerable: true,
             configurable: true
         });
+        DateTime.prototype.equals = function (other, strict) {
+            if (strict === void 0) { strict = false; }
+            if (!other)
+                return false;
+            if (other == this)
+                return true;
+            if (other instanceof Date) {
+                var v = this._value;
+                return other == v || other.getTime() == v.getTime();
+            }
+            if (other instanceof DateTime) {
+                if (strict) {
+                    var ok = other._kind;
+                    if (!ok && this._kind || ok != this._kind)
+                        return false;
+                }
+                return this.equals(other._value);
+            }
+            else if (strict)
+                return false;
+            return this.equals(other.toJsDate());
+        };
+        DateTime.prototype.equivalent = function (other) {
+            if (!other)
+                return false;
+            if (other == this)
+                return true;
+            if (other instanceof Date) {
+                var v = this._value;
+                // TODO: What is the best way to handle this when kinds match or don't?
+                return v.toUTCString() == other.toUTCString();
+            }
+            if (other instanceof DateTime) {
+                if (this.equals(other, true))
+                    return true;
+            }
+            return this.equivalent(other.toJsDate());
+        };
         Object.defineProperty(DateTime, "today", {
             /**
              * The date component for now.

@@ -11,8 +11,12 @@ import {TimeStamp} from "./TimeStamp";
 import {IDateTime} from "./IDateTime";
 import {Gregorian} from "./Calendars";
 import {ITimeQuantity} from "./ITimeQuantity";
+import {IEquatable} from "../IEquatable";
+import Kind = DateTime.Kind;
 
-export class DateTime implements ICalendarDate, IDateTime
+const VOID0:undefined = void 0;
+
+export class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime>
 {
 	private readonly _value:Date;
 
@@ -30,11 +34,14 @@ export class DateTime implements ICalendarDate, IDateTime
 	{
 		this._kind = kind;
 		if(value instanceof DateTime)
+		{
 			this._value = value.toJsDate();
+			if(kind===VOID0) this._kind = value._kind;
+		}
 		else if(value instanceof Date)
 			this._value = new Date(value.getTime());
 		else
-			this._value = value===void 0
+			this._value = value===VOID0
 				? new Date()
 				: new Date(value);
 	}
@@ -263,6 +270,69 @@ export class DateTime implements ICalendarDate, IDateTime
 	}
 
 	/**
+	 * Compares a JS Date with the current instance.  Does not evaluate the kind.
+	 * @param other
+	 * @returns {boolean}
+	 */
+	equals(other:Date):boolean
+
+	/**
+	 * Compares another IDateTime object and returns true if they or their value are equal.
+	 * @param other The other IDateTime object.
+	 * @param strict When strict is true, the 'kind' also must match.
+	 * @returns {boolean}
+	 */
+	equals(other:IDateTime, strict?:boolean):boolean
+
+	equals(other:IDateTime | Date, strict:boolean = false):boolean
+	{
+		if(!other) return false;
+		if(other==this) return true;
+
+		if(other instanceof Date)
+		{
+			let v = this._value;
+			return other==v || other.getTime()==v.getTime();
+		}
+
+		if(other instanceof DateTime)
+		{
+			if(strict)
+			{
+				let ok = other._kind;
+				if(!ok && this._kind || ok!=this._kind) return false;
+			}
+
+			return this.equals(other._value);
+		}
+		else if(strict)
+			return false;
+
+		return this.equals(other.toJsDate());
+
+	}
+
+	equivalent(other:IDateTime | Date):boolean
+	{
+		if(!other) return false;
+		if(other==this) return true;
+
+		if(other instanceof Date)
+		{
+			let v = this._value;
+			// TODO: What is the best way to handle this when kinds match or don't?
+			return v.toUTCString()==other.toUTCString();
+		}
+
+		if(other instanceof DateTime)
+		{
+			if(this.equals(other, true)) return true;
+		}
+
+		return this.equivalent(other.toJsDate());
+	}
+
+	/**
 	 * The date component for now.
 	 * @returns {DateTime}
 	 */
@@ -330,7 +400,9 @@ export class DateTime implements ICalendarDate, IDateTime
 			day = (<ICalendarDate>yearOrDate).day;
 			month = (<ICalendarDate>yearOrDate).month;
 			year = (<ICalendarDate>yearOrDate).year;
-		} else {
+		}
+		else
+		{
 			year = yearOrDate;
 		}
 
@@ -352,7 +424,9 @@ export class DateTime implements ICalendarDate, IDateTime
 			day = (<ICalendarDate>yearOrDate).day;
 			month = (<ICalendarDate>yearOrDate).month;
 			year = (<ICalendarDate>yearOrDate).year;
-		} else {
+		}
+		else
+		{
 			year = yearOrDate;
 		}
 

@@ -37,4 +37,16 @@ describe(".between(first,last)", function () {
         assert.ok(DateTime_1.default.between(new Date("2016-06-06"), new Date("2016-07-06")).total.milliseconds > 0);
     });
 });
+describe(".equals", function () {
+    var d1 = "2016-06-06", d2 = "2016-06-07";
+    it("should match", function () {
+        var x = new DateTime_1.default(d1), y = new DateTime_1.default(d1);
+        assert.ok(x.equals(y));
+    });
+    it("should not match", function () {
+        var x = new DateTime_1.default(d1), y = new DateTime_1.default(d2);
+        assert.ok(!x.equals(null));
+        assert.ok(!x.equals(y));
+    });
+});
 //# sourceMappingURL=DateTime.js.map
