@@ -3,7 +3,7 @@ TypeScript.NET
 
 ### A JavaScript-Friendly .NET Based TypeScript Library
 
-<span class="badge-patreon"><a href="http://patreon.com/codeevolution" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span>
+<span class="badge-patreon"><a href="http://patreon.com/codeevolution" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span> Or support by taking this course: https://www.udemy.com/stepping-up-to-typescript-fundamentals/
 
 The intention of this project to to allow for the evolution of a .NET based TypeScript (and resultant JavaScript) library.
 Contributions are welcomed as the .NET Library (meaning it's class structure and classes, not necessarily its content) has a substantial amount of usefulness.  With the open sourcing of .NET, TypeScript seems the most logical means to take advantage of it.  Typing, generics, classes, modules, inheritance, all are required to make a resultant JavaScript library that takes advantage of this elegance.
