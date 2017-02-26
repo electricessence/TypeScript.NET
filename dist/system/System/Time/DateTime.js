@@ -1,7 +1,7 @@
-System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_1, context_1) {
+System.register(["./TimeSpan", "./ClockTime", "./TimeStamp", "../Exceptions/ArgumentNullException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var TimeSpan_1, ClockTime_1, TimeStamp_1, VOID0, DateTime;
+    var TimeSpan_1, ClockTime_1, TimeStamp_1, ArgumentNullException_1, VOID0, DateTime;
     return {
         setters: [
             function (TimeSpan_1_1) {
@@ -12,6 +12,9 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
             },
             function (TimeStamp_1_1) {
                 TimeStamp_1 = TimeStamp_1_1;
+            },
+            function (ArgumentNullException_1_1) {
+                ArgumentNullException_1 = ArgumentNullException_1_1;
             }
         ],
         execute: function () {
@@ -253,6 +256,21 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                     else if (strict)
                         return false;
                     return this.equals(other.toJsDate());
+                };
+                // https://msdn.microsoft.com/en-us/library/system.icomparable.compareto(v=vs.110).aspx
+                DateTime.prototype.compareTo = function (other) {
+                    if (!other)
+                        throw new ArgumentNullException_1.ArgumentNullException("other");
+                    if (other == this)
+                        return 0;
+                    if (other instanceof DateTime) {
+                        other = other._value;
+                    }
+                    var ms = this._value.getTime();
+                    if (other instanceof Date) {
+                        return ms - other.getTime();
+                    }
+                    return ms - other.toJsDate().getTime();
                 };
                 DateTime.prototype.equivalent = function (other) {
                     if (!other)

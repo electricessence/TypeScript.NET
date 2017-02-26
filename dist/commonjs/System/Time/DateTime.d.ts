@@ -5,7 +5,8 @@ import { IDateTime } from "./IDateTime";
 import { Gregorian } from "./Calendars";
 import { ITimeQuantity } from "./ITimeQuantity";
 import { IEquatable } from "../IEquatable";
-export declare class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime> {
+import { IComparable } from "../IComparable";
+export declare class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime>, IComparable<IDateTime> {
     private readonly _value;
     toJsDate(): Date;
     constructor();
@@ -104,6 +105,7 @@ export declare class DateTime implements ICalendarDate, IDateTime, IEquatable<ID
      * @returns {boolean}
      */
     equals(other: IDateTime, strict?: boolean): boolean;
+    compareTo(other: IDateTime | Date): number;
     equivalent(other: IDateTime | Date): boolean;
     /**
      * The date component for now.

@@ -48,5 +48,10 @@ describe(".equals", function () {
         assert.ok(!x.equals(null));
         assert.ok(!x.equals(y));
     });
+    it("should compare correctly", function () {
+        var x = new DateTime_1.default(d1), y = new DateTime_1.default(d2), z = new DateTime_1.default(d2);
+        assert.ok(x.compareTo(y) < 0);
+        assert.ok(y.compareTo(x) > 0);
+        assert.ok(y.compareTo(z) == 0);
+    });
 });
-//# sourceMappingURL=DateTime.js.map

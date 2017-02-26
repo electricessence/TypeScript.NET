@@ -1,6 +1,7 @@
 import { TimeSpan } from "./TimeSpan";
 import { ClockTime } from "./ClockTime";
 import { TimeStamp } from "./TimeStamp";
+import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 const VOID0 = void 0;
 export class DateTime {
     toJsDate() {
@@ -188,6 +189,21 @@ export class DateTime {
         else if (strict)
             return false;
         return this.equals(other.toJsDate());
+    }
+    // https://msdn.microsoft.com/en-us/library/system.icomparable.compareto(v=vs.110).aspx
+    compareTo(other) {
+        if (!other)
+            throw new ArgumentNullException("other");
+        if (other == this)
+            return 0;
+        if (other instanceof DateTime) {
+            other = other._value;
+        }
+        const ms = this._value.getTime();
+        if (other instanceof Date) {
+            return ms - other.getTime();
+        }
+        return ms - other.toJsDate().getTime();
     }
     equivalent(other) {
         if (!other)

@@ -12,11 +12,13 @@ import {IDateTime} from "./IDateTime";
 import {Gregorian} from "./Calendars";
 import {ITimeQuantity} from "./ITimeQuantity";
 import {IEquatable} from "../IEquatable";
+import {IComparable} from "../IComparable";
+import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import Kind = DateTime.Kind;
 
 const VOID0:undefined = void 0;
 
-export class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime>
+export class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime>, IComparable<IDateTime>
 {
 	private readonly _value:Date;
 
@@ -310,6 +312,27 @@ export class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime>
 
 		return this.equals(other.toJsDate());
 
+	}
+
+	// https://msdn.microsoft.com/en-us/library/system.icomparable.compareto(v=vs.110).aspx
+	compareTo(other:IDateTime | Date):number
+	{
+		if(!other) throw new ArgumentNullException("other");
+		if(other==this) return 0;
+
+		if(other instanceof DateTime)
+		{
+			other = other._value;
+		}
+
+		const ms = this._value.getTime();
+
+		if(other instanceof Date)
+		{
+			return ms - other.getTime();
+		}
+
+		return ms - other.toJsDate().getTime();
 	}
 
 	equivalent(other:IDateTime | Date):boolean

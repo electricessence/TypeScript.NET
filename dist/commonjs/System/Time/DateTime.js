@@ -2,6 +2,7 @@
 var TimeSpan_1 = require("./TimeSpan");
 var ClockTime_1 = require("./ClockTime");
 var TimeStamp_1 = require("./TimeStamp");
+var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var VOID0 = void 0;
 var DateTime = (function () {
     function DateTime(value, kind) {
@@ -240,6 +241,21 @@ var DateTime = (function () {
         else if (strict)
             return false;
         return this.equals(other.toJsDate());
+    };
+    // https://msdn.microsoft.com/en-us/library/system.icomparable.compareto(v=vs.110).aspx
+    DateTime.prototype.compareTo = function (other) {
+        if (!other)
+            throw new ArgumentNullException_1.ArgumentNullException("other");
+        if (other == this)
+            return 0;
+        if (other instanceof DateTime) {
+            other = other._value;
+        }
+        var ms = this._value.getTime();
+        if (other instanceof Date) {
+            return ms - other.getTime();
+        }
+        return ms - other.toJsDate().getTime();
     };
     DateTime.prototype.equivalent = function (other) {
         if (!other)

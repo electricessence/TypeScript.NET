@@ -57,4 +57,12 @@ describe(".equals",()=>{
 		assert.ok(!x.equals(y));
 	});
 
+	it("should compare correctly",()=>{
+		const x = new DateTime(d1), y = new DateTime(d2), z = new DateTime(d2);
+		assert.ok(x.compareTo(y)<0);
+		assert.ok(y.compareTo(x)>0);
+		assert.ok(y.compareTo(z)==0);
+	});
+
+
 });
