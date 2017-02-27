@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -49,6 +50,5 @@ function extractKeyValue(item, to) {
     return to(key, value);
 }
 exports.extractKeyValue = extractKeyValue;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = extractKeyValue;
 //# sourceMappingURL=KeyValueExtract.js.map

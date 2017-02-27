@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -96,6 +97,5 @@ var ResolverBase = (function (_super) {
     return ResolverBase;
 }(DisposableBase_1.DisposableBase));
 exports.ResolverBase = ResolverBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ResolverBase;
 //# sourceMappingURL=ResolverBase.js.map

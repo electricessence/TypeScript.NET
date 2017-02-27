@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -10,7 +11,7 @@ var __extends = extends_1.default;
 var ReadOnlyCollectionBase = (function (_super) {
     __extends(ReadOnlyCollectionBase, _super);
     function ReadOnlyCollectionBase() {
-        return _super.apply(this, arguments) || this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     ReadOnlyCollectionBase.prototype.getCount = function () {
         return this._getCount();
@@ -35,6 +36,5 @@ var ReadOnlyCollectionBase = (function (_super) {
     return ReadOnlyCollectionBase;
 }(CollectionBase_1.CollectionBase));
 exports.ReadOnlyCollectionBase = ReadOnlyCollectionBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ReadOnlyCollectionBase;
 //# sourceMappingURL=ReadOnlyCollectionBase.js.map

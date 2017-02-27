@@ -34,7 +34,11 @@ export class IndexEnumerator extends EnumeratorBase {
             if (!len || isNaN(len))
                 return yielder.yieldBreak();
             const current = source.pointer;
-            source.pointer += source.step;
+            if (source.pointer == null)
+                source.pointer = 0; // should never happen but is in place to negate compiler warnings.
+            if (!source.step)
+                source.step = 1; // should never happen but is in place to negate compiler warnings.
+            source.pointer = source.pointer + source.step;
             return (current < len && current >= 0)
                 ? yielder.yieldReturn(source.source[current])
                 : yielder.yieldBreak();

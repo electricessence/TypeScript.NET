@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ObservableBase_1 = require("../Observable/ObservableBase");
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
@@ -43,6 +44,5 @@ var NodeJSWorker = (function (_super) {
     return NodeJSWorker;
 }(ObservableBase_1.ObservableBase));
 exports.NodeJSWorker = NodeJSWorker;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = NodeJSWorker;
 //# sourceMappingURL=NodeJSWorker.js.map

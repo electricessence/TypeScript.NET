@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
@@ -100,6 +101,5 @@ var TypeValidator = (function () {
     return TypeValidator;
 }());
 exports.TypeValidator = TypeValidator;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TypeValidator;
 //# sourceMappingURL=TypeValidator.js.map

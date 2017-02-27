@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
 /**
  * https://en.wikipedia.org/wiki/Insertion_sort

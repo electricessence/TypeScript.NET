@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -90,6 +91,5 @@ function wipe(map, depth) {
         }
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = HashSet;
 //# sourceMappingURL=HashSet.js.map

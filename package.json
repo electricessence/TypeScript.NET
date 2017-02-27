@@ -1,6 +1,6 @@
 {
   "name": "typescript-dotnet",
-  "version": "4.7.16",
+  "version": "4.8.0",
   "license": "MIT",
   "author": "electricessence <npm@electrified.net>",
   "description": "A JavaScript-Friendly .NET Based TypeScript Library.",
@@ -50,9 +50,9 @@
     "stream-to-promise-agnostic": "^1.0.3",
     "ts-node": "^1.6.1",
     "typedoc": "^0.4.5",
-    "typescript": "^2.1.1"
+    "typescript": "^2.2.1"
   },
   "optionalDependencies": {
-    "typescript": "^2.1.1"
+    "typescript": "^2.2.1"
   }
 }

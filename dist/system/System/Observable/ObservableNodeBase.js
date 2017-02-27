@@ -28,7 +28,7 @@ System.register(["./ObservableBase", "../../extends"], function (exports_1, cont
             ObservableNodeBase = (function (_super) {
                 __extends(ObservableNodeBase, _super);
                 function ObservableNodeBase() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 ObservableNodeBase.prototype.onNext = function (value) {
                     this._onNext(value);

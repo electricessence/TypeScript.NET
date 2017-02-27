@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 var root = "./tests/mocha/";
 function getFilesAt(path, ext) {

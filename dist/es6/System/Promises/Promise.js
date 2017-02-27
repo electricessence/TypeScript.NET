@@ -467,6 +467,7 @@ export class Promise extends Resolvable {
                     pools.PromiseCallbacks.recycle(c);
                     //let ex =
                     handleResolution(promise, result, onFulfilled);
+                    //if(!p && ex) console.error("Unhandled exception in onFulfilled:",ex);
                 }
                 o.length = 0;
             }
@@ -486,6 +487,7 @@ export class Promise extends Resolvable {
                 if (onRejected) {
                     //let ex =
                     handleResolution(promise, error, onRejected);
+                    //if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
                 }
                 else if (promise)
                     promise.reject(error);

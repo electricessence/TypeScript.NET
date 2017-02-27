@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -23,6 +24,5 @@ var ArgumentOutOfRangeException = (function (_super) {
     return ArgumentOutOfRangeException;
 }(ArgumentException_1.ArgumentException));
 exports.ArgumentOutOfRangeException = ArgumentOutOfRangeException;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ArgumentOutOfRangeException;
 //# sourceMappingURL=ArgumentOutOfRangeException.js.map

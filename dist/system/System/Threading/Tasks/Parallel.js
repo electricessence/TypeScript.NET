@@ -316,7 +316,7 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                 };
                 Parallel.prototype.ensureClampedMaxConcurrency = function () {
                     var maxConcurrency = this.options.maxConcurrency;
-                    if (maxConcurrency > MAX_WORKERS) {
+                    if (maxConcurrency && maxConcurrency > MAX_WORKERS) {
                         this.options.maxConcurrency = maxConcurrency = MAX_WORKERS;
                         console.warn("More than " + MAX_WORKERS + " workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to " + MAX_WORKERS + ".");
                     }

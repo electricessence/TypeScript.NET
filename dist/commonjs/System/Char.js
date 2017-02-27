@@ -4,6 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 function isWhiteSpace(ch) {
     return ch === 32 || (ch >= 9 && ch <= 13) || ch === 133 || ch === 160;
 }

@@ -27,7 +27,7 @@ System.register(["../Exception", "../../extends"], function (exports_1, context_
             SystemException = (function (_super) {
                 __extends(SystemException, _super);
                 function SystemException() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 /*
                     constructor(

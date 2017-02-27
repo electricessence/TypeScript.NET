@@ -22,7 +22,7 @@ System.register(["./SystemException", "../Text/Utility", "../../extends"], funct
                 __extends(ArgumentException, _super);
                 // For simplicity and consistency, lets stick with 1 signature.
                 function ArgumentException(paramName, message, innerException, beforeSealing) {
-                    var _this;
+                    var _this = this;
                     var pn = paramName ? ('{' + paramName + '} ') : '';
                     _this = _super.call(this, Utility_1.trim(pn + (message || '')), innerException, function (_) {
                         _.paramName = paramName;

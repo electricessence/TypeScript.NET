@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
 /**
  * Quick internalSort O(n log (n))

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -61,12 +62,13 @@ exports.contains = contains;
  * @returns {number}
  */
 function replace(array, old, newValue, max) {
+    if (max === void 0) { max = Infinity; }
     if (!array || !array.length || max === 0)
         return 0;
     if (max < 0)
         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('max', max, CBL0);
     if (!max)
-        max = Infinity;
+        max = Infinity; // just in case.
     var count = 0;
     for (var i = 0, len = array.length; i < len; i++) {
         if (array[i] === old) {
@@ -211,6 +213,7 @@ exports.removeIndex = removeIndex;
  * @returns {number} The number of times the value was found and removed.
  */
 function remove(array, value, max, equalityComparer) {
+    if (max === void 0) { max = Infinity; }
     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
     if (!array || !array.length || max === 0)
         return 0;

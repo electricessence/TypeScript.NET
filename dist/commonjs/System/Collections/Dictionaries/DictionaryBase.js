@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -184,6 +185,5 @@ var DictionaryBase = (function (_super) {
     return DictionaryBase;
 }(CollectionBase_1.CollectionBase));
 exports.DictionaryBase = DictionaryBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = DictionaryBase;
 //# sourceMappingURL=DictionaryBase.js.map

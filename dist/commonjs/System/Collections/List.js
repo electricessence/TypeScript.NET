@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -130,6 +131,5 @@ var List = (function (_super) {
     return List;
 }(CollectionBase_1.CollectionBase));
 exports.List = List;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = List;
 //# sourceMappingURL=List.js.map

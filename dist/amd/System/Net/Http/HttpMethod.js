@@ -1,2 +1,2 @@
-define(["require","exports"],function(E,T){"use strict";var t;!function(E){E.OPTIONS="OPTIONS",E.HEAD="HEAD",E.GET="GET",E.PUT="PUT",E.POST="POST",E.DELETE="DELETE",E.TRACE="TRACE",E.CONNECT="CONNECT"}(t=T.HttpMethod||(T.HttpMethod={}))});
+define(["require","exports"],function(e,E){"use strict";Object.defineProperty(E,"__esModule",{value:!0});var T;!function(e){e.OPTIONS="OPTIONS",e.HEAD="HEAD",e.GET="GET",e.PUT="PUT",e.POST="POST",e.DELETE="DELETE",e.TRACE="TRACE",e.CONNECT="CONNECT"}(T=E.HttpMethod||(E.HttpMethod={}))});
 //# sourceMappingURL=HttpMethod.js.map

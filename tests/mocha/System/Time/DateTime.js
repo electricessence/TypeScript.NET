@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
@@ -55,3 +56,4 @@ describe(".equals", function () {
         assert.ok(y.compareTo(z) == 0);
     });
 });
+//# sourceMappingURL=DateTime.js.map

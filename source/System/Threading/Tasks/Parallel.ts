@@ -427,7 +427,7 @@ export class Parallel
 	private ensureClampedMaxConcurrency():number
 	{
 		let {maxConcurrency} = this.options;
-		if(maxConcurrency>MAX_WORKERS)
+		if(maxConcurrency && maxConcurrency>MAX_WORKERS)
 		{
 			this.options.maxConcurrency = maxConcurrency = MAX_WORKERS;
 			console.warn(`More than ${MAX_WORKERS} workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to ${MAX_WORKERS}.`);

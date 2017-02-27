@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {ILazy} from "./ILazy";
 import {Func} from "./FunctionTypes";
 import {ResolverBase} from "./ResolverBase";
@@ -42,6 +41,11 @@ export class Lazy<T> extends ResolverBase<T> implements ILazy<T>
 		return this.equals(other) || this.value===other.value;
 	}
 
+	static create<T>(valueFactory:Func<T>, trapExceptions:boolean = false, allowReset:boolean = false)
+	{
+		return new Lazy<T>(valueFactory, trapExceptions, allowReset);
+	}
+
 }
 
 export class ResettableLazy<T> extends Lazy<T>
@@ -50,6 +54,11 @@ export class ResettableLazy<T> extends Lazy<T>
 	{
 		super(valueFactory, trapExceptions, true);
 		this._disposableObjectName = 'ResettableLazy';
+	}
+
+	static create<T>(valueFactory:Func<T>, trapExceptions:boolean = false)
+	{
+		return new ResettableLazy<T>(valueFactory, trapExceptions);
 	}
 }
 

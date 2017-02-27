@@ -4,12 +4,14 @@
  */
 import { areEqual, compare } from "../Compare";
 import { TimeUnit } from "./TimeUnit";
+import { Lazy } from "../Lazy";
 /**
  * This class provides a simple means for storing and calculating time quantities.
  */
 export class TimeQuantity {
     constructor(_quantity = 0) {
         this._quantity = _quantity;
+        this._resetTotal();
     }
     // Provides an overridable mechanism for extending this class.
     getTotalMilliseconds() {
@@ -38,24 +40,28 @@ export class TimeQuantity {
     compareTo(other) {
         return compare(this.getTotalMilliseconds(), other && other.total && other.total.milliseconds);
     }
+    _resetTotal() {
+        const t = this._total;
+        if (!t || t.isValueCreated) {
+            this._total = Lazy.create(() => {
+                const ms = this.getTotalMilliseconds();
+                return Object.freeze({
+                    ticks: ms * 10000 /* Millisecond */,
+                    milliseconds: ms,
+                    seconds: ms / 1000 /* Second */,
+                    minutes: ms / 60000 /* Minute */,
+                    hours: ms / 3600000 /* Hour */,
+                    days: ms / 86400000 /* Day */,
+                });
+            });
+        }
+    }
     /**
      * Returns an object with all units exposed as totals.
      * @returns {ITimeMeasurement}
      */
     get total() {
-        let t = this._total;
-        if (!t) {
-            const ms = this.getTotalMilliseconds();
-            this._total = t = Object.freeze({
-                ticks: ms * 10000 /* Millisecond */,
-                milliseconds: ms,
-                seconds: ms / 1000 /* Second */,
-                minutes: ms / 60000 /* Minute */,
-                hours: ms / 3600000 /* Hour */,
-                days: ms / 86400000 /* Day */,
-            });
-        }
-        return t;
+        return this._total.value;
     }
     /**
      * Returns the total amount of time measured in the requested TimeUnit.

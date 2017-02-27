@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 function default_1(thisArg, body) {
     var f, y, t;
     // sent can be applied via thisArgs.
@@ -91,6 +92,5 @@ function default_1(thisArg, body) {
         return { value: op[0] ? op[1] : void 0, done: true };
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = default_1;
 //# sourceMappingURL=generator.js.map

@@ -44,7 +44,7 @@ System.register(["./SubscribableBase", "../../extends"], function (exports_1, co
             ObservableBase = (function (_super) {
                 __extends(ObservableBase, _super);
                 function ObservableBase() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 ObservableBase.prototype._onNext = function (value) {
                     processAction(this._getSubscribers(), function (s) { s.onNext && s.onNext(value); });

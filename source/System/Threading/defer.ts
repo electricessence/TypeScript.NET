@@ -25,7 +25,7 @@ class Defer extends DeferBase
 {
 
 
-	constructor(task:Function, delay?:number, payload?:any)
+	constructor(task:Function, delay:number = 0, payload?:any)
 	{
 		super();
 		if(!(delay>0)) delay = 0; // covers undefined and null.

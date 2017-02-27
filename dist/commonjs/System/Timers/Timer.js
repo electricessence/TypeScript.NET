@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ObservableBase_1 = require("../Observable/ObservableBase");
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
@@ -137,6 +138,5 @@ var Timer = (function (_super) {
     };
     return Timer;
 }(ObservableBase_1.ObservableBase));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Timer;
 //# sourceMappingURL=Timer.js.map

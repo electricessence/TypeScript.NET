@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 var TaskHandler_1 = require("../../../../dist/commonjs/System/Threading/Tasks/TaskHandler");

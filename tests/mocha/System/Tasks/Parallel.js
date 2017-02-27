@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 var Stopwatch_1 = require("../../../../dist/commonjs/System/Diagnostics/Stopwatch");
@@ -10,7 +11,7 @@ it("should return the expected concatenation", function () {
 });
 function test(start) {
     var max = 3000000;
-    for (var i = start, stop = start + max; i < stop; i++) {
+    for (var i = start, stop_1 = start + max; i < stop_1; i++) {
         start += i;
     }
     return start;

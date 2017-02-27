@@ -84,11 +84,11 @@ export function replace<T>(
 	array:ArrayLikeWritable<T>,
 	old:T,
 	newValue:T,
-	max?:number):number
+	max:number = Infinity):number
 {
 	if(!array || !array.length || max===0) return 0;
 	if(max<0) throw new ArgumentOutOfRangeException('max', max, CBL0);
-	if(!max) max = Infinity;
+	if(!max) max = Infinity; // just in case.
 
 	let count = 0;
 
@@ -279,7 +279,7 @@ export function removeIndex<T>(array:T[], index:number):boolean
  * @returns {number} The number of times the value was found and removed.
  */
 export function remove<T>(
-	array:T[], value:T, max?:number,
+	array:T[], value:T, max:number = Infinity,
 	equalityComparer:EqualityComparison<T> = areEqual):number
 {
 	if(!array || !array.length || max===0) return 0;

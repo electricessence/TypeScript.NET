@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var TimeSpan_1 = require("./TimeSpan");
 var ClockTime_1 = require("./ClockTime");
 var TimeStamp_1 = require("./TimeStamp");
@@ -356,6 +357,5 @@ var DateTime = (function () {
 }());
 exports.DateTime = DateTime;
 Object.freeze(DateTime);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = DateTime;
 //# sourceMappingURL=DateTime.js.map

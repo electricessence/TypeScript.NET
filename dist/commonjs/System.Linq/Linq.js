@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Original: http://linqjs.codeplex.com/
@@ -51,7 +52,7 @@ function isNotNullOrUndefined(e) {
 var LinqFunctions = (function (_super) {
     __extends(LinqFunctions, _super);
     function LinqFunctions() {
-        return _super.apply(this, arguments) || this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     // noinspection JSMethodCanBeStatic
     LinqFunctions.prototype.Greater = function (a, b) {
@@ -137,6 +138,7 @@ var InfiniteLinqEnumerable = (function (_super) {
                         return yielder.yieldBreak();
                     if (actionResult !== 2 /* Skip */)
                         return yielder.yieldReturn(c);
+                    // If actionResult===2, then a signal for skip is received.
                 }
                 if (onComplete)
                     onComplete(index);
@@ -879,6 +881,7 @@ var InfiniteLinqEnumerable = (function (_super) {
                     enumerator = _.getEnumerator();
                 }
                 catch (e) {
+                    // Don't init...
                 }
             }, function (yielder) {
                 if (enumerator)
@@ -2462,6 +2465,5 @@ function enumerableFrom(source, additional) {
     }
     Enumerable.weave = weave;
 })(Enumerable = exports.Enumerable || (exports.Enumerable = {}));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Enumerable;
 //# sourceMappingURL=Linq.js.map

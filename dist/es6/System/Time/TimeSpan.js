@@ -7,6 +7,7 @@ import { Type } from "../Types";
 import { TimeUnit } from "./TimeUnit";
 import { ClockTime } from "./ClockTime";
 import { TimeQuantity } from "./TimeQuantity";
+import { Lazy } from "../Lazy";
 // noinspection JSUnusedLocalSymbols
 /**
  * TimeSpan expands on TimeQuantity to provide an class that is similar to .NET's TimeSpan including many useful static methods.
@@ -22,6 +23,8 @@ export class TimeSpan extends TimeQuantity {
         this.minutes = ms / 60000 /* Minute */;
         this.hours = ms / 3600000 /* Hour */;
         this.days = ms / 86400000 /* Day */;
+        this._time = Lazy.create(() => new ClockTime(this.getTotalMilliseconds()));
+        Object.freeze(this);
     }
     /**
      * Provides an standard interface for acquiring the total time.
@@ -32,11 +35,7 @@ export class TimeSpan extends TimeQuantity {
     }
     // Instead of the confusing getTotal versus unit name, expose a 'ClockTime' value which reports the individual components.
     get time() {
-        const _ = this;
-        let t = _._time;
-        if (!t)
-            _._time = t = new ClockTime(_.getTotalMilliseconds());
-        return t;
+        return this._time.value;
     }
     add(other) {
         if (Type.isNumber(other))

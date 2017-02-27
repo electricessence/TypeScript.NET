@@ -38,8 +38,8 @@ System.register(["./TimeUnit", "./TimeQuantity", "../../extends"], function (exp
                         return this._quantity;
                     },
                     set: function (v) {
-                        this._total = null;
                         this._quantity = v;
+                        this._resetTotal();
                     },
                     enumerable: true,
                     configurable: true

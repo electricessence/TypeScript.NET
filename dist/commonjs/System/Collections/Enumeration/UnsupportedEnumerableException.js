@@ -4,6 +4,7 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var SystemException_1 = require("../../Exceptions/SystemException");
 var extends_1 = require("../../../extends");
 // noinspection JSUnusedLocalSymbols
@@ -20,6 +21,5 @@ var UnsupportedEnumerableException = (function (_super) {
     return UnsupportedEnumerableException;
 }(SystemException_1.SystemException));
 exports.UnsupportedEnumerableException = UnsupportedEnumerableException;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = UnsupportedEnumerableException;
 //# sourceMappingURL=UnsupportedEnumerableException.js.map

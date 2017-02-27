@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -366,6 +367,5 @@ function assertValidDetached(node, propName) {
     if (node.next || node.previous)
         throw new InvalidOperationException_1.InvalidOperationException("Cannot add a node to a LinkedNodeList that is already linked.");
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = LinkedNodeList;
 //# sourceMappingURL=LinkedNodeList.js.map

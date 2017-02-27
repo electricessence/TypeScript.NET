@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Original: http://linqjs.codeplex.com/
@@ -184,6 +185,5 @@ var Dictionary = (function (_super) {
     return Dictionary;
 }(DictionaryBase_1.default));
 exports.Dictionary = Dictionary;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Dictionary;
 //# sourceMappingURL=Dictionary.js.map

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -26,6 +27,5 @@ var ArrayEnumerator = (function (_super) {
     return ArrayEnumerator;
 }(IndexEnumerator_1.IndexEnumerator));
 exports.ArrayEnumerator = ArrayEnumerator;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ArrayEnumerator;
 //# sourceMappingURL=ArrayEnumerator.js.map

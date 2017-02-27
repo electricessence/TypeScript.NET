@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
@@ -238,6 +239,5 @@ var Match = (function (_super) {
 exports.Match = Match;
 var EmptyMatch = new Match();
 EmptyMatch.freeze();
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Regex;
 //# sourceMappingURL=RegularExpressions.js.map

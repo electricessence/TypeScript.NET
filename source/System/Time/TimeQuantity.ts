@@ -9,6 +9,7 @@ import {IEquatable} from "../IEquatable";
 import {IComparable} from "../IComparable";
 import {ITimeQuantity} from "./ITimeQuantity";
 import {ITimeMeasurement} from "./ITimeMeasurement";
+import {Lazy} from "../Lazy";
 
 /**
  * This class provides a simple means for storing and calculating time quantities.
@@ -18,6 +19,7 @@ export class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITim
 
 	constructor(protected _quantity:number = 0)
 	{
+		this._resetTotal();
 	}
 
 	// Provides an overridable mechanism for extending this class.
@@ -55,9 +57,28 @@ export class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITim
 		return compare(this.getTotalMilliseconds(), other && other.total && other.total.milliseconds);
 	}
 
+	protected _total:Lazy<ITimeMeasurement>;
 
-	// Clear this value if sub-class values change.
-	protected _total:ITimeMeasurement | null;
+	protected _resetTotal():void
+	{
+		const t = this._total;
+		if(!t || t.isValueCreated)
+		{
+			this._total = Lazy.create(() =>
+			{
+				const ms = this.getTotalMilliseconds();
+
+				return <ITimeMeasurement>Object.freeze({
+					ticks: ms*Ticks.Per.Millisecond,
+					milliseconds: ms,
+					seconds: ms/Milliseconds.Per.Second,
+					minutes: ms/Milliseconds.Per.Minute,
+					hours: ms/Milliseconds.Per.Hour,
+					days: ms/Milliseconds.Per.Day,
+				});
+			});
+		}
+	}
 
 	/**
 	 * Returns an object with all units exposed as totals.
@@ -65,21 +86,7 @@ export class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITim
 	 */
 	get total():ITimeMeasurement
 	{
-		let t = this._total;
-		if(!t)
-		{
-			const ms = this.getTotalMilliseconds();
-
-			this._total = t = <ITimeMeasurement>Object.freeze({
-				ticks: ms*Ticks.Per.Millisecond,
-				milliseconds: ms,
-				seconds: ms/Milliseconds.Per.Second,
-				minutes: ms/Milliseconds.Per.Minute,
-				hours: ms/Milliseconds.Per.Hour,
-				days: ms/Milliseconds.Per.Day,
-			});
-		}
-		return t;
+		return this._total.value;
 	}
 
 	/**

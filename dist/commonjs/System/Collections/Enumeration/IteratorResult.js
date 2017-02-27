@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var VOID0 = void 0;
 var IteratorResult = (function () {
     function IteratorResult(value, index, done) {
@@ -22,6 +23,5 @@ exports.IteratorResult = IteratorResult;
 })(IteratorResult = exports.IteratorResult || (exports.IteratorResult = {}));
 exports.IteratorResult = IteratorResult;
 Object.freeze(IteratorResult);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = IteratorResult;
 //# sourceMappingURL=IteratorResult.js.map

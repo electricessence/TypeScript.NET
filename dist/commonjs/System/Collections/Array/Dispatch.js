@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -94,6 +95,5 @@ exports.dispatch = dispatch;
     }
     dispatch.mapped = mapped;
 })(dispatch = exports.dispatch || (exports.dispatch = {}));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = dispatch;
 //# sourceMappingURL=Dispatch.js.map

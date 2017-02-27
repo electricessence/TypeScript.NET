@@ -23,11 +23,17 @@ export class Lazy extends ResolverBase {
     valueEquals(other) {
         return this.equals(other) || this.value === other.value;
     }
+    static create(valueFactory, trapExceptions = false, allowReset = false) {
+        return new Lazy(valueFactory, trapExceptions, allowReset);
+    }
 }
 export class ResettableLazy extends Lazy {
     constructor(valueFactory, trapExceptions = false) {
         super(valueFactory, trapExceptions, true);
         this._disposableObjectName = 'ResettableLazy';
+    }
+    static create(valueFactory, trapExceptions = false) {
+        return new ResettableLazy(valueFactory, trapExceptions);
     }
 }
 export default Lazy;

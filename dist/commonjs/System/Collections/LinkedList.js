@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
@@ -321,6 +322,5 @@ var LinkedListNode = (function () {
     };
     return LinkedListNode;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = LinkedList;
 //# sourceMappingURL=LinkedList.js.map

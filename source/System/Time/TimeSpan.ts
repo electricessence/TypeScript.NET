@@ -11,6 +11,7 @@ import {Milliseconds, Ticks} from "./HowMany";
 import {ITimeMeasurement} from "./ITimeMeasurement";
 import {ITimeQuantity} from "./ITimeQuantity";
 import __extendsImport from "../../extends";
+import {Lazy} from "../Lazy";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -62,6 +63,10 @@ export class TimeSpan extends TimeQuantity implements ITimeMeasurement
 		this.minutes = ms/Milliseconds.Per.Minute;
 		this.hours = ms/Milliseconds.Per.Hour;
 		this.days = ms/Milliseconds.Per.Day;
+
+		this._time = Lazy.create(()=> new ClockTime(this.getTotalMilliseconds()));
+
+		Object.freeze(this);
 	}
 
 	/**
@@ -73,14 +78,11 @@ export class TimeSpan extends TimeQuantity implements ITimeMeasurement
 		return this;
 	}
 
-	private _time:ClockTime;
+	private _time:Lazy<ClockTime>;
 	// Instead of the confusing getTotal versus unit name, expose a 'ClockTime' value which reports the individual components.
 	get time():ClockTime
 	{
-		const _ = this;
-		let t = _._time;
-		if(!t) _._time = t = new ClockTime(_.getTotalMilliseconds());
-		return t;
+		return this._time.value;
 	}
 
 	add(other:ITimeQuantity):TimeSpan

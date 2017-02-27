@@ -27,7 +27,7 @@ System.register(["./SystemException", "../../extends"], function (exports_1, con
             NotImplementedException = (function (_super) {
                 __extends(NotImplementedException, _super);
                 function NotImplementedException() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 NotImplementedException.prototype.getName = function () {
                     return NAME;

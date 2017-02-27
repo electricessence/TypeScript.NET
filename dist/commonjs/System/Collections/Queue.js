@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
@@ -253,6 +254,5 @@ function assertIntegerZeroOrGreater(value, property) {
     Integer_1.Integer.assert(value, property);
     return assertZeroOrGreater(value, property);
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Queue;
 //# sourceMappingURL=Queue.js.map

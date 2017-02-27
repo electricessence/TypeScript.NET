@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 var TextUtility = require("../../../../dist/commonjs/System/Text/Utility");

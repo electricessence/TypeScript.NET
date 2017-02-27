@@ -36,13 +36,13 @@ export abstract class TaskHandlerBase extends DisposableBase implements ICancell
 	 * Schedules/Reschedules triggering the task.
 	 * @param defer Optional time to wait until triggering.
 	 */
-	start(defer?:number):void
+	start(defer:number = 0):void
 	{
 		this.throwIfDisposed();
 
 		this.cancel();
 		this._status = TaskStatus.WaitingToRun;
-		if(!(defer>0)) defer = 0;
+		if(!(defer>0)) defer = 0;  // A negation is used to catch edge cases.
 		if(isFinite(<any>defer))
 			this._timeoutId = setTimeout(TaskHandlerBase._handler, defer, this);
 	}

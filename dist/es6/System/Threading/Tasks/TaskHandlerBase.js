@@ -22,12 +22,12 @@ export class TaskHandlerBase extends DisposableBase {
      * Schedules/Reschedules triggering the task.
      * @param defer Optional time to wait until triggering.
      */
-    start(defer) {
+    start(defer = 0) {
         this.throwIfDisposed();
         this.cancel();
         this._status = 1 /* WaitingToRun */;
         if (!(defer > 0))
-            defer = 0;
+            defer = 0; // A negation is used to catch edge cases.
         if (isFinite(defer))
             this._timeoutId = setTimeout(TaskHandlerBase._handler, defer, this);
     }

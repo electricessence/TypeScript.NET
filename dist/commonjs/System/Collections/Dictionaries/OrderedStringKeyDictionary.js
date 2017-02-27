@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -81,6 +82,5 @@ var OrderedStringKeyDictionary = (function (_super) {
     return OrderedStringKeyDictionary;
 }(StringKeyDictionary_1.StringKeyDictionary));
 exports.OrderedStringKeyDictionary = OrderedStringKeyDictionary;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = OrderedStringKeyDictionary;
 //# sourceMappingURL=OrderedStringKeyDictionary.js.map

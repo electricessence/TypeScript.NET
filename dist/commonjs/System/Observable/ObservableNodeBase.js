@@ -5,6 +5,7 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
 var ObservableBase_1 = require("./ObservableBase");
 var extends_1 = require("../../extends");
@@ -13,7 +14,7 @@ var __extends = extends_1.default;
 var ObservableNodeBase = (function (_super) {
     __extends(ObservableNodeBase, _super);
     function ObservableNodeBase() {
-        return _super.apply(this, arguments) || this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     ObservableNodeBase.prototype.onNext = function (value) {
         this._onNext(value);
@@ -27,6 +28,5 @@ var ObservableNodeBase = (function (_super) {
     return ObservableNodeBase;
 }(ObservableBase_1.default));
 exports.ObservableNodeBase = ObservableNodeBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ObservableNodeBase;
 //# sourceMappingURL=ObservableNodeBase.js.map

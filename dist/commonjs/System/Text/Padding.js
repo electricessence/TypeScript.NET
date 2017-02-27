@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../Types");
 var Utility_1 = require("./Utility");
 var SPACE = ' ';

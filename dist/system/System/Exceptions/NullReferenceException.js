@@ -27,7 +27,7 @@ System.register(["./SystemException", "../../extends"], function (exports_1, con
             NullReferenceException = (function (_super) {
                 __extends(NullReferenceException, _super);
                 function NullReferenceException() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 NullReferenceException.prototype.getName = function () {
                     return NAME;

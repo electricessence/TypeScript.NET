@@ -312,7 +312,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             Resolvable = (function (_super) {
                 __extends(Resolvable, _super);
                 function Resolvable() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 Resolvable.prototype.thenSynchronous = function (onFulfilled, onRejected) {
                     this.throwIfDisposed();
@@ -567,6 +567,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                                 pools.PromiseCallbacks.recycle(c);
                                 //let ex =
                                 handleResolution(promise, result, onFulfilled);
+                                //if(!p && ex) console.error("Unhandled exception in onFulfilled:",ex);
                             }
                             o.length = 0;
                         }
@@ -587,6 +588,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                             if (onRejected) {
                                 //let ex =
                                 handleResolution(promise, error, onRejected);
+                                //if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
                             }
                             else if (promise)
                                 promise.reject(error);
@@ -637,7 +639,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             ArrayPromise = (function (_super) {
                 __extends(ArrayPromise, _super);
                 function ArrayPromise() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 /**
                  * Simplifies the use of a map function on an array of results when the source is assured to be an array.
@@ -803,43 +805,6 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 // 	else c.dispose();
                 // }
                 var PromiseCallbacks;
-                // export module pending
-                // {
-                //
-                //
-                // 	var pool:ObjectPool<Promise<any>>;
-                //
-                // 	function getPool()
-                // 	{
-                // 		return pool || (pool = new ObjectPool<Promise<any>>(40, factory, c=>c.dispose()));
-                // 	}
-                //
-                // 	function factory():Promise<any>
-                // 	{
-                // 		return new Promise();
-                // 	}
-                //
-                // 	export function get():Promise<any>
-                // 	{
-                // 		var p:any = getPool().take();
-                // 		p.__wasDisposed = false;
-                // 		p._state = Promise.State.Pending;
-                // 		return p;
-                // 	}
-                //
-                // 	export function recycle<T>(c:Promise<T>):void
-                // 	{
-                // 		if(c) getPool().add(c);
-                // 	}
-                //
-                // }
-                //
-                // export function recycle<T>(c:PromiseBase<T>):void
-                // {
-                // 	if(!c) return;
-                // 	if(c instanceof Promise && c.constructor==Promise) pending.recycle(c);
-                // 	else c.dispose();
-                // }
                 (function (PromiseCallbacks) {
                     var pool;
                     //noinspection JSUnusedLocalSymbols
@@ -879,11 +844,6 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                  * If a promise is disposed the value will be undefined which will also evaluate (promise.state)==false.
                  */
                 var State;
-                /**
-                 * The state of a promise.
-                 * https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
-                 * If a promise is disposed the value will be undefined which will also evaluate (promise.state)==false.
-                 */
                 (function (State) {
                     State[State["Pending"] = 0] = "Pending";
                     State[State["Fulfilled"] = 1] = "Fulfilled";

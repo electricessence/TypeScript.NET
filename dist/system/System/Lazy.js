@@ -52,6 +52,11 @@ System.register(["./ResolverBase", "../extends"], function (exports_1, context_1
                 Lazy.prototype.valueEquals = function (other) {
                     return this.equals(other) || this.value === other.value;
                 };
+                Lazy.create = function (valueFactory, trapExceptions, allowReset) {
+                    if (trapExceptions === void 0) { trapExceptions = false; }
+                    if (allowReset === void 0) { allowReset = false; }
+                    return new Lazy(valueFactory, trapExceptions, allowReset);
+                };
                 return Lazy;
             }(ResolverBase_1.ResolverBase));
             exports_1("Lazy", Lazy);
@@ -63,6 +68,10 @@ System.register(["./ResolverBase", "../extends"], function (exports_1, context_1
                     _this._disposableObjectName = 'ResettableLazy';
                     return _this;
                 }
+                ResettableLazy.create = function (valueFactory, trapExceptions) {
+                    if (trapExceptions === void 0) { trapExceptions = false; }
+                    return new ResettableLazy(valueFactory, trapExceptions);
+                };
                 return ResettableLazy;
             }(Lazy));
             exports_1("ResettableLazy", ResettableLazy);

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
@@ -104,6 +105,5 @@ var StringBuilder = (function () {
     return StringBuilder;
 }());
 exports.StringBuilder = StringBuilder;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = StringBuilder;
 //# sourceMappingURL=StringBuilder.js.map

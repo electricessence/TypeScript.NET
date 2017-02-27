@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Based upon .NET source.
@@ -83,6 +84,5 @@ var SubscribableBase = (function (_super) {
     return SubscribableBase;
 }(DisposableBase_1.DisposableBase));
 exports.SubscribableBase = SubscribableBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SubscribableBase;
 //# sourceMappingURL=SubscribableBase.js.map

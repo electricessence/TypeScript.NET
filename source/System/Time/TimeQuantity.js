@@ -5,7 +5,7 @@
     else if (typeof define === 'function' && define.amd) {
         define(dependencies, factory);
     }
-})(["require", "exports", "../Compare", "./TimeUnit"], function (require, exports) {
+})(["require", "exports", "../Compare", "./TimeUnit", "../Lazy"], function (require, exports) {
     "use strict";
     /*!
      * @author electricessence / https://github.com/electricessence/
@@ -13,6 +13,7 @@
      */
     var Compare_1 = require("../Compare");
     var TimeUnit_1 = require("./TimeUnit");
+    var Lazy_1 = require("../Lazy");
     /**
      * This class provides a simple means for storing and calculating time quantities.
      */
@@ -20,6 +21,7 @@
         function TimeQuantity(_quantity) {
             if (_quantity === void 0) { _quantity = 0; }
             this._quantity = _quantity;
+            this._resetTotal();
         }
         // Provides an overridable mechanism for extending this class.
         TimeQuantity.prototype.getTotalMilliseconds = function () {
@@ -52,16 +54,13 @@
         TimeQuantity.prototype.compareTo = function (other) {
             return Compare_1.compare(this.getTotalMilliseconds(), other && other.total && other.total.milliseconds);
         };
-        Object.defineProperty(TimeQuantity.prototype, "total", {
-            /**
-             * Returns an object with all units exposed as totals.
-             * @returns {ITimeMeasurement}
-             */
-            get: function () {
-                var t = this._total;
-                if (!t) {
-                    var ms = this.getTotalMilliseconds();
-                    this._total = t = Object.freeze({
+        TimeQuantity.prototype._resetTotal = function () {
+            var _this = this;
+            var t = this._total;
+            if (!t || t.isValueCreated) {
+                this._total = Lazy_1.Lazy.create(function () {
+                    var ms = _this.getTotalMilliseconds();
+                    return Object.freeze({
                         ticks: ms * 10000 /* Millisecond */,
                         milliseconds: ms,
                         seconds: ms / 1000 /* Second */,
@@ -69,8 +68,16 @@
                         hours: ms / 3600000 /* Hour */,
                         days: ms / 86400000 /* Day */,
                     });
-                }
-                return t;
+                });
+            }
+        };
+        Object.defineProperty(TimeQuantity.prototype, "total", {
+            /**
+             * Returns an object with all units exposed as totals.
+             * @returns {ITimeMeasurement}
+             */
+            get: function () {
+                return this._total.value;
             },
             enumerable: true,
             configurable: true

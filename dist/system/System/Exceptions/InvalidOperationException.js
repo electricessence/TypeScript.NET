@@ -27,7 +27,7 @@ System.register(["./SystemException", "../../extends"], function (exports_1, con
             InvalidOperationException = (function (_super) {
                 __extends(InvalidOperationException, _super);
                 function InvalidOperationException() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 InvalidOperationException.prototype.getName = function () {
                     return NAME;

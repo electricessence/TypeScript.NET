@@ -1,2 +1,2 @@
-define(["require","exports"],function(r,e){"use strict";function t(r){for(var e=r.length;--e;){var t=Math.floor(Math.random()*(e+1)),n=r[e];r[e]=r[t],r[t]=n}return r}e.shuffle=t});
+define(["require","exports"],function(e,r){"use strict";function t(e){for(var r=e.length;--r;){var t=Math.floor(Math.random()*(r+1)),n=e[r];e[r]=e[t],e[t]=n}return e}Object.defineProperty(r,"__esModule",{value:!0}),r.shuffle=t});
 //# sourceMappingURL=shuffle.js.map

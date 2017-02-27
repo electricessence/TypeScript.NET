@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -10,7 +11,7 @@ var __extends = extends_1.default;
 var IndexEnumerator = (function (_super) {
     __extends(IndexEnumerator, _super);
     function IndexEnumerator(sourceFactory) {
-        var _this;
+        var _this = this;
         var source;
         _this = _super.call(this, function () {
             source = sourceFactory();
@@ -40,7 +41,11 @@ var IndexEnumerator = (function (_super) {
             if (!len || isNaN(len))
                 return yielder.yieldBreak();
             var current = source.pointer;
-            source.pointer += source.step;
+            if (source.pointer == null)
+                source.pointer = 0; // should never happen but is in place to negate compiler warnings.
+            if (!source.step)
+                source.step = 1; // should never happen but is in place to negate compiler warnings.
+            source.pointer = source.pointer + source.step;
             return (current < len && current >= 0)
                 ? yielder.yieldReturn(source.source[current])
                 : yielder.yieldBreak();
@@ -55,6 +60,5 @@ var IndexEnumerator = (function (_super) {
     return IndexEnumerator;
 }(EnumeratorBase_1.EnumeratorBase));
 exports.IndexEnumerator = IndexEnumerator;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = IndexEnumerator;
 //# sourceMappingURL=IndexEnumerator.js.map

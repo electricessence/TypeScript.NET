@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Randomize array element order in-place.
  * Using Durstenfeld shuffle algorithm.

@@ -3,6 +3,7 @@ import { IEquatable } from "../IEquatable";
 import { IComparable } from "../IComparable";
 import { ITimeQuantity } from "./ITimeQuantity";
 import { ITimeMeasurement } from "./ITimeMeasurement";
+import { Lazy } from "../Lazy";
 /**
  * This class provides a simple means for storing and calculating time quantities.
  */
@@ -27,7 +28,8 @@ export declare class TimeQuantity implements IEquatable<ITimeQuantity>, ICompara
      * @returns {CompareResult}
      */
     compareTo(other: ITimeQuantity): number;
-    protected _total: ITimeMeasurement | null;
+    protected _total: Lazy<ITimeMeasurement>;
+    protected _resetTotal(): void;
     /**
      * Returns an object with all units exposed as totals.
      * @returns {ITimeMeasurement}

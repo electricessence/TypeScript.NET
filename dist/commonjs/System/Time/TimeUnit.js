@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var TimeUnit;
 (function (TimeUnit) {
     TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
@@ -61,6 +62,5 @@ var TimeUnit;
     TimeUnit.assertValid = assertValid;
 })(TimeUnit = exports.TimeUnit || (exports.TimeUnit = {}));
 Object.freeze(TimeUnit);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TimeUnit;
 //# sourceMappingURL=TimeUnit.js.map

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Originally based upon .NET source but with many additions and improvements.
@@ -9,6 +10,7 @@ var TimeUnit_1 = require("./TimeUnit");
 var ClockTime_1 = require("./ClockTime");
 var TimeQuantity_1 = require("./TimeQuantity");
 var extends_1 = require("../../extends");
+var Lazy_1 = require("../Lazy");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 /**
@@ -19,7 +21,7 @@ var TimeSpan = (function (_super) {
     // In .NET the default type is Ticks, but for JavaScript, we will use Milliseconds.
     function TimeSpan(value, units) {
         if (units === void 0) { units = TimeUnit_1.TimeUnit.Milliseconds; }
-        var _this;
+        var _this = this;
         var ms = TimeUnit_1.TimeUnit.toMilliseconds(value, units);
         _this = _super.call(this, ms) || this;
         _this.ticks = ms * 10000 /* Millisecond */;
@@ -28,6 +30,8 @@ var TimeSpan = (function (_super) {
         _this.minutes = ms / 60000 /* Minute */;
         _this.hours = ms / 3600000 /* Hour */;
         _this.days = ms / 86400000 /* Day */;
+        _this._time = Lazy_1.Lazy.create(function () { return new ClockTime_1.ClockTime(_this.getTotalMilliseconds()); });
+        Object.freeze(_this);
         return _this;
     }
     Object.defineProperty(TimeSpan.prototype, "total", {
@@ -44,11 +48,7 @@ var TimeSpan = (function (_super) {
     Object.defineProperty(TimeSpan.prototype, "time", {
         // Instead of the confusing getTotal versus unit name, expose a 'ClockTime' value which reports the individual components.
         get: function () {
-            var _ = this;
-            var t = _._time;
-            if (!t)
-                _._time = t = new ClockTime_1.ClockTime(_.getTotalMilliseconds());
-            return t;
+            return this._time.value;
         },
         enumerable: true,
         configurable: true
@@ -95,6 +95,5 @@ var TimeSpan = (function (_super) {
 }(TimeQuantity_1.TimeQuantity));
 exports.TimeSpan = TimeSpan;
 var timeSpanZero;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TimeSpan;
 //# sourceMappingURL=TimeSpan.js.map

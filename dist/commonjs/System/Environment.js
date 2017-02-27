@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // Need to spoof this so WebPack doesn't panic (warnings).
 var r;
 try {

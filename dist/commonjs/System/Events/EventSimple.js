@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
@@ -44,6 +45,5 @@ var EventSimple = (function () {
     };
     return EventSimple;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = EventSimple;
 //# sourceMappingURL=EventSimple.js.map

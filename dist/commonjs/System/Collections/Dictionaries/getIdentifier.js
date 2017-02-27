@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../../Types");
 var VOID0 = void 0;
 var NULL = "null", GET_SYMBOL = "getSymbol", GET_HASH_CODE = "getHashCode";
@@ -29,6 +30,5 @@ function getIdentifier(obj, throwIfUnknown) {
         : Object.prototype.toString.call(obj);
 }
 exports.getIdentifier = getIdentifier;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = getIdentifier;
 //# sourceMappingURL=getIdentifier.js.map

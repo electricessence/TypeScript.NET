@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
@@ -147,6 +148,5 @@ var LazyPromise = (function (_super) {
     return LazyPromise;
 }(Promise_1.Promise));
 exports.LazyPromise = LazyPromise;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = LazyPromise;
 //# sourceMappingURL=LazyPromise.js.map

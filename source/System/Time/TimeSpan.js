@@ -5,7 +5,7 @@
     else if (typeof define === 'function' && define.amd) {
         define(dependencies, factory);
     }
-})(["require", "exports", "../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../../extends"], function (require, exports) {
+})(["require", "exports", "../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../../extends", "../Lazy"], function (require, exports) {
     "use strict";
     /*!
      * @author electricessence / https://github.com/electricessence/
@@ -17,6 +17,7 @@
     var ClockTime_1 = require("./ClockTime");
     var TimeQuantity_1 = require("./TimeQuantity");
     var extends_1 = require("../../extends");
+    var Lazy_1 = require("../Lazy");
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     /**
@@ -36,6 +37,8 @@
             _this.minutes = ms / 60000 /* Minute */;
             _this.hours = ms / 3600000 /* Hour */;
             _this.days = ms / 86400000 /* Day */;
+            _this._time = Lazy_1.Lazy.create(function () { return new ClockTime_1.ClockTime(_this.getTotalMilliseconds()); });
+            Object.freeze(_this);
             return _this;
         }
         Object.defineProperty(TimeSpan.prototype, "total", {
@@ -52,11 +55,7 @@
         Object.defineProperty(TimeSpan.prototype, "time", {
             // Instead of the confusing getTotal versus unit name, expose a 'ClockTime' value which reports the individual components.
             get: function () {
-                var _ = this;
-                var t = _._time;
-                if (!t)
-                    _._time = t = new ClockTime_1.ClockTime(_.getTotalMilliseconds());
-                return t;
+                return this._time.value;
             },
             enumerable: true,
             configurable: true

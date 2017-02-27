@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
@@ -294,7 +295,7 @@ exports.PromiseBase = PromiseBase;
 var Resolvable = (function (_super) {
     __extends(Resolvable, _super);
     function Resolvable() {
-        return _super.apply(this, arguments) || this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     Resolvable.prototype.thenSynchronous = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
@@ -549,6 +550,7 @@ var Promise = (function (_super) {
                     pools.PromiseCallbacks.recycle(c);
                     //let ex =
                     handleResolution(promise, result, onFulfilled);
+                    //if(!p && ex) console.error("Unhandled exception in onFulfilled:",ex);
                 }
                 o.length = 0;
             }
@@ -569,6 +571,7 @@ var Promise = (function (_super) {
                 if (onRejected) {
                     //let ex =
                     handleResolution(promise, error, onRejected);
+                    //if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
                 }
                 else if (promise)
                     promise.reject(error);
@@ -619,7 +622,7 @@ exports.Promise = Promise;
 var ArrayPromise = (function (_super) {
     __extends(ArrayPromise, _super);
     function ArrayPromise() {
-        return _super.apply(this, arguments) || this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     /**
      * Simplifies the use of a map function on an array of results when the source is assured to be an array.
@@ -1076,6 +1079,5 @@ var pools;
     Promise.createFrom = createFrom;
 })(Promise = exports.Promise || (exports.Promise = {}));
 exports.Promise = Promise;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Promise;
 //# sourceMappingURL=Promise.js.map

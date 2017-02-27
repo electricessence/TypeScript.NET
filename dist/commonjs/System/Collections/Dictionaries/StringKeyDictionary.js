@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -12,7 +13,7 @@ var VOID0 = void 0;
 var StringKeyDictionary = (function (_super) {
     __extends(StringKeyDictionary, _super);
     function StringKeyDictionary() {
-        var _this = _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
         _this._count = 0;
         _this._map = {};
         return _this;
@@ -112,6 +113,5 @@ var StringKeyDictionary = (function (_super) {
     return StringKeyDictionary;
 }(DictionaryBase_1.DictionaryBase));
 exports.StringKeyDictionary = StringKeyDictionary;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = StringKeyDictionary;
 //# sourceMappingURL=StringKeyDictionary.js.map

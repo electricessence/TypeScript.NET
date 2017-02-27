@@ -53,13 +53,13 @@ export function contains(array, item, equalityComparer = areEqual) {
  * @param max
  * @returns {number}
  */
-export function replace(array, old, newValue, max) {
+export function replace(array, old, newValue, max = Infinity) {
     if (!array || !array.length || max === 0)
         return 0;
     if (max < 0)
         throw new ArgumentOutOfRangeException('max', max, CBL0);
     if (!max)
-        max = Infinity;
+        max = Infinity; // just in case.
     let count = 0;
     for (let i = 0, len = array.length; i < len; i++) {
         if (array[i] === old) {
@@ -192,7 +192,7 @@ export function removeIndex(array, index) {
  * @param {function?} equalityComparer
  * @returns {number} The number of times the value was found and removed.
  */
-export function remove(array, value, max, equalityComparer = areEqual) {
+export function remove(array, value, max = Infinity, equalityComparer = areEqual) {
     if (!array || !array.length || max === 0)
         return 0;
     if (max < 0)

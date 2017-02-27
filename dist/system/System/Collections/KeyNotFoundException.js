@@ -27,7 +27,7 @@ System.register(["../Exceptions/SystemException", "../../extends"], function (ex
             KeyNotFoundException = (function (_super) {
                 __extends(KeyNotFoundException, _super);
                 function KeyNotFoundException() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 KeyNotFoundException.prototype.getName = function () {
                     return NAME;

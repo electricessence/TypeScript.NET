@@ -21,7 +21,7 @@ System.register(["../../Compare", "./DictionaryBase", "../../../extends"], funct
             StringKeyDictionary = (function (_super) {
                 __extends(StringKeyDictionary, _super);
                 function StringKeyDictionary() {
-                    var _this = _super.apply(this, arguments) || this;
+                    var _this = _super !== null && _super.apply(this, arguments) || this;
                     _this._count = 0;
                     _this._map = {};
                     return _this;

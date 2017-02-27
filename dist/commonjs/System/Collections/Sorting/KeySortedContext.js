@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -32,6 +33,5 @@ var KeySortedContext = (function (_super) {
     return KeySortedContext;
 }(SortContext_1.SortContext));
 exports.KeySortedContext = KeySortedContext;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = KeySortedContext;
 //# sourceMappingURL=KeySortedContext.js.map

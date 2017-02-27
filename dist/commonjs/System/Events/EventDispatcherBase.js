@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -128,6 +129,5 @@ var EventDispatcherBase = (function (_super) {
     };
     return EventDispatcherBase;
 }(DisposableBase_1.DisposableBase));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = EventDispatcherBase;
 //# sourceMappingURL=EventDispatcherBase.js.map

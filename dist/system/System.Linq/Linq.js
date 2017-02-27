@@ -157,7 +157,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
             LinqFunctions = (function (_super) {
                 __extends(LinqFunctions, _super);
                 function LinqFunctions() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 // noinspection JSMethodCanBeStatic
                 LinqFunctions.prototype.Greater = function (a, b) {
@@ -239,6 +239,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                                     return yielder.yieldBreak();
                                 if (actionResult !== 2 /* Skip */)
                                     return yielder.yieldReturn(c);
+                                // If actionResult===2, then a signal for skip is received.
                             }
                             if (onComplete)
                                 onComplete(index);
@@ -981,6 +982,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                                 enumerator = _.getEnumerator();
                             }
                             catch (e) {
+                                // Don't init...
                             }
                         }, function (yielder) {
                             if (enumerator)

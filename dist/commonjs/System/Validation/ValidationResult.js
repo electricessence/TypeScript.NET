@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var valid = new ValidationResult(true);
 /**
  * A class for generating responses to validation.
@@ -48,6 +49,5 @@ var ValidationResult = (function () {
     };
     return ValidationResult;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ValidationResult;
 //# sourceMappingURL=ValidationResult.js.map

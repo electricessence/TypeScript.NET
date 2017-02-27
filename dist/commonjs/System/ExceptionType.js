@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*
  * Since the 'Error' type in JavaScript is simply {name:string, message:string},
  * Exception types provide a means for identifying and properly reusing 'name'.

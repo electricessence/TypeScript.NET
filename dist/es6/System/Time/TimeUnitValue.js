@@ -20,8 +20,8 @@ export default class TimeUnitValue extends TimeQuantity {
         return this._quantity;
     }
     set value(v) {
-        this._total = null;
         this._quantity = v;
+        this._resetTotal();
     }
     getTotalMilliseconds() {
         return TimeUnit.toMilliseconds(this._quantity, this._units);

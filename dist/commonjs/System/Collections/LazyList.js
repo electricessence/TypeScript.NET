@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ReadOnlyCollectionBase_1 = require("./ReadOnlyCollectionBase");
 var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
 var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");

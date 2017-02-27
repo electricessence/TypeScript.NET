@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var Scheme;
 (function (Scheme) {
     /**
@@ -66,6 +67,5 @@ var Scheme;
     Scheme.isValid = isValid;
 })(Scheme = exports.Scheme || (exports.Scheme = {}));
 Object.freeze(Scheme);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Scheme;
 //# sourceMappingURL=Scheme.js.map

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _SYMBOL = "symbol", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { }, LENGTH = "length";
 // Only used for primitives.
 var typeInfoRegistry = {};
@@ -355,6 +356,5 @@ exports.Type = Type;
     Type.isArrayLike = isArrayLike;
 })(Type = exports.Type || (exports.Type = {}));
 Object.freeze(Type);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Type;
 //# sourceMappingURL=Types.js.map

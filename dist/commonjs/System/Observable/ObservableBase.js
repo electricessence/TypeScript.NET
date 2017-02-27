@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Based upon .NET source.
@@ -13,7 +14,7 @@ var __extends = extends_1.default;
 var ObservableBase = (function (_super) {
     __extends(ObservableBase, _super);
     function ObservableBase() {
-        return _super.apply(this, arguments) || this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     ObservableBase.prototype._onNext = function (value) {
         processAction(this._getSubscribers(), function (s) { s.onNext && s.onNext(value); });
@@ -71,6 +72,5 @@ function processAction(observers, handler) {
             };
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ObservableBase;
 //# sourceMappingURL=ObservableBase.js.map

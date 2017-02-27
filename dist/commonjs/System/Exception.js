@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var NAME = 'Exception';
 /**
  * Represents errors that occur during application execution.
@@ -65,6 +66,5 @@ var Exception = (function () {
     return Exception;
 }());
 exports.Exception = Exception;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Exception;
 //# sourceMappingURL=Exception.js.map

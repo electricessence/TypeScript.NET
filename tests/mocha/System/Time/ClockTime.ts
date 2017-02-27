@@ -7,7 +7,7 @@ import {Random} from "../../../../dist/commonjs/System/Random";
 
 
 const
-	days        = Random.integer(365),
+	days        = Random.integer(364) + 1,
 	hour        = Random.integer(24),
 	minute      = Random.integer(60),
 	second      = Random.integer(60),
@@ -20,6 +20,7 @@ const c2 = new ClockTime(
 	+ minute*Milliseconds.Per.Minute
 	+ second*Milliseconds.Per.Second
 	+ millisecond);
+
 describe(".", ()=>
 {
 	it('should match constructor values', ()=>
@@ -37,5 +38,18 @@ describe(".", ()=>
 		assert.equal(c2.minute, minute);
 		assert.equal(c2.second, second);
 		assert.equal(c2.millisecond, millisecond);
+	});
+});
+
+describe(".equals", ()=>
+{
+	it('should not be equal', ()=>
+	{
+		assert.ok(!c1.equals(c2));
+	});
+
+	it('c1 should be less than c2', ()=>
+	{
+		assert.ok(c1.compareTo(c2)<0);
 	});
 });

@@ -21,6 +21,7 @@
     var Defer = (function (_super) {
         __extends(Defer, _super);
         function Defer(task, delay, payload) {
+            if (delay === void 0) { delay = 0; }
             var _this = _super.call(this) || this;
             if (!(delay > 0))
                 delay = 0; // covers undefined and null.

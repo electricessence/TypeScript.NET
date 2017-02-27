@@ -31,8 +31,8 @@ class TimeUnitValue extends TimeQuantity
 
 	set value(v:number)
 	{
-		this._total = null;
 		this._quantity = v;
+		this._resetTotal();
 	}
 
 	getTotalMilliseconds():number

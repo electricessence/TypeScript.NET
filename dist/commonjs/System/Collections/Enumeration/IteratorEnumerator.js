@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var SimpleEnumerableBase_1 = require("./SimpleEnumerableBase");
 var extends_1 = require("../../../extends");
 // noinspection JSUnusedLocalSymbols
@@ -47,6 +48,5 @@ var IteratorEnumerator = (function (_super) {
     return IteratorEnumerator;
 }(SimpleEnumerableBase_1.SimpleEnumerableBase));
 exports.IteratorEnumerator = IteratorEnumerator;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = IteratorEnumerator;
 //# sourceMappingURL=IteratorEnumerator.js.map

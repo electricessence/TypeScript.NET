@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -32,11 +33,12 @@ var TaskHandlerBase = (function (_super) {
      * @param defer Optional time to wait until triggering.
      */
     TaskHandlerBase.prototype.start = function (defer) {
+        if (defer === void 0) { defer = 0; }
         this.throwIfDisposed();
         this.cancel();
         this._status = 1 /* WaitingToRun */;
         if (!(defer > 0))
-            defer = 0;
+            defer = 0; // A negation is used to catch edge cases.
         if (isFinite(defer))
             this._timeoutId = setTimeout(TaskHandlerBase._handler, defer, this);
     };
@@ -83,6 +85,5 @@ var TaskHandlerBase = (function (_super) {
     return TaskHandlerBase;
 }(DisposableBase_1.DisposableBase));
 exports.TaskHandlerBase = TaskHandlerBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TaskHandlerBase;
 //# sourceMappingURL=TaskHandlerBase.js.map

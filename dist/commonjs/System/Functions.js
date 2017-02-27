@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Can be used statically or extended for varying different reusable function signatures.
  */
@@ -60,6 +61,5 @@ var rootFunctions = new Functions();
 exports.Functions = Functions;
 // Make this read only.  Should still allow for sub-classing since extra methods are added to prototype.
 Object.freeze(Functions);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Functions;
 //# sourceMappingURL=Functions.js.map

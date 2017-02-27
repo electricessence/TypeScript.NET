@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.
  */
@@ -50,6 +51,5 @@ var Subscription = (function () {
     return Subscription;
 }());
 exports.Subscription = Subscription;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Subscription;
 //# sourceMappingURL=Subscription.js.map

@@ -17,7 +17,7 @@ System.register(["./CollectionBase", "../../extends"], function (exports_1, cont
             ReadOnlyCollectionBase = (function (_super) {
                 __extends(ReadOnlyCollectionBase, _super);
                 function ReadOnlyCollectionBase() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 ReadOnlyCollectionBase.prototype.getCount = function () {
                     return this._getCount();

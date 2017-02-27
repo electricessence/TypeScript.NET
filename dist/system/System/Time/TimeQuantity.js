@@ -1,7 +1,7 @@
-System.register(["../Compare", "./TimeUnit"], function (exports_1, context_1) {
+System.register(["../Compare", "./TimeUnit", "../Lazy"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, TimeUnit_1, TimeQuantity;
+    var Compare_1, TimeUnit_1, Lazy_1, TimeQuantity;
     return {
         setters: [
             function (Compare_1_1) {
@@ -9,6 +9,9 @@ System.register(["../Compare", "./TimeUnit"], function (exports_1, context_1) {
             },
             function (TimeUnit_1_1) {
                 TimeUnit_1 = TimeUnit_1_1;
+            },
+            function (Lazy_1_1) {
+                Lazy_1 = Lazy_1_1;
             }
         ],
         execute: function () {
@@ -19,6 +22,7 @@ System.register(["../Compare", "./TimeUnit"], function (exports_1, context_1) {
                 function TimeQuantity(_quantity) {
                     if (_quantity === void 0) { _quantity = 0; }
                     this._quantity = _quantity;
+                    this._resetTotal();
                 }
                 // Provides an overridable mechanism for extending this class.
                 TimeQuantity.prototype.getTotalMilliseconds = function () {
@@ -51,16 +55,13 @@ System.register(["../Compare", "./TimeUnit"], function (exports_1, context_1) {
                 TimeQuantity.prototype.compareTo = function (other) {
                     return Compare_1.compare(this.getTotalMilliseconds(), other && other.total && other.total.milliseconds);
                 };
-                Object.defineProperty(TimeQuantity.prototype, "total", {
-                    /**
-                     * Returns an object with all units exposed as totals.
-                     * @returns {ITimeMeasurement}
-                     */
-                    get: function () {
-                        var t = this._total;
-                        if (!t) {
-                            var ms = this.getTotalMilliseconds();
-                            this._total = t = Object.freeze({
+                TimeQuantity.prototype._resetTotal = function () {
+                    var _this = this;
+                    var t = this._total;
+                    if (!t || t.isValueCreated) {
+                        this._total = Lazy_1.Lazy.create(function () {
+                            var ms = _this.getTotalMilliseconds();
+                            return Object.freeze({
                                 ticks: ms * 10000 /* Millisecond */,
                                 milliseconds: ms,
                                 seconds: ms / 1000 /* Second */,
@@ -68,8 +69,16 @@ System.register(["../Compare", "./TimeUnit"], function (exports_1, context_1) {
                                 hours: ms / 3600000 /* Hour */,
                                 days: ms / 86400000 /* Day */,
                             });
-                        }
-                        return t;
+                        });
+                    }
+                };
+                Object.defineProperty(TimeQuantity.prototype, "total", {
+                    /**
+                     * Returns an object with all units exposed as totals.
+                     * @returns {ITimeMeasurement}
+                     */
+                    get: function () {
+                        return this._total.value;
                     },
                     enumerable: true,
                     configurable: true

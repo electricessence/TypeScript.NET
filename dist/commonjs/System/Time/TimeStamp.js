@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -43,6 +44,5 @@ var TimeStamp = (function () {
     return TimeStamp;
 }());
 exports.TimeStamp = TimeStamp;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TimeStamp;
 //# sourceMappingURL=TimeStamp.js.map

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
@@ -13,6 +14,7 @@ var DeferBase = (function () {
 var Defer = (function (_super) {
     __extends(Defer, _super);
     function Defer(task, delay, payload) {
+        if (delay === void 0) { delay = 0; }
         var _this = _super.call(this) || this;
         if (!(delay > 0))
             delay = 0; // covers undefined and null.
@@ -73,6 +75,5 @@ function interval(task, interval, count) {
     return new DeferInterval(task, interval, count);
 }
 exports.interval = interval;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = defer;
 //# sourceMappingURL=defer.js.map

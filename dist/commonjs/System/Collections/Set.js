@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -20,6 +21,5 @@ var Set = (function (_super) {
     return Set;
 }(HashSet_1.HashSet));
 exports.Set = Set;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Set;
 //# sourceMappingURL=Set.js.map

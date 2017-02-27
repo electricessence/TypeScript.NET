@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 function sum(source, ignoreNaN) {
     if (ignoreNaN === void 0) { ignoreNaN = false; }
     if (!source || !source.length)

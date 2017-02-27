@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -301,7 +302,7 @@ var Parallel = (function () {
     };
     Parallel.prototype.ensureClampedMaxConcurrency = function () {
         var maxConcurrency = this.options.maxConcurrency;
-        if (maxConcurrency > MAX_WORKERS) {
+        if (maxConcurrency && maxConcurrency > MAX_WORKERS) {
             this.options.maxConcurrency = maxConcurrency = MAX_WORKERS;
             console.warn("More than " + MAX_WORKERS + " workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to " + MAX_WORKERS + ".");
         }
@@ -409,7 +410,6 @@ var Parallel = (function () {
     return Parallel;
 }());
 exports.Parallel = Parallel;
-Object.defineProperty(exports, "__esModule", { value: true });
 //
 //
 // 	private _spawnReduceWorker<N>(

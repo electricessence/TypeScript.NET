@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var DisposableBase_1 = require("../../Disposable/DisposableBase");
 var HttpMethod_1 = require("./HttpMethod");
@@ -63,6 +64,5 @@ var HttpRequestFactory = (function (_super) {
     return HttpRequestFactory;
 }(DisposableBase_1.DisposableBase));
 exports.HttpRequestFactory = HttpRequestFactory;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = HttpRequestFactory;
 //# sourceMappingURL=HttpRequestFactory.js.map

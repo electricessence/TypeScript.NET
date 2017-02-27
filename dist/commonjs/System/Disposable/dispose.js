@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -176,6 +177,5 @@ function disposeTheseInternal(disposables, trapExceptions, index) {
     }
     return exceptions;
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = dispose;
 //# sourceMappingURL=dispose.js.map

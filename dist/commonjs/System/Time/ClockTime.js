@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Originally based upon .NET source but with many additions and improvements.
@@ -76,6 +77,5 @@ function pluralize(value, label) {
         label += "s";
     return label;
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ClockTime;
 //# sourceMappingURL=ClockTime.js.map

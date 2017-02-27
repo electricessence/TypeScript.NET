@@ -122,6 +122,7 @@ export class InfiniteLinqEnumerable extends DisposableBase {
                         return yielder.yieldBreak();
                     if (actionResult !== 2 /* Skip */)
                         return yielder.yieldReturn(c);
+                    // If actionResult===2, then a signal for skip is received.
                 }
                 if (onComplete)
                     onComplete(index);
@@ -847,6 +848,7 @@ export class InfiniteLinqEnumerable extends DisposableBase {
                     enumerator = _.getEnumerator();
                 }
                 catch (e) {
+                    // Don't init...
                 }
             }, (yielder) => {
                 if (enumerator)

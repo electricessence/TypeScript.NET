@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Used by TypeScript to extend classes before ES6.
  *
@@ -21,6 +22,5 @@ function default_1(d, b) {
         ? Object.create(b)
         : (__.prototype = b.prototype, new __());
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = default_1;
 //# sourceMappingURL=extends.js.map

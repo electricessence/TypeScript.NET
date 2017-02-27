@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -159,6 +160,5 @@ else {
         setTimeout(flush, 0);
     };
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = deferImmediate;
 //# sourceMappingURL=deferImmediate.js.map

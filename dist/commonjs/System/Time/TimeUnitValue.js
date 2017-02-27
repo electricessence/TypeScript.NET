@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -26,8 +27,8 @@ var TimeUnitValue = (function (_super) {
             return this._quantity;
         },
         set: function (v) {
-            this._total = null;
             this._quantity = v;
+            this._resetTotal();
         },
         enumerable: true,
         configurable: true
@@ -53,7 +54,6 @@ var TimeUnitValue = (function (_super) {
     };
     return TimeUnitValue;
 }(TimeQuantity_1.TimeQuantity));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TimeUnitValue;
 function getUnitQuantityFrom(q, units) {
     return TimeUnit_1.TimeUnit.fromMilliseconds(q.getTotalMilliseconds(), units);

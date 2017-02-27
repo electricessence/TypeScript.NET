@@ -1,2 +1,2 @@
-define(["require","exports","../../Integer"],function(e,n,r){"use strict";function t(e){r.Integer.assert(e,"length");var n;return e>65536?n=new Array(e):(n=[],n.length=e),n}n.initialize=t});
+define(["require","exports","../../Integer"],function(e,r,t){"use strict";function n(e){t.Integer.assert(e,"length");var r;return e>65536?r=new Array(e):(r=[],r.length=e),r}Object.defineProperty(r,"__esModule",{value:!0}),r.initialize=n});
 //# sourceMappingURL=initialize.js.map
