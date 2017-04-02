@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase", "../../extends"], factory);
     }
-})(["require", "exports", "../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase", "../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
@@ -329,7 +331,6 @@
         };
         return LinkedListNode;
     }());
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = LinkedList;
 });
 //# sourceMappingURL=LinkedList.js.map

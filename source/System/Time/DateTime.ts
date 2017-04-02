@@ -462,7 +462,7 @@ export class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime>
 // Extend DateTime's usefulness.
 export module DateTime
 {
-	export const enum Kind {
+	export enum Kind {
 		Unspecified,
 		Local,
 		Utc,

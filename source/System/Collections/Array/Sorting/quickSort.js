@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../../../Exceptions/ArgumentNullException"], factory);
     }
-})(["require", "exports", "../../../Exceptions/ArgumentNullException"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
     /**
      * Quick internalSort O(n log (n))

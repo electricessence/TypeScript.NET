@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "./EnumeratorBase", "../../../extends"], factory);
     }
-})(["require", "exports", "./EnumeratorBase", "../../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -18,7 +20,7 @@
     var IndexEnumerator = (function (_super) {
         __extends(IndexEnumerator, _super);
         function IndexEnumerator(sourceFactory) {
-            var _this;
+            var _this = this;
             var source;
             _this = _super.call(this, function () {
                 source = sourceFactory();
@@ -67,7 +69,6 @@
         return IndexEnumerator;
     }(EnumeratorBase_1.EnumeratorBase));
     exports.IndexEnumerator = IndexEnumerator;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = IndexEnumerator;
 });
 //# sourceMappingURL=IndexEnumerator.js.map

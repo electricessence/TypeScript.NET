@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../../extends"], factory);
     }
-})(["require", "exports", "../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var extends_1 = require("../../extends");
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
@@ -52,7 +54,6 @@
         };
         return EventSimple;
     }());
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = EventSimple;
 });
 //# sourceMappingURL=EventSimple.js.map

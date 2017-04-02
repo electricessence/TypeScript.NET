@@ -143,7 +143,7 @@ export declare class DateTime implements ICalendarDate, IDateTime, IEquatable<ID
     static fromCalendarDate(year: number, month: number, day: number): DateTime;
 }
 export declare module DateTime {
-    const enum Kind {
+    enum Kind {
         Unspecified = 0,
         Local = 1,
         Utc = 2,

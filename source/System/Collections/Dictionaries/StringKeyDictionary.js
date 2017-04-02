@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../../Compare", "./DictionaryBase", "../../../extends"], factory);
     }
-})(["require", "exports", "../../Compare", "./DictionaryBase", "../../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -20,7 +22,7 @@
     var StringKeyDictionary = (function (_super) {
         __extends(StringKeyDictionary, _super);
         function StringKeyDictionary() {
-            var _this = _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             _this._count = 0;
             _this._map = {};
             return _this;
@@ -120,7 +122,6 @@
         return StringKeyDictionary;
     }(DictionaryBase_1.DictionaryBase));
     exports.StringKeyDictionary = StringKeyDictionary;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = StringKeyDictionary;
 });
 //# sourceMappingURL=StringKeyDictionary.js.map

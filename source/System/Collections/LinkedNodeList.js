@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase", "../../extends"], factory);
     }
-})(["require", "exports", "../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase", "../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -374,7 +376,6 @@
         if (node.next || node.previous)
             throw new InvalidOperationException_1.InvalidOperationException("Cannot add a node to a LinkedNodeList that is already linked.");
     }
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = LinkedNodeList;
 });
 //# sourceMappingURL=LinkedNodeList.js.map

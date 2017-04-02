@@ -7,7 +7,7 @@ export class DateTime {
     toJsDate() {
         return new Date(this._value.getTime()); // return a clone.
     }
-    constructor(value = new Date(), kind = 1 /* Local */) {
+    constructor(value = new Date(), kind = DateTime.Kind.Local) {
         this._kind = kind;
         if (value instanceof DateTime) {
             this._value = value.toJsDate();
@@ -164,10 +164,10 @@ export class DateTime {
      */
     get toUniversalTime() {
         const _ = this;
-        if (_._kind != 1 /* Local */)
+        if (_._kind != DateTime.Kind.Local)
             return new DateTime(_, _._kind);
         const d = _._value;
-        return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), 2 /* Utc */);
+        return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), DateTime.Kind.Utc);
     }
     equals(other, strict = false) {
         if (!other)
@@ -289,6 +289,15 @@ export class DateTime {
         return new DateTime(new Date(year, month - 1, day));
     }
 }
+// Extend DateTime's usefulness.
+(function (DateTime) {
+    var Kind;
+    (function (Kind) {
+        Kind[Kind["Unspecified"] = 0] = "Unspecified";
+        Kind[Kind["Local"] = 1] = "Local";
+        Kind[Kind["Utc"] = 2] = "Utc";
+    })(Kind = DateTime.Kind || (DateTime.Kind = {}));
+})(DateTime || (DateTime = {}));
 Object.freeze(DateTime);
 export default DateTime;
 //# sourceMappingURL=DateTime.js.map

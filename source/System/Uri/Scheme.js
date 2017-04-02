@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports"], factory);
     }
-})(["require", "exports"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var Scheme;
     (function (Scheme) {
         /**
@@ -74,7 +76,6 @@
         Scheme.isValid = isValid;
     })(Scheme = exports.Scheme || (exports.Scheme = {}));
     Object.freeze(Scheme);
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Scheme;
 });
 //# sourceMappingURL=Scheme.js.map

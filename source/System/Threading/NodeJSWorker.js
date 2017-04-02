@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../Observable/ObservableBase", "../../extends"], factory);
     }
-})(["require", "exports", "../Observable/ObservableBase", "../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var ObservableBase_1 = require("../Observable/ObservableBase");
     var extends_1 = require("../../extends");
     // noinspection JSUnusedLocalSymbols
@@ -51,7 +53,6 @@
         return NodeJSWorker;
     }(ObservableBase_1.ObservableBase));
     exports.NodeJSWorker = NodeJSWorker;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = NodeJSWorker;
 });
 //# sourceMappingURL=NodeJSWorker.js.map

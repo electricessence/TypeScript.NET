@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../Collections/LinkedNodeList", "../Disposable/dispose", "./Subscription", "../Disposable/DisposableBase", "../../extends"], factory);
     }
-})(["require", "exports", "../Collections/LinkedNodeList", "../Disposable/dispose", "./Subscription", "../Disposable/DisposableBase", "../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Based upon .NET source.
@@ -91,7 +93,6 @@
         return SubscribableBase;
     }(DisposableBase_1.DisposableBase));
     exports.SubscribableBase = SubscribableBase;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = SubscribableBase;
 });
 //# sourceMappingURL=SubscribableBase.js.map

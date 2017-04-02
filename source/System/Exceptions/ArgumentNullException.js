@@ -3,15 +3,17 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "./ArgumentException", "../../extends"], factory);
     }
-})(["require", "exports", "./ArgumentException", "../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var ArgumentException_1 = require("./ArgumentException");
     var extends_1 = require("../../extends");
     // noinspection JSUnusedLocalSymbols
@@ -29,7 +31,6 @@
         return ArgumentNullException;
     }(ArgumentException_1.ArgumentException));
     exports.ArgumentNullException = ArgumentNullException;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ArgumentNullException;
 });
 //# sourceMappingURL=ArgumentNullException.js.map

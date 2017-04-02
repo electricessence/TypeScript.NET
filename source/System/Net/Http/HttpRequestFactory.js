@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../../Exceptions/ArgumentNullException", "../../Disposable/DisposableBase", "./HttpMethod", "../../Uri/Uri", "../../../extends"], factory);
     }
-})(["require", "exports", "../../Exceptions/ArgumentNullException", "../../Disposable/DisposableBase", "./HttpMethod", "../../Uri/Uri", "../../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
     var DisposableBase_1 = require("../../Disposable/DisposableBase");
     var HttpMethod_1 = require("./HttpMethod");
@@ -71,7 +73,6 @@
         return HttpRequestFactory;
     }(DisposableBase_1.DisposableBase));
     exports.HttpRequestFactory = HttpRequestFactory;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = HttpRequestFactory;
 });
 //# sourceMappingURL=HttpRequestFactory.js.map

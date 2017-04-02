@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./CollectionBase", "../../extends", "./Enumeration/EnumeratorBase"], factory);
     }
-})(["require", "exports", "../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./CollectionBase", "../../extends", "./Enumeration/EnumeratorBase"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -138,7 +140,6 @@
         return List;
     }(CollectionBase_1.CollectionBase));
     exports.List = List;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = List;
 });
 //# sourceMappingURL=List.js.map

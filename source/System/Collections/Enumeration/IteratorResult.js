@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports"], factory);
     }
-})(["require", "exports"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var VOID0 = void 0;
     var IteratorResult = (function () {
         function IteratorResult(value, index, done) {
@@ -30,7 +32,6 @@
     })(IteratorResult = exports.IteratorResult || (exports.IteratorResult = {}));
     exports.IteratorResult = IteratorResult;
     Object.freeze(IteratorResult);
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = IteratorResult;
 });
 //# sourceMappingURL=IteratorResult.js.map

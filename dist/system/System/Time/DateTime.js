@@ -22,7 +22,7 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp", "../Exceptions/Argu
             DateTime = (function () {
                 function DateTime(value, kind) {
                     if (value === void 0) { value = new Date(); }
-                    if (kind === void 0) { kind = 1 /* Local */; }
+                    if (kind === void 0) { kind = DateTime.Kind.Local; }
                     this._kind = kind;
                     if (value instanceof DateTime) {
                         this._value = value.toJsDate();
@@ -227,10 +227,10 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp", "../Exceptions/Argu
                      */
                     get: function () {
                         var _ = this;
-                        if (_._kind != 1 /* Local */)
+                        if (_._kind != DateTime.Kind.Local)
                             return new DateTime(_, _._kind);
                         var d = _._value;
-                        return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), 2 /* Utc */);
+                        return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), DateTime.Kind.Utc);
                     },
                     enumerable: true,
                     configurable: true
@@ -369,6 +369,16 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp", "../Exceptions/Argu
                 };
                 return DateTime;
             }());
+            exports_1("DateTime", DateTime);
+            // Extend DateTime's usefulness.
+            (function (DateTime) {
+                var Kind;
+                (function (Kind) {
+                    Kind[Kind["Unspecified"] = 0] = "Unspecified";
+                    Kind[Kind["Local"] = 1] = "Local";
+                    Kind[Kind["Utc"] = 2] = "Utc";
+                })(Kind = DateTime.Kind || (DateTime.Kind = {}));
+            })(DateTime || (DateTime = {}));
             exports_1("DateTime", DateTime);
             Object.freeze(DateTime);
             exports_1("default", DateTime);

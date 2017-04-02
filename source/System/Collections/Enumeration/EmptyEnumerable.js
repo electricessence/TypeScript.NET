@@ -2,15 +2,17 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "./EmptyEnumerator"], factory);
     }
-})(["require", "exports", "./EmptyEnumerator"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var EmptyEnumerator_1 = require("./EmptyEnumerator");
     var EmptyEnumerable = (function () {
         function EmptyEnumerable() {

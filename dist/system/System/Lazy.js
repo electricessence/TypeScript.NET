@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["./ResolverBase", "../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -15,10 +11,7 @@ System.register(["./ResolverBase", "../extends"], function (exports_1, context_1
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {/*!
-             * @author electricessence / https://github.com/electricessence/
-             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-             */
+        execute: function () {
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             // We need a non-resettable lazy to ensure it can be passed safely around.

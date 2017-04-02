@@ -1,15 +1,16 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "./Sorting/createComparer", "./Sorting/quickSort"], factory);
     }
-})(["require", "exports", "./Sorting/createComparer", "./Sorting/quickSort"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var createComparer_1 = require("./Sorting/createComparer");
     exports.createComparer = createComparer_1.createComparer;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = createComparer_1.createComparer;
     exports.by = createComparer_1.createComparer;
     var quickSort_1 = require("./Sorting/quickSort");

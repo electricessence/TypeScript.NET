@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "./Promise", "../Threading/defer", "../Exceptions/ArgumentNullException", "../../extends"], factory);
     }
-})(["require", "exports", "./Promise", "../Threading/defer", "../Exceptions/ArgumentNullException", "../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Licensing: MIT
@@ -155,7 +157,6 @@
         return LazyPromise;
     }(Promise_1.Promise));
     exports.LazyPromise = LazyPromise;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = LazyPromise;
 });
 //# sourceMappingURL=LazyPromise.js.map

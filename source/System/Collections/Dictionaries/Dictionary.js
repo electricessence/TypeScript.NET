@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../../Compare", "../../Types", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./getIdentifier", "./DictionaryBase", "../../../extends"], factory);
     }
-})(["require", "exports", "../../Compare", "../../Types", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./getIdentifier", "./DictionaryBase", "../../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Original: http://linqjs.codeplex.com/
@@ -192,7 +194,6 @@
         return Dictionary;
     }(DictionaryBase_1.default));
     exports.Dictionary = Dictionary;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Dictionary;
 });
 //# sourceMappingURL=Dictionary.js.map

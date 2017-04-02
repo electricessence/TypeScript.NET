@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports"], factory);
     }
-})(["require", "exports"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.
      */
@@ -63,7 +65,6 @@
         return Subscription;
     }());
     exports.Subscription = Subscription;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Subscription;
 });
 //# sourceMappingURL=Subscription.js.map

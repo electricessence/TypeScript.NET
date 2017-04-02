@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], factory);
     }
-})(["require", "exports", "../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
@@ -261,7 +263,6 @@
         Integer_1.Integer.assert(value, property);
         return assertZeroOrGreater(value, property);
     }
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Queue;
 });
 //# sourceMappingURL=Queue.js.map

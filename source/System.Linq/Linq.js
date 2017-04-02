@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../System/Compare", "../System/Collections/Array/copy", "../System/Collections/Array/Compare", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../System/Collections/Enumeration/IteratorEnumerator", "../System/Collections/Array/initialize", "../System/Random", "../System/Collections/Enumeration/InfiniteEnumerator", "../extends", "../System/Collections/LazyList"], factory);
     }
-})(["require", "exports", "../System/Compare", "../System/Collections/Array/copy", "../System/Collections/Array/Compare", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../System/Collections/Enumeration/IteratorEnumerator", "../System/Collections/Array/initialize", "../System/Random", "../System/Collections/Enumeration/InfiniteEnumerator", "../extends", "../System/Collections/LazyList"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Original: http://linqjs.codeplex.com/
@@ -59,7 +61,7 @@
     var LinqFunctions = (function (_super) {
         __extends(LinqFunctions, _super);
         function LinqFunctions() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         // noinspection JSMethodCanBeStatic
         LinqFunctions.prototype.Greater = function (a, b) {
@@ -145,6 +147,7 @@
                             return yielder.yieldBreak();
                         if (actionResult !== 2 /* Skip */)
                             return yielder.yieldReturn(c);
+                        // If actionResult===2, then a signal for skip is received.
                     }
                     if (onComplete)
                         onComplete(index);
@@ -887,6 +890,7 @@
                         enumerator = _.getEnumerator();
                     }
                     catch (e) {
+                        // Don't init...
                     }
                 }, function (yielder) {
                     if (enumerator)
@@ -2476,7 +2480,6 @@
         }
         Enumerable.weave = weave;
     })(Enumerable = exports.Enumerable || (exports.Enumerable = {}));
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Enumerable;
 });
 //# sourceMappingURL=Linq.js.map

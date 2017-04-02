@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../Types", "../Threading/deferImmediate", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "../Disposable/ObjectPool", "../Collections/Set", "../Threading/defer", "../Disposable/ObjectDisposedException", "../../extends"], factory);
     }
-})(["require", "exports", "../Types", "../Threading/deferImmediate", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "../Disposable/ObjectPool", "../Collections/Set", "../Threading/defer", "../Disposable/ObjectDisposedException", "../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Licensing: MIT
@@ -302,7 +304,7 @@
     var Resolvable = (function (_super) {
         __extends(Resolvable, _super);
         function Resolvable() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         Resolvable.prototype.thenSynchronous = function (onFulfilled, onRejected) {
             this.throwIfDisposed();
@@ -557,6 +559,7 @@
                         pools.PromiseCallbacks.recycle(c);
                         //let ex =
                         handleResolution(promise, result, onFulfilled);
+                        //if(!p && ex) console.error("Unhandled exception in onFulfilled:",ex);
                     }
                     o.length = 0;
                 }
@@ -577,6 +580,7 @@
                     if (onRejected) {
                         //let ex =
                         handleResolution(promise, error, onRejected);
+                        //if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
                     }
                     else if (promise)
                         promise.reject(error);
@@ -627,7 +631,7 @@
     var ArrayPromise = (function (_super) {
         __extends(ArrayPromise, _super);
         function ArrayPromise() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         /**
          * Simplifies the use of a map function on an array of results when the source is assured to be an array.
@@ -1084,7 +1088,6 @@
         Promise.createFrom = createFrom;
     })(Promise = exports.Promise || (exports.Promise = {}));
     exports.Promise = Promise;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Promise;
 });
 //# sourceMappingURL=Promise.js.map

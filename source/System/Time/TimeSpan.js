@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../../extends", "../Lazy"], factory);
     }
-})(["require", "exports", "../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../../extends", "../Lazy"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Originally based upon .NET source but with many additions and improvements.
@@ -28,7 +30,7 @@
         // In .NET the default type is Ticks, but for JavaScript, we will use Milliseconds.
         function TimeSpan(value, units) {
             if (units === void 0) { units = TimeUnit_1.TimeUnit.Milliseconds; }
-            var _this;
+            var _this = this;
             var ms = TimeUnit_1.TimeUnit.toMilliseconds(value, units);
             _this = _super.call(this, ms) || this;
             _this.ticks = ms * 10000 /* Millisecond */;
@@ -102,7 +104,6 @@
     }(TimeQuantity_1.TimeQuantity));
     exports.TimeSpan = TimeSpan;
     var timeSpanZero;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = TimeSpan;
 });
 //# sourceMappingURL=TimeSpan.js.map

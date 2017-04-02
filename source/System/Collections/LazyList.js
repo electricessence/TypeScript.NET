@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "./ReadOnlyCollectionBase", "../Exceptions/ArgumentOutOfRangeException", "./Enumeration/EnumeratorBase", "../../extends", "../Integer"], factory);
     }
-})(["require", "exports", "./ReadOnlyCollectionBase", "../Exceptions/ArgumentOutOfRangeException", "./Enumeration/EnumeratorBase", "../../extends", "../Integer"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var ReadOnlyCollectionBase_1 = require("./ReadOnlyCollectionBase");
     var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
     var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");

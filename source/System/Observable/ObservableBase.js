@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "./SubscribableBase", "../../extends"], factory);
     }
-})(["require", "exports", "./SubscribableBase", "../../extends"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /*!
      * @author electricessence / https://github.com/electricessence/
      * Based upon .NET source.
@@ -21,7 +23,7 @@
     var ObservableBase = (function (_super) {
         __extends(ObservableBase, _super);
         function ObservableBase() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         ObservableBase.prototype._onNext = function (value) {
             processAction(this._getSubscribers(), function (s) { s.onNext && s.onNext(value); });
@@ -79,7 +81,6 @@
                 };
         }
     }
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ObservableBase;
 });
 //# sourceMappingURL=ObservableBase.js.map

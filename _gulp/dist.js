@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "gulp-typescript-helper", "./constants/Paths", "gulp", "./constants/TaskNames", "../_utility/file-promise", "../_utility/stream-to-promise", "../source/System/Promises/Promise", "../source/awaiter", "../source/generator"], factory);
     }
-})(["require", "exports", "gulp-typescript-helper", "./constants/Paths", "gulp", "./constants/TaskNames", "../_utility/file-promise", "../_utility/stream-to-promise", "../source/System/Promises/Promise", "../source/awaiter", "../source/generator"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var gulp_typescript_helper_1 = require("gulp-typescript-helper");
     var PATH = require("./constants/Paths");
     var gulp = require("gulp");

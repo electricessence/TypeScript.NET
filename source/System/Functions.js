@@ -2,15 +2,17 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports"], factory);
     }
-})(["require", "exports"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Can be used statically or extended for varying different reusable function signatures.
      */
@@ -68,7 +70,6 @@
     exports.Functions = Functions;
     // Make this read only.  Should still allow for sub-classing since extra methods are added to prototype.
     Object.freeze(Functions);
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Functions;
 });
 //# sourceMappingURL=Functions.js.map

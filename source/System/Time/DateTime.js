@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "./TimeSpan", "./ClockTime", "./TimeStamp", "../Exceptions/ArgumentNullException"], factory);
     }
-})(["require", "exports", "./TimeSpan", "./ClockTime", "./TimeStamp", "../Exceptions/ArgumentNullException"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var TimeSpan_1 = require("./TimeSpan");
     var ClockTime_1 = require("./ClockTime");
     var TimeStamp_1 = require("./TimeStamp");
@@ -15,7 +17,7 @@
     var DateTime = (function () {
         function DateTime(value, kind) {
             if (value === void 0) { value = new Date(); }
-            if (kind === void 0) { kind = 1 /* Local */; }
+            if (kind === void 0) { kind = DateTime.Kind.Local; }
             this._kind = kind;
             if (value instanceof DateTime) {
                 this._value = value.toJsDate();
@@ -220,10 +222,10 @@
              */
             get: function () {
                 var _ = this;
-                if (_._kind != 1 /* Local */)
+                if (_._kind != DateTime.Kind.Local)
                     return new DateTime(_, _._kind);
                 var d = _._value;
-                return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), 2 /* Utc */);
+                return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), DateTime.Kind.Utc);
             },
             enumerable: true,
             configurable: true
@@ -363,8 +365,17 @@
         return DateTime;
     }());
     exports.DateTime = DateTime;
+    // Extend DateTime's usefulness.
+    (function (DateTime) {
+        var Kind;
+        (function (Kind) {
+            Kind[Kind["Unspecified"] = 0] = "Unspecified";
+            Kind[Kind["Local"] = 1] = "Local";
+            Kind[Kind["Utc"] = 2] = "Utc";
+        })(Kind = DateTime.Kind || (DateTime.Kind = {}));
+    })(DateTime = exports.DateTime || (exports.DateTime = {}));
+    exports.DateTime = DateTime;
     Object.freeze(DateTime);
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DateTime;
 });
 //# sourceMappingURL=DateTime.js.map

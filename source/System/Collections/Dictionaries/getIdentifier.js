@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "../../Types"], factory);
     }
-})(["require", "exports", "../../Types"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var Types_1 = require("../../Types");
     var VOID0 = void 0;
     var NULL = "null", GET_SYMBOL = "getSymbol", GET_HASH_CODE = "getHashCode";
@@ -37,7 +39,6 @@
             : Object.prototype.toString.call(obj);
     }
     exports.getIdentifier = getIdentifier;
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = getIdentifier;
 });
 //# sourceMappingURL=getIdentifier.js.map
