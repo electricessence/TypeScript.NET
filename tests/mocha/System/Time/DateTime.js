@@ -56,4 +56,3 @@ describe(".equals", function () {
         assert.ok(y.compareTo(z) == 0);
     });
 });
-//# sourceMappingURL=DateTime.js.map
