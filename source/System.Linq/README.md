@@ -1,4 +1,4 @@
-#LINQ
+# LINQ
 
 Exported in this module is the ```Enumerable``` class which contains
 all available LINQ methods you would expect.
