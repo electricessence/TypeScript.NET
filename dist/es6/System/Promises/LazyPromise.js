@@ -34,9 +34,9 @@ export class LazyPromise extends Promise {
         this._onThen();
         return super.thenSynchronous(onFulfilled, onRejected);
     }
-    thenThis(onFulfilled, onRejected) {
+    doneNow(onFulfilled, onRejected) {
         this._onThen();
-        return super.thenThis(onFulfilled, onRejected);
+        super.doneNow(onFulfilled, onRejected);
     }
     // NOTE: For a LazyPromise we need to be careful not to trigger the resolve for delay.
     /**
@@ -66,7 +66,7 @@ export class LazyPromise extends Promise {
         return new LazyPromise((resolve, reject) => {
             // A lazy promise only enters here if something called for a resolution.
             pass = () => {
-                this.doneSynchronous(v => resolve(v), e => reject(e));
+                this.doneNow(v => resolve(v), e => reject(e));
                 timeout.dispose();
                 timeout = VOID0;
                 pass = VOID0;
@@ -111,23 +111,23 @@ export class LazyPromise extends Promise {
                 if (finalize)
                     timeout = defer(finalize, milliseconds);
             };
-            // Calling super.thenThis does not trigger resolution.
+            // Calling super.doneNow does not trigger resolution.
             // This simply waits for resolution to happen.
             // Is effectively the timer by when resolution has occurred.
-            super.doneSynchronous(detector, detector);
+            super.doneNow(detector, detector);
             //noinspection JSUnusedAssignment
             detector = null;
         }
         return new LazyPromise((resolve, reject) => {
             // Because of the lazy nature of this promise, this could enter here at any time.
             if (this.isPending) {
-                this.doneSynchronous(v => defer(() => resolve(v), milliseconds), e => defer(() => reject(e), milliseconds));
+                this.doneNow(v => defer(() => resolve(v), milliseconds), e => defer(() => reject(e), milliseconds));
                 finalize();
             }
             else {
                 // We don't know when this resolved and could have happened anytime after calling this delay method.
                 pass = () => {
-                    this.doneSynchronous(v => resolve(v), e => reject(e));
+                    this.doneNow(v => resolve(v), e => reject(e));
                 };
                 // Already finalized (aka resolved after a timeout)? Go now!
                 if (!finalize)

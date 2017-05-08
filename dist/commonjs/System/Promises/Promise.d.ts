@@ -26,14 +26,14 @@ export declare class PromiseState<T> extends DisposableBase {
 export declare abstract class PromiseBase<T> extends PromiseState<T> implements PromiseLike<T> {
     constructor();
     /**
-     * .doneSynchronous is provided as a non-standard means that synchronously resolves as the end of a promise chain.
+     * .doneNow is provided as a non-standard means that synchronously resolves as the end of a promise chain.
      * As stated by promisejs.org: 'then' is to 'done' as 'map' is to 'forEach'.
      * It is the underlying method by which propagation occurs.
      * @param onFulfilled
      * @param onRejected
      */
-    abstract doneSynchronous(onFulfilled: Promise.Fulfill<T, any>, onRejected?: Promise.Reject<any>): void;
-    abstract doneSynchronous(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
+    abstract doneNow(onFulfilled: Promise.Fulfill<T, any>, onRejected?: Promise.Reject<any>): void;
+    abstract doneNow(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
     /**
      * Calls the respective handlers once the promise is resolved.
      * @param onFulfilled
@@ -115,7 +115,7 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
     finallyThis(fin: Closure, synchronous?: boolean): this;
 }
 export declare abstract class Resolvable<T> extends PromiseBase<T> {
-    doneSynchronous(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
+    doneNow(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
     thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
 }
 /**
@@ -143,7 +143,7 @@ export declare class Promise<T> extends Resolvable<T> {
     private _waiting;
     constructor(resolver?: Promise.Executor<T>, forceSynchronous?: boolean);
     thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
-    doneSynchronous(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
+    doneNow(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
     protected _onDispose(): void;
     protected _resolvedCalled: boolean;
     resolveUsing(resolver: Promise.Executor<T>, forceSynchronous?: boolean): void;

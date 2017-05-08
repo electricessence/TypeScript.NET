@@ -64,7 +64,7 @@ function handleResolutionMethods(targetFulfill, targetReject, value, resolver) {
 }
 function handleDispatch(p, onFulfilled, onRejected) {
     if (p instanceof PromiseBase) {
-        p.doneSynchronous(onFulfilled, onRejected);
+        p.doneNow(onFulfilled, onRejected);
     }
     else {
         p.then(onFulfilled, onRejected);
@@ -168,7 +168,7 @@ var PromiseBase = (function (_super) {
         return _this;
     }
     PromiseBase.prototype.thenThis = function (onFulfilled, onRejected) {
-        this.doneSynchronous(onFulfilled, onRejected);
+        this.doneNow(onFulfilled, onRejected);
         return this;
     };
     /**
@@ -181,7 +181,7 @@ var PromiseBase = (function (_super) {
         var _this = this;
         this.throwIfDisposed();
         return new Promise(function (resolve, reject) {
-            _this.doneSynchronous(function (result) {
+            _this.doneNow(function (result) {
                 return handleResolutionMethods(resolve, reject, result, onFulfilled);
             }, function (error) {
                 return onRejected
@@ -200,7 +200,7 @@ var PromiseBase = (function (_super) {
         var _this = this;
         this.throwIfDisposed();
         return new Promise(function (resolve, reject) {
-            _this.doneSynchronous(function (result) {
+            _this.doneNow(function (result) {
                 return resolve((onFulfilled ? onFulfilled(result) : result));
             }, function (error) {
                 return reject(onRejected ? onRejected(error) : error);
@@ -215,7 +215,7 @@ var PromiseBase = (function (_super) {
      */
     PromiseBase.prototype.done = function (onFulfilled, onRejected) {
         var _this = this;
-        defer_1.defer(function () { return _this.doneSynchronous(onFulfilled, onRejected); });
+        defer_1.defer(function () { return _this.doneNow(onFulfilled, onRejected); });
     };
     /**
      * Will yield for a number of milliseconds from the time called before continuing.
@@ -228,7 +228,7 @@ var PromiseBase = (function (_super) {
         this.throwIfDisposed();
         return new Promise(function (resolve, reject) {
             defer_1.defer(function () {
-                _this.doneSynchronous(function (v) { return resolve(v); }, function (e) { return reject(e); });
+                _this.doneNow(function (v) { return resolve(v); }, function (e) { return reject(e); });
             }, milliseconds);
         }, true // Since the resolve/reject is deferred.
         );
@@ -246,7 +246,7 @@ var PromiseBase = (function (_super) {
         if (this.isSettled)
             return this.delayFromNow(milliseconds);
         return new Promise(function (resolve, reject) {
-            _this.doneSynchronous(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
+            _this.doneNow(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
         }, true // Since the resolve/reject is deferred.
         );
     };
@@ -291,7 +291,7 @@ var PromiseBase = (function (_super) {
      */
     PromiseBase.prototype.finallyThis = function (fin, synchronous) {
         var f = synchronous ? fin : function () { return deferImmediate_1.deferImmediate(fin); };
-        this.doneSynchronous(f, f);
+        this.doneNow(f, f);
         return this;
     };
     return PromiseBase;
@@ -302,7 +302,7 @@ var Resolvable = (function (_super) {
     function Resolvable() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Resolvable.prototype.doneSynchronous = function (onFulfilled, onRejected) {
+    Resolvable.prototype.doneNow = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
         switch (this.state) {
             case Promise.State.Fulfilled:
@@ -409,13 +409,13 @@ var PromiseWrapper = (function (_super) {
                 : reject(error); });
         }, true);
     };
-    PromiseWrapper.prototype.doneSynchronous = function (onFulfilled, onRejected) {
+    PromiseWrapper.prototype.doneNow = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
         var t = this._target;
         if (t)
             handleDispatch(t, onFulfilled, onRejected);
         else
-            _super.prototype.doneSynchronous.call(this, onFulfilled, onRejected);
+            _super.prototype.doneNow.call(this, onFulfilled, onRejected);
     };
     PromiseWrapper.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
@@ -454,11 +454,11 @@ var Promise = (function (_super) {
             .push(pools.PromiseCallbacks.init(onFulfilled, onRejected, p));
         return p;
     };
-    Promise.prototype.doneSynchronous = function (onFulfilled, onRejected) {
+    Promise.prototype.doneNow = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
         // Already fulfilled?
         if (this._state)
-            return _super.prototype.doneSynchronous.call(this, onFulfilled, onRejected);
+            return _super.prototype.doneNow.call(this, onFulfilled, onRejected);
         (this._waiting || (this._waiting = []))
             .push(pools.PromiseCallbacks.init(onFulfilled, onRejected));
     };
@@ -527,7 +527,7 @@ var Promise = (function (_super) {
                 return;
             switch (r.state) {
                 case Promise.State.Pending:
-                    r.doneSynchronous(function (v) { return _this._resolveInternal(v); }, function (e) { return _this._rejectInternal(e); });
+                    r.doneNow(function (v) { return _this._resolveInternal(v); }, function (e) { return _this._rejectInternal(e); });
                     return;
                 case Promise.State.Rejected:
                     this._rejectInternal(r.error);
@@ -637,7 +637,7 @@ var ArrayPromise = (function (_super) {
         var _this = this;
         this.throwIfDisposed();
         return new ArrayPromise(function (resolve) {
-            _this.doneSynchronous(function (result) { return resolve(result.map(transform)); });
+            _this.doneNow(function (result) { return resolve(result.map(transform)); });
         }, true);
     };
     /**
@@ -721,7 +721,7 @@ var PromiseCollection = (function (_super) {
         this.throwIfDisposed();
         return new ArrayPromise(function (resolve) {
             _this.all()
-                .doneSynchronous(function (result) { return resolve(result.map(transform)); });
+                .doneNow(function (result) { return resolve(result.map(transform)); });
         }, true);
     };
     /**

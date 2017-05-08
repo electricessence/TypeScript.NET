@@ -60,7 +60,7 @@ function handleResolutionMethods(targetFulfill, targetReject, value, resolver) {
 }
 function handleDispatch(p, onFulfilled, onRejected) {
     if (p instanceof PromiseBase) {
-        p.doneSynchronous(onFulfilled, onRejected);
+        p.doneNow(onFulfilled, onRejected);
     }
     else {
         p.then(onFulfilled, onRejected);
@@ -129,6 +129,10 @@ export class PromiseBase extends PromiseState {
         super(Promise.State.Pending);
         this._disposableObjectName = PROMISE;
     }
+    thenThis(onFulfilled, onRejected) {
+        this.doneNow(onFulfilled, onRejected);
+        return this;
+    }
     /**
      * Standard .then method that defers execution until resolved.
      * @param onFulfilled
@@ -138,7 +142,7 @@ export class PromiseBase extends PromiseState {
     then(onFulfilled, onRejected) {
         this.throwIfDisposed();
         return new Promise((resolve, reject) => {
-            this.doneSynchronous(result => handleResolutionMethods(resolve, reject, result, onFulfilled), error => onRejected
+            this.doneNow(result => handleResolutionMethods(resolve, reject, result, onFulfilled), error => onRejected
                 ? handleResolutionMethods(resolve, reject, error, onRejected)
                 : reject(error));
         });
@@ -152,7 +156,7 @@ export class PromiseBase extends PromiseState {
     thenAllowFatal(onFulfilled, onRejected) {
         this.throwIfDisposed();
         return new Promise((resolve, reject) => {
-            this.doneSynchronous(result => resolve((onFulfilled ? onFulfilled(result) : result)), error => reject(onRejected ? onRejected(error) : error));
+            this.doneNow(result => resolve((onFulfilled ? onFulfilled(result) : result)), error => reject(onRejected ? onRejected(error) : error));
         });
     }
     /**
@@ -162,7 +166,7 @@ export class PromiseBase extends PromiseState {
      * @param onRejected
      */
     done(onFulfilled, onRejected) {
-        defer(() => this.doneSynchronous(onFulfilled, onRejected));
+        defer(() => this.doneNow(onFulfilled, onRejected));
     }
     /**
      * Will yield for a number of milliseconds from the time called before continuing.
@@ -173,7 +177,7 @@ export class PromiseBase extends PromiseState {
         this.throwIfDisposed();
         return new Promise((resolve, reject) => {
             defer(() => {
-                this.doneSynchronous(v => resolve(v), e => reject(e));
+                this.doneNow(v => resolve(v), e => reject(e));
             }, milliseconds);
         }, true // Since the resolve/reject is deferred.
         );
@@ -189,7 +193,7 @@ export class PromiseBase extends PromiseState {
         if (this.isSettled)
             return this.delayFromNow(milliseconds);
         return new Promise((resolve, reject) => {
-            this.doneSynchronous(v => defer(() => resolve(v), milliseconds), e => defer(() => reject(e), milliseconds));
+            this.doneNow(v => defer(() => resolve(v), milliseconds), e => defer(() => reject(e), milliseconds));
         }, true // Since the resolve/reject is deferred.
         );
     }
@@ -234,14 +238,23 @@ export class PromiseBase extends PromiseState {
      */
     finallyThis(fin, synchronous) {
         const f = synchronous ? fin : () => deferImmediate(fin);
-        this.doneSynchronous(f, f);
+        this.doneNow(f, f);
         return this;
     }
 }
 export class Resolvable extends PromiseBase {
-    doneSynchronous(onFulfilled, onRejected) {
-        //noinspection JSIgnoredPromiseFromCall
-        this.thenThis(onFulfilled, onRejected);
+    doneNow(onFulfilled, onRejected) {
+        this.throwIfDisposed();
+        switch (this.state) {
+            case Promise.State.Fulfilled:
+                if (onFulfilled)
+                    onFulfilled(this._result);
+                break;
+            case Promise.State.Rejected:
+                if (onRejected)
+                    onRejected(this._error);
+                break;
+        }
     }
     thenSynchronous(onFulfilled, onRejected) {
         this.throwIfDisposed();
@@ -261,20 +274,6 @@ export class Resolvable extends PromiseBase {
             return new Rejected(ex);
         }
         throw new Error("Invalid state for a resolved promise.");
-    }
-    thenThis(onFulfilled, onRejected) {
-        this.throwIfDisposed();
-        switch (this.state) {
-            case Promise.State.Fulfilled:
-                if (onFulfilled)
-                    onFulfilled(this._result);
-                break;
-            case Promise.State.Rejected:
-                if (onRejected)
-                    onRejected(this._error);
-                break;
-        }
-        return this;
     }
 }
 /**
@@ -337,13 +336,13 @@ class PromiseWrapper extends Resolvable {
                 : reject(error));
         }, true);
     }
-    thenThis(onFulfilled, onRejected) {
+    doneNow(onFulfilled, onRejected) {
         this.throwIfDisposed();
         let t = this._target;
-        if (!t)
-            return super.thenThis(onFulfilled, onRejected);
-        handleDispatch(t, onFulfilled, onRejected);
-        return this;
+        if (t)
+            handleDispatch(t, onFulfilled, onRejected);
+        else
+            super.doneNow(onFulfilled, onRejected);
     }
     _onDispose() {
         super._onDispose();
@@ -378,14 +377,13 @@ export class Promise extends Resolvable {
             .push(pools.PromiseCallbacks.init(onFulfilled, onRejected, p));
         return p;
     }
-    thenThis(onFulfilled, onRejected) {
+    doneNow(onFulfilled, onRejected) {
         this.throwIfDisposed();
         // Already fulfilled?
         if (this._state)
-            return super.thenThis(onFulfilled, onRejected);
+            return super.doneNow(onFulfilled, onRejected);
         (this._waiting || (this._waiting = []))
             .push(pools.PromiseCallbacks.init(onFulfilled, onRejected));
-        return this;
     }
     _onDispose() {
         super._onDispose();
@@ -449,7 +447,7 @@ export class Promise extends Resolvable {
                 return;
             switch (r.state) {
                 case Promise.State.Pending:
-                    r.doneSynchronous(v => this._resolveInternal(v), e => this._rejectInternal(e));
+                    r.doneNow(v => this._resolveInternal(v), e => this._rejectInternal(e));
                     return;
                 case Promise.State.Rejected:
                     this._rejectInternal(r.error);
@@ -548,7 +546,7 @@ export class ArrayPromise extends Promise {
     map(transform) {
         this.throwIfDisposed();
         return new ArrayPromise(resolve => {
-            this.doneSynchronous((result) => resolve(result.map(transform)));
+            this.doneNow((result) => resolve(result.map(transform)));
         }, true);
     }
     /**
@@ -623,7 +621,7 @@ export class PromiseCollection extends DisposableBase {
         this.throwIfDisposed();
         return new ArrayPromise(resolve => {
             this.all()
-                .doneSynchronous((result) => resolve(result.map(transform)));
+                .doneNow((result) => resolve(result.map(transform)));
         }, true);
     }
     /**

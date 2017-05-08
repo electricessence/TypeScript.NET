@@ -57,9 +57,9 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
                     this._onThen();
                     return _super.prototype.thenSynchronous.call(this, onFulfilled, onRejected);
                 };
-                LazyPromise.prototype.thenThis = function (onFulfilled, onRejected) {
+                LazyPromise.prototype.doneNow = function (onFulfilled, onRejected) {
                     this._onThen();
-                    return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
+                    _super.prototype.doneNow.call(this, onFulfilled, onRejected);
                 };
                 // NOTE: For a LazyPromise we need to be careful not to trigger the resolve for delay.
                 /**
@@ -91,7 +91,7 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
                     return new LazyPromise(function (resolve, reject) {
                         // A lazy promise only enters here if something called for a resolution.
                         pass = function () {
-                            _this.doneSynchronous(function (v) { return resolve(v); }, function (e) { return reject(e); });
+                            _this.doneNow(function (v) { return resolve(v); }, function (e) { return reject(e); });
                             timeout.dispose();
                             timeout = VOID0;
                             pass = VOID0;
@@ -138,23 +138,23 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
                             if (finalize)
                                 timeout = defer_1.defer(finalize, milliseconds);
                         };
-                        // Calling super.thenThis does not trigger resolution.
+                        // Calling super.doneNow does not trigger resolution.
                         // This simply waits for resolution to happen.
                         // Is effectively the timer by when resolution has occurred.
-                        _super.prototype.doneSynchronous.call(this, detector, detector);
+                        _super.prototype.doneNow.call(this, detector, detector);
                         //noinspection JSUnusedAssignment
                         detector = null;
                     }
                     return new LazyPromise(function (resolve, reject) {
                         // Because of the lazy nature of this promise, this could enter here at any time.
                         if (_this.isPending) {
-                            _this.doneSynchronous(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
+                            _this.doneNow(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
                             finalize();
                         }
                         else {
                             // We don't know when this resolved and could have happened anytime after calling this delay method.
                             pass = function () {
-                                _this.doneSynchronous(function (v) { return resolve(v); }, function (e) { return reject(e); });
+                                _this.doneNow(function (v) { return resolve(v); }, function (e) { return reject(e); });
                             };
                             // Already finalized (aka resolved after a timeout)? Go now!
                             if (!finalize)

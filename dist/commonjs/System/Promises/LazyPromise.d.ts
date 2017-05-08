@@ -12,7 +12,7 @@ export declare class LazyPromise<T> extends Promise<T> {
     protected _onDispose(): void;
     private _onThen();
     thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
-    doneSynchronous(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
+    doneNow(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
     /**
      * Will yield for a number of milliseconds from the time called before continuing.
      * @param milliseconds
