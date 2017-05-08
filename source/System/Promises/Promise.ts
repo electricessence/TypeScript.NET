@@ -92,7 +92,7 @@ function handleDispatch<T, TResult>(
 {
 	if(p instanceof PromiseBase)
 	{
-		p.doneSynchronous(onFulfilled, onRejected);
+		p.doneNow(onFulfilled, onRejected);
 	}
 	else
 	{
@@ -204,19 +204,20 @@ export abstract class PromiseBase<T>
 	}
 
 	/**
-	 * .doneSynchronous is provided as a non-standard means that synchronously resolves as the end of a promise chain.
+	 * .doneNow is provided as a non-standard means that synchronously resolves as the end of a promise chain.
 	 * As stated by promisejs.org: 'then' is to 'done' as 'map' is to 'forEach'.
 	 * It is the underlying method by which propagation occurs.
 	 * @param onFulfilled
 	 * @param onRejected
 	 */
-	abstract doneSynchronous(
+	abstract doneNow(
 		onFulfilled:Promise.Fulfill<T, any>,
 		onRejected?:Promise.Reject<any>):void;
 
-	abstract doneSynchronous(
+	abstract doneNow(
 		onFulfilled:(v?:T) => any,
 		onRejected?:(v?:any) => any):void;
+
 
 	/**
 	 * Calls the respective handlers once the promise is resolved.
@@ -233,13 +234,17 @@ export abstract class PromiseBase<T>
 	 * @param onFulfilled
 	 * @param onRejected
 	 */
-	abstract thenThis(
+	thenThis(
 		onFulfilled:Promise.Fulfill<T, any>,
 		onRejected?:Promise.Reject<any>):this;
 
-	abstract thenThis(
+	thenThis(
 		onFulfilled:(v?:T) => any,
-		onRejected?:(v?:any) => any):this;
+		onRejected?:(v?:any) => any):this
+	{
+		this.doneNow(onFulfilled,onRejected);
+		return this;
+	}
 
 
 	/**
@@ -256,7 +261,7 @@ export abstract class PromiseBase<T>
 
 		return new Promise<TResult>((resolve, reject) =>
 		{
-			this.doneSynchronous(
+			this.doneNow(
 				result =>
 					handleResolutionMethods(resolve, reject, result, onFulfilled),
 				error =>
@@ -281,7 +286,7 @@ export abstract class PromiseBase<T>
 
 		return new Promise<TResult>((resolve, reject) =>
 		{
-			this.doneSynchronous(
+			this.doneNow(
 				result =>
 					resolve(<any>(onFulfilled ? onFulfilled(result) : result)),
 				error =>
@@ -301,7 +306,7 @@ export abstract class PromiseBase<T>
 		onFulfilled:Promise.Fulfill<T, any>,
 		onRejected?:Promise.Reject<any>):void
 	{
-		defer(() => this.doneSynchronous(onFulfilled, onRejected));
+		defer(() => this.doneNow(onFulfilled, onRejected));
 	}
 
 	/**
@@ -318,7 +323,7 @@ export abstract class PromiseBase<T>
 			{
 				defer(() =>
 				{
-					this.doneSynchronous(
+					this.doneNow(
 						v => resolve(v),
 						e => reject(e));
 				}, milliseconds)
@@ -342,7 +347,7 @@ export abstract class PromiseBase<T>
 		return new Promise<T>(
 			(resolve, reject) =>
 			{
-				this.doneSynchronous(
+				this.doneNow(
 					v => defer(() => resolve(v), milliseconds),
 					e => defer(() => reject(e), milliseconds))
 			},
@@ -400,7 +405,7 @@ export abstract class PromiseBase<T>
 	finallyThis(fin:Closure, synchronous?:boolean):this
 	{
 		const f:Closure = synchronous ? fin : () => deferImmediate(fin);
-		this.doneSynchronous(f, f);
+		this.doneNow(f, f);
 		return this;
 	}
 
@@ -410,12 +415,21 @@ export abstract class Resolvable<T>
 	extends PromiseBase<T>
 {
 
-	doneSynchronous(
+	doneNow(
 		onFulfilled:(v?:T) => any,
 		onRejected?:(v?:any) => any):void
 	{
-		//noinspection JSIgnoredPromiseFromCall
-		this.thenThis(onFulfilled,onRejected);
+		this.throwIfDisposed();
+
+		switch(this.state)
+		{
+			case Promise.State.Fulfilled:
+				if(onFulfilled) onFulfilled(this._result);
+				break;
+			case Promise.State.Rejected:
+				if(onRejected) onRejected(this._error);
+				break;
+		}
 	}
 
 	thenSynchronous<TResult>(
@@ -446,24 +460,7 @@ export abstract class Resolvable<T>
 		throw new Error("Invalid state for a resolved promise.");
 	}
 
-	thenThis(
-		onFulfilled:(v?:T) => any,
-		onRejected?:(v?:any) => any):this
-	{
-		this.throwIfDisposed();
 
-		switch(this.state)
-		{
-			case Promise.State.Fulfilled:
-				if(onFulfilled) onFulfilled(this._result);
-				break;
-			case Promise.State.Rejected:
-				if(onRejected) onRejected(this._error);
-				break;
-		}
-
-		return this;
-	}
 
 }
 
@@ -561,17 +558,17 @@ class PromiseWrapper<T>
 		}, true);
 	}
 
-
-	thenThis(
+	doneNow(
 		onFulfilled:(v?:T) => any,
-		onRejected?:(v?:any) => any):this
+		onRejected?:(v?:any) => any):void
 	{
 		this.throwIfDisposed();
 
 		let t = this._target;
-		if(!t) return <any>super.thenThis(onFulfilled, onRejected);
-		handleDispatch(t, onFulfilled, onRejected);
-		return this;
+		if(t)
+			handleDispatch(t, onFulfilled, onRejected);
+		else
+			super.doneNow(onFulfilled, onRejected);
 	}
 
 	protected _onDispose():void
@@ -625,22 +622,19 @@ export class Promise<T>
 		return p;
 	}
 
-	thenThis(
+	doneNow(
 		onFulfilled:(v?:T) => any,
-		onRejected?:(v?:any) => any):this
+		onRejected?:(v?:any) => any):void
 	{
 		this.throwIfDisposed();
 
 		// Already fulfilled?
 		if(this._state)
-			return <any>super.thenThis(onFulfilled, onRejected);
+			return super.doneNow(onFulfilled, onRejected);
 
 		(this._waiting || (this._waiting = []))
 			.push(pools.PromiseCallbacks.init(onFulfilled, onRejected));
-
-		return this;
 	}
-
 
 	protected _onDispose()
 	{
@@ -729,7 +723,7 @@ export class Promise<T>
 			switch(r.state)
 			{
 				case Promise.State.Pending:
-					r.doneSynchronous(
+					r.doneNow(
 						v => this._resolveInternal(v),
 						e => this._rejectInternal(e)
 					);
@@ -866,7 +860,7 @@ export class ArrayPromise<T>
 		this.throwIfDisposed();
 		return new ArrayPromise<U>(resolve =>
 		{
-			this.doneSynchronous((result:T[]) => resolve(result.map(transform)));
+			this.doneNow((result:T[]) => resolve(result.map(transform)));
 		}, true);
 	}
 
@@ -967,7 +961,7 @@ export class PromiseCollection<T>
 		return new ArrayPromise<U>(resolve =>
 		{
 			this.all()
-				.doneSynchronous((result:T[]) => resolve(result.map(transform)));
+				.doneNow((result:T[]) => resolve(result.map(transform)));
 		}, true);
 	}
 

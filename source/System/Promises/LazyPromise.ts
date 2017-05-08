@@ -53,12 +53,12 @@ export class LazyPromise<T> extends Promise<T>
 	}
 
 
-	thenThis(
+	doneNow(
 		onFulfilled:(v?:T)=>any,
-		onRejected?:(v?:any)=>any):this
+		onRejected?:(v?:any)=>any):void
 	{
 		this._onThen();
-		return <any> super.thenThis(onFulfilled, onRejected);
+		super.doneNow(onFulfilled, onRejected);
 	}
 
 	// NOTE: For a LazyPromise we need to be careful not to trigger the resolve for delay.
@@ -100,7 +100,7 @@ export class LazyPromise<T> extends Promise<T>
 				// A lazy promise only enters here if something called for a resolution.
 				pass = ()=>
 				{
-					this.doneSynchronous(
+					this.doneNow(
 						v=> resolve(v),
 						e=> reject(e)
 					);
@@ -162,10 +162,10 @@ export class LazyPromise<T> extends Promise<T>
 					timeout = defer(finalize, milliseconds);
 			};
 
-			// Calling super.thenThis does not trigger resolution.
+			// Calling super.doneNow does not trigger resolution.
 			// This simply waits for resolution to happen.
 			// Is effectively the timer by when resolution has occurred.
-			super.doneSynchronous(detector, detector);
+			super.doneNow(detector, detector);
 			//noinspection JSUnusedAssignment
 			detector = <any>null;
 		}
@@ -176,7 +176,7 @@ export class LazyPromise<T> extends Promise<T>
 				// Because of the lazy nature of this promise, this could enter here at any time.
 				if(this.isPending)
 				{
-					this.doneSynchronous(
+					this.doneNow(
 						v=> defer(()=>resolve(v), milliseconds),
 						e=> defer(()=>reject(e), milliseconds)
 					);
@@ -187,7 +187,7 @@ export class LazyPromise<T> extends Promise<T>
 					// We don't know when this resolved and could have happened anytime after calling this delay method.
 					pass = ()=>
 					{
-						this.doneSynchronous(
+						this.doneNow(
 							v=> resolve(v),
 							e=> reject(e)
 						);

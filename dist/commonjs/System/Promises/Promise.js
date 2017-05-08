@@ -167,6 +167,10 @@ var PromiseBase = (function (_super) {
         _this._disposableObjectName = PROMISE;
         return _this;
     }
+    PromiseBase.prototype.thenThis = function (onFulfilled, onRejected) {
+        this.doneSynchronous(onFulfilled, onRejected);
+        return this;
+    };
     /**
      * Standard .then method that defers execution until resolved.
      * @param onFulfilled
@@ -299,8 +303,17 @@ var Resolvable = (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     Resolvable.prototype.doneSynchronous = function (onFulfilled, onRejected) {
-        //noinspection JSIgnoredPromiseFromCall
-        this.thenThis(onFulfilled, onRejected);
+        this.throwIfDisposed();
+        switch (this.state) {
+            case Promise.State.Fulfilled:
+                if (onFulfilled)
+                    onFulfilled(this._result);
+                break;
+            case Promise.State.Rejected:
+                if (onRejected)
+                    onRejected(this._error);
+                break;
+        }
     };
     Resolvable.prototype.thenSynchronous = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
@@ -320,20 +333,6 @@ var Resolvable = (function (_super) {
             return new Rejected(ex);
         }
         throw new Error("Invalid state for a resolved promise.");
-    };
-    Resolvable.prototype.thenThis = function (onFulfilled, onRejected) {
-        this.throwIfDisposed();
-        switch (this.state) {
-            case Promise.State.Fulfilled:
-                if (onFulfilled)
-                    onFulfilled(this._result);
-                break;
-            case Promise.State.Rejected:
-                if (onRejected)
-                    onRejected(this._error);
-                break;
-        }
-        return this;
     };
     return Resolvable;
 }(PromiseBase));
@@ -410,13 +409,13 @@ var PromiseWrapper = (function (_super) {
                 : reject(error); });
         }, true);
     };
-    PromiseWrapper.prototype.thenThis = function (onFulfilled, onRejected) {
+    PromiseWrapper.prototype.doneSynchronous = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
         var t = this._target;
-        if (!t)
-            return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
-        handleDispatch(t, onFulfilled, onRejected);
-        return this;
+        if (t)
+            handleDispatch(t, onFulfilled, onRejected);
+        else
+            _super.prototype.doneSynchronous.call(this, onFulfilled, onRejected);
     };
     PromiseWrapper.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
@@ -455,14 +454,13 @@ var Promise = (function (_super) {
             .push(pools.PromiseCallbacks.init(onFulfilled, onRejected, p));
         return p;
     };
-    Promise.prototype.thenThis = function (onFulfilled, onRejected) {
+    Promise.prototype.doneSynchronous = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
         // Already fulfilled?
         if (this._state)
-            return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
+            return _super.prototype.doneSynchronous.call(this, onFulfilled, onRejected);
         (this._waiting || (this._waiting = []))
             .push(pools.PromiseCallbacks.init(onFulfilled, onRejected));
-        return this;
     };
     Promise.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);

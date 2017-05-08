@@ -40,9 +40,9 @@ var LazyPromise = (function (_super) {
         this._onThen();
         return _super.prototype.thenSynchronous.call(this, onFulfilled, onRejected);
     };
-    LazyPromise.prototype.thenThis = function (onFulfilled, onRejected) {
+    LazyPromise.prototype.doneSynchronous = function (onFulfilled, onRejected) {
         this._onThen();
-        return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
+        _super.prototype.doneSynchronous.call(this, onFulfilled, onRejected);
     };
     // NOTE: For a LazyPromise we need to be careful not to trigger the resolve for delay.
     /**
