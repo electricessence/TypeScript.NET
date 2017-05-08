@@ -3,6 +3,7 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {ILinkedList} from "./ILinkedList";
 
 export interface ILinkedNode<TNode extends ILinkedNode<TNode>>

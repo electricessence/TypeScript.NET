@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Original: http://linqjs.codeplex.com/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["../System/Compare", "../System/Collections/Array/copy", "../System/Collections/Array/Compare", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../System/Collections/Enumeration/IteratorEnumerator", "../System/Collections/Array/initialize", "../System/Random", "../System/Collections/Enumeration/InfiniteEnumerator", "../extends", "../System/Collections/LazyList"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -41,6 +46,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
             return createSortContext(orderedEnumerable.parent, context);
         return context;
     }
+    //noinspection JSUnusedLocalSymbols
     function throwIfDisposed(disposed) {
         if (disposed)
             throw new ObjectDisposedException_1.ObjectDisposedException("Enumerable");
@@ -145,7 +151,11 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                 LazyList_1 = LazyList_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Original: http://linqjs.codeplex.com/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             disposeSingle = dispose_1.dispose.single;
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;

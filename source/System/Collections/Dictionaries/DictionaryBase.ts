@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {areEqual} from "../../Compare";
 import {forEach} from "../Enumeration/Enumerator";
 import {CollectionBase} from "../CollectionBase";

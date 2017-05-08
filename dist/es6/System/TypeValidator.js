@@ -16,7 +16,7 @@
  *      g : "literal"
  * }
  */
-import { TypeInfo, Type } from "./Types";
+import { Type, TypeInfo } from "./Types";
 import { areEqual } from "./Compare";
 // noinspection JSUnusedLocalSymbols
 export class TypeInfoHelper extends TypeInfo {

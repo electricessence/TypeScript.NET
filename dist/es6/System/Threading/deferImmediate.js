@@ -84,7 +84,7 @@ function requestFlush() {
  * @param task
  * @param context
  * @param args
- * @returns {{cancel: (()=>boolean), dispose: (()=>undefined)}}
+ * @returns ICancellable
  */
 export function deferImmediate(task, context, args) {
     let entry = entryPool.take();

@@ -1,7 +1,12 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { CollectionBase } from "./CollectionBase";
 import { ILinkedListNode } from "./ILinkedListNode";
 import { IEnumerator } from "./Enumeration/IEnumerator";
-import { EqualityComparison, PredicateWithIndex, ActionWithIndex } from "../FunctionTypes";
+import { ActionWithIndex, EqualityComparison, PredicateWithIndex } from "../FunctionTypes";
 import { ILinkedList } from "./ILinkedList";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";
 export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedList<T> {

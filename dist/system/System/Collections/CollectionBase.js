@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Environment", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -26,7 +30,10 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             //noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             //noinspection SpellCheckingInspection
@@ -245,7 +252,7 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                  * Returns an array filtered by the provided predicate.
                  * Provided for similarity to JS Array.
                  * @param predicate
-                 * @returns {T[]}
+                 * @returns {[]}
                  */
                 CollectionBase.prototype.filter = function (predicate) {
                     if (!predicate)

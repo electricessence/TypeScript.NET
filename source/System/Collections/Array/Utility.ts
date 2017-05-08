@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {Type} from "../../Types";
 import {Integer} from "../../Integer";
 import {areEqual} from "../../Compare";
@@ -9,10 +10,10 @@ import {ArgumentException} from "../../Exceptions/ArgumentException";
 import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
 import {ArgumentOutOfRangeException} from "../../Exceptions/ArgumentOutOfRangeException";
 import {
+	ActionWithIndex,
 	EqualityComparison,
 	PredicateWithIndex,
-	SelectorWithIndex,
-	ActionWithIndex
+	SelectorWithIndex
 } from "../../FunctionTypes";
 import {ArrayLikeWritable} from "./ArrayLikeWritable";
 import {initialize} from "./initialize";

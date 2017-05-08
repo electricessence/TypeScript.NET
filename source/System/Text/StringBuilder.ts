@@ -3,10 +3,9 @@
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {Type} from "../Types";
 import {IDisposable} from "../Disposable/IDisposable";
-
-const VOID0:undefined = void 0;
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:

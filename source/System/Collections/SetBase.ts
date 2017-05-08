@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {LinkedNodeList} from "./LinkedNodeList";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import {forEach} from "./Enumeration/Enumerator";
@@ -12,7 +13,6 @@ import {CollectionBase} from "./CollectionBase";
 import {IDisposable} from "../Disposable/IDisposable";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
 import {ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
-import {IMap} from "../../IMap";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {ISet} from "./ISet";
@@ -254,19 +254,6 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	}
 
 
-}
-
-function wipe(map:IMap<any>, depth:number = 1):void
-{
-	if(map && depth)
-	{
-		for(let key of Object.keys(map))
-		{
-			const v = map[key];
-			delete map[key];
-			wipe(v, depth - 1);
-		}
-	}
 }
 
 export default SetBase;

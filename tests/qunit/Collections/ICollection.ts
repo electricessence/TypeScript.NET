@@ -55,7 +55,7 @@ function assertCopyToClear<T>(assert:Assert, c:ICollection<T>)
 	assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
 
 	// Restore contents.
-	for(let v of a) c.add(v);
+	for(let v1 of a) c.add(v1);
 
 	const extraSize = 10;
 	const b = AU.initialize<T>(count + extraSize);
@@ -68,7 +68,7 @@ function assertCopyToClear<T>(assert:Assert, c:ICollection<T>)
 	assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
 
 	// Restore contents.
-	for(let v of a) c.add(v);
+	for(let v2 of a) c.add(v2);
 	assert.equal(c.count, a.length, "A collection's count should be equal to the number of items added.");
 }
 
@@ -111,7 +111,7 @@ export function Collection<T>(
 	collection:CollectionBase<T>,
 	sourceValues:T[]):void
 {
-	if(sourceValues.indexOf(<any>null)!= -1)
+	if(sourceValues.indexOf(<any>null)!== -1)
 		throw "Source values should not contain null as checking against null is one of the tests.";
 
 	/* The following tests inherently test:

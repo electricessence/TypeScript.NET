@@ -1,15 +1,23 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["../Types"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, VOID0, StringBuilder;
+    var Types_1, StringBuilder;
     return {
         setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             }
         ],
-        execute: function () {
-            VOID0 = void 0;
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             /*****************************
              * IMPORTANT NOTES ABOUT PERFORMANCE:
              * http://jsperf.com/string-concatenation-looped

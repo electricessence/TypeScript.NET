@@ -3,6 +3,7 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {areEqual} from "../Compare";
 import * as AU from "./Array/Utility";
 import {Type} from "../Types";
@@ -12,7 +13,7 @@ import {NotImplementedException} from "../Exceptions/NotImplementedException";
 import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
 import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
 import {CollectionBase} from "./CollectionBase";
-import {EqualityComparison, Action, ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
+import {Action, ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import __extendsImport from "../../extends";
@@ -106,6 +107,7 @@ extends CollectionBase<T>
 	//noinspection JSUnusedLocalSymbols
 	protected _removeInternal(item:T, max?:number):number
 	{
+		//noinspection HtmlUnknownTag
 		throw new NotImplementedException(
 			"ICollection\<T\>.remove is not implemented in Queue\<T\>" +
 			" since it would require destroying the underlying array to remove the item."

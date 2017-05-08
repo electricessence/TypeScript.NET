@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["../../Types", "../../Integer", "../../Compare", "../../Exceptions/ArgumentException", "../../Exceptions/ArgumentNullException", "../../Exceptions/ArgumentOutOfRangeException", "./initialize", "./copy"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -343,7 +347,10 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
                 copy_1 = copy_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             exports_1("initialize", initialize_1.initialize);
             exports_1("copy", copy_1.copy);
             exports_1("copyTo", copy_1.copyTo);

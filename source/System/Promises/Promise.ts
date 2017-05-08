@@ -9,6 +9,7 @@
  * https://promisesaplus.com/
  * https://github.com/kriskowal/q
  */
+
 import Type from "../Types";
 import {deferImmediate} from "../Threading/deferImmediate";
 import {DisposableBase} from "../Disposable/DisposableBase";
@@ -24,7 +25,8 @@ import {Closure} from "../FunctionTypes";
 //noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-const VOID0:any = void 0, NULL:any = null, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
+const VOID0:any = void 0, NULL:any = null, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State",
+      THEN                                                                    = "then", TARGET                                                   = "target";
 
 function isPromise<T>(value:any):value is PromiseLike<T>
 {
@@ -32,8 +34,8 @@ function isPromise<T>(value:any):value is PromiseLike<T>
 }
 
 function resolve<T>(
-	value:Promise.Resolution<T>, resolver:(v:Promise.Resolution<T>)=>any,
-	promiseFactory:(v:any)=>PromiseBase<any>):PromiseBase<any>
+	value:Promise.Resolution<T>, resolver:(v:Promise.Resolution<T>) => any,
+	promiseFactory:(v:any) => PromiseBase<any>):PromiseBase<any>
 {
 	let nextValue = resolver
 		? resolver(value)
@@ -45,28 +47,34 @@ function resolve<T>(
 }
 
 function handleResolution(
-	p:Promise<any>|null|undefined,
+	p:Promise<any> | null | undefined,
 	value:Promise.Resolution<any>,
-	resolver?:(v:Promise.Resolution<any>)=>any):any
+	resolver?:(v:Promise.Resolution<any>) => any):any
 {
 	try
 	{
 		let v = resolver ? resolver(value) : value;
-		if(p) p.resolve(v);
+		if(p)
+		{ //noinspection JSIgnoredPromiseFromCall
+			p.resolve(v);
+		}
 		return null;
 	}
 	catch(ex)
 	{
-		if(p) p.reject(ex);
+		if(p)
+		{ //noinspection JSIgnoredPromiseFromCall
+			p.reject(ex);
+		}
 		return ex;
 	}
 }
 
 function handleResolutionMethods(
-	targetFulfill:Promise.Fulfill<any,any>|null|undefined,
-	targetReject:Promise.Reject<any>|null|undefined,
+	targetFulfill:Promise.Fulfill<any, any> | null | undefined,
+	targetReject:Promise.Reject<any> | null | undefined,
 	value:Promise.Resolution<any>,
-	resolver?:(v:Promise.Resolution<any>)=>any):void
+	resolver?:(v:Promise.Resolution<any>) => any):void
 {
 	try
 	{
@@ -77,20 +85,24 @@ function handleResolutionMethods(
 	{ if(targetReject) targetReject(ex); }
 }
 
-function handleDispatch<T,TResult>(
+function handleDispatch<T, TResult>(
 	p:PromiseLike<T>,
-	onFulfilled:Promise.Fulfill<T,TResult>,
+	onFulfilled:Promise.Fulfill<T, TResult>,
 	onRejected?:Promise.Reject<TResult>):void
 {
 	if(p instanceof PromiseBase)
-		p.thenThis(onFulfilled, onRejected);
+	{
+		p.doneSynchronous(onFulfilled, onRejected);
+	}
 	else
+	{
 		p.then(<any>onFulfilled, onRejected);
+	}
 }
 
-function handleSyncIfPossible<T,TResult>(
+function handleSyncIfPossible<T, TResult>(
 	p:PromiseLike<T>,
-	onFulfilled:Promise.Fulfill<T,TResult>,
+	onFulfilled:Promise.Fulfill<T, TResult>,
 	onRejected?:Promise.Reject<TResult>):PromiseLike<TResult>
 {
 	if(p instanceof PromiseBase)
@@ -105,7 +117,7 @@ function newODE()
 }
 
 export class PromiseState<T>
-extends DisposableBase
+	extends DisposableBase
 {
 
 	constructor(
@@ -157,12 +169,12 @@ extends DisposableBase
 	/*
 	 * Providing overrides allows for special defer or lazy sub classes.
 	 */
-	protected getResult():T|undefined
+	protected getResult():T | undefined
 	{
 		return this._result;
 	}
 
-	get result():T|undefined
+	get result():T | undefined
 	{
 		this.throwIfDisposed();
 		return this.getResult();
@@ -182,7 +194,8 @@ extends DisposableBase
 }
 
 export abstract class PromiseBase<T>
-extends PromiseState<T> implements PromiseLike<T>
+	extends PromiseState<T>
+	implements PromiseLike<T>
 {
 	constructor()
 	{
@@ -191,12 +204,27 @@ extends PromiseState<T> implements PromiseLike<T>
 	}
 
 	/**
+	 * .doneSynchronous is provided as a non-standard means that synchronously resolves as the end of a promise chain.
+	 * As stated by promisejs.org: 'then' is to 'done' as 'map' is to 'forEach'.
+	 * It is the underlying method by which propagation occurs.
+	 * @param onFulfilled
+	 * @param onRejected
+	 */
+	abstract doneSynchronous(
+		onFulfilled:Promise.Fulfill<T, any>,
+		onRejected?:Promise.Reject<any>):void;
+
+	abstract doneSynchronous(
+		onFulfilled:(v?:T) => any,
+		onRejected?:(v?:any) => any):void;
+
+	/**
 	 * Calls the respective handlers once the promise is resolved.
 	 * @param onFulfilled
 	 * @param onRejected
 	 */
 	abstract thenSynchronous<TResult>(
-		onFulfilled:Promise.Fulfill<T,TResult>,
+		onFulfilled:Promise.Fulfill<T, TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>;
 
 	/**
@@ -206,12 +234,12 @@ extends PromiseState<T> implements PromiseLike<T>
 	 * @param onRejected
 	 */
 	abstract thenThis(
-		onFulfilled:Promise.Fulfill<T,any>,
+		onFulfilled:Promise.Fulfill<T, any>,
 		onRejected?:Promise.Reject<any>):this;
 
 	abstract thenThis(
-		onFulfilled:(v?:T)=>any,
-		onRejected?:(v?:any)=>any):this;
+		onFulfilled:(v?:T) => any,
+		onRejected?:(v?:any) => any):this;
 
 
 	/**
@@ -221,14 +249,14 @@ extends PromiseState<T> implements PromiseLike<T>
 	 * @returns {Promise}
 	 */
 	then<TResult>(
-		onFulfilled:Promise.Fulfill<T,TResult>,
+		onFulfilled:Promise.Fulfill<T, TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
 		this.throwIfDisposed();
 
 		return new Promise<TResult>((resolve, reject) =>
 		{
-			this.thenThis(
+			this.doneSynchronous(
 				result =>
 					handleResolutionMethods(resolve, reject, result, onFulfilled),
 				error =>
@@ -246,14 +274,14 @@ extends PromiseState<T> implements PromiseLike<T>
 	 * @returns {Promise}
 	 */
 	thenAllowFatal<TResult>(
-		onFulfilled:Promise.Fulfill<T,TResult>,
+		onFulfilled:Promise.Fulfill<T, TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
 		this.throwIfDisposed();
 
 		return new Promise<TResult>((resolve, reject) =>
 		{
-			this.thenThis(
+			this.doneSynchronous(
 				result =>
 					resolve(<any>(onFulfilled ? onFulfilled(result) : result)),
 				error =>
@@ -262,6 +290,7 @@ extends PromiseState<T> implements PromiseLike<T>
 		});
 	}
 
+
 	/**
 	 * .done is provided as a non-standard means that maps to similar functionality in other promise libraries.
 	 * As stated by promisejs.org: 'then' is to 'done' as 'map' is to 'forEach'.
@@ -269,11 +298,10 @@ extends PromiseState<T> implements PromiseLike<T>
 	 * @param onRejected
 	 */
 	done(
-		onFulfilled:Promise.Fulfill<T,any>,
+		onFulfilled:Promise.Fulfill<T, any>,
 		onRejected?:Promise.Reject<any>):void
 	{
-		defer(() =>
-			this.thenThis(onFulfilled, onRejected));
+		defer(() => this.doneSynchronous(onFulfilled, onRejected));
 	}
 
 	/**
@@ -290,7 +318,7 @@ extends PromiseState<T> implements PromiseLike<T>
 			{
 				defer(() =>
 				{
-					this.thenThis(
+					this.doneSynchronous(
 						v => resolve(v),
 						e => reject(e));
 				}, milliseconds)
@@ -314,7 +342,7 @@ extends PromiseState<T> implements PromiseLike<T>
 		return new Promise<T>(
 			(resolve, reject) =>
 			{
-				this.thenThis(
+				this.doneSynchronous(
 					v => defer(() => resolve(v), milliseconds),
 					e => defer(() => reject(e), milliseconds))
 			},
@@ -347,7 +375,7 @@ extends PromiseState<T> implements PromiseLike<T>
 	 * @param fin
 	 * @returns {PromiseBase<TResult>}
 	 */
-	'finally'<TResult>(fin:()=>Promise.Resolution<TResult>):PromiseBase<TResult>
+	'finally'<TResult>(fin:() => Promise.Resolution<TResult>):PromiseBase<TResult>
 	{
 		return this.then(fin, fin);
 	}
@@ -357,7 +385,7 @@ extends PromiseState<T> implements PromiseLike<T>
 	 * @param fin
 	 * @returns {PromiseBase<TResult>}
 	 */
-	finallyAllowFatal<TResult>(fin:()=>Promise.Resolution<TResult>):PromiseBase<TResult>
+	finallyAllowFatal<TResult>(fin:() => Promise.Resolution<TResult>):PromiseBase<TResult>
 	{
 		return this.thenAllowFatal(fin, fin);
 	}
@@ -371,19 +399,27 @@ extends PromiseState<T> implements PromiseLike<T>
 	 */
 	finallyThis(fin:Closure, synchronous?:boolean):this
 	{
-		this.throwIfDisposed();
 		const f:Closure = synchronous ? fin : () => deferImmediate(fin);
-		this.thenThis(f, f);
+		this.doneSynchronous(f, f);
 		return this;
 	}
 
 }
 
-export abstract class Resolvable<T> extends PromiseBase<T>
+export abstract class Resolvable<T>
+	extends PromiseBase<T>
 {
 
+	doneSynchronous(
+		onFulfilled:(v?:T) => any,
+		onRejected?:(v?:any) => any):void
+	{
+		//noinspection JSIgnoredPromiseFromCall
+		this.thenThis(onFulfilled,onRejected);
+	}
+
 	thenSynchronous<TResult>(
-		onFulfilled:Promise.Fulfill<T,TResult>,
+		onFulfilled:Promise.Fulfill<T, TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
 		this.throwIfDisposed();
@@ -411,8 +447,8 @@ export abstract class Resolvable<T> extends PromiseBase<T>
 	}
 
 	thenThis(
-		onFulfilled:(v?:T)=>any,
-		onRejected?:(v?:any)=>any):this
+		onFulfilled:(v?:T) => any,
+		onRejected?:(v?:any) => any):this
 	{
 		this.throwIfDisposed();
 
@@ -434,7 +470,8 @@ export abstract class Resolvable<T> extends PromiseBase<T>
 /**
  * The simplest usable version of a promise which returns synchronously the resolved state provided.
  */
-export abstract class Resolved<T> extends Resolvable<T>
+export abstract class Resolved<T>
+	extends Resolvable<T>
 {
 	constructor(state:Promise.State, result:T, error?:any)
 	{
@@ -450,7 +487,8 @@ export abstract class Resolved<T> extends Resolvable<T>
 /**
  * A fulfilled Resolved<T>.  Provided for readability.
  */
-export class Fulfilled<T> extends Resolved<T>
+export class Fulfilled<T>
+	extends Resolved<T>
 {
 	constructor(value:T)
 	{
@@ -461,7 +499,8 @@ export class Fulfilled<T> extends Resolved<T>
 /**
  * A rejected Resolved<T>.  Provided for readability.
  */
-export class Rejected<T> extends Resolved<T>
+export class Rejected<T>
+	extends Resolved<T>
 {
 	constructor(error:any)
 	{
@@ -473,7 +512,8 @@ export class Rejected<T> extends Resolved<T>
 /**
  * Provided as a means for extending the interface of other PromiseLike<T> objects.
  */
-class PromiseWrapper<T> extends Resolvable<T>
+class PromiseWrapper<T>
+	extends Resolvable<T>
 {
 	constructor(private _target:PromiseLike<T>)
 	{
@@ -502,7 +542,7 @@ class PromiseWrapper<T> extends Resolvable<T>
 	}
 
 	thenSynchronous<TResult>(
-		onFulfilled:Promise.Fulfill<T,TResult>,
+		onFulfilled:Promise.Fulfill<T, TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
 		this.throwIfDisposed();
@@ -523,8 +563,8 @@ class PromiseWrapper<T> extends Resolvable<T>
 
 
 	thenThis(
-		onFulfilled:(v?:T)=>any,
-		onRejected?:(v?:any)=>any):this
+		onFulfilled:(v?:T) => any,
+		onRejected?:(v?:any) => any):this
 	{
 		this.throwIfDisposed();
 
@@ -546,10 +586,11 @@ class PromiseWrapper<T> extends Resolvable<T>
 /**
  * This promise class that facilitates pending resolution.
  */
-export class Promise<T> extends Resolvable<T>
+export class Promise<T>
+	extends Resolvable<T>
 {
 
-	private _waiting:IPromiseCallbacks<any>[]|null|undefined;
+	private _waiting:IPromiseCallbacks<any>[] | null | undefined;
 
 	/*
 	 * A note about deferring:
@@ -569,9 +610,8 @@ export class Promise<T> extends Resolvable<T>
 		if(resolver) this.resolveUsing(resolver, forceSynchronous);
 	}
 
-
 	thenSynchronous<TResult>(
-		onFulfilled:Promise.Fulfill<T,TResult>,
+		onFulfilled:Promise.Fulfill<T, TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
 		this.throwIfDisposed();
@@ -586,8 +626,8 @@ export class Promise<T> extends Resolvable<T>
 	}
 
 	thenThis(
-		onFulfilled:(v?:T)=>any,
-		onRejected?:(v?:any)=>any):this
+		onFulfilled:(v?:T) => any,
+		onRejected?:(v?:any) => any):this
 	{
 		this.throwIfDisposed();
 
@@ -675,7 +715,7 @@ export class Promise<T> extends Resolvable<T>
 		return d;
 	}
 
-	private _resolveInternal(result?:T|PromiseLike<T>):void
+	private _resolveInternal(result?:T | PromiseLike<T>):void
 	{
 		if(this.wasDisposed) return;
 
@@ -689,7 +729,7 @@ export class Promise<T> extends Resolvable<T>
 			switch(r.state)
 			{
 				case Promise.State.Pending:
-					r.thenSynchronous(
+					r.doneSynchronous(
 						v => this._resolveInternal(v),
 						e => this._rejectInternal(e)
 					);
@@ -755,7 +795,9 @@ export class Promise<T> extends Resolvable<T>
 					handleResolution(promise, error, onRejected);
 					//if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
 				}
-				else if(promise) promise.reject(error);
+				else if(promise) { //noinspection JSIgnoredPromiseFromCall
+					promise.reject(error);
+				}
 			}
 			o.length = 0;
 		}
@@ -810,7 +852,8 @@ export class Promise<T> extends Resolvable<T>
 /**
  * By providing an ArrayPromise we expose useful methods/shortcuts for dealing with array results.
  */
-export class ArrayPromise<T> extends Promise<T[]>
+export class ArrayPromise<T>
+	extends Promise<T[]>
 {
 
 	/**
@@ -818,12 +861,12 @@ export class ArrayPromise<T> extends Promise<T[]>
 	 * @param transform
 	 * @returns {PromiseBase<Array<any>>}
 	 */
-	map<U>(transform:(value:T)=>U):ArrayPromise<U>
+	map<U>(transform:(value:T) => U):ArrayPromise<U>
 	{
 		this.throwIfDisposed();
 		return new ArrayPromise<U>(resolve =>
 		{
-			this.thenThis((result:T[]) => resolve(result.map(transform)));
+			this.doneSynchronous((result:T[]) => resolve(result.map(transform)));
 		}, true);
 	}
 
@@ -852,11 +895,12 @@ const PROMISE_COLLECTION = "PromiseCollection";
 /**
  * A Promise collection exposes useful methods for handling a collection of promises and their results.
  */
-export class PromiseCollection<T> extends DisposableBase
+export class PromiseCollection<T>
+	extends DisposableBase
 {
 	private _source:PromiseLike<T>[];
 
-	constructor(source:PromiseLike<T>[]|null|undefined)
+	constructor(source:PromiseLike<T>[] | null | undefined)
 	{
 		super();
 		this._disposableObjectName = PROMISE_COLLECTION;
@@ -917,13 +961,13 @@ export class PromiseCollection<T> extends DisposableBase
 	 * @param transform
 	 * @returns {PromiseBase<Array<any>>}
 	 */
-	map<U>(transform:(value:T)=>U):ArrayPromise<U>
+	map<U>(transform:(value:T) => U):ArrayPromise<U>
 	{
 		this.throwIfDisposed();
 		return new ArrayPromise<U>(resolve =>
 		{
 			this.all()
-				.thenThis((result:T[]) => resolve(result.map(transform)));
+				.doneSynchronous((result:T[]) => resolve(result.map(transform)));
 		}, true);
 	}
 
@@ -934,7 +978,7 @@ export class PromiseCollection<T> extends DisposableBase
 	 * @returns {PromiseCollection<U>}
 	 */
 
-	pipe<U>(transform:(value:T)=>U|PromiseLike<U>):PromiseCollection<U>
+	pipe<U>(transform:(value:T) => U | PromiseLike<U>):PromiseCollection<U>
 	{
 		this.throwIfDisposed();
 		return new PromiseCollection<U>(this._source.map(p => handleSyncIfPossible(p, transform)));
@@ -949,7 +993,7 @@ export class PromiseCollection<T> extends DisposableBase
 	 */
 	reduce<U>(
 		reduction:(previousValue:U, currentValue:T, i?:number, array?:PromiseLike<T>[]) => U,
-		initialValue?:U|PromiseLike<U>):PromiseBase<U>
+		initialValue?:U | PromiseLike<U>):PromiseBase<U>
 	{
 		this.throwIfDisposed();
 		return Promise.wrap(this._source
@@ -1039,7 +1083,7 @@ module pools
 		}
 
 		export function init<T>(
-			onFulfilled:Promise.Fulfill<T,any>,
+			onFulfilled:Promise.Fulfill<T, any>,
 			onRejected?:Promise.Reject<any>,
 			promise?:Promise<any>):IPromiseCallbacks<T>
 		{
@@ -1070,9 +1114,9 @@ export module Promise
 	 * If a promise is disposed the value will be undefined which will also evaluate (promise.state)==false.
 	 */
 	export enum State {
-		Pending   = 0,
+		Pending = 0,
 		Fulfilled = 1,
-		Rejected  = -1
+		Rejected = -1
 	}
 	Object.freeze(State);
 
@@ -1088,10 +1132,10 @@ export module Promise
 		(reason:any):TResult | PromiseLike<TResult>;
 	}
 
-	export interface Then<T,TResult>
+	export interface Then<T, TResult>
 	{
-		(onfulfilled?:Fulfill<T,TResult>, onrejected?:Reject<TResult>):PromiseLike<TResult>;
-		(onfulfilled?:Fulfill<T,TResult>, onrejected?:Reject<void>):PromiseLike<TResult>;
+		(onfulfilled?:Fulfill<T, TResult>, onrejected?:Reject<TResult>):PromiseLike<TResult>;
+		(onfulfilled?:Fulfill<T, TResult>, onrejected?:Reject<void>):PromiseLike<TResult>;
 	}
 
 	export interface Executor<T>
@@ -1121,13 +1165,13 @@ export module Promise
 		promise:PromiseLike<T>,
 		...rest:PromiseLike<T>[]):PromiseCollection<T>
 	export function group(
-		first:PromiseLike<any>|PromiseLike<any>[],
+		first:PromiseLike<any> | PromiseLike<any>[],
 		...rest:PromiseLike<any>[]):PromiseCollection<any>
 	{
 
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
 		return new PromiseCollection(
-			((first)instanceof(Array) ? first : [first])
+			((first) instanceof (Array) ? first : [first])
 				.concat(rest)
 		);
 	}
@@ -1138,11 +1182,11 @@ export module Promise
 	export function all<T>(promises:PromiseLike<T>[]):ArrayPromise<T>
 	export function all<T>(promise:PromiseLike<T>, ...rest:PromiseLike<T>[]):ArrayPromise<T>
 	export function all(
-		first:PromiseLike<any>|PromiseLike<any>[],
+		first:PromiseLike<any> | PromiseLike<any>[],
 		...rest:PromiseLike<any>[]):ArrayPromise<any>
 	{
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
-		let promises = ((first)instanceof(Array) ? first : [first]).concat(rest); // yay a copy!
+		let promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy!
 		if(!promises.length || promises.every(v => !v)) return new ArrayPromise<any>(
 			r => r(promises), true); // it's a new empty, reuse it. :|
 
@@ -1214,11 +1258,11 @@ export module Promise
 		promise:PromiseLike<T>,
 		...rest:PromiseLike<T>[]):ArrayPromise<PromiseLike<T>>
 	export function waitAll(
-		first:PromiseLike<any>|PromiseLike<any>[],
+		first:PromiseLike<any> | PromiseLike<any>[],
 		...rest:PromiseLike<any>[]):ArrayPromise<PromiseLike<any>>
 	{
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
-		const promises = ((first)instanceof(Array) ? first : [first]).concat(rest); // yay a copy!
+		const promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy!
 		if(!promises.length || promises.every(v => !v)) return new ArrayPromise<any>(
 			r => r(promises), true); // it's a new empty, reuse it. :|
 
@@ -1277,10 +1321,10 @@ export module Promise
 	export function race<T>(promises:PromiseLike<T>[]):PromiseBase<T>
 	export function race<T>(promise:PromiseLike<T>, ...rest:PromiseLike<T>[]):PromiseBase<T>
 	export function race(
-		first:PromiseLike<any>|PromiseLike<any>[],
+		first:PromiseLike<any> | PromiseLike<any>[],
 		...rest:PromiseLike<any>[]):PromiseBase<any>
 	{
-		let promises = first && ((first)instanceof(Array) ? first : [first]).concat(rest); // yay a copy?
+		let promises = first && ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy?
 		if(!promises || !promises.length || !(promises = promises.filter(v => v!=null)).length)
 			throw new ArgumentException("Nothing to wait for.");
 
@@ -1306,7 +1350,7 @@ export module Promise
 				promises = NULL;
 			};
 
-			let onResolve = (r:(x:any)=>void, v:any) =>
+			let onResolve = (r:(x:any) => void, v:any) =>
 			{
 				if(r)
 				{
@@ -1369,12 +1413,12 @@ export module Promise
 		promise:T | PromiseLike<T>,
 		...rest:Array<T | PromiseLike<T>>):PromiseCollection<T>
 	export function resolveAll(
-		first:any | PromiseLike<any>|Array<any | PromiseLike<any>>,
+		first:any | PromiseLike<any> | Array<any | PromiseLike<any>>,
 		...rest:Array<any | PromiseLike<any>>):PromiseCollection<any>
 	{
 		if(!first && !rest.length) throw new ArgumentNullException("resolutions");
 		return new PromiseCollection(
-			((first)instanceof(Array) ? first : [first])
+			((first) instanceof (Array) ? first : [first])
 				.concat(rest)
 				.map((v:any) => resolve(v)));
 	}
@@ -1387,7 +1431,7 @@ export module Promise
 	 * @param transform
 	 * @returns {PromiseCollection<T>}
 	 */
-	export function map<T,U>(source:T[], transform:(value:T)=>U):PromiseCollection<U>
+	export function map<T, U>(source:T[], transform:(value:T) => U):PromiseCollection<U>
 	{
 		return new PromiseCollection<U>(
 			source.map(d => new Promise<U>((r, j) =>
@@ -1419,7 +1463,7 @@ export module Promise
 	 * @param target The Promise-Like object
 	 * @returns A new target that simply extends the target.
 	 */
-	export function wrap<T>(target:T|PromiseLike<T>):PromiseBase<T>
+	export function wrap<T>(target:T | PromiseLike<T>):PromiseBase<T>
 	{
 		if(!target) throw new ArgumentNullException(TARGET);
 		return isPromise(target)
@@ -1432,7 +1476,7 @@ export module Promise
 	 * @param then
 	 * @returns {PromiseWrapper<T>}
 	 */
-	export function createFrom<T>(then:Then<T,any>):PromiseBase<T>
+	export function createFrom<T>(then:Then<T, any>):PromiseBase<T>
 	{
 		if(!then) throw new ArgumentNullException(THEN);
 		return new PromiseWrapper<T>({then: then});
@@ -1443,7 +1487,7 @@ export module Promise
 
 interface IPromiseCallbacks<T>
 {
-	onFulfilled:Promise.Fulfill<T,any>;
+	onFulfilled:Promise.Fulfill<T, any>;
 	onRejected?:Promise.Reject<any>;
 	promise?:Promise<any>;
 }

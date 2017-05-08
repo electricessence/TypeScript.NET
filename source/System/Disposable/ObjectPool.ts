@@ -4,6 +4,7 @@
  * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
  * Uses .add(T) and .take():T
  */
+
 import {dispose} from "./dispose";
 import {DisposableBase} from "./DisposableBase";
 import {TaskHandler} from "../Threading/Tasks/TaskHandler";

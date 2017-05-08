@@ -3,7 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
-import {Promise, PromiseBase, ArrayPromise, PromiseCollection} from "../../Promises/Promise";
+
+import {ArrayPromise, Promise, PromiseBase, PromiseCollection} from "../../Promises/Promise";
 import {Type} from "../../Types";
 import Worker from "../Worker";
 import {WorkerLike} from "../WorkerType";
@@ -25,7 +26,7 @@ const
 	URL                = typeof self!==Type.UNDEFINED
 		? (self.URL ? self.URL : (<any>self).webkitURL)
 		: null,
-	_supports          = !!(isNodeJS || (<any>self).Worker); // node always supports parallel
+	_supports          = isNodeJS || !!(<any>self).Worker; // node always supports parallel
 
 export interface ParallelOptions
 {
@@ -392,9 +393,11 @@ export class Parallel
 							//noinspection JSReferencingMutableVariableFromClosure
 							let ii = i++, p = result![ii];
 							let wp = new WorkerPromise<U>(worker, data[ii]);
+							//noinspection JSIgnoredPromiseFromCall
 							wp.thenSynchronous(
 								r =>
 								{
+									//noinspection JSIgnoredPromiseFromCall
 									p.resolve(r);
 									next();
 								},
@@ -403,6 +406,7 @@ export class Parallel
 									if(!error)
 									{
 										error = e;
+										//noinspection JSIgnoredPromiseFromCall
 										p.reject(e);
 										worker = workers.recycle(worker);
 									}
@@ -486,6 +490,7 @@ export class Parallel
 						{
 							let ii = i++;
 							let wp = new WorkerPromise<U>(worker, data[ii]);
+							//noinspection JSIgnoredPromiseFromCall
 							wp.thenSynchronous(
 								r =>
 								{

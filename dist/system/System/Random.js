@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT
+ */
 System.register(["./Integer", "./Collections/Array/initialize", "./Collections/Array/shuffle"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -14,7 +18,10 @@ System.register(["./Integer", "./Collections/Array/initialize", "./Collections/A
                 shuffle_1 = shuffle_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT
+             */
             assert = Integer_1.Integer.assert;
             (function (Random) {
                 function r(maxExclusive) {

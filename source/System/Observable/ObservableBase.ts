@@ -4,6 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * C# Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
+
 import {SubscribableBase} from "./SubscribableBase";
 import {IObservable} from "./IObservable";
 import {IObserver} from "./IObserver";

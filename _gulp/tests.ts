@@ -1,4 +1,4 @@
-import {Target, Module, BuildHelper} from "gulp-typescript-helper";
+import {BuildHelper, Module, Target} from "gulp-typescript-helper";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
 import {Promise} from "../source/System/Promises/Promise";
@@ -31,6 +31,7 @@ gulp.task(
 		TASK.DIST_COMMONJS
 	],
 	()=> renderer
+		.addOptions({noEmitHelpers:true})
 		//.target(Target.ES6)
 		.at('./tests/mocha')
 		.init()

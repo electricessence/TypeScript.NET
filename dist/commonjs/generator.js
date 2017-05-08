@@ -1,4 +1,8 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 function default_1(thisArg, body) {
     var f, y, t;

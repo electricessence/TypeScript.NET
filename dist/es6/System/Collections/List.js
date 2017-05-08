@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { areEqual } from "../Compare";
-import { remove, indexOf, contains, copyTo, removeIndex } from "./Array/Utility";
+import { contains, copyTo, indexOf, remove, removeIndex } from "./Array/Utility";
 import { forEach } from "./Enumeration/Enumerator";
 import { Type } from "../Types";
 import { CollectionBase } from "./CollectionBase";

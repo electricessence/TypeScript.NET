@@ -1,8 +1,8 @@
+"use strict";
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var EmptyEnumerator_1 = require("./EmptyEnumerator");
 var EmptyEnumerable = (function () {

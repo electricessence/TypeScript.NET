@@ -1,4 +1,9 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Origin: http://www.fallingcanbedeadly.com/
+ * Licensing: MIT
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 var ReadOnlyCollectionBase_1 = require("./ReadOnlyCollectionBase");
 var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");

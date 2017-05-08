@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based on .NET DateTime's interface.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
@@ -252,7 +257,7 @@
                 return false;
             return this.equals(other.toJsDate());
         };
-        // https://msdn.microsoft.com/en-us/library/system.icomparable.compareto(v=vs.110).aspx
+        // https://msdn.microsoft.com/en-us/library/System.IComparable.CompareTo(v=vs.110).aspx
         DateTime.prototype.compareTo = function (other) {
             if (!other)
                 throw new ArgumentNullException_1.ArgumentNullException("other");

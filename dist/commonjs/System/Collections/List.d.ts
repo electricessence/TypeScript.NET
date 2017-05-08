@@ -1,5 +1,9 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { CollectionBase } from "./CollectionBase";
-import { EqualityComparison, ActionWithIndex, PredicateWithIndex } from "../FunctionTypes";
+import { ActionWithIndex, EqualityComparison, PredicateWithIndex } from "../FunctionTypes";
 import { IEnumerator } from "./Enumeration/IEnumerator";
 import { IList } from "./IList";
 import { IEnumerateEach } from "./Enumeration/IEnumerateEach";

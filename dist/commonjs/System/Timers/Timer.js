@@ -1,4 +1,8 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 var ObservableBase_1 = require("../Observable/ObservableBase");
 var extends_1 = require("../../extends");
@@ -17,7 +21,7 @@ var Timer = (function (_super) {
         _this._maxCount = _maxCount;
         _this._initialDelay = _initialDelay;
         _this._count = 0;
-        if (_interval == null)
+        if (_interval === null)
             throw "'interval' must be a valid number.";
         if (_interval < 0)
             throw "'interval' cannot be negative.";
@@ -67,7 +71,7 @@ var Timer = (function (_super) {
         _.throwIfDisposed("This timer has been disposed and can't be reused.");
         if (!_._cancel && _._count < _._maxCount) {
             // For now, if it's isn't the start...
-            if (_._count || _._initialDelay == _._interval) {
+            if (_._count || _._initialDelay === _._interval) {
                 var i_1 = setInterval(Timer._onTick, _._interval, _);
                 _._cancel = function () {
                     clearInterval(i_1);

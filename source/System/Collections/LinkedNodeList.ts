@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {format} from "../Text/Utility";
 import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
 import {ArgumentException} from "../Exceptions/ArgumentException";
@@ -12,7 +13,7 @@ import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 import {IDisposable} from "../Disposable/IDisposable";
 import {ILinkedNodeList} from "./ILinkedList";
 import {IEnumerator} from "./Enumeration/IEnumerator";
-import {Selector, PredicateWithIndex, ActionWithIndex, SelectorWithIndex} from "../FunctionTypes";
+import {ActionWithIndex, PredicateWithIndex, Selector, SelectorWithIndex} from "../FunctionTypes";
 import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols

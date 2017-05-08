@@ -3,12 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
+
 import {Type} from "../Types";
 import {UriComponent} from "./UriComponent";
 import {Scheme} from "./Scheme";
 import {SchemeValue} from "./SchemeValue";
 import {QueryParam} from "./QueryParam";
-import {parseToMap, encode, Separator} from "./QueryParams";
+import {encode, parseToMap, Separator} from "./QueryParams";
 import {trim} from "../Text/Utility";
 import {Exception} from "../Exception";
 import {ArgumentException} from "../Exceptions/ArgumentException";

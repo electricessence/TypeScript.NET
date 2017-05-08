@@ -2,16 +2,17 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {using} from "../../Disposable/dispose";
 import {Type} from "../../Types";
 import {ArrayEnumerator} from "./ArrayEnumerator";
 import {IndexEnumerator} from "./IndexEnumerator";
 import {UnsupportedEnumerableException} from "./UnsupportedEnumerableException";
-import {SelectorWithIndex, ActionWithIndex, PredicateWithIndex} from "../../FunctionTypes";
+import {ActionWithIndex, PredicateWithIndex, SelectorWithIndex} from "../../FunctionTypes";
 import {IEnumerator} from "./IEnumerator";
 import {IEnumerable} from "./IEnumerable";
 import {IEnumerableOrArray} from "../IEnumerableOrArray";
-import {InfiniteValueFactory, InfiniteEnumerator} from "./InfiniteEnumerator";
+import {InfiniteEnumerator, InfiniteValueFactory} from "./InfiniteEnumerator";
 import {EmptyEnumerator as Empty} from "./EmptyEnumerator";
 import {IIterator, IIteratorResult} from "./IIterator";
 import {IteratorEnumerator} from "./IteratorEnumerator";

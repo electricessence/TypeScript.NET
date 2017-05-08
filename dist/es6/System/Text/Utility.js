@@ -89,7 +89,7 @@ export function format(source, ...args) {
  */
 export function supplant(source, params) {
     const oIsArray = (params) instanceof (Array);
-    return source.replace(/\{([^{}]*)}/g, (a, b) => {
+    return source.replace(/{([^{}]*)}/g, (a, b) => {
         let n = b;
         if (oIsArray) {
             let i = parseInt(b);

@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 /**
  * Takes a target object and applies all source values to it.
  * @param target
@@ -57,5 +61,14 @@ export function trim(target, keyMap) {
         }
     }
     //return <any>target;
+}
+export function wipe(map, depth = 1) {
+    if (map && depth) {
+        for (let key of Object.keys(map)) {
+            const v = map[key];
+            delete map[key];
+            wipe(v, depth - 1);
+        }
+    }
 }
 //# sourceMappingURL=MapUtility.js.map

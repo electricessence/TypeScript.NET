@@ -27,7 +27,7 @@ describe(".daysInMonth(year,month) & .isLeapYear(year)",()=>{
 	{
 		for(let y=startYear;y<2004;y++) {
 			for(let m=0;m<12;m++) {
-				if(m==1 && DateTime.isLeapYear(y)) {
+				if(m===1 && DateTime.isLeapYear(y)) {
 					assert.equal(DateTime.daysInMonth(y,m),29);
 				} else {
 					assert.equal(DateTime.daysInMonth(y,m),daysPerMonth[m]);
@@ -61,7 +61,7 @@ describe(".equals",()=>{
 		const x = new DateTime(d1), y = new DateTime(d2), z = new DateTime(d2);
 		assert.ok(x.compareTo(y)<0);
 		assert.ok(y.compareTo(x)>0);
-		assert.ok(y.compareTo(z)==0);
+		assert.ok(y.compareTo(z)===0);
 	});
 
 

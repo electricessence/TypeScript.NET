@@ -3,6 +3,7 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {areEqual} from "../../Compare";
 import {Type} from "../../Types";
 import {EnumeratorBase} from "../Enumeration/EnumeratorBase";

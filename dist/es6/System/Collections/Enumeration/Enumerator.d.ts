@@ -1,4 +1,8 @@
-import { SelectorWithIndex, ActionWithIndex, PredicateWithIndex } from "../../FunctionTypes";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+import { ActionWithIndex, PredicateWithIndex, SelectorWithIndex } from "../../FunctionTypes";
 import { IEnumerator } from "./IEnumerator";
 import { IEnumerable } from "./IEnumerable";
 import { IEnumerableOrArray } from "../IEnumerableOrArray";

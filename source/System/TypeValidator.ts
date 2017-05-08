@@ -16,7 +16,8 @@
  *      g : "literal"
  * }
  */
-import {TypeInfo, Type} from "./Types";
+
+import {Type, TypeInfo} from "./Types";
 import {areEqual} from "./Compare";
 import __extendsImport from "../extends";
 // noinspection JSUnusedLocalSymbols

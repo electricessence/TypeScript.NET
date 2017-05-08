@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT
+ */
 System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullException", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -17,7 +21,10 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT
+             */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
@@ -84,7 +91,7 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
                     return new LazyPromise(function (resolve, reject) {
                         // A lazy promise only enters here if something called for a resolution.
                         pass = function () {
-                            _this.thenThis(function (v) { return resolve(v); }, function (e) { return reject(e); });
+                            _this.doneSynchronous(function (v) { return resolve(v); }, function (e) { return reject(e); });
                             timeout.dispose();
                             timeout = VOID0;
                             pass = VOID0;
@@ -134,20 +141,20 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
                         // Calling super.thenThis does not trigger resolution.
                         // This simply waits for resolution to happen.
                         // Is effectively the timer by when resolution has occurred.
-                        _super.prototype.thenThis.call(this, detector, detector);
+                        _super.prototype.doneSynchronous.call(this, detector, detector);
                         //noinspection JSUnusedAssignment
                         detector = null;
                     }
                     return new LazyPromise(function (resolve, reject) {
                         // Because of the lazy nature of this promise, this could enter here at any time.
                         if (_this.isPending) {
-                            _this.thenThis(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
+                            _this.doneSynchronous(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
                             finalize();
                         }
                         else {
                             // We don't know when this resolved and could have happened anytime after calling this delay method.
                             pass = function () {
-                                _this.thenThis(function (v) { return resolve(v); }, function (e) { return reject(e); });
+                                _this.doneSynchronous(function (v) { return resolve(v); }, function (e) { return reject(e); });
                             };
                             // Already finalized (aka resolved after a timeout)? Go now!
                             if (!finalize)

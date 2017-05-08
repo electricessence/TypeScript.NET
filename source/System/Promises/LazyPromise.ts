@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
+
 import {Promise, PromiseBase} from "./Promise";
 import {Closure} from "../FunctionTypes";
 import {ICancellable} from "../Threading/ICancellable";
@@ -99,7 +100,7 @@ export class LazyPromise<T> extends Promise<T>
 				// A lazy promise only enters here if something called for a resolution.
 				pass = ()=>
 				{
-					this.thenThis(
+					this.doneSynchronous(
 						v=> resolve(v),
 						e=> reject(e)
 					);
@@ -164,7 +165,7 @@ export class LazyPromise<T> extends Promise<T>
 			// Calling super.thenThis does not trigger resolution.
 			// This simply waits for resolution to happen.
 			// Is effectively the timer by when resolution has occurred.
-			super.thenThis(detector, detector);
+			super.doneSynchronous(detector, detector);
 			//noinspection JSUnusedAssignment
 			detector = <any>null;
 		}
@@ -175,7 +176,7 @@ export class LazyPromise<T> extends Promise<T>
 				// Because of the lazy nature of this promise, this could enter here at any time.
 				if(this.isPending)
 				{
-					this.thenThis(
+					this.doneSynchronous(
 						v=> defer(()=>resolve(v), milliseconds),
 						e=> defer(()=>reject(e), milliseconds)
 					);
@@ -186,7 +187,7 @@ export class LazyPromise<T> extends Promise<T>
 					// We don't know when this resolved and could have happened anytime after calling this delay method.
 					pass = ()=>
 					{
-						this.thenThis(
+						this.doneSynchronous(
 							v=> resolve(v),
 							e=> reject(e)
 						);

@@ -3,15 +3,16 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {areEqual as areEqualValues, compare as compareValues} from "../System/Compare";
 import {copy} from "../System/Collections/Array/copy";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as enumUtil from "../System/Collections/Enumeration/Enumerator";
 import {
 	isEnumerable,
-	throwIfEndless,
+	isEnumerator,
 	isIterator,
-	isEnumerator
+	throwIfEndless
 } from "../System/Collections/Enumeration/Enumerator";
 import {EmptyEnumerator} from "../System/Collections/Enumeration/EmptyEnumerator";
 import {Type} from "../System/Types";
@@ -32,27 +33,27 @@ import {IEnumerator} from "../System/Collections/Enumeration/IEnumerator";
 import {IEnumerable} from "../System/Collections/Enumeration/IEnumerable";
 import {
 	Action,
-	Predicate,
-	Selector,
-	EqualityComparison,
-	Comparison,
-	Closure,
 	ActionWithIndex,
+	Closure,
+	Comparison,
+	EqualityComparison,
+	Predicate,
 	PredicateWithIndex,
+	Selector,
 	SelectorWithIndex
 } from "../System/FunctionTypes";
-import {IMap, IDictionary} from "../System/Collections/Dictionaries/IDictionary";
+import {IDictionary, IMap} from "../System/Collections/Dictionaries/IDictionary";
 import {Comparable} from "../System/IComparable";
 import {IComparer} from "../System/IComparer";
 import {IKeyValuePair} from "../System/KeyValuePair";
 import {Order} from "../System/Collections/Sorting/Order";
 import {
+	IFiniteEnumerable,
+	IGrouping,
 	IInfiniteEnumerable,
 	ILinqEnumerable,
-	IFiniteEnumerable,
 	ILookup,
 	IOrderedEnumerable,
-	IGrouping,
 	NotEmptyEnumerable
 } from "./Enumerable";
 import {EnumerableAction} from "./EnumerableAction";
@@ -3313,8 +3314,11 @@ function createSortContext<T, TOrderBy extends Comparable>(
 // since there is a strong chance of introducing a circular reference.
 
 function throwIfDisposed(disposed:true):true
+//noinspection JSUnusedLocalSymbols
 function throwIfDisposed(disposed:false):never
+//noinspection JSUnusedLocalSymbols
 function throwIfDisposed(disposed:boolean):true|never
+//noinspection JSUnusedLocalSymbols
 function throwIfDisposed(disposed:boolean):true|never
 {
 	if(disposed) throw new ObjectDisposedException("Enumerable");

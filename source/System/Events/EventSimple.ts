@@ -3,6 +3,7 @@
  * Based on Netjs mscorlib.ts
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {IDisposable} from "../Disposable/IDisposable";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols

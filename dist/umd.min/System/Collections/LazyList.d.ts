@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Origin: http://www.fallingcanbedeadly.com/
+ * Licensing: MIT
+ */
 import { IEnumerator } from "./Enumeration/IEnumerator";
 import { ReadOnlyCollectionBase } from "./ReadOnlyCollectionBase";
 import { IEnumerable } from "./Enumeration/IEnumerable";

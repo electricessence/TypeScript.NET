@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["./initialize", "../../Exceptions/ArgumentNullException", "../../Exceptions/ArgumentOutOfRangeException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -68,7 +72,10 @@ System.register(["./initialize", "../../Exceptions/ArgumentNullException", "../.
                 ArgumentOutOfRangeException_1 = ArgumentOutOfRangeException_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             CBN = 'Cannot be null.', CBL0 = 'Cannot be less than zero.';
         }
     };

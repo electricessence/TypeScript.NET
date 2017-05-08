@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import * as Values from "../../Compare";
 import {SortContext} from "./SortContext";
 import {Functions} from "../../Functions";

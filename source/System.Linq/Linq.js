@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Original: http://linqjs.codeplex.com/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
@@ -9,11 +14,6 @@
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    /*!
-     * @author electricessence / https://github.com/electricessence/
-     * Original: http://linqjs.codeplex.com/
-     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-     */
     var Compare_1 = require("../System/Compare");
     var copy_1 = require("../System/Collections/Array/copy");
     var Arrays = require("../System/Collections/Array/Compare");
@@ -2016,6 +2016,7 @@
             return createSortContext(orderedEnumerable.parent, context);
         return context;
     }
+    //noinspection JSUnusedLocalSymbols
     function throwIfDisposed(disposed) {
         if (disposed)
             throw new ObjectDisposedException_1.ObjectDisposedException("Enumerable");

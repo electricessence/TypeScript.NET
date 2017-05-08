@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import * as AU from "../Collections/Array/Utility";
 import {shallowCopy} from "../Utility/shallowCopy";
 import {DisposableBase} from "../Disposable/DisposableBase";

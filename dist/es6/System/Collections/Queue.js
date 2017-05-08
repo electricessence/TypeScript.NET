@@ -69,6 +69,7 @@ export class Queue extends CollectionBase {
     }
     //noinspection JSUnusedLocalSymbols
     _removeInternal(item, max) {
+        //noinspection HtmlUnknownTag
         throw new NotImplementedException("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
             " since it would require destroying the underlying array to remove the item.");
     }

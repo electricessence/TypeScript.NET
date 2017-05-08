@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { IIteratorResult } from "./IIterator";
 export declare class IteratorResult<T> implements IIteratorResult<T> {
     readonly value: T;

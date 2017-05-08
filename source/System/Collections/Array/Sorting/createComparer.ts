@@ -2,10 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {Type} from "../../../Types";
 import {compare} from "../../../Compare";
 import {Primitive} from "../../../Primitive";
-import {Selector, Comparison} from "../../../FunctionTypes";
+import {Comparison, Selector} from "../../../FunctionTypes";
 import {CompareResult} from "../../../CompareResult";
 import {Order} from "../../Sorting/Order";
 

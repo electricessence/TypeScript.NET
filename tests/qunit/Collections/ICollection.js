@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "QUnit", "../../../dist/amd/System/Text/Utility", "../../../dist/amd/System/Collections/Array/Utility", "../../../dist/amd/System/Exceptions/NotImplementedException"], factory);
     }
-})(["require", "exports", "QUnit", "../../../dist/amd/System/Text/Utility", "../../../dist/amd/System/Collections/Array/Utility", "../../../dist/amd/System/Exceptions/NotImplementedException"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     ///<reference types="qunit"/>
     ///<amd-dependency path="QUnit"/>
     var Text = require("../../../dist/amd/System/Text/Utility");
@@ -53,8 +55,8 @@
         assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
         // Restore contents.
         for (var _i = 0, a_2 = a; _i < a_2.length; _i++) {
-            var v = a_2[_i];
-            c.add(v);
+            var v1 = a_2[_i];
+            c.add(v1);
         }
         var extraSize = 10;
         var b = AU.initialize(count + extraSize);
@@ -66,8 +68,8 @@
         assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
         // Restore contents.
         for (var _a = 0, a_3 = a; _a < a_3.length; _a++) {
-            var v = a_3[_a];
-            c.add(v);
+            var v2 = a_3[_a];
+            c.add(v2);
         }
         assert.equal(c.count, a.length, "A collection's count should be equal to the number of items added.");
     }
@@ -98,7 +100,7 @@
         }
     }
     function Collection(name, collection, sourceValues) {
-        if (sourceValues.indexOf(null) != -1)
+        if (sourceValues.indexOf(null) !== -1)
             throw "Source values should not contain null as checking against null is one of the tests.";
         /* The following tests inherently test:
          - count

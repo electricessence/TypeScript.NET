@@ -1,9 +1,13 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { ILinkedNode, ILinkedNodeWithValue } from "./ILinkedListNode";
 import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
 import { IDisposable } from "../Disposable/IDisposable";
 import { ILinkedNodeList } from "./ILinkedList";
 import { IEnumerator } from "./Enumeration/IEnumerator";
-import { Selector, PredicateWithIndex, ActionWithIndex, SelectorWithIndex } from "../FunctionTypes";
+import { ActionWithIndex, PredicateWithIndex, Selector, SelectorWithIndex } from "../FunctionTypes";
 import { ArrayLikeWritable } from "./Array/ArrayLikeWritable";
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:

@@ -23,7 +23,7 @@ describe(".daysInMonth(year,month) & .isLeapYear(year)", function () {
     it('should match actual Gregorian values.', function () {
         for (var y = startYear; y < 2004; y++) {
             for (var m = 0; m < 12; m++) {
-                if (m == 1 && DateTime_1.default.isLeapYear(y)) {
+                if (m === 1 && DateTime_1.default.isLeapYear(y)) {
                     assert.equal(DateTime_1.default.daysInMonth(y, m), 29);
                 }
                 else {
@@ -53,6 +53,7 @@ describe(".equals", function () {
         var x = new DateTime_1.default(d1), y = new DateTime_1.default(d2), z = new DateTime_1.default(d2);
         assert.ok(x.compareTo(y) < 0);
         assert.ok(y.compareTo(x) > 0);
-        assert.ok(y.compareTo(z) == 0);
+        assert.ok(y.compareTo(z) === 0);
     });
 });
+//# sourceMappingURL=DateTime.js.map

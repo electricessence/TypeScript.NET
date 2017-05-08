@@ -7,7 +7,7 @@ import { areEqual as areEqualValues, compare as compareValues } from "../System/
 import { copy } from "../System/Collections/Array/copy";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as enumUtil from "../System/Collections/Enumeration/Enumerator";
-import { isEnumerable, throwIfEndless, isIterator, isEnumerator } from "../System/Collections/Enumeration/Enumerator";
+import { isEnumerable, isEnumerator, isIterator, throwIfEndless } from "../System/Collections/Enumeration/Enumerator";
 import { EmptyEnumerator } from "../System/Collections/Enumeration/EmptyEnumerator";
 import { Type } from "../System/Types";
 import { Integer } from "../System/Integer";
@@ -1900,6 +1900,7 @@ function createSortContext(orderedEnumerable, currentContext = null) {
         return createSortContext(orderedEnumerable.parent, context);
     return context;
 }
+//noinspection JSUnusedLocalSymbols
 function throwIfDisposed(disposed) {
     if (disposed)
         throw new ObjectDisposedException("Enumerable");

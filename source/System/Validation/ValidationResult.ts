@@ -2,10 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {IEquatable} from "../IEquatable";
 import {IValidationResult} from "./IValidationResult"; // For compatibility with (let, const, function, class);
 
-const valid = new ValidationResult(true);
+let VALID:ValidationResult|null = null;
 
 /**
  * A class for generating responses to validation.
@@ -47,7 +48,7 @@ class ValidationResult implements IValidationResult, IEquatable<IValidationResul
 	 */
 	static get valid():IValidationResult
 	{
-		return valid;
+		return VALID || (VALID = new ValidationResult(true));
 	}
 
 	/**

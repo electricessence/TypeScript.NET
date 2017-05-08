@@ -1,3 +1,9 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
+ * Uses .add(T) and .take():T
+ */
 System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandler", "../Exceptions/ArgumentOutOfRangeException", "../Exceptions/ArgumentException", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -23,7 +29,12 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
+             * Uses .add(T) and .take():T
+             */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = "Must be less than or equal to " + ABSOLUTE_MAX_SIZE + ".";

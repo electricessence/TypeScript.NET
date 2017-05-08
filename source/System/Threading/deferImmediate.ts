@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on code from: https://github.com/kriskowal/q
  */
+
 import {Type} from "../Types";
 import {LinkedNodeList} from "../Collections/LinkedNodeList";
 import {Queue} from "../Collections/Queue";
@@ -146,7 +147,7 @@ export function deferImmediate(task:Function, context?:any, args?:any[]):ICancel
  * @param task
  * @param context
  * @param args
- * @returns {{cancel: (()=>boolean), dispose: (()=>undefined)}}
+ * @returns ICancellable
  */
 export function deferImmediate(task:Closure|Function, context?:any, args?:any[]):ICancellable
 {

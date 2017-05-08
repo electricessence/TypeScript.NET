@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
+
 import {Integer} from "./Integer";
 import {initialize} from "./Collections/Array/initialize";
 import {shuffle as arrayShuffle} from "./Collections/Array/shuffle";

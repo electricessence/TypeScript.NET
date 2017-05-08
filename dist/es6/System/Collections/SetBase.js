@@ -172,14 +172,5 @@ export class SetBase extends CollectionBase {
         return this._removeNode(s && s.last);
     }
 }
-function wipe(map, depth = 1) {
-    if (map && depth) {
-        for (let key of Object.keys(map)) {
-            const v = map[key];
-            delete map[key];
-            wipe(v, depth - 1);
-        }
-    }
-}
 export default SetBase;
 //# sourceMappingURL=SetBase.js.map

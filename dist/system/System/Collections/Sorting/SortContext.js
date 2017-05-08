@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["../../Compare"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -8,7 +12,10 @@ System.register(["../../Compare"], function (exports_1, context_1) {
                 Values = Values_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             SortContext = (function () {
                 function SortContext(_next, _comparer, _order) {
                     if (_comparer === void 0) { _comparer = Values.compare; }

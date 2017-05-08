@@ -1,11 +1,18 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var valid, ValidationResult;
+    var VALID, ValidationResult;
     return {
         setters: [],
-        execute: function () {
-            valid = new ValidationResult(true);
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
+            VALID = null;
             /**
              * A class for generating responses to validation.
              */
@@ -40,7 +47,7 @@ System.register([], function (exports_1, context_1) {
                      * Allows for returning this instance like you would return 'true'.
                      */
                     get: function () {
-                        return valid;
+                        return VALID || (VALID = new ValidationResult(true));
                     },
                     enumerable: true,
                     configurable: true

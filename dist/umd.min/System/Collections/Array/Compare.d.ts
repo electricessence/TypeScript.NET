@@ -1,5 +1,9 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { Primitive } from "../../Primitive";
-import { EqualityComparison, Comparison } from "../../FunctionTypes";
+import { Comparison, EqualityComparison } from "../../FunctionTypes";
 import { IComparable } from "../../IComparable";
 export declare function areAllEqual(arrays: ArrayLike<ArrayLike<any>>, equalityComparer?: EqualityComparison<any>): boolean;
 export declare function areAllEqual(arrays: ArrayLike<ArrayLike<any>>, strict: boolean, equalityComparer?: EqualityComparison<any>): boolean;

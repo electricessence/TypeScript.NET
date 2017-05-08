@@ -1,4 +1,8 @@
-import { KeyValuePair, IKeyValuePair } from "./KeyValuePair";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+import { IKeyValuePair, KeyValuePair } from "./KeyValuePair";
 export declare function isKeyValuePair<TKey, TValue>(kvp: any): kvp is IKeyValuePair<TKey, TValue>;
 export declare function assertKey<TKey>(key: TKey, name?: string): TKey | never;
 export declare function assertTuple(tuple: ArrayLike<any>, name?: string): void | never;

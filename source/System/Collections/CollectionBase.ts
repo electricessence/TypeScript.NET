@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {forEach} from "./Enumeration/Enumerator";
 import {areEqual} from "../Compare";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
@@ -10,11 +11,11 @@ import {DisposableBase} from "../Disposable/DisposableBase";
 import {ICollection} from "./ICollection";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
-import {EqualityComparison, Action, PredicateWithIndex, ActionWithIndex} from "../FunctionTypes";
+import {Action, ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
 import {ILinqEnumerable} from "../../System.Linq/Enumerable";
-import {isCommonJS, isRequireJS, isNodeJS} from "../Environment";
+import {isCommonJS, isNodeJS, isRequireJS} from "../Environment";
 import __extendsImport from "../../extends";
 //noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -289,7 +290,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	 * Returns an array filtered by the provided predicate.
 	 * Provided for similarity to JS Array.
 	 * @param predicate
-	 * @returns {T[]}
+	 * @returns {[]}
 	 */
 	filter(predicate:PredicateWithIndex<T>):T[]
 	{

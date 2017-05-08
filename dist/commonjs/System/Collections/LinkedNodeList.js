@@ -1,9 +1,9 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Utility_1 = require("../Text/Utility");
 var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
 var ArgumentException_1 = require("../Exceptions/ArgumentException");

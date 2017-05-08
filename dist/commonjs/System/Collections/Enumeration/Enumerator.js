@@ -1,9 +1,9 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var dispose_1 = require("../../Disposable/dispose");
 var Types_1 = require("../../Types");
 var ArrayEnumerator_1 = require("./ArrayEnumerator");

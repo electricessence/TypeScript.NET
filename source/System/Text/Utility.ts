@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {Type} from "../Types";
 
 export const EMPTY:string = '';
@@ -115,7 +116,7 @@ export function format(source:string, ...args:any[])
 export function supplant(source:string, params:{[key:string]:any}|any[]):string
 {
 	const oIsArray = (params)instanceof(Array);
-	return source.replace(/\{([^{}]*)}/g,
+	return source.replace(/{([^{}]*)}/g,
 		(a:string, b:string):any=>
 		{
 			let n:any = b;

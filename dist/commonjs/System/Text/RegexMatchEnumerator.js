@@ -1,9 +1,9 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var RegularExpressions_1 = require("./RegularExpressions");
 var EmptyEnumerator_1 = require("../Collections/Enumeration/EmptyEnumerator");
 var EnumeratorBase_1 = require("../Collections/Enumeration/EnumeratorBase");

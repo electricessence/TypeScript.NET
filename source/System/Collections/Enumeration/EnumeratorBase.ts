@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {Type} from "../../Types";
 import {DisposableBase} from "../../Disposable/DisposableBase";
 import {ObjectPool} from "../../Disposable/ObjectPool";
@@ -11,7 +12,7 @@ import {IIteratorResult} from "./IIterator";
 import {IYield} from "./IYield";
 import {IteratorResult} from "./IteratorResult";
 import __extendsImport from "../../../extends";
-import {Closure, Action} from "../../FunctionTypes";
+import {Action, Closure} from "../../FunctionTypes";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 

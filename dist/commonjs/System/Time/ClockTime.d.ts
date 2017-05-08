@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Originally based upon .NET source but with many additions and improvements.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { TimeQuantity } from "./TimeQuantity";
 import { IClockTime } from "./ITimeStamp";
 export declare class ClockTime extends TimeQuantity implements IClockTime {

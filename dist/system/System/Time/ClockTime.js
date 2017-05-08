@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Originally based upon .NET source but with many additions and improvements.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["./TimeQuantity", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -17,7 +22,11 @@ System.register(["./TimeQuantity", "../../extends"], function (exports_1, contex
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Originally based upon .NET source but with many additions and improvements.
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             ClockTime = (function (_super) {

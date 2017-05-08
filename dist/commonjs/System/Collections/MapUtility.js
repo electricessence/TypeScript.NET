@@ -1,4 +1,8 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Takes a target object and applies all source values to it.
@@ -65,4 +69,16 @@ function trim(target, keyMap) {
     //return <any>target;
 }
 exports.trim = trim;
+function wipe(map, depth) {
+    if (depth === void 0) { depth = 1; }
+    if (map && depth) {
+        for (var _i = 0, _a = Object.keys(map); _i < _a.length; _i++) {
+            var key = _a[_i];
+            var v = map[key];
+            delete map[key];
+            wipe(v, depth - 1);
+        }
+    }
+}
+exports.wipe = wipe;
 //# sourceMappingURL=MapUtility.js.map

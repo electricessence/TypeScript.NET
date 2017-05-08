@@ -5,7 +5,7 @@
  */
 import { Type } from "../Types";
 import { Scheme } from "./Scheme";
-import { parseToMap, encode, Separator } from "./QueryParams";
+import { encode, parseToMap, Separator } from "./QueryParams";
 import { trim } from "../Text/Utility";
 import { ArgumentException } from "../Exceptions/ArgumentException";
 import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";

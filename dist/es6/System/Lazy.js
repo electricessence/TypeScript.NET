@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { ResolverBase } from "./ResolverBase";
 // noinspection JSUnusedLocalSymbols
 // We need a non-resettable lazy to ensure it can be passed safely around.

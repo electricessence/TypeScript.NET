@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based on .NET DateTime's interface.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["./TimeSpan", "./ClockTime", "./TimeStamp", "../Exceptions/ArgumentNullException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -17,7 +22,11 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp", "../Exceptions/Argu
                 ArgumentNullException_1 = ArgumentNullException_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Based on .NET DateTime's interface.
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             VOID0 = void 0;
             DateTime = (function () {
                 function DateTime(value, kind) {
@@ -257,7 +266,7 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp", "../Exceptions/Argu
                         return false;
                     return this.equals(other.toJsDate());
                 };
-                // https://msdn.microsoft.com/en-us/library/system.icomparable.compareto(v=vs.110).aspx
+                // https://msdn.microsoft.com/en-us/library/System.IComparable.CompareTo(v=vs.110).aspx
                 DateTime.prototype.compareTo = function (other) {
                     if (!other)
                         throw new ArgumentNullException_1.ArgumentNullException("other");

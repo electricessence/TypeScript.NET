@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
-import { Promise, ArrayPromise, PromiseCollection } from "../../Promises/Promise";
+import { ArrayPromise, Promise, PromiseCollection } from "../../Promises/Promise";
 import { Type } from "../../Types";
 import Worker from "../Worker";
 import { deferImmediate } from "../deferImmediate";
@@ -12,7 +12,7 @@ import { ObjectPool } from "../../Disposable/ObjectPool";
 //noinspection JSUnusedAssignment
 const MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Type.UNDEFINED
     ? (self.URL ? self.URL : self.webkitURL)
-    : null, _supports = !!(isNodeJS || self.Worker); // node always supports parallel
+    : null, _supports = isNodeJS || !!self.Worker; // node always supports parallel
 //noinspection JSUnusedAssignment
 const defaults = {
     evalPath: isNodeJS ? __dirname + '/eval.js' : VOID0,
@@ -257,12 +257,15 @@ export class Parallel {
                             //noinspection JSReferencingMutableVariableFromClosure
                             let ii = i++, p = result[ii];
                             let wp = new WorkerPromise(worker, data[ii]);
+                            //noinspection JSIgnoredPromiseFromCall
                             wp.thenSynchronous(r => {
+                                //noinspection JSIgnoredPromiseFromCall
                                 p.resolve(r);
                                 next();
                             }, e => {
                                 if (!error) {
                                     error = e;
+                                    //noinspection JSIgnoredPromiseFromCall
                                     p.reject(e);
                                     worker = workers.recycle(worker);
                                 }
@@ -323,6 +326,7 @@ export class Parallel {
                         if (i < len) {
                             let ii = i++;
                             let wp = new WorkerPromise(worker, data[ii]);
+                            //noinspection JSIgnoredPromiseFromCall
                             wp.thenSynchronous(r => {
                                 result[ii] = r;
                                 next();

@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT
+ */
 import { Promise, PromiseBase } from "./Promise";
 /**
  * A promise that waits for the first then to trigger the resolver.

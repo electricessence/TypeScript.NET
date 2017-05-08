@@ -2,9 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {Type} from "../Types";
 import {Primitive} from "../Primitive";
-import {JsonMap, JsonArray} from "../../JSON";
+import {JsonArray, JsonMap} from "../../JSON";
 import {copy} from "../Collections/Array/copy";
 
 export default function clone(source:Primitive | JsonMap | JsonArray, depth:number = 0):any

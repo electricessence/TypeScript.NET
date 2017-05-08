@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT
+ */
 import { ArrayLikeWritable } from "./Collections/Array/ArrayLikeWritable";
 export declare module Random {
     /**

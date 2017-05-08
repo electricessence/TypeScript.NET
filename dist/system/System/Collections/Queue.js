@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -44,7 +49,11 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
@@ -106,6 +115,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 };
                 //noinspection JSUnusedLocalSymbols
                 Queue.prototype._removeInternal = function (item, max) {
+                    //noinspection HtmlUnknownTag
                     throw new NotImplementedException_1.NotImplementedException("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
                         " since it would require destroying the underlying array to remove the item.");
                 };

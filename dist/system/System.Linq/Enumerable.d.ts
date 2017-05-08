@@ -3,18 +3,19 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {IEnumerator} from "../System/Collections/Enumeration/IEnumerator";
 import {
-	Selector,
-	EqualityComparison,
-	Comparison,
-	Closure,
+	Action,
 	ActionWithIndex,
+	Closure,
+	Comparison,
+	EqualityComparison,
 	PredicateWithIndex,
-	SelectorWithIndex,
-	Action
+	Selector,
+	SelectorWithIndex
 } from "../System/FunctionTypes";
-import {IMap, IDictionary} from "../System/Collections/Dictionaries/IDictionary";
+import {IDictionary, IMap} from "../System/Collections/Dictionaries/IDictionary";
 import {Comparable} from "../System/IComparable";
 import {EnumerableAction} from "./EnumerableAction";
 import {IEnumerable} from "../System/Collections/Enumeration/IEnumerable";

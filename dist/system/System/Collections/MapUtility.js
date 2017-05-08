@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -66,9 +70,24 @@ System.register([], function (exports_1, context_1) {
         //return <any>target;
     }
     exports_1("trim", trim);
+    function wipe(map, depth) {
+        if (depth === void 0) { depth = 1; }
+        if (map && depth) {
+            for (var _i = 0, _a = Object.keys(map); _i < _a.length; _i++) {
+                var key = _a[_i];
+                var v = map[key];
+                delete map[key];
+                wipe(v, depth - 1);
+            }
+        }
+    }
+    exports_1("wipe", wipe);
     return {
         setters: [],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
         }
     };
 });

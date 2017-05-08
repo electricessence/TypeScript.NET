@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT
+ */
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
@@ -9,10 +13,6 @@
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    /*!
-     * @author electricessence / https://github.com/electricessence/
-     * Licensing: MIT
-     */
     var Integer_1 = require("./Integer");
     var initialize_1 = require("./Collections/Array/initialize");
     var shuffle_1 = require("./Collections/Array/shuffle");

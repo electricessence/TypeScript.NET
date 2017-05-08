@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["../Types"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -98,7 +102,7 @@ System.register(["../Types"], function (exports_1, context_1) {
      */
     function supplant(source, params) {
         var oIsArray = (params) instanceof (Array);
-        return source.replace(/\{([^{}]*)}/g, function (a, b) {
+        return source.replace(/{([^{}]*)}/g, function (a, b) {
             var n = b;
             if (oIsArray) {
                 var i = parseInt(b);
@@ -156,7 +160,10 @@ System.register(["../Types"], function (exports_1, context_1) {
                 Types_1 = Types_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             exports_1("EMPTY", EMPTY = '');
         }
     };

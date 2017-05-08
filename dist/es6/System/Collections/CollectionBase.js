@@ -7,7 +7,7 @@ import { areEqual } from "../Compare";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { DisposableBase } from "../Disposable/DisposableBase";
-import { isCommonJS, isRequireJS, isNodeJS } from "../Environment";
+import { isCommonJS, isNodeJS, isRequireJS } from "../Environment";
 //noinspection JSUnusedLocalSymbols
 //noinspection SpellCheckingInspection
 const NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
@@ -207,7 +207,7 @@ export class CollectionBase extends DisposableBase {
      * Returns an array filtered by the provided predicate.
      * Provided for similarity to JS Array.
      * @param predicate
-     * @returns {T[]}
+     * @returns {[]}
      */
     filter(predicate) {
         if (!predicate)

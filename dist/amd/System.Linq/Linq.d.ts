@@ -1,9 +1,14 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Original: http://linqjs.codeplex.com/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { DisposableBase } from "../System/Disposable/DisposableBase";
 import { IEnumerator } from "../System/Collections/Enumeration/IEnumerator";
-import { Action, Selector, EqualityComparison, Comparison, Closure, ActionWithIndex, PredicateWithIndex, SelectorWithIndex } from "../System/FunctionTypes";
-import { IMap, IDictionary } from "../System/Collections/Dictionaries/IDictionary";
+import { Action, ActionWithIndex, Closure, Comparison, EqualityComparison, PredicateWithIndex, Selector, SelectorWithIndex } from "../System/FunctionTypes";
+import { IDictionary, IMap } from "../System/Collections/Dictionaries/IDictionary";
 import { Comparable } from "../System/IComparable";
-import { IInfiniteEnumerable, ILinqEnumerable, IFiniteEnumerable, ILookup, IOrderedEnumerable, IGrouping, NotEmptyEnumerable } from "./Enumerable";
+import { IFiniteEnumerable, IGrouping, IInfiniteEnumerable, ILinqEnumerable, ILookup, IOrderedEnumerable, NotEmptyEnumerable } from "./Enumerable";
 import { EnumerableAction } from "./EnumerableAction";
 import { Primitive } from "../System/Primitive";
 import { ForEachEnumerable } from "../System/Collections/Enumeration/ForEachEnumerable";

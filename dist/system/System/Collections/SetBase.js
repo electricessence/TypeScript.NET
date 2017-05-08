@@ -1,17 +1,10 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "./Enumeration/EmptyEnumerator", "../Disposable/dispose", "../Compare", "./CollectionBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    function wipe(map, depth) {
-        if (depth === void 0) { depth = 1; }
-        if (map && depth) {
-            for (var _i = 0, _a = Object.keys(map); _i < _a.length; _i++) {
-                var key = _a[_i];
-                var v = map[key];
-                delete map[key];
-                wipe(v, depth - 1);
-            }
-        }
-    }
     var LinkedNodeList_1, ArgumentNullException_1, Enumerator_1, EmptyEnumerator_1, dispose_1, Compare_1, CollectionBase_1, extends_1, __extends, VOID0, OTHER, SetBase;
     return {
         setters: [
@@ -40,7 +33,10 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;

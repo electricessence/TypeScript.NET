@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {ICancellable} from "../Threading/ICancellable";
 import {ObservableBase} from "../Observable/ObservableBase";
 import {ITimer} from "./ITimer";
@@ -26,7 +27,7 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 	{
 		super();
 
-		if(_interval==null)
+		if(_interval===null)
 			throw "'interval' must be a valid number.";
 		if(_interval<0)
 			throw "'interval' cannot be negative.";
@@ -77,7 +78,7 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 		if(!_._cancel && _._count<_._maxCount)
 		{
 			// For now, if it's isn't the start...
-			if(_._count || _._initialDelay==_._interval)
+			if(_._count || _._initialDelay===_._interval)
 			{
 				let i = setInterval(
 					Timer._onTick,

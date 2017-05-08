@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based on code from: https://github.com/kriskowal/q
+ */
 System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Queue", "../Disposable/ObjectPool", "../Environment"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -62,7 +67,7 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
      * @param task
      * @param context
      * @param args
-     * @returns {{cancel: (()=>boolean), dispose: (()=>undefined)}}
+     * @returns ICancellable
      */
     function deferImmediate(task, context, args) {
         var entry = entryPool.take();
@@ -112,7 +117,11 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
                 Environment_1 = Environment_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             * Based on code from: https://github.com/kriskowal/q
+             */
             flushing = false;
             // linked list of tasks.  Using a real linked list to allow for removal.
             immediateQueue = new LinkedNodeList_1.LinkedNodeList();

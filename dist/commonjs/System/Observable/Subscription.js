@@ -1,4 +1,10 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based upon .NET source.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.

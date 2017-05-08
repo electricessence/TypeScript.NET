@@ -4,6 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * https://en.wikipedia.org/wiki/Merge_sort
  */
+
 import {Primitive} from "../../../Primitive";
 import {ArgumentNullException} from "../../../Exceptions/ArgumentNullException";
 import {initialize} from "../Utility";

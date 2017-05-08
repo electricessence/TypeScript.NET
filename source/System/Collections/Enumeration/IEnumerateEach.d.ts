@@ -2,7 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import {PredicateWithIndex, ActionWithIndex} from "../../FunctionTypes";
+
+import {ActionWithIndex, PredicateWithIndex} from "../../FunctionTypes";
 
 export interface IEnumerateEach<T>
 {

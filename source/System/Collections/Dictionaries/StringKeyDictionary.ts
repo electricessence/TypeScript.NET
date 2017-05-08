@@ -2,8 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {areEqual} from "../../Compare";
-import {IStringKeyDictionary, IMap} from "./IDictionary";
+import {IMap, IStringKeyDictionary} from "./IDictionary";
 import {IKeyValuePair} from "../../KeyValuePair";
 import {DictionaryBase} from "./DictionaryBase";
 import __extendsImport from "../../../extends";

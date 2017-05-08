@@ -1,9 +1,9 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Integer_1 = require("./Integer");
 var initialize_1 = require("./Collections/Array/initialize");
 var shuffle_1 = require("./Collections/Array/shuffle");

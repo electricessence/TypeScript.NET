@@ -1,3 +1,21 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT
+ */
+/**
+ * A descriptor is simply a JSON tree that either has an actual value or a type that identifies what the expect type should be at that leaf in the tree.
+ *
+ * var descriptor = {
+ *      a : Object,
+ *      b : String,
+ *      c : {
+ *          d : true ,
+ *          e : Array,
+ *          f : []
+ *      },
+ *      g : "literal"
+ * }
+ */
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
@@ -9,24 +27,6 @@
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    /*!
-     * @author electricessence / https://github.com/electricessence/
-     * Licensing: MIT
-     */
-    /**
-     * A descriptor is simply a JSON tree that either has an actual value or a type that identifies what the expect type should be at that leaf in the tree.
-     *
-     * var descriptor = {
-     *      a : Object,
-     *      b : String,
-     *      c : {
-     *          d : true ,
-     *          e : Array,
-     *          f : []
-     *      },
-     *      g : "literal"
-     * }
-     */
     var Types_1 = require("./Types");
     var Compare_1 = require("./Compare");
     var extends_1 = require("../extends");

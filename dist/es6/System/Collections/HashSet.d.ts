@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { SetBase } from "./SetBase";
 import { ILinkedNodeWithValue } from "./ILinkedListNode";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";

@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
@@ -9,10 +13,6 @@
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    /*!
-     * @author electricessence / https://github.com/electricessence/
-     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-     */
     var Enumerator_1 = require("./Enumeration/Enumerator");
     var Compare_1 = require("../Compare");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
@@ -238,7 +238,7 @@
          * Returns an array filtered by the provided predicate.
          * Provided for similarity to JS Array.
          * @param predicate
-         * @returns {T[]}
+         * @returns {[]}
          */
         CollectionBase.prototype.filter = function (predicate) {
             if (!predicate)

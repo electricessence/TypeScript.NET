@@ -1,14 +1,16 @@
 ///<reference types='qunit'/>
 ///<amd-dependency path='QUnit'/>
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "QUnit", "../../dist/amd/System/Integer"], factory);
     }
-})(["require", "exports", "QUnit", "../../dist/amd/System/Integer"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var Integer_1 = require("../../dist/amd/System/Integer");
     function run() {
         var TEST_FLOAT = 10.915, TEST_INT = 10;
@@ -26,7 +28,6 @@
             });
         });
     }
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = run;
 });
 //# sourceMappingURL=Integer.js.map

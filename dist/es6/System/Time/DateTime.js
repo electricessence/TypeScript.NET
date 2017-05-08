@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based on .NET DateTime's interface.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { TimeSpan } from "./TimeSpan";
 import { ClockTime } from "./ClockTime";
 import { TimeStamp } from "./TimeStamp";
@@ -190,7 +195,7 @@ export class DateTime {
             return false;
         return this.equals(other.toJsDate());
     }
-    // https://msdn.microsoft.com/en-us/library/system.icomparable.compareto(v=vs.110).aspx
+    // https://msdn.microsoft.com/en-us/library/System.IComparable.CompareTo(v=vs.110).aspx
     compareTo(other) {
         if (!other)
             throw new ArgumentNullException("other");

@@ -1,10 +1,10 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on code from: https://github.com/kriskowal/q
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../Types");
 var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
 var Queue_1 = require("../Collections/Queue");
@@ -86,7 +86,7 @@ function requestFlush() {
  * @param task
  * @param context
  * @param args
- * @returns {{cancel: (()=>boolean), dispose: (()=>undefined)}}
+ * @returns ICancellable
  */
 function deferImmediate(task, context, args) {
     var entry = entryPool.take();

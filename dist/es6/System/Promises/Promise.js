@@ -35,13 +35,15 @@ function resolve(value, resolver, promiseFactory) {
 function handleResolution(p, value, resolver) {
     try {
         let v = resolver ? resolver(value) : value;
-        if (p)
+        if (p) {
             p.resolve(v);
+        }
         return null;
     }
     catch (ex) {
-        if (p)
+        if (p) {
             p.reject(ex);
+        }
         return ex;
     }
 }
@@ -57,10 +59,12 @@ function handleResolutionMethods(targetFulfill, targetReject, value, resolver) {
     }
 }
 function handleDispatch(p, onFulfilled, onRejected) {
-    if (p instanceof PromiseBase)
-        p.thenThis(onFulfilled, onRejected);
-    else
+    if (p instanceof PromiseBase) {
+        p.doneSynchronous(onFulfilled, onRejected);
+    }
+    else {
         p.then(onFulfilled, onRejected);
+    }
 }
 function handleSyncIfPossible(p, onFulfilled, onRejected) {
     if (p instanceof PromiseBase)
@@ -134,7 +138,7 @@ export class PromiseBase extends PromiseState {
     then(onFulfilled, onRejected) {
         this.throwIfDisposed();
         return new Promise((resolve, reject) => {
-            this.thenThis(result => handleResolutionMethods(resolve, reject, result, onFulfilled), error => onRejected
+            this.doneSynchronous(result => handleResolutionMethods(resolve, reject, result, onFulfilled), error => onRejected
                 ? handleResolutionMethods(resolve, reject, error, onRejected)
                 : reject(error));
         });
@@ -148,7 +152,7 @@ export class PromiseBase extends PromiseState {
     thenAllowFatal(onFulfilled, onRejected) {
         this.throwIfDisposed();
         return new Promise((resolve, reject) => {
-            this.thenThis(result => resolve((onFulfilled ? onFulfilled(result) : result)), error => reject(onRejected ? onRejected(error) : error));
+            this.doneSynchronous(result => resolve((onFulfilled ? onFulfilled(result) : result)), error => reject(onRejected ? onRejected(error) : error));
         });
     }
     /**
@@ -158,7 +162,7 @@ export class PromiseBase extends PromiseState {
      * @param onRejected
      */
     done(onFulfilled, onRejected) {
-        defer(() => this.thenThis(onFulfilled, onRejected));
+        defer(() => this.doneSynchronous(onFulfilled, onRejected));
     }
     /**
      * Will yield for a number of milliseconds from the time called before continuing.
@@ -169,7 +173,7 @@ export class PromiseBase extends PromiseState {
         this.throwIfDisposed();
         return new Promise((resolve, reject) => {
             defer(() => {
-                this.thenThis(v => resolve(v), e => reject(e));
+                this.doneSynchronous(v => resolve(v), e => reject(e));
             }, milliseconds);
         }, true // Since the resolve/reject is deferred.
         );
@@ -185,7 +189,7 @@ export class PromiseBase extends PromiseState {
         if (this.isSettled)
             return this.delayFromNow(milliseconds);
         return new Promise((resolve, reject) => {
-            this.thenThis(v => defer(() => resolve(v), milliseconds), e => defer(() => reject(e), milliseconds));
+            this.doneSynchronous(v => defer(() => resolve(v), milliseconds), e => defer(() => reject(e), milliseconds));
         }, true // Since the resolve/reject is deferred.
         );
     }
@@ -229,13 +233,16 @@ export class PromiseBase extends PromiseState {
      * @returns {PromiseBase}
      */
     finallyThis(fin, synchronous) {
-        this.throwIfDisposed();
         const f = synchronous ? fin : () => deferImmediate(fin);
-        this.thenThis(f, f);
+        this.doneSynchronous(f, f);
         return this;
     }
 }
 export class Resolvable extends PromiseBase {
+    doneSynchronous(onFulfilled, onRejected) {
+        //noinspection JSIgnoredPromiseFromCall
+        this.thenThis(onFulfilled, onRejected);
+    }
     thenSynchronous(onFulfilled, onRejected) {
         this.throwIfDisposed();
         try {
@@ -442,7 +449,7 @@ export class Promise extends Resolvable {
                 return;
             switch (r.state) {
                 case Promise.State.Pending:
-                    r.thenSynchronous(v => this._resolveInternal(v), e => this._rejectInternal(e));
+                    r.doneSynchronous(v => this._resolveInternal(v), e => this._rejectInternal(e));
                     return;
                 case Promise.State.Rejected:
                     this._rejectInternal(r.error);
@@ -489,8 +496,9 @@ export class Promise extends Resolvable {
                     handleResolution(promise, error, onRejected);
                     //if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
                 }
-                else if (promise)
+                else if (promise) {
                     promise.reject(error);
+                }
             }
             o.length = 0;
         }
@@ -540,7 +548,7 @@ export class ArrayPromise extends Promise {
     map(transform) {
         this.throwIfDisposed();
         return new ArrayPromise(resolve => {
-            this.thenThis((result) => resolve(result.map(transform)));
+            this.doneSynchronous((result) => resolve(result.map(transform)));
         }, true);
     }
     /**
@@ -615,7 +623,7 @@ export class PromiseCollection extends DisposableBase {
         this.throwIfDisposed();
         return new ArrayPromise(resolve => {
             this.all()
-                .thenThis((result) => resolve(result.map(transform)));
+                .doneSynchronous((result) => resolve(result.map(transform)));
         }, true);
     }
     /**

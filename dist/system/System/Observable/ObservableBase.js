@@ -1,3 +1,9 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based upon .NET source.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * C# Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
+ */
 System.register(["./SubscribableBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -37,7 +43,12 @@ System.register(["./SubscribableBase", "../../extends"], function (exports_1, co
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Based upon .NET source.
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             * C# Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
+             */
             //noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             // Can be used as a base class, mixin, or simply reference on how to implement the pattern.

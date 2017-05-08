@@ -3,9 +3,10 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {TimeQuantity} from "./TimeQuantity";
 import {IClockTime} from "./ITimeStamp";
-import {Minutes, Seconds, Milliseconds, Ticks} from "./HowMany";
+import {Milliseconds, Minutes, Seconds, Ticks} from "./HowMany";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

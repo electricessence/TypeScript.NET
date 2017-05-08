@@ -1,9 +1,9 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var LinkedNodeList_1 = require("./LinkedNodeList");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var Enumerator_1 = require("./Enumeration/Enumerator");
@@ -185,16 +185,5 @@ var SetBase = (function (_super) {
     return SetBase;
 }(CollectionBase_1.CollectionBase));
 exports.SetBase = SetBase;
-function wipe(map, depth) {
-    if (depth === void 0) { depth = 1; }
-    if (map && depth) {
-        for (var _i = 0, _a = Object.keys(map); _i < _a.length; _i++) {
-            var key = _a[_i];
-            var v = map[key];
-            delete map[key];
-            wipe(v, depth - 1);
-        }
-    }
-}
 exports.default = SetBase;
 //# sourceMappingURL=SetBase.js.map

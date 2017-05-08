@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import ReadOnlyCollectionWrapper from "../ReadOnlyCollectionWrapper";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols

@@ -1,4 +1,8 @@
-import { EqualityComparison, PredicateWithIndex, SelectorWithIndex, ActionWithIndex } from "../../FunctionTypes";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+import { ActionWithIndex, EqualityComparison, PredicateWithIndex, SelectorWithIndex } from "../../FunctionTypes";
 import { ArrayLikeWritable } from "./ArrayLikeWritable";
 import { initialize } from "./initialize";
 import { copy, copyTo } from "./copy";

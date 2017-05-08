@@ -2,10 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import * as Values from "../../Compare";
 import {Type} from "../../Types";
 import {Primitive} from "../../Primitive";
-import {EqualityComparison, Comparison} from "../../FunctionTypes";
+import {Comparison, EqualityComparison} from "../../FunctionTypes";
 import {IComparable} from "../../IComparable";
 
 /*  validateSize: Utility for quick validation/invalidation of array equality.

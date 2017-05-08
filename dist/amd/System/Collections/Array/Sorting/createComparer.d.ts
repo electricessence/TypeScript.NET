@@ -1,5 +1,9 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { Primitive } from "../../../Primitive";
-import { Selector, Comparison } from "../../../FunctionTypes";
+import { Comparison, Selector } from "../../../FunctionTypes";
 import { Order } from "../../Sorting/Order";
 /**
  * A factory function that creates a comparer to be used in multi-dimensional sorting.

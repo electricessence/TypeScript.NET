@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["./SimpleEnumerableBase", "./Enumerator"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -11,7 +15,10 @@ System.register(["./SimpleEnumerableBase", "./Enumerator"], function (exports_1,
                 Enumerator_1 = Enumerator_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             /**
              * Creates a randomized version of the source.
              * Note: An iterator will always require a arrayCopy (buffer) to pull random results one by one.

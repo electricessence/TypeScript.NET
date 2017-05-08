@@ -1,3 +1,21 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT
+ */
+/**
+ * A descriptor is simply a JSON tree that either has an actual value or a type that identifies what the expect type should be at that leaf in the tree.
+ *
+ * var descriptor = {
+ *      a : Object,
+ *      b : String,
+ *      c : {
+ *          d : true ,
+ *          e : Array,
+ *          f : []
+ *      },
+ *      g : "literal"
+ * }
+ */
 System.register(["./Types", "./Compare", "../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -22,7 +40,24 @@ System.register(["./Types", "./Compare", "../extends"], function (exports_1, con
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT
+             */
+            /**
+             * A descriptor is simply a JSON tree that either has an actual value or a type that identifies what the expect type should be at that leaf in the tree.
+             *
+             * var descriptor = {
+             *      a : Object,
+             *      b : String,
+             *      c : {
+             *          d : true ,
+             *          e : Array,
+             *          f : []
+             *      },
+             *      g : "literal"
+             * }
+             */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             TypeInfoHelper = (function (_super) {

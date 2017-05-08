@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Origin: http://www.fallingcanbedeadly.com/
+ * Licensing: MIT
+ */
 System.register(["./ReadOnlyCollectionBase", "../Exceptions/ArgumentOutOfRangeException", "./Enumeration/EnumeratorBase", "../../extends", "../Integer"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -20,7 +25,11 @@ System.register(["./ReadOnlyCollectionBase", "../Exceptions/ArgumentOutOfRangeEx
                 Integer_1 = Integer_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Origin: http://www.fallingcanbedeadly.com/
+             * Licensing: MIT
+             */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             LazyList = (function (_super) {

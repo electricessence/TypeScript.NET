@@ -1,3 +1,14 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT
+ * Although most of the following code is written from scratch, it is
+ * heavily influenced by Q (https://github.com/kriskowal/q) and uses some of Q's spec.
+ */
+/*
+ * Resources:
+ * https://promisesaplus.com/
+ * https://github.com/kriskowal/q
+ */
 System.register(["../Types", "../Threading/deferImmediate", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "../Disposable/ObjectPool", "../Collections/Set", "../Threading/defer", "../Disposable/ObjectDisposedException", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -15,13 +26,15 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
     function handleResolution(p, value, resolver) {
         try {
             var v = resolver ? resolver(value) : value;
-            if (p)
+            if (p) {
                 p.resolve(v);
+            }
             return null;
         }
         catch (ex) {
-            if (p)
+            if (p) {
                 p.reject(ex);
+            }
             return ex;
         }
     }
@@ -37,10 +50,12 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
         }
     }
     function handleDispatch(p, onFulfilled, onRejected) {
-        if (p instanceof PromiseBase)
-            p.thenThis(onFulfilled, onRejected);
-        else
+        if (p instanceof PromiseBase) {
+            p.doneSynchronous(onFulfilled, onRejected);
+        }
+        else {
             p.then(onFulfilled, onRejected);
+        }
     }
     function handleSyncIfPossible(p, onFulfilled, onRejected) {
         if (p instanceof PromiseBase)
@@ -88,7 +103,17 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT
+             * Although most of the following code is written from scratch, it is
+             * heavily influenced by Q (https://github.com/kriskowal/q) and uses some of Q's spec.
+             */
+            /*
+             * Resources:
+             * https://promisesaplus.com/
+             * https://github.com/kriskowal/q
+             */
             //noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0, NULL = null, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
@@ -190,7 +215,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     var _this = this;
                     this.throwIfDisposed();
                     return new Promise(function (resolve, reject) {
-                        _this.thenThis(function (result) {
+                        _this.doneSynchronous(function (result) {
                             return handleResolutionMethods(resolve, reject, result, onFulfilled);
                         }, function (error) {
                             return onRejected
@@ -209,7 +234,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     var _this = this;
                     this.throwIfDisposed();
                     return new Promise(function (resolve, reject) {
-                        _this.thenThis(function (result) {
+                        _this.doneSynchronous(function (result) {
                             return resolve((onFulfilled ? onFulfilled(result) : result));
                         }, function (error) {
                             return reject(onRejected ? onRejected(error) : error);
@@ -224,9 +249,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                  */
                 PromiseBase.prototype.done = function (onFulfilled, onRejected) {
                     var _this = this;
-                    defer_1.defer(function () {
-                        return _this.thenThis(onFulfilled, onRejected);
-                    });
+                    defer_1.defer(function () { return _this.doneSynchronous(onFulfilled, onRejected); });
                 };
                 /**
                  * Will yield for a number of milliseconds from the time called before continuing.
@@ -239,7 +262,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     this.throwIfDisposed();
                     return new Promise(function (resolve, reject) {
                         defer_1.defer(function () {
-                            _this.thenThis(function (v) { return resolve(v); }, function (e) { return reject(e); });
+                            _this.doneSynchronous(function (v) { return resolve(v); }, function (e) { return reject(e); });
                         }, milliseconds);
                     }, true // Since the resolve/reject is deferred.
                     );
@@ -257,7 +280,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     if (this.isSettled)
                         return this.delayFromNow(milliseconds);
                     return new Promise(function (resolve, reject) {
-                        _this.thenThis(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
+                        _this.doneSynchronous(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
                     }, true // Since the resolve/reject is deferred.
                     );
                 };
@@ -301,9 +324,8 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                  * @returns {PromiseBase}
                  */
                 PromiseBase.prototype.finallyThis = function (fin, synchronous) {
-                    this.throwIfDisposed();
                     var f = synchronous ? fin : function () { return deferImmediate_1.deferImmediate(fin); };
-                    this.thenThis(f, f);
+                    this.doneSynchronous(f, f);
                     return this;
                 };
                 return PromiseBase;
@@ -314,6 +336,10 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 function Resolvable() {
                     return _super !== null && _super.apply(this, arguments) || this;
                 }
+                Resolvable.prototype.doneSynchronous = function (onFulfilled, onRejected) {
+                    //noinspection JSIgnoredPromiseFromCall
+                    this.thenThis(onFulfilled, onRejected);
+                };
                 Resolvable.prototype.thenSynchronous = function (onFulfilled, onRejected) {
                     this.throwIfDisposed();
                     try {
@@ -541,7 +567,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                             return;
                         switch (r.state) {
                             case Promise.State.Pending:
-                                r.thenSynchronous(function (v) { return _this._resolveInternal(v); }, function (e) { return _this._rejectInternal(e); });
+                                r.doneSynchronous(function (v) { return _this._resolveInternal(v); }, function (e) { return _this._rejectInternal(e); });
                                 return;
                             case Promise.State.Rejected:
                                 this._rejectInternal(r.error);
@@ -590,8 +616,9 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                                 handleResolution(promise, error, onRejected);
                                 //if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
                             }
-                            else if (promise)
+                            else if (promise) {
                                 promise.reject(error);
+                            }
                         }
                         o.length = 0;
                     }
@@ -650,7 +677,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     var _this = this;
                     this.throwIfDisposed();
                     return new ArrayPromise(function (resolve) {
-                        _this.thenThis(function (result) { return resolve(result.map(transform)); });
+                        _this.doneSynchronous(function (result) { return resolve(result.map(transform)); });
                     }, true);
                 };
                 /**
@@ -734,7 +761,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     this.throwIfDisposed();
                     return new ArrayPromise(function (resolve) {
                         _this.all()
-                            .thenThis(function (result) { return resolve(result.map(transform)); });
+                            .doneSynchronous(function (result) { return resolve(result.map(transform)); });
                     }, true);
                 };
                 /**

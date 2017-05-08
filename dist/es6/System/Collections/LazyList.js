@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Origin: http://www.fallingcanbedeadly.com/
+ * Licensing: MIT
+ */
 import { ReadOnlyCollectionBase } from "./ReadOnlyCollectionBase";
 import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
 import { EnumeratorBase } from "./Enumeration/EnumeratorBase";

@@ -2,9 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {ArgumentException} from "./Exceptions/ArgumentException";
 import {ArgumentNullException} from "./Exceptions/ArgumentNullException";
-import {KeyValuePair, IKeyValuePair} from "./KeyValuePair";
+import {IKeyValuePair, KeyValuePair} from "./KeyValuePair";
 import {Type} from "./Types";
 
 const

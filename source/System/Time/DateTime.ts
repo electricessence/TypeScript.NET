@@ -3,6 +3,7 @@
  * Based on .NET DateTime's interface.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {ICalendarDate, ITimeStamp} from "./ITimeStamp";
 import {TimeSpan} from "./TimeSpan";
 import {ClockTime} from "./ClockTime";
@@ -14,7 +15,6 @@ import {ITimeQuantity} from "./ITimeQuantity";
 import {IEquatable} from "../IEquatable";
 import {IComparable} from "../IComparable";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import Kind = DateTime.Kind;
 
 const VOID0:undefined = void 0;
 
@@ -314,7 +314,7 @@ export class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime>
 
 	}
 
-	// https://msdn.microsoft.com/en-us/library/system.icomparable.compareto(v=vs.110).aspx
+	// https://msdn.microsoft.com/en-us/library/System.IComparable.CompareTo(v=vs.110).aspx
 	compareTo(other:IDateTime | Date):number
 	{
 		if(!other) throw new ArgumentNullException("other");

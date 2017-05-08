@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {IMap} from "../../IMap";
 
 /**
@@ -85,4 +86,17 @@ export function trim<TResult extends IMap<any>>(target:IMap<any>, keyMap:TResult
 		}
 	}
 	//return <any>target;
+}
+
+export function wipe(map:IMap<any>, depth:number = 1):void
+{
+	if(map && depth)
+	{
+		for(let key of Object.keys(map))
+		{
+			const v = map[key];
+			delete map[key];
+			wipe(v, depth - 1);
+		}
+	}
 }

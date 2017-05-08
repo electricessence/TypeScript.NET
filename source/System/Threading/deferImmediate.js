@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based on code from: https://github.com/kriskowal/q
+ */
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
@@ -9,11 +14,6 @@
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    /*!
-     * @author electricessence / https://github.com/electricessence/
-     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-     * Based on code from: https://github.com/kriskowal/q
-     */
     var Types_1 = require("../Types");
     var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
     var Queue_1 = require("../Collections/Queue");
@@ -95,7 +95,7 @@
      * @param task
      * @param context
      * @param args
-     * @returns {{cancel: (()=>boolean), dispose: (()=>undefined)}}
+     * @returns ICancellable
      */
     function deferImmediate(task, context, args) {
         var entry = entryPool.take();

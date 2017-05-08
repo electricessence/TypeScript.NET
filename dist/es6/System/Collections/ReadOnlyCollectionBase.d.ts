@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { CollectionBase } from "./CollectionBase";
 import { IEnumerator } from "./Enumeration/IEnumerator";
 export declare abstract class ReadOnlyCollectionBase<T> extends CollectionBase<T> {

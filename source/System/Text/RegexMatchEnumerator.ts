@@ -2,7 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import {Regex, Match} from "./RegularExpressions";
+
+import {Match, Regex} from "./RegularExpressions";
 import {EmptyEnumerator} from "../Collections/Enumeration/EmptyEnumerator";
 import {EnumeratorBase} from "../Collections/Enumeration/EnumeratorBase";
 import {IEnumerator} from "../Collections/Enumeration/IEnumerator";

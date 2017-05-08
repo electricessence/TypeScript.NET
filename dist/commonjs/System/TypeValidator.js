@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
@@ -18,6 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  *      g : "literal"
  * }
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("./Types");
 var Compare_1 = require("./Compare");
 var extends_1 = require("../extends");

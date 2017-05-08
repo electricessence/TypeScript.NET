@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { TimeUnit } from "./TimeUnit";
 import { IEquatable } from "../IEquatable";
 import { IComparable } from "../IComparable";

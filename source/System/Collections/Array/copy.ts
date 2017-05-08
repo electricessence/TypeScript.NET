@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {initialize} from "./initialize";
 import {ArrayLikeWritable} from "./ArrayLikeWritable";
 import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";

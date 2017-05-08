@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {IHashable, ISymbolizable} from "./IDictionary";
 import {Type} from "../../Types";
 import {Selector} from "../../FunctionTypes";

@@ -1,10 +1,10 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Promise_1 = require("../../Promises/Promise");
 var Types_1 = require("../../Types");
 var Worker_1 = require("../Worker");
@@ -17,7 +17,7 @@ var __extends = extends_1.default;
 //noinspection JSUnusedAssignment
 var MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFINED
     ? (self.URL ? self.URL : self.webkitURL)
-    : null, _supports = !!(Environment_1.isNodeJS || self.Worker); // node always supports parallel
+    : null, _supports = Environment_1.isNodeJS || !!self.Worker; // node always supports parallel
 //noinspection JSUnusedAssignment
 var defaults = {
     evalPath: Environment_1.isNodeJS ? __dirname + '/eval.js' : VOID0,
@@ -270,12 +270,15 @@ var Parallel = (function () {
                             //noinspection JSReferencingMutableVariableFromClosure
                             var ii = i_1++, p_1 = result[ii];
                             var wp_1 = new WorkerPromise(worker, data[ii]);
+                            //noinspection JSIgnoredPromiseFromCall
                             wp_1.thenSynchronous(function (r) {
+                                //noinspection JSIgnoredPromiseFromCall
                                 p_1.resolve(r);
                                 next();
                             }, function (e) {
                                 if (!error_1) {
                                     error_1 = e;
+                                    //noinspection JSIgnoredPromiseFromCall
                                     p_1.reject(e);
                                     worker = workers.recycle(worker);
                                 }
@@ -345,6 +348,7 @@ var Parallel = (function () {
                         if (i < len) {
                             var ii_1 = i++;
                             var wp_2 = new WorkerPromise(worker, data[ii_1]);
+                            //noinspection JSIgnoredPromiseFromCall
                             wp_2.thenSynchronous(function (r) {
                                 result[ii_1] = r;
                                 next();

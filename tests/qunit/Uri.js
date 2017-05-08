@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "QUnit", "../../dist/amd/System/Uri/Uri"], factory);
     }
-})(["require", "exports", "QUnit", "../../dist/amd/System/Uri/Uri"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     ///<reference types="qunit"/>
     ///<amd-dependency path='QUnit'/>
     var Uri_1 = require("../../dist/amd/System/Uri/Uri");
@@ -72,7 +74,6 @@
             });
         });
     }
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = run;
 });
 //# sourceMappingURL=Uri.js.map

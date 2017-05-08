@@ -1,4 +1,8 @@
-import { IStringKeyDictionary, IMap } from "./IDictionary";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+import { IMap, IStringKeyDictionary } from "./IDictionary";
 import { IKeyValuePair } from "../../KeyValuePair";
 import { DictionaryBase } from "./DictionaryBase";
 export declare class StringKeyDictionary<TValue> extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue> {

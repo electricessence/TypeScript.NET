@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { ObservableBase } from "../Observable/ObservableBase";
 // noinspection JSUnusedLocalSymbols
 /**
@@ -10,7 +14,7 @@ export default class Timer extends ObservableBase {
         this._maxCount = _maxCount;
         this._initialDelay = _initialDelay;
         this._count = 0;
-        if (_interval == null)
+        if (_interval === null)
             throw "'interval' must be a valid number.";
         if (_interval < 0)
             throw "'interval' cannot be negative.";
@@ -49,7 +53,7 @@ export default class Timer extends ObservableBase {
         _.throwIfDisposed("This timer has been disposed and can't be reused.");
         if (!_._cancel && _._count < _._maxCount) {
             // For now, if it's isn't the start...
-            if (_._count || _._initialDelay == _._interval) {
+            if (_._count || _._initialDelay === _._interval) {
                 let i = setInterval(Timer._onTick, _._interval, _);
                 _._cancel = () => {
                     clearInterval(i);

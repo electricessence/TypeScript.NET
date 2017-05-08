@@ -5,7 +5,7 @@
 import { Type } from "../Types";
 import { OrderedStringKeyDictionary } from "../Collections/Dictionaries/OrderedStringKeyDictionary";
 import { isEnumerableOrArrayLike } from "../Collections/Enumeration/Enumerator";
-import { parse, encode } from "./QueryParams";
+import { encode, parse } from "./QueryParams";
 // noinspection JSUnusedLocalSymbols
 /**
  * Provides a means for parsing and building a set of parameters.

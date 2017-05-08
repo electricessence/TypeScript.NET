@@ -4,6 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
+
 import {IDisposableAware} from "../Disposable/IDisposableAware";
 import {ISubscribable} from "./ISubscribable"; // For compatibility with (let, const, function, class);
 

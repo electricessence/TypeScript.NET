@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "./ICollection", "../../../dist/amd/System/Collections/Dictionaries/OrderedStringKeyDictionary"], factory);
     }
-})(["require", "exports", "./ICollection", "../../../dist/amd/System/Collections/Dictionaries/OrderedStringKeyDictionary"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var ICollectionTests = require("./ICollection");
     var OrderedStringKeyDictionary_1 = require("../../../dist/amd/System/Collections/Dictionaries/OrderedStringKeyDictionary");
     function run() {
@@ -19,7 +21,6 @@
             { key: 'F', value: 6 }
         ]);
     }
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = run;
 });
 //# sourceMappingURL=OrderedStringKeyDictionary.js.map

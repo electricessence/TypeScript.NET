@@ -1,9 +1,9 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var AU = require("../Collections/Array/Utility");
 var shallowCopy_1 = require("../Utility/shallowCopy");
 var DisposableBase_1 = require("../Disposable/DisposableBase");

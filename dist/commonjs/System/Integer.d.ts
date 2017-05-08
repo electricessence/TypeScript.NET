@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 export declare function Integer(n: number): number;
 export declare module Integer {
     const MAX_32_BIT: number;

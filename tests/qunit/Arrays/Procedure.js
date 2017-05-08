@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "QUnit", "../../../dist/amd/System/Collections/Array/Procedure"], factory);
     }
-})(["require", "exports", "QUnit", "../../../dist/amd/System/Collections/Array/Procedure"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     ///<reference types="qunit"/>
     ///<amd-dependency path="QUnit"/>
     var ArrayProcedure = require("../../../dist/amd/System/Collections/Array/Procedure");
@@ -39,7 +41,6 @@
             assert.equal(ArrayProcedure.max(b, true), maxB, "Min value should be " + maxB);
         });
     }
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = run;
 });
 //# sourceMappingURL=Procedure.js.map

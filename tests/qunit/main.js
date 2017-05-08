@@ -1,12 +1,14 @@
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "QUnit", "./Arrays/_all", "./Collections/_all", "./Linq/_all", "./Uri", "./Integer", "./Tasks/Parallel"], factory);
     }
-})(["require", "exports", "QUnit", "./Arrays/_all", "./Collections/_all", "./Linq/_all", "./Uri", "./Integer", "./Tasks/Parallel"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     ///<reference types="qunit"/>
     ///<amd-dependency path="QUnit"/>
     var _all_1 = require("./Arrays/_all");

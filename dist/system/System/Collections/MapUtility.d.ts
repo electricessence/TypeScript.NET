@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { IMap } from "../../IMap";
 /**
  * Takes a target object and applies all source values to it.
@@ -32,3 +36,4 @@ export declare function merge<A extends IMap<any>, B extends IMap<any>>(a: A, b:
  * @param keyMap
  */
 export declare function trim<TResult extends IMap<any>>(target: IMap<any>, keyMap: TResult): void;
+export declare function wipe(map: IMap<any>, depth?: number): void;

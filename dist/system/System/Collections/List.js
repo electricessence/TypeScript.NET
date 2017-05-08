@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./CollectionBase", "../../extends", "./Enumeration/EnumeratorBase"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -26,7 +30,10 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
                 EnumeratorBase_1 = EnumeratorBase_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;

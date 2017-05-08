@@ -1,4 +1,8 @@
-const valid = new ValidationResult(true);
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+let VALID = null;
 /**
  * A class for generating responses to validation.
  */
@@ -30,7 +34,7 @@ export default class ValidationResult {
      * Allows for returning this instance like you would return 'true'.
      */
     static get valid() {
-        return valid;
+        return VALID || (VALID = new ValidationResult(true));
     }
     /**
      * Factory method for easily creating an invalid result.

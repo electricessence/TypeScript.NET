@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
@@ -9,7 +13,7 @@
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var valid = new ValidationResult(true);
+    var VALID = null;
     /**
      * A class for generating responses to validation.
      */
@@ -44,7 +48,7 @@
              * Allows for returning this instance like you would return 'true'.
              */
             get: function () {
-                return valid;
+                return VALID || (VALID = new ValidationResult(true));
             },
             enumerable: true,
             configurable: true

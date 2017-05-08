@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 import {IIteratorResult} from "./IIterator";
 import {IteratorResult} from "./IteratorResult";
 import {IEnumerator} from "./IEnumerator";

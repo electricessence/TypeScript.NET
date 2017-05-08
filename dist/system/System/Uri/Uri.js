@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
+ */
 System.register(["../Types", "./Scheme", "./QueryParams", "../Text/Utility", "../Exceptions/ArgumentException", "../Exceptions/ArgumentOutOfRangeException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -183,7 +188,11 @@ System.register(["../Types", "./Scheme", "./QueryParams", "../Text/Utility", "..
                 ArgumentOutOfRangeException_1 = ArgumentOutOfRangeException_1_1;
             }
         ],
-        execute: function () {
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
+             */
             VOID0 = void 0;
             /**
              * Provides an read-only model representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
