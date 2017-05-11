@@ -185,7 +185,7 @@ extends CollectionBase<T>
 		return super.forEach(action, true);
 	}
 
-	setCapacity(capacity:number):void
+	setCapacity(capacity:number):this
 	{
 		const _ = this;
 		assertIntegerZeroOrGreater(capacity, "capacity");
@@ -193,7 +193,7 @@ extends CollectionBase<T>
 		const array = _._array, len = _._capacity;
 		if(capacity>len) _.throwIfDisposed();
 		if(capacity==len)
-			return;
+			return this;
 
 		const head = _._head, tail = _._tail, size = _._size;
 
@@ -202,7 +202,7 @@ extends CollectionBase<T>
 		{
 			array.length = _._capacity = capacity;
 			_._version++;
-			return;
+			return this;
 		}
 
 		// We create a new array because modifying an existing one could be slow.
@@ -226,11 +226,13 @@ extends CollectionBase<T>
 		_._tail = (size==capacity) ? 0 : size;
 
 		_._signalModification(true);
+
+		return this;
 	}
 
-	enqueue(item:T):void
+	enqueue(item:T):this
 	{
-		this.add(item);
+		return this.add(item);
 	}
 
 	protected _tryDequeueInternal(out:Action<T>):boolean

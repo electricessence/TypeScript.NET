@@ -128,6 +128,7 @@ var CollectionBase = (function (_super) {
             _._updateRecursion--;
         }
         _._signalModification();
+        return _;
     };
     /**
      * Removes entries from the collection allowing for a limit.

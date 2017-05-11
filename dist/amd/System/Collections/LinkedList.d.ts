@@ -32,14 +32,14 @@ export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedL
     getNodeAt(index: number): ILinkedListNode<T> | null;
     find(entry: T): ILinkedListNode<T> | null;
     findLast(entry: T): ILinkedListNode<T> | null;
-    addFirst(entry: T): void;
-    addLast(entry: T): void;
+    addFirst(entry: T): this;
+    addLast(entry: T): this;
     private _removeNodeInternal(node);
     removeFirst(): boolean;
     removeLast(): boolean;
     removeAt(index: number): boolean;
     removeNode(node: ILinkedListNode<T>): boolean;
-    addBefore(before: ILinkedListNode<T>, entry: T): void;
-    addAfter(after: ILinkedListNode<T>, entry: T): void;
+    addBefore(before: ILinkedListNode<T>, entry: T): this;
+    addAfter(after: ILinkedListNode<T>, entry: T): this;
 }
 export default LinkedList;

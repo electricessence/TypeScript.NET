@@ -181,9 +181,10 @@ export class LinkedList extends CollectionBase {
         this.assertModifiable();
         this._listInternal.addNodeBefore(new InternalNode(entry));
         this._signalModification(true);
+        return this;
     }
     addLast(entry) {
-        this.add(entry);
+        return this.add(entry);
     }
     _removeNodeInternal(node) {
         const _ = this;
@@ -220,12 +221,14 @@ export class LinkedList extends CollectionBase {
         _.assertModifiable();
         _._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, _));
         _._signalModification(true);
+        return this;
     }
     addAfter(after, entry) {
         const _ = this;
         _.assertModifiable();
         _._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, _));
         _._signalModification(true);
+        return this;
     }
 }
 // Use an internal node class to prevent mucking up the LinkedList.
@@ -260,10 +263,12 @@ class LinkedListNode {
     addBefore(entry) {
         this.throwIfDetached();
         this._list.addBefore(this, entry);
+        return this;
     }
     addAfter(entry) {
         this.throwIfDetached();
         this._list.addAfter(this, entry);
+        return this;
     }
     remove() {
         const _ = this;

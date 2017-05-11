@@ -38,7 +38,7 @@ export declare abstract class CollectionBase<T> extends DisposableBase implement
      * Adds an entry to the collection.
      * @param entry
      */
-    add(entry: T): void;
+    add(entry: T): this;
     protected abstract _removeInternal(entry: T, max?: number): number;
     /**
      * Removes entries from the collection allowing for a limit.

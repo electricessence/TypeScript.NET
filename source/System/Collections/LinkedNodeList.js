@@ -250,15 +250,18 @@
         /**
          * Adds a node to the end of the list.
          * @param node
+         * @returns {LinkedNodeList}
          */
         LinkedNodeList.prototype.addNode = function (node) {
             this.addNodeAfter(node);
+            return this;
         };
         /**
          * Inserts a node before the specified 'before' node.
          * If no 'before' node is specified, it inserts it as the first node.
          * @param node
          * @param before
+         * @returns {LinkedNodeList}
          */
         LinkedNodeList.prototype.addNodeBefore = function (node, before) {
             if (before === void 0) { before = null; }
@@ -282,12 +285,14 @@
             }
             _._version++;
             _.unsafeCount++;
+            return this;
         };
         /**
          * Inserts a node after the specified 'after' node.
          * If no 'after' node is specified, it appends it as the last node.
          * @param node
          * @param after
+         * @returns {LinkedNodeList}
          */
         LinkedNodeList.prototype.addNodeAfter = function (node, after) {
             if (after === void 0) { after = null; }
@@ -311,17 +316,19 @@
             }
             _._version++;
             _.unsafeCount++;
+            return _;
         };
         /**
          * Takes and existing node and replaces it.
          * @param node
          * @param replacement
+         * @returns {any}
          */
         LinkedNodeList.prototype.replace = function (node, replacement) {
             if (node == null)
                 throw new ArgumentNullException_1.ArgumentNullException('node');
             if (node == replacement)
-                return;
+                return this;
             assertValidDetached(replacement, 'replacement');
             var _ = this;
             replacement.previous = node.previous;
@@ -335,6 +342,7 @@
             if (node == _._last)
                 _._last = replacement;
             _._version++;
+            return _;
         };
         LinkedNodeList.valueEnumeratorFrom = function (list) {
             if (!list)

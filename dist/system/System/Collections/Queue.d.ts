@@ -25,8 +25,8 @@ export declare class Queue<T> extends CollectionBase<T> {
     dump(max?: number): T[];
     forEach(action: ActionWithIndex<T>): number;
     forEach(action: PredicateWithIndex<T>): number;
-    setCapacity(capacity: number): void;
-    enqueue(item: T): void;
+    setCapacity(capacity: number): this;
+    enqueue(item: T): this;
     protected _tryDequeueInternal(out: Action<T>): boolean;
     /**
      * Pulls an entry from the head of the queue and returns it.

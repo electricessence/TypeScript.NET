@@ -9,7 +9,7 @@ import {IEnumerator} from "./Enumeration/IEnumerator";
 
 export interface ICollection<T> extends IReadOnlyCollection<T>
 {
-	add(entry:T):void;
+	add(entry:T):this;
 	remove(entry:T, max?:number):number;  // Number of times removed.
 	clear():number;
 

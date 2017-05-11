@@ -229,9 +229,10 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                     this.assertModifiable();
                     this._listInternal.addNodeBefore(new InternalNode(entry));
                     this._signalModification(true);
+                    return this;
                 };
                 LinkedList.prototype.addLast = function (entry) {
-                    this.add(entry);
+                    return this.add(entry);
                 };
                 LinkedList.prototype._removeNodeInternal = function (node) {
                     var _ = this;
@@ -268,12 +269,14 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                     _.assertModifiable();
                     _._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, _));
                     _._signalModification(true);
+                    return this;
                 };
                 LinkedList.prototype.addAfter = function (after, entry) {
                     var _ = this;
                     _.assertModifiable();
                     _._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, _));
                     _._signalModification(true);
+                    return this;
                 };
                 return LinkedList;
             }(CollectionBase_1.CollectionBase));
@@ -326,10 +329,12 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 LinkedListNode.prototype.addBefore = function (entry) {
                     this.throwIfDetached();
                     this._list.addBefore(this, entry);
+                    return this;
                 };
                 LinkedListNode.prototype.addAfter = function (entry) {
                     this.throwIfDetached();
                     this._list.addAfter(this, entry);
+                    return this;
                 };
                 LinkedListNode.prototype.remove = function () {
                     var _ = this;

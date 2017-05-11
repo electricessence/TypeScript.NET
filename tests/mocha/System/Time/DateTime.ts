@@ -53,7 +53,7 @@ describe(".equals",()=>{
 
 	it("should not match",()=>{
 		const x = new DateTime(d1), y = new DateTime(d2);
-		assert.ok(!x.equals(null));
+		assert.ok(!x.equals(<any>null));
 		assert.ok(!x.equals(y));
 	});
 

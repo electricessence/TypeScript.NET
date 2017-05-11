@@ -137,13 +137,13 @@ var Queue = (function (_super) {
         if (capacity > len)
             _.throwIfDisposed();
         if (capacity == len)
-            return;
+            return this;
         var head = _._head, tail = _._tail, size = _._size;
         // Special case where we can simply extend the length of the array. (JavaScript only)
         if (array != emptyArray && capacity > len && head < tail) {
             array.length = _._capacity = capacity;
             _._version++;
-            return;
+            return this;
         }
         // We create a new array because modifying an existing one could be slow.
         var newArray = AU.initialize(capacity);
@@ -161,9 +161,10 @@ var Queue = (function (_super) {
         _._head = 0;
         _._tail = (size == capacity) ? 0 : size;
         _._signalModification(true);
+        return this;
     };
     Queue.prototype.enqueue = function (item) {
-        this.add(item);
+        return this.add(item);
     };
     Queue.prototype._tryDequeueInternal = function (out) {
         var _ = this;

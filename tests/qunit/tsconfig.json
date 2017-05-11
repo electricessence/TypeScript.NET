@@ -4,6 +4,7 @@
     "target": "es5",
     "sourceMap": true,
     "noEmitHelpers": false,
+    "strictNullChecks": false,
     "moduleResolution": "node"
   }
 }

@@ -329,20 +329,22 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	/**
 	 * Adds a node to the end of the list.
 	 * @param node
+	 * @returns {LinkedNodeList}
 	 */
-	addNode(node:TNode):void
+	addNode(node:TNode):this
 	{
 		this.addNodeAfter(node);
+		return this;
 	}
-
 
 	/**
 	 * Inserts a node before the specified 'before' node.
 	 * If no 'before' node is specified, it inserts it as the first node.
 	 * @param node
 	 * @param before
+	 * @returns {LinkedNodeList}
 	 */
-	addNodeBefore(node:TNode, before:TNode|null = null):void
+	addNodeBefore(node:TNode, before:TNode|null = null):this
 	{
 		assertValidDetached(node);
 
@@ -370,6 +372,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 		_._version++;
 		_.unsafeCount++;
+
+		return this;
 	}
 
 	/**
@@ -377,8 +381,9 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	 * If no 'after' node is specified, it appends it as the last node.
 	 * @param node
 	 * @param after
+	 * @returns {LinkedNodeList}
 	 */
-	addNodeAfter(node:TNode, after:TNode|null = null):void
+	addNodeAfter(node:TNode, after:TNode|null = null):this
 	{
 		assertValidDetached(node);
 		const _ = this;
@@ -406,20 +411,22 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		_._version++;
 		_.unsafeCount++;
 
+		return _;
 	}
 
 	/**
 	 * Takes and existing node and replaces it.
 	 * @param node
 	 * @param replacement
+	 * @returns {any}
 	 */
-	replace(node:TNode, replacement:TNode):void
+	replace(node:TNode, replacement:TNode):this
 	{
 
 		if(node==null)
 			throw new ArgumentNullException('node');
 
-		if(node==replacement) return;
+		if(node==replacement) return this;
 
 		assertValidDetached(replacement, 'replacement');
 
@@ -434,6 +441,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		if(node==_._last) _._last = replacement;
 
 		_._version++;
+
+		return _;
 	}
 
 	static valueEnumeratorFrom<T>(list:LinkedNodeList<ILinkedNodeWithValue<T>>):IEnumerator<T>

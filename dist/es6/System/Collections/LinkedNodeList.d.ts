@@ -97,28 +97,32 @@ export declare class LinkedNodeList<TNode extends ILinkedNode<TNode>> implements
     /**
      * Adds a node to the end of the list.
      * @param node
+     * @returns {LinkedNodeList}
      */
-    addNode(node: TNode): void;
+    addNode(node: TNode): this;
     /**
      * Inserts a node before the specified 'before' node.
      * If no 'before' node is specified, it inserts it as the first node.
      * @param node
      * @param before
+     * @returns {LinkedNodeList}
      */
-    addNodeBefore(node: TNode, before?: TNode | null): void;
+    addNodeBefore(node: TNode, before?: TNode | null): this;
     /**
      * Inserts a node after the specified 'after' node.
      * If no 'after' node is specified, it appends it as the last node.
      * @param node
      * @param after
+     * @returns {LinkedNodeList}
      */
-    addNodeAfter(node: TNode, after?: TNode | null): void;
+    addNodeAfter(node: TNode, after?: TNode | null): this;
     /**
      * Takes and existing node and replaces it.
      * @param node
      * @param replacement
+     * @returns {any}
      */
-    replace(node: TNode, replacement: TNode): void;
+    replace(node: TNode, replacement: TNode): this;
     static valueEnumeratorFrom<T>(list: LinkedNodeList<ILinkedNodeWithValue<T>>): IEnumerator<T>;
     static copyValues<T, TDestination extends ArrayLikeWritable<any>>(list: LinkedNodeList<ILinkedNodeWithValue<T>>, array: TDestination, index?: number): TDestination;
 }

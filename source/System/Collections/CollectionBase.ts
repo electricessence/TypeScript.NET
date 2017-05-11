@@ -159,7 +159,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	 * Adds an entry to the collection.
 	 * @param entry
 	 */
-	add(entry:T):void
+	add(entry:T):this
 	{
 		const _ = this;
 		_.assertModifiable();
@@ -171,6 +171,8 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		{ _._updateRecursion--; }
 
 		_._signalModification();
+
+		return _;
 	}
 
 	protected abstract _removeInternal(entry:T, max?:number):number;

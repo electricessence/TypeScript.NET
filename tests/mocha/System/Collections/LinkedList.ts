@@ -56,8 +56,7 @@ describe("Validate external node detachment", ()=>
 	it("should assert if node detached", ()=>
 	{
 		const list = new LinkedList<number>();
-		list.add(1);
-		list.add(2);
+		list.add(1).add(2);
 		assert.equal(list.count, 2);
 
 		assert.equal(list.findLast(1)!.value,1);
@@ -68,9 +67,10 @@ describe("Validate external node detachment", ()=>
 		assert.equal(list.find(3)!.value,3);
 		assert.equal(list.lastValue,3);
 
-		list.addAfter(list.first!,5);
-		list.addFirst(0);
-		list.addLast(10);
+		list.addAfter(list.first!,5)
+			.addFirst(0)
+			.addLast(10);
+
 		assert.equal(list.first!.value,0);
 		assert.equal(list.getNodeAt(0)!.value,0);
 		assert.equal(list.getValueAt(0),0);

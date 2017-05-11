@@ -283,16 +283,17 @@ extends CollectionBase<T> implements ILinkedList<T>
 		return li && ensureExternal(this._findLast(entry), this);
 	}
 
-	addFirst(entry:T):void
+	addFirst(entry:T):this
 	{
 		this.assertModifiable();
 		this._listInternal.addNodeBefore(new InternalNode(entry));
 		this._signalModification(true);
+		return this;
 	}
 
-	addLast(entry:T):void
+	addLast(entry:T):this
 	{
-		this.add(entry);
+		return this.add(entry);
 	}
 
 	private _removeNodeInternal(node:InternalNode<T>|null|undefined):boolean
@@ -336,7 +337,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		return _._removeNodeInternal(getInternal(node, _));
 	}
 
-	addBefore(before:ILinkedListNode<T>, entry:T):void
+	addBefore(before:ILinkedListNode<T>, entry:T):this
 	{
 		const _ = this;
 		_.assertModifiable();
@@ -346,9 +347,10 @@ extends CollectionBase<T> implements ILinkedList<T>
 		);
 
 		_._signalModification(true);
+		return this;
 	}
 
-	addAfter(after:ILinkedListNode<T>, entry:T):void
+	addAfter(after:ILinkedListNode<T>, entry:T):this
 	{
 		const _ = this;
 		_.assertModifiable();
@@ -358,6 +360,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		);
 
 		_._signalModification(true);
+		return this;
 	}
 
 }
@@ -406,16 +409,18 @@ class LinkedListNode<T> implements ILinkedListNode<T>, IDisposable
 		this._nodeInternal.value = v;
 	}
 
-	addBefore(entry:T):void
+	addBefore(entry:T):this
 	{
 		this.throwIfDetached();
 		this._list.addBefore(this, entry);
+		return this;
 	}
 
-	addAfter(entry:T):void
+	addAfter(entry:T):this
 	{
 		this.throwIfDetached();
 		this._list.addAfter(this, entry);
+		return this;
 	}
 
 
