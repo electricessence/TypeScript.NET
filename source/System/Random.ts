@@ -55,6 +55,33 @@ export module Random
 		return next(maxExclusive);
 	}
 
+	/**
+	 * Returns a function that generates random floating point numbers up to the maxExclusive value.
+	 * Useful for generating a random and memoizable set for use with other enumerables.
+	 * @param maxExclusive
+	 * @returns {()=>number}
+	 */
+	export function generate(maxExclusive:number):()=>number
+	{
+		return ()=> r(maxExclusive);
+	}
+
+	export module generate
+	{
+		/**
+		 * Returns a function that generates random integers up to the boundary.
+		 * Useful for generating a random and memoizable set for use with other enumerables.
+		 * @param boundary
+		 * @param inclusive
+		 * @returns {()=>number}
+		 */
+		export function integers(
+			boundary:number,
+			inclusive?:boolean):()=>number
+		{
+			return ()=> nr(boundary,inclusive);
+		}
+	}
 
 	/**
 	 * Returns a random integer from 0 to the boundary.
@@ -188,4 +215,6 @@ export module Random
 				throw "Cannot select from an empty set.";
 		}
 	}
+
+
 }

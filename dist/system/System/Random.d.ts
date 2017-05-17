@@ -18,6 +18,23 @@ export declare module Random {
      */
     function integer(maxExclusive: number): number;
     /**
+     * Returns a function that generates random floating point numbers up to the maxExclusive value.
+     * Useful for generating a random and memoizable set for use with other enumerables.
+     * @param maxExclusive
+     * @returns {()=>number}
+     */
+    function generate(maxExclusive: number): () => number;
+    module generate {
+        /**
+         * Returns a function that generates random integers up to the boundary.
+         * Useful for generating a random and memoizable set for use with other enumerables.
+         * @param boundary
+         * @param inclusive
+         * @returns {()=>number}
+         */
+        function integers(boundary: number, inclusive?: boolean): () => number;
+    }
+    /**
      * Returns a random integer from 0 to the boundary.
      * Return value will be less than the boundary unless inclusive is set to true.
      * Negative numbers are allowed.
