@@ -17,6 +17,11 @@
     var initialize_1 = require("./Collections/Array/initialize");
     var shuffle_1 = require("./Collections/Array/shuffle");
     var assert = Integer_1.Integer.assert;
+    /**
+     * This module only acts as a utility API for getting random numbers from Math.random().
+     * If you need repeatable seeded random numbers then you'll need a separate utility.
+     * Highly recommended: https://github.com/ckknight/random-js which has typings under @types/random-js.
+     */
     var Random;
     (function (Random) {
         function r(maxExclusive) {

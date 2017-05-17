@@ -390,10 +390,11 @@ export function rangeUntil(
  * Returns a unique reduced set of values.
  * @param source
  */
-export function distinct(source:string[]):string[];
-export function distinct(source:number[]):number[];
-export function distinct(source:any[]):any[]
+export function distinct(source:string[]|null):string[];
+export function distinct(source:number[]|null):number[];
+export function distinct(source:any[]|null):any[]
 {
+	if(!source) return []; // Allowing for null facilitates regex filtering.
 	const seen:any = {};
 	return source.filter(e => !(e in seen) && (seen[e] = true));
 }

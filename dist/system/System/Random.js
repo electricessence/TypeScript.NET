@@ -23,6 +23,11 @@ System.register(["./Integer", "./Collections/Array/initialize", "./Collections/A
              * Licensing: MIT
              */
             assert = Integer_1.Integer.assert;
+            /**
+             * This module only acts as a utility API for getting random numbers from Math.random().
+             * If you need repeatable seeded random numbers then you'll need a separate utility.
+             * Highly recommended: https://github.com/ckknight/random-js which has typings under @types/random-js.
+             */
             (function (Random) {
                 function r(maxExclusive) {
                     return Math.floor(Math.random() * maxExclusive);

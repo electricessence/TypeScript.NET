@@ -302,6 +302,8 @@ function rangeUntil(first, until, step) {
 }
 exports.rangeUntil = rangeUntil;
 function distinct(source) {
+    if (!source)
+        return []; // Allowing for null facilitates regex filtering.
     var seen = {};
     return source.filter(function (e) { return !(e in seen) && (seen[e] = true); });
 }

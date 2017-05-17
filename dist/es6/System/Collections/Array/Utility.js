@@ -274,6 +274,8 @@ export function rangeUntil(first, until, step = 1) {
     return range(first, (until - first) / step, step);
 }
 export function distinct(source) {
+    if (!source)
+        return []; // Allowing for null facilitates regex filtering.
     const seen = {};
     return source.filter(e => !(e in seen) && (seen[e] = true));
 }
