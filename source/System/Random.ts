@@ -17,7 +17,7 @@ import assert = Integer.assert;
 export module Random
 {
 
-	function r(maxExclusive:number):number
+	function r(maxExclusive:number = 1):number
 	{
 		return Math.floor(Math.random()*maxExclusive);
 	}
@@ -61,7 +61,7 @@ export module Random
 	 * @param maxExclusive
 	 * @returns {()=>number}
 	 */
-	export function generate(maxExclusive:number):()=>number
+	export function generate(maxExclusive:number = 1):()=>number
 	{
 		return ()=> r(maxExclusive);
 	}

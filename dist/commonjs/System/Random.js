@@ -16,6 +16,7 @@ var assert = Integer_1.Integer.assert;
 var Random;
 (function (Random) {
     function r(maxExclusive) {
+        if (maxExclusive === void 0) { maxExclusive = 1; }
         return Math.floor(Math.random() * maxExclusive);
     }
     function nr(boundary, inclusive) {
@@ -52,6 +53,7 @@ var Random;
      * @returns {()=>number}
      */
     function generate(maxExclusive) {
+        if (maxExclusive === void 0) { maxExclusive = 1; }
         return function () { return r(maxExclusive); };
     }
     Random.generate = generate;

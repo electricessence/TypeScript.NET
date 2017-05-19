@@ -23,7 +23,7 @@ export declare module Random {
      * @param maxExclusive
      * @returns {()=>number}
      */
-    function generate(maxExclusive: number): () => number;
+    function generate(maxExclusive?: number): () => number;
     module generate {
         /**
          * Returns a function that generates random integers up to the boundary.

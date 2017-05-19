@@ -2375,6 +2375,18 @@
                     });
         }
         Enumerable.generate = generate;
+        var random;
+        (function (random) {
+            function floats(maxExclusive) {
+                if (maxExclusive === void 0) { maxExclusive = 1; }
+                return generate(Random_1.Random.generate(maxExclusive));
+            }
+            random.floats = floats;
+            function integers(boundary, inclusive) {
+                return generate(Random_1.Random.generate.integers(boundary, inclusive));
+            }
+            random.integers = integers;
+        })(random = Enumerable.random || (Enumerable.random = {}));
         function unfold(seed, valueFactory, skipSeed) {
             if (skipSeed === void 0) { skipSeed = false; }
             if (!valueFactory)

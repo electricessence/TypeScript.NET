@@ -3836,10 +3836,12 @@ export module Enumerable
 		);
 	}
 
+	export function generate<T>(factory:() => T):InfiniteLinqEnumerable<T>;
+	export function generate<T>(factory:() => T, count:number):FiniteEnumerable<T>;
 	export function generate<T>(factory:(index:number) => T):InfiniteLinqEnumerable<T>;
 	export function generate<T>(factory:(index:number) => T, count:number):FiniteEnumerable<T>;
 	export function generate<T>(
-		factory:(index:number) => T,
+		factory:(index?:number) => T,
 		count:number = Infinity):InfiniteLinqEnumerable<T>
 	{
 		if(!factory)
@@ -3900,6 +3902,19 @@ export module Enumerable
 				{
 					factory = NULL;
 				});
+	}
+
+
+	export module random
+	{
+		export function floats(maxExclusive:number = 1):InfiniteLinqEnumerable<number>
+		{
+			return generate(Random.generate(maxExclusive));
+		}
+		export function integers(boundary:number, inclusive?:boolean):InfiniteLinqEnumerable<number>
+		{
+			return generate(Random.generate.integers(boundary, inclusive));
+		}
 	}
 
 	export function unfold<T>(

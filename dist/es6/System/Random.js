@@ -13,7 +13,7 @@ var assert = Integer.assert;
  */
 export var Random;
 (function (Random) {
-    function r(maxExclusive) {
+    function r(maxExclusive = 1) {
         return Math.floor(Math.random() * maxExclusive);
     }
     function nr(boundary, inclusive) {
@@ -49,7 +49,7 @@ export var Random;
      * @param maxExclusive
      * @returns {()=>number}
      */
-    function generate(maxExclusive) {
+    function generate(maxExclusive = 1) {
         return () => r(maxExclusive);
     }
     Random.generate = generate;

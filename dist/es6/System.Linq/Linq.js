@@ -2230,6 +2230,17 @@ function enumerableFrom(source, additional) {
                 });
     }
     Enumerable.generate = generate;
+    var random;
+    (function (random) {
+        function floats(maxExclusive = 1) {
+            return generate(Random.generate(maxExclusive));
+        }
+        random.floats = floats;
+        function integers(boundary, inclusive) {
+            return generate(Random.generate.integers(boundary, inclusive));
+        }
+        random.integers = integers;
+    })(random = Enumerable.random || (Enumerable.random = {}));
     function unfold(seed, valueFactory, skipSeed = false) {
         if (!valueFactory)
             throw new ArgumentNullException("factory");

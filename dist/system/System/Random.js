@@ -30,6 +30,7 @@ System.register(["./Integer", "./Collections/Array/initialize", "./Collections/A
              */
             (function (Random) {
                 function r(maxExclusive) {
+                    if (maxExclusive === void 0) { maxExclusive = 1; }
                     return Math.floor(Math.random() * maxExclusive);
                 }
                 function nr(boundary, inclusive) {
@@ -66,6 +67,7 @@ System.register(["./Integer", "./Collections/Array/initialize", "./Collections/A
                  * @returns {()=>number}
                  */
                 function generate(maxExclusive) {
+                    if (maxExclusive === void 0) { maxExclusive = 1; }
                     return function () { return r(maxExclusive); };
                 }
                 Random.generate = generate;

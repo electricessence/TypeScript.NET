@@ -231,8 +231,14 @@ export declare module Enumerable {
     function toNegativeInfinity(start?: number, step?: number): InfiniteLinqEnumerable<number>;
     function rangeTo(start: number, to: number, step?: number): FiniteEnumerable<number>;
     function matches(input: string, pattern: any, flags?: string): FiniteEnumerable<RegExpExecArray>;
+    function generate<T>(factory: () => T): InfiniteLinqEnumerable<T>;
+    function generate<T>(factory: () => T, count: number): FiniteEnumerable<T>;
     function generate<T>(factory: (index: number) => T): InfiniteLinqEnumerable<T>;
     function generate<T>(factory: (index: number) => T, count: number): FiniteEnumerable<T>;
+    module random {
+        function floats(maxExclusive?: number): InfiniteLinqEnumerable<number>;
+        function integers(boundary: number, inclusive?: boolean): InfiniteLinqEnumerable<number>;
+    }
     function unfold<T>(seed: T, valueFactory: SelectorWithIndex<T, T>, skipSeed?: Boolean): InfiniteLinqEnumerable<T>;
     function forEach<T>(e: ForEachEnumerable<T>, action: ActionWithIndex<T>, max?: number): number;
     function forEach<T>(e: ForEachEnumerable<T>, action: PredicateWithIndex<T>, max?: number): number;
