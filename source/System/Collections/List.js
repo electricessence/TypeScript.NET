@@ -133,6 +133,14 @@
                 return yielder.yieldReturn(source[index++]);
             });
         };
+        /**
+         * Sorts the underlying array.
+         * @param compareFn The name of the function used to determine the order of the elements. If omitted, the elements are sorted in ascending, ASCII character order.
+         */
+        List.prototype.sort = function (compareFn) {
+            this._source.sort(compareFn);
+            return this;
+        };
         List.prototype.forEach = function (action, useCopy) {
             var s = this._source;
             return Enumerator_1.forEach(useCopy ? s.slice() : this, action);

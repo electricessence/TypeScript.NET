@@ -21,7 +21,8 @@ const __extends = __extendsImport;
 
 const VOID0:undefined = void 0;
 export class List<T>
-extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
+	extends CollectionBase<T>
+	implements IList<T>, IEnumerateEach<T>
 {
 
 	protected readonly _source:T[];
@@ -31,7 +32,7 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super(VOID0, equalityComparer);
-		if((source)instanceof(Array))
+		if((source) instanceof (Array))
 		{
 			this._source = source.slice();
 		}
@@ -42,7 +43,8 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 		}
 	}
 
-	protected _onDispose() {
+	protected _onDispose()
+	{
 		super._onDispose();
 		(<any>this)._source = null;
 	}
@@ -72,7 +74,7 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 		return len;
 	}
 
-	protected _importEntries(entries:IEnumerableOrArray<T>|null|undefined):number
+	protected _importEntries(entries:IEnumerableOrArray<T> | null | undefined):number
 	{
 		if(Type.isArrayLike(entries))
 		{
@@ -168,10 +170,11 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 				version = _._version;
 				index = 0;
 			},
-			(yielder)=>
+			(yielder) =>
 			{
 				if(index) _.throwIfDisposed();
-				else if(_.wasDisposed) {
+				else if(_.wasDisposed)
+				{
 					// We never actually started? Then no biggie.
 					return yielder.yieldBreak();
 				}
@@ -186,6 +189,15 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 		);
 	}
 
+	/**
+	 * Sorts the underlying array.
+	 * @param compareFn The name of the function used to determine the order of the elements. If omitted, the elements are sorted in ascending, ASCII character order.
+	 */
+	sort(compareFn?: (a:T, b:T)=>number): this
+	{
+		this._source.sort(compareFn);
+		return this;
+	}
 
 	forEach(action:ActionWithIndex<T>, useCopy?:boolean):number
 	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number

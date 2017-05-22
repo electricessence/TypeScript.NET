@@ -116,6 +116,14 @@ export class List extends CollectionBase {
             return yielder.yieldReturn(source[index++]);
         });
     }
+    /**
+     * Sorts the underlying array.
+     * @param compareFn The name of the function used to determine the order of the elements. If omitted, the elements are sorted in ascending, ASCII character order.
+     */
+    sort(compareFn) {
+        this._source.sort(compareFn);
+        return this;
+    }
     forEach(action, useCopy) {
         const s = this._source;
         return forEach(useCopy ? s.slice() : this, action);

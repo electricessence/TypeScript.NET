@@ -26,6 +26,11 @@ export declare class List<T> extends CollectionBase<T> implements IList<T>, IEnu
     contains(item: T): boolean;
     copyTo<TTarget extends ArrayLikeWritable<any>>(target: TTarget, index?: number): TTarget;
     getEnumerator(): IEnumerator<T>;
+    /**
+     * Sorts the underlying array.
+     * @param compareFn The name of the function used to determine the order of the elements. If omitted, the elements are sorted in ascending, ASCII character order.
+     */
+    sort(compareFn?: (a: T, b: T) => number): this;
     forEach(action: ActionWithIndex<T>, useCopy?: boolean): number;
     forEach(action: PredicateWithIndex<T>, useCopy?: boolean): number;
 }
