@@ -250,7 +250,7 @@ export class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime>
 	 * Returns a UTC version of this date if its kind is local.
 	 * @returns {DateTime}
 	 */
-	get toUniversalTime():DateTime
+	toUniversalTime():DateTime
 	{
 		const _ = this;
 		if(_._kind!=DateTime.Kind.Local)

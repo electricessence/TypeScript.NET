@@ -96,7 +96,7 @@ export declare class DateTime implements ICalendarDate, IDateTime, IEquatable<ID
      * Returns a UTC version of this date if its kind is local.
      * @returns {DateTime}
      */
-    readonly toUniversalTime: DateTime;
+    toUniversalTime(): DateTime;
     /**
      * Compares a JS Date with the current instance.  Does not evaluate the kind.
      * @param other

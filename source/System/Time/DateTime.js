@@ -220,21 +220,17 @@
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(DateTime.prototype, "toUniversalTime", {
-            /**
-             * Returns a UTC version of this date if its kind is local.
-             * @returns {DateTime}
-             */
-            get: function () {
-                var _ = this;
-                if (_._kind != DateTime.Kind.Local)
-                    return new DateTime(_, _._kind);
-                var d = _._value;
-                return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), DateTime.Kind.Utc);
-            },
-            enumerable: true,
-            configurable: true
-        });
+        /**
+         * Returns a UTC version of this date if its kind is local.
+         * @returns {DateTime}
+         */
+        DateTime.prototype.toUniversalTime = function () {
+            var _ = this;
+            if (_._kind != DateTime.Kind.Local)
+                return new DateTime(_, _._kind);
+            var d = _._value;
+            return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), DateTime.Kind.Utc);
+        };
         DateTime.prototype.equals = function (other, strict) {
             if (strict === void 0) { strict = false; }
             if (!other)

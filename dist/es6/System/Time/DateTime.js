@@ -167,7 +167,7 @@ export class DateTime {
      * Returns a UTC version of this date if its kind is local.
      * @returns {DateTime}
      */
-    get toUniversalTime() {
+    toUniversalTime() {
         const _ = this;
         if (_._kind != DateTime.Kind.Local)
             return new DateTime(_, _._kind);
