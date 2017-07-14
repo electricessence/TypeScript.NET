@@ -34,7 +34,7 @@
         "browser": true
     };
     function getPackage(dist) {
-        return __awaiter(this, void 0, Promise_1.Promise, function () {
+        return __awaiter(this, void 0, Promise_1.TSDNPromise, function () {
             var pkg, _i, _a, key;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -56,7 +56,7 @@
     }
     function savePackage(dist, folder) {
         if (folder === void 0) { folder = dist; }
-        return __awaiter(this, void 0, Promise_1.Promise, function () {
+        return __awaiter(this, void 0, Promise_1.TSDNPromise, function () {
             var pkg;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -85,7 +85,7 @@
         moduleResolution: "node"
     });
     var builder = gulp_typescript_helper_1.BuildHelper
-        .inject(Promise_1.Promise.factory)
+        .inject(Promise_1.TSDNPromise.factory)
         .fromTo(PATH.SOURCE, "./dist", DEFAULTS);
     gulp.task(TASK.DIST_ES6, function () { return builder
         .init(gulp_typescript_helper_1.Module.ES6, gulp_typescript_helper_1.Target.ES6, gulp_typescript_helper_1.Module.ES6)

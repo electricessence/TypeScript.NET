@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-import { Promise } from "./Promise";
+import { TSDNPromise } from "./Promise";
 import { defer } from "../Threading/defer";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 // noinspection JSUnusedLocalSymbols
@@ -10,7 +10,7 @@ const VOID0 = void 0;
 /**
  * A promise that waits for the first then to trigger the resolver.
  */
-export class LazyPromise extends Promise {
+export class LazyPromise extends TSDNPromise {
     constructor(_resolver) {
         super();
         this._resolver = _resolver;

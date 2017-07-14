@@ -4,7 +4,7 @@
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
 
-import {ArrayPromise, Promise, PromiseBase, PromiseCollection} from "../../Promises/Promise";
+import {ArrayPromise, PromiseBase, PromiseCollection, TSDNPromise} from "../../Promises/Promise";
 import {Type} from "../../Types";
 import Worker from "../Worker";
 import {WorkerLike} from "../WorkerType";
@@ -81,7 +81,7 @@ function interact(
 	if(message!==VOID0) w.postMessage(message);
 }
 
-class WorkerPromise<T> extends Promise<T>
+class WorkerPromise<T> extends TSDNPromise<T>
 {
 	constructor(worker:WorkerLike, data:any)
 	{
@@ -291,9 +291,9 @@ export class Parallel
 	 * @param data
 	 * @param task
 	 * @param env
-	 * @returns {Promise<U>|Promise}
+	 * @returns {TSDNPromise<U>|TSDNPromise}
 	 */
-	startNew<T,U>(data:T, task:(data:T) => U, env?:any):Promise<U>
+	startNew<T,U>(data:T, task:(data:T) => U, env?:any):TSDNPromise<U>
 	{
 		const _ = this;
 		const maxConcurrency = this.ensureClampedMaxConcurrency();
@@ -318,11 +318,11 @@ export class Parallel
 	 * Is good for use with testing.
 	 * @param data
 	 * @param task
-	 * @returns {Promise<U>|Promise}
+	 * @returns {TSDNPromise<U>|TSDNPromise}
 	 */
-	startLocal<T,U>(data:T, task:(data:T) => U):Promise<U>
+	startLocal<T,U>(data:T, task:(data:T) => U):TSDNPromise<U>
 	{
-		return new Promise<U>(
+		return new TSDNPromise<U>(
 			(resolve, reject) =>
 			{
 				try
@@ -348,7 +348,7 @@ export class Parallel
 	{
 
 		// The resultant promise collection will make an internal copy...
-		let result:Promise<U>[]|undefined;
+		let result:TSDNPromise<U>[]|undefined;
 
 		if(data && data.length)
 		{
@@ -369,14 +369,14 @@ export class Parallel
 							:"'maxConcurrency' set to 0 but 'allowSynchronous' is false.");
 
 					// Concurrency doesn't matter in a single thread... Just queue it all up.
-					return Promise.map(data, task);
+					return TSDNPromise.map(data, task);
 				}
 
 				if(!result)
 				{
 					// There is a small risk that the consumer could call .resolve() which would result in a double resolution.
 					// But it's important to minimize the number of objects created.
-					result = data.map(d => new Promise<U>());
+					result = data.map(d => new TSDNPromise<U>());
 				}
 
 				let next = () =>
@@ -473,7 +473,7 @@ export class Parallel
 						throw new Error('Workers do not exist and synchronous operation not allowed!');
 
 					// Concurrency doesn't matter in a single thread... Just queue it all up.
-					resolve(Promise.map(data, task).all());
+					resolve(TSDNPromise.map(data, task).all());
 					return;
 				}
 

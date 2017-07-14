@@ -163,7 +163,7 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
                     });
                 };
                 return LazyPromise;
-            }(Promise_1.Promise));
+            }(Promise_1.TSDNPromise));
             exports_1("LazyPromise", LazyPromise);
             exports_1("default", LazyPromise);
         }

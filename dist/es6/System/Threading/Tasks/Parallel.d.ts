@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
-import { ArrayPromise, Promise, PromiseBase, PromiseCollection } from "../../Promises/Promise";
+import { ArrayPromise, TSDNPromise, PromiseBase, PromiseCollection } from "../../Promises/Promise";
 import { WorkerLike } from "../WorkerType";
 export interface ParallelOptions {
     /**
@@ -43,17 +43,17 @@ export declare class Parallel {
      * @param data
      * @param task
      * @param env
-     * @returns {Promise<U>|Promise}
+     * @returns {TSDNPromise<U>|TSDNPromise}
      */
-    startNew<T, U>(data: T, task: (data: T) => U, env?: any): Promise<U>;
+    startNew<T, U>(data: T, task: (data: T) => U, env?: any): TSDNPromise<U>;
     /**
      * Runs the task within the local thread/process.
      * Is good for use with testing.
      * @param data
      * @param task
-     * @returns {Promise<U>|Promise}
+     * @returns {TSDNPromise<U>|TSDNPromise}
      */
-    startLocal<T, U>(data: T, task: (data: T) => U): Promise<U>;
+    startLocal<T, U>(data: T, task: (data: T) => U): TSDNPromise<U>;
     /**
      * Returns an array of promises that each resolve after their task completes.
      * Provides a potential performance benefit by not waiting for all promises to resolve before proceeding to next step.

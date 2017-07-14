@@ -3,8 +3,8 @@
  * Licensing: MIT
  */
 
-import {Promise} from "../source/System/Promises/Promise";
+import {TSDNPromise} from "../source/System/Promises/Promise";
 import {streamToPromise as stp} from "stream-to-promise-agnostic";
 
-export const streamToPromise = stp(Promise.factory);
+export const streamToPromise = stp(TSDNPromise.factory);
 export default streamToPromise;

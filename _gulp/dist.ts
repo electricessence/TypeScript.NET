@@ -1,4 +1,4 @@
-import {Target, Module, CoreTypeScriptOptions, BuildHelper} from "gulp-typescript-helper";
+import {BuildHelper, CoreTypeScriptOptions, Module, Target} from "gulp-typescript-helper";
 import * as PATH from "./constants/Paths";
 import * as gulp from "gulp";
 import * as TASK from "./constants/TaskNames";
@@ -6,7 +6,7 @@ import * as File from "../_utility/file-promise";
 import {JsonMap} from "../source/JSON";
 import {IMap} from "../source/IMap";
 import {streamToPromise as stream} from "../_utility/stream-to-promise";
-import {Promise as NPromise} from "../source/System/Promises/Promise";
+import {TSDNPromise as NPromise} from "../source/System/Promises/Promise";
 import awaiter from "../source/awaiter";
 import generator from "../source/generator";
 // noinspection JSUnusedLocalSymbols

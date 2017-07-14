@@ -6,14 +6,15 @@
  */
 import { DisposableBase } from "../Disposable/DisposableBase";
 import { Closure } from "../FunctionTypes";
+export declare type Resolver = (v: TSDNPromise.Resolution<any>) => any;
 export declare class PromiseState<T> extends DisposableBase {
-    protected _state: Promise.State;
+    protected _state: TSDNPromise.State;
     protected _result: T;
     protected _error: any;
-    constructor(_state: Promise.State, _result?: T, _error?: any);
+    constructor(_state: TSDNPromise.State, _result?: T, _error?: any);
     protected _onDispose(): void;
-    protected getState(): Promise.State;
-    readonly state: Promise.State;
+    protected getState(): TSDNPromise.State;
+    readonly state: TSDNPromise.State;
     readonly isPending: boolean;
     readonly isSettled: boolean;
     readonly isFulfilled: boolean;
@@ -23,7 +24,7 @@ export declare class PromiseState<T> extends DisposableBase {
     protected getError(): any;
     readonly error: any;
 }
-export declare abstract class PromiseBase<T> extends PromiseState<T> implements PromiseLike<T> {
+export declare abstract class PromiseBase<T> extends PromiseState<T> implements PromiseLike<T>, Promise<T> {
     constructor();
     /**
      * .doneNow is provided as a non-standard means that synchronously resolves as the end of a promise chain.
@@ -32,42 +33,42 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
      * @param onFulfilled
      * @param onRejected
      */
-    abstract doneNow(onFulfilled: Promise.Fulfill<T, any>, onRejected?: Promise.Reject<any>): void;
-    abstract doneNow(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
+    abstract doneNow(onFulfilled: TSDNPromise.Fulfill<T, any> | undefined | null, onRejected?: TSDNPromise.Reject<any> | undefined | null): void;
+    abstract doneNow(onFulfilled: (v?: T) => any | undefined | null, onRejected?: (v?: any) => any | undefined | null): void;
     /**
      * Calls the respective handlers once the promise is resolved.
      * @param onFulfilled
      * @param onRejected
      */
-    abstract thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
+    abstract thenSynchronous<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | undefined | null): PromiseBase<TFulfilled | TRejected>;
     /**
      * Same as 'thenSynchronous' but does not return the result.  Returns the current promise instead.
      * You may not need an additional promise result, and this will not create a new one.
      * @param onFulfilled
      * @param onRejected
      */
-    thenThis(onFulfilled: Promise.Fulfill<T, any>, onRejected?: Promise.Reject<any>): this;
+    thenThis(onFulfilled: TSDNPromise.Fulfill<T, any> | undefined | null, onRejected?: TSDNPromise.Reject<any> | undefined | null): this;
     /**
      * Standard .then method that defers execution until resolved.
      * @param onFulfilled
      * @param onRejected
-     * @returns {Promise}
+     * @returns {TSDNPromise}
      */
-    then<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
+    then<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | undefined | null): PromiseBase<TFulfilled | TRejected>;
     /**
      * Same as .then but doesn't trap errors.  Exceptions may end up being fatal.
      * @param onFulfilled
      * @param onRejected
-     * @returns {Promise}
+     * @returns {TSDNPromise}
      */
-    thenAllowFatal<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
+    thenAllowFatal<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | undefined | null): PromiseBase<TFulfilled | TRejected>;
     /**
      * .done is provided as a non-standard means that maps to similar functionality in other promise libraries.
      * As stated by promisejs.org: 'then' is to 'done' as 'map' is to 'forEach'.
      * @param onFulfilled
      * @param onRejected
      */
-    done(onFulfilled: Promise.Fulfill<T, any>, onRejected?: Promise.Reject<any>): void;
+    done(onFulfilled: TSDNPromise.Fulfill<T, any>, onRejected?: TSDNPromise.Reject<any>): void;
     /**
      * Will yield for a number of milliseconds from the time called before continuing.
      * @param milliseconds
@@ -86,25 +87,25 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
      * @param onRejected
      * @returns {PromiseBase<TResult>}
      */
-    'catch'<TResult>(onRejected: Promise.Reject<TResult>): PromiseBase<TResult>;
+    'catch'<TResult = never>(onRejected: TSDNPromise.Reject<TResult>): PromiseBase<T | TResult>;
     /**
      * Shortcut for trapping a rejection but will allow exceptions to propagate within the onRejected handler.
      * @param onRejected
      * @returns {PromiseBase<TResult>}
      */
-    catchAllowFatal<TResult>(onRejected: Promise.Reject<TResult>): PromiseBase<TResult>;
+    catchAllowFatal<TResult = never>(onRejected: TSDNPromise.Reject<TResult>): PromiseBase<T | TResult>;
     /**
      * Shortcut to for handling either resolve or reject.
      * @param fin
      * @returns {PromiseBase<TResult>}
      */
-    'finally'<TResult>(fin: () => Promise.Resolution<TResult>): PromiseBase<TResult>;
+    'finally'<TResult = never>(fin: () => TSDNPromise.Resolution<TResult>): PromiseBase<TResult>;
     /**
      * Shortcut to for handling either resolve or reject but will allow exceptions to propagate within the handler.
      * @param fin
      * @returns {PromiseBase<TResult>}
      */
-    finallyAllowFatal<TResult>(fin: () => Promise.Resolution<TResult>): PromiseBase<TResult>;
+    finallyAllowFatal<TResult = never>(fin: () => TSDNPromise.Resolution<TResult>): PromiseBase<TResult>;
     /**
      * Shortcut to for handling either resolve or reject.  Returns the current promise instead.
      * You may not need an additional promise result, and this will not create a new one.
@@ -116,13 +117,13 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
 }
 export declare abstract class Resolvable<T> extends PromiseBase<T> {
     doneNow(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
-    thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
+    thenSynchronous<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | undefined | null): PromiseBase<TFulfilled | TRejected>;
 }
 /**
  * The simplest usable version of a promise which returns synchronously the resolved state provided.
  */
 export declare abstract class Resolved<T> extends Resolvable<T> {
-    constructor(state: Promise.State, result: T, error?: any);
+    constructor(state: TSDNPromise.State, result: T, error?: any);
 }
 /**
  * A fulfilled Resolved<T>.  Provided for readability.
@@ -139,14 +140,14 @@ export declare class Rejected<T> extends Resolved<T> {
 /**
  * This promise class that facilitates pending resolution.
  */
-export declare class Promise<T> extends Resolvable<T> {
+export declare class TSDNPromise<T> extends Resolvable<T> {
     private _waiting;
-    constructor(resolver?: Promise.Executor<T>, forceSynchronous?: boolean);
-    thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
+    constructor(resolver?: TSDNPromise.Executor<T>, forceSynchronous?: boolean);
+    thenSynchronous<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | undefined | null): PromiseBase<TFulfilled | TRejected>;
     doneNow(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
     protected _onDispose(): void;
     protected _resolvedCalled: boolean;
-    resolveUsing(resolver: Promise.Executor<T>, forceSynchronous?: boolean): void;
+    resolveUsing(resolver: TSDNPromise.Executor<T>, forceSynchronous?: boolean): void;
     private _emitDisposalRejection(p);
     private _resolveInternal(result?);
     private _rejectInternal(error);
@@ -156,20 +157,15 @@ export declare class Promise<T> extends Resolvable<T> {
 /**
  * By providing an ArrayPromise we expose useful methods/shortcuts for dealing with array results.
  */
-export declare class ArrayPromise<T> extends Promise<T[]> {
+export declare class ArrayPromise<T> extends TSDNPromise<T[]> {
     /**
      * Simplifies the use of a map function on an array of results when the source is assured to be an array.
      * @param transform
      * @returns {PromiseBase<Array<any>>}
      */
     map<U>(transform: (value: T) => U): ArrayPromise<U>;
-    /**
-     * Simplifies the use of a reduce function on an array of results when the source is assured to be an array.
-     * @param reduction
-     * @param initialValue
-     * @returns {PromiseBase<any>}
-     */
-    reduce<U>(reduction: (previousValue: U, currentValue: T, i?: number, array?: T[]) => U, initialValue?: U): PromiseBase<U>;
+    reduce(reduction: (previousValue: T, currentValue: T, i?: number, array?: T[]) => T, initialValue?: T): PromiseBase<T>;
+    reduce<U>(reduction: (previousValue: U, currentValue: T, i?: number, array?: T[]) => U, initialValue: U): PromiseBase<U>;
     static fulfilled<T>(value: T[]): ArrayPromise<T>;
 }
 /**
@@ -214,16 +210,10 @@ export declare class PromiseCollection<T> extends DisposableBase {
      * @returns {PromiseCollection<U>}
      */
     pipe<U>(transform: (value: T) => U | PromiseLike<U>): PromiseCollection<U>;
-    /**
-     * Behaves like array reduce.
-     * Creates the promise chain necessary to produce the desired result.
-     * @param reduction
-     * @param initialValue
-     * @returns {PromiseBase<PromiseLike<any>>}
-     */
-    reduce<U>(reduction: (previousValue: U, currentValue: T, i?: number, array?: PromiseLike<T>[]) => U, initialValue?: U | PromiseLike<U>): PromiseBase<U>;
+    reduce(reduction: (previousValue: T, currentValue: T, i?: number, array?: PromiseLike<T>[]) => T, initialValue?: T | PromiseLike<T>): PromiseBase<T>;
+    reduce<U>(reduction: (previousValue: U, currentValue: T, i?: number, array?: PromiseLike<T>[]) => U, initialValue: U | PromiseLike<U>): PromiseBase<U>;
 }
-export declare module Promise {
+export declare module TSDNPromise {
     /**
      * The state of a promise.
      * https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
@@ -242,8 +232,8 @@ export declare module Promise {
         (reason: any): TResult | PromiseLike<TResult>;
     }
     interface Then<T, TResult> {
-        (onfulfilled?: Fulfill<T, TResult>, onrejected?: Reject<TResult>): PromiseLike<TResult>;
-        (onfulfilled?: Fulfill<T, TResult>, onrejected?: Reject<void>): PromiseLike<TResult>;
+        (onfulfilled?: Fulfill<T, TResult> | undefined | null, onrejected?: Reject<TResult> | undefined | null): PromiseLike<TResult>;
+        (onfulfilled?: Fulfill<T, TResult> | undefined | null, onrejected?: Reject<void> | undefined | null): PromiseLike<TResult>;
     }
     interface Executor<T> {
         (resolve: (value?: T | PromiseLike<T>) => void, reject: (reason?: any) => void): void;
@@ -251,7 +241,7 @@ export declare module Promise {
     interface Factory {
         <T>(executor: Executor<T>): PromiseLike<T>;
     }
-    function factory<T>(e: Executor<T>): Promise<T>;
+    function factory<T>(e: Executor<T>): TSDNPromise<T>;
     /**
      * Takes a set of promises and returns a PromiseCollection.
      * @param promises
@@ -292,9 +282,9 @@ export declare module Promise {
      * Syntactic shortcut for avoiding 'new'.
      * @param resolver
      * @param forceSynchronous
-     * @returns {Promise}
+     * @returns {TSDNPromise}
      */
-    function using<T>(resolver: Promise.Executor<T>, forceSynchronous?: boolean): PromiseBase<T>;
+    function using<T>(resolver: TSDNPromise.Executor<T>, forceSynchronous?: boolean): PromiseBase<T>;
     /**
      * Takes a set of values or promises and returns a PromiseCollection.
      * Similar to 'group' but calls resolve on each entry.
@@ -330,4 +320,5 @@ export declare module Promise {
      */
     function createFrom<T>(then: Then<T, any>): PromiseBase<T>;
 }
-export default Promise;
+export { TSDNPromise as Promise };
+export default TSDNPromise;

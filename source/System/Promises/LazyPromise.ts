@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 
-import {Promise, PromiseBase} from "./Promise";
+import {PromiseBase, TSDNPromise} from "./Promise";
 import {Closure} from "../FunctionTypes";
 import {ICancellable} from "../Threading/ICancellable";
 import {defer} from "../Threading/defer";
@@ -17,10 +17,10 @@ const VOID0:any = void 0;
 /**
  * A promise that waits for the first then to trigger the resolver.
  */
-export class LazyPromise<T> extends Promise<T>
+export class LazyPromise<T> extends TSDNPromise<T>
 {
 
-	constructor(private _resolver:Promise.Executor<T>)
+	constructor(private _resolver:TSDNPromise.Executor<T>)
 	{
 		super();
 		if(!_resolver) throw new ArgumentNullException("resolver");
@@ -45,8 +45,8 @@ export class LazyPromise<T> extends Promise<T>
 	}
 
 	thenSynchronous<TResult>(
-		onFulfilled:Promise.Fulfill<T, TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
+		onFulfilled:TSDNPromise.Fulfill<T, TResult>,
+		onRejected?:TSDNPromise.Reject<TResult>):PromiseBase<TResult>
 	{
 		this._onThen();
 		return super.thenSynchronous(onFulfilled, onRejected);

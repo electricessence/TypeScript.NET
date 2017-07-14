@@ -57,6 +57,7 @@ export declare class InfiniteLinqEnumerable<T> extends DisposableBase implements
     pairwise<TSelect>(selector: (previous: T, current: T, index: number) => TSelect): InfiniteLinqEnumerable<TSelect>;
     scan(func: (previous: T, current: T, index: number) => T, seed?: T): this;
     select<TResult>(selector: SelectorWithIndex<T, TResult>): InfiniteLinqEnumerable<TResult>;
+    map<TResult>(selector: SelectorWithIndex<T, TResult>): InfiniteLinqEnumerable<TResult>;
     protected _selectMany<TElement, TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>, resultSelector?: (collection: T, element: TElement) => TResult): LinqEnumerable<TResult>;
     selectMany<TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TResult> | null | undefined>): InfiniteLinqEnumerable<TResult>;
     selectMany<TElement, TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>, resultSelector: (collection: T, element: TElement) => TResult): InfiniteLinqEnumerable<TResult>;
@@ -68,6 +69,7 @@ export declare class InfiniteLinqEnumerable<T> extends DisposableBase implements
     choose(): InfiniteLinqEnumerable<T>;
     choose<TResult>(selector?: Selector<T, TResult>): InfiniteLinqEnumerable<TResult>;
     where(predicate: PredicateWithIndex<T>): this;
+    filter(predicate: PredicateWithIndex<T>): this;
     nonNull(): this;
     ofType<TType>(type: {
         new (...params: any[]): TType;
@@ -125,6 +127,7 @@ export declare class LinqEnumerable<T> extends InfiniteLinqEnumerable<T> impleme
     takeExceptLast(count?: number): this;
     skipToLast(count: number): this;
     select<TResult>(selector: SelectorWithIndex<T, TResult>): LinqEnumerable<TResult>;
+    map<TResult>(selector: SelectorWithIndex<T, TResult>): LinqEnumerable<TResult>;
     selectMany<TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TResult> | null | undefined>): LinqEnumerable<TResult>;
     selectMany<TElement, TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>, resultSelector: (collection: T, element: TElement) => TResult): LinqEnumerable<TResult>;
     choose(): LinqEnumerable<T>;
@@ -157,8 +160,10 @@ export declare class LinqEnumerable<T> extends InfiniteLinqEnumerable<T> impleme
     flatten<TFlat>(): LinqEnumerable<TFlat>;
     flatten(): LinqEnumerable<any>;
     pairwise<TSelect>(selector: (previous: T, current: T, index: number) => TSelect): LinqEnumerable<TSelect>;
-    aggregate(func: (previous: T, current: T, index: number) => T, seed: T): T;
-    aggregate(func: (previous: T, current: T, index: number) => T, seed?: T): T | undefined;
+    aggregate(reduction: (previous: T, current: T, index?: number) => T): T | undefined;
+    aggregate<U>(reduction: (previous: U, current: T, index?: number) => U, initialValue: U): U;
+    reduce<T>(reduction: (previous: T, current: T, index?: number) => T): T | undefined;
+    reduce<U>(reduction: (previous: U, current: T, index?: number) => U, initialValue: U): U;
     average(selector?: SelectorWithIndex<T, number>): number;
     max(): T | undefined;
     min(): T | undefined;

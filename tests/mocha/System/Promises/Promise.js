@@ -26,7 +26,7 @@ describe("computing sum of integers using promises", function () {
         return array
             .reduce(function (promise, nextVal) {
             return promise.thenSynchronous(function (currentVal) { return currentVal + nextVal; });
-        }, Promise_1.Promise.resolve(0))
+        }, Promise_1.TSDNPromise.resolve(0))
             .thenSynchronous(function (value) {
             sw.stop();
             // console.log("");
@@ -51,7 +51,7 @@ describe("computing sum of integers using promises", function () {
         return array
             .reduce(function (promise, nextVal) {
             return promise.then(function (currentVal) { return currentVal + nextVal; });
-        }, Promise_1.Promise.resolve(0))
+        }, Promise_1.TSDNPromise.resolve(0))
             .then(function (value) {
             sw.stop();
             //console.log("");
@@ -76,7 +76,7 @@ describe("computing sum of integers using promises", function () {
     // });
     it("should be deferring fulfillment", function () {
         var wasRun = false;
-        var r = Promise_1.Promise.resolve(true).then(function () {
+        var r = Promise_1.TSDNPromise.resolve(true).then(function () {
             wasRun = true;
         });
         assert.ok(!wasRun, "The promise should have deferred until after closure completed.");
@@ -85,14 +85,14 @@ describe("computing sum of integers using promises", function () {
 });
 describe("Resolution and Rejection", function () {
     it("should result in a fulfilled promise when given a value", function () {
-        var f = Promise_1.Promise.resolve(5);
+        var f = Promise_1.TSDNPromise.resolve(5);
         assert.equal(f.result, 5);
         assert.equal(f.isSettled, true);
         assert.equal(f.isFulfilled, true);
         assert.equal(f.isRejected, false);
     });
     it("should result in a rejected promise when requesting rejected", function () {
-        var f = Promise_1.Promise.reject("err");
+        var f = Promise_1.TSDNPromise.reject("err");
         assert.equal(f.error, "err");
         assert.equal(f.isSettled, true);
         assert.equal(f.isFulfilled, false);
@@ -101,7 +101,7 @@ describe("Resolution and Rejection", function () {
     it("resolves multiple observers", function (done) {
         var nextTurn = false;
         var resolution = "Ta-ram pam param!";
-        var pending = new Promise_1.Promise();
+        var pending = new Promise_1.TSDNPromise();
         var count = 10;
         var i = 0;
         function resolve(value) {
@@ -123,7 +123,7 @@ describe("Resolution and Rejection", function () {
     });
     it("observers called even after throw (synchronous)", function () {
         var threw = false;
-        var pending = new Promise_1.Promise();
+        var pending = new Promise_1.TSDNPromise();
         pending.thenSynchronous(function () {
             threw = true;
             throw new Error(REASON);
@@ -134,7 +134,7 @@ describe("Resolution and Rejection", function () {
     });
     it("observers called even after throw (asynchronous)", function () {
         var threw = false;
-        var pending = new Promise_1.Promise();
+        var pending = new Promise_1.TSDNPromise();
         pending.thenSynchronous(function () {
             threw = true;
             throw new Error(REASON);
@@ -174,7 +174,7 @@ describe("Resolution and Rejection", function () {
             return NO;
         })
             .then(null, null) // ensure pass through
-            .then(function () {
+            .then(function (v) {
             // The previous promise threw/rejected so should never go here.
             assert.ok(false);
             return NO;
@@ -213,32 +213,34 @@ describe("Resolution and Rejection", function () {
         });
     }
     it("should follow expected promise behavior flow for a resolved promise", function () {
-        return testPromiseFlow(Promise_1.Promise.resolve(true));
+        return testPromiseFlow(Promise_1.TSDNPromise.resolve(true));
     });
     it("should follow expected promise behavior flow for a rejected promise", function () {
-        return testPromiseFlow(Promise_1.Promise
+        return testPromiseFlow(Promise_1.TSDNPromise
             .reject(BREAK)
-            .catch(function (v) {
+            .then(function (v) {
+            assert.ok(false, "Fulfilled when it should have been rejected.");
+        }, function (v) {
             assert.equal(v, BREAK);
-            return true;
-        }));
+        })
+            .finally(function () { return true; }));
     });
     it("should pass through", function () {
-        return Promise_1.Promise.resolve(true)
+        return Promise_1.TSDNPromise.resolve(true)
             .thenAllowFatal(function () {
             // throw "BAM!";
         });
     });
     it("should follow expected promise behavior flow for a pending then resolved promise", function () {
-        var p = new Promise_1.Promise();
+        var p = new Promise_1.TSDNPromise();
         assert.ok(p.isPending);
         p.resolve(true);
         return testPromiseFlow(p);
     });
     it("should be able to use a then-able", function () {
-        var p = Promise_1.Promise.createFrom(function (r) {
+        var p = Promise_1.TSDNPromise.createFrom(function (r) {
             r(true);
-            return Promise_1.Promise.resolve(true);
+            return Promise_1.TSDNPromise.resolve(true);
         });
         return testPromiseFlow(p);
     });
@@ -269,8 +271,8 @@ describe("Resolution and Rejection", function () {
         });
     });
     it("should be able to use promise as a resolution", function () {
-        var s = new Promise_1.Promise();
-        var p = new Promise_1.Promise(function (resolve) {
+        var s = new Promise_1.TSDNPromise();
+        var p = new Promise_1.TSDNPromise(function (resolve) {
             defer_1.defer(function () { return resolve(s); });
         });
         assert.ok(s.isPending);
@@ -282,7 +284,7 @@ describe("Resolution and Rejection", function () {
         var other = new LazyPromise_1.LazyPromise(function (resolve) {
             resolve(4);
         });
-        return Promise_1.Promise.waitAll(other, Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.reject(BREAK), Promise_1.Promise.resolve(1)).thenSynchronous(function (r) {
+        return Promise_1.TSDNPromise.waitAll(other, Promise_1.TSDNPromise.resolve(3), Promise_1.TSDNPromise.resolve(2), Promise_1.TSDNPromise.reject(BREAK), Promise_1.TSDNPromise.resolve(1)).thenSynchronous(function (r) {
             assert.equal(r[0].result, 4);
             assert.equal(r[1].result, 3);
             assert.equal(r[2].result, 2);
@@ -295,7 +297,7 @@ describe("Resolution and Rejection", function () {
         var other = new LazyPromise_1.LazyPromise(function (resolve) {
             resolve(4);
         });
-        return Promise_1.Promise.all(other.delayFromNow(10).delayAfterResolve(10), Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.resolve(1)).thenSynchronous(function (r) {
+        return Promise_1.TSDNPromise.all(other.delayFromNow(10).delayAfterResolve(10), Promise_1.TSDNPromise.resolve(3), Promise_1.TSDNPromise.resolve(2), Promise_1.TSDNPromise.resolve(1)).thenSynchronous(function (r) {
             assert.equal(r[0], 4);
             assert.equal(r[1], 3);
             assert.equal(r[2], 2);
@@ -306,7 +308,7 @@ describe("Resolution and Rejection", function () {
         var other = new LazyPromise_1.LazyPromise(function (resolve) {
             resolve(4);
         });
-        return Promise_1.Promise.all(other, Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.resolve(1), Promise_1.Promise.reject(-1)).thenSynchronous(function () {
+        return Promise_1.TSDNPromise.all(other, Promise_1.TSDNPromise.resolve(3), Promise_1.TSDNPromise.resolve(2), Promise_1.TSDNPromise.resolve(1), Promise_1.TSDNPromise.reject(-1)).thenSynchronous(function () {
             assert.ok(false);
         }, function (e) {
             assert.equal(e, -1);
@@ -316,30 +318,30 @@ describe("Resolution and Rejection", function () {
         var other = new LazyPromise_1.LazyPromise(function (resolve, reject) {
             reject(4);
         });
-        return Promise_1.Promise.race(other.delayAfterResolve(40), Promise_1.Promise.resolve(3).delayFromNow(10), Promise_1.Promise.resolve(2).delayFromNow(20), Promise_1.Promise.resolve(1).delayFromNow(30)).thenSynchronous(function (r) {
+        return Promise_1.TSDNPromise.race(other.delayAfterResolve(40), Promise_1.TSDNPromise.resolve(3).delayFromNow(10), Promise_1.TSDNPromise.resolve(2).delayFromNow(20), Promise_1.TSDNPromise.resolve(1).delayFromNow(30)).thenSynchronous(function (r) {
             assert.equal(r, 3);
         }, function () {
             assert.ok(false);
         });
     });
     it("should be resolve the rejection", function () {
-        return Promise_1.Promise.race(Promise_1.Promise.resolve(3).delayFromNow(20), Promise_1.Promise.resolve(2).delayAfterResolve(10), Promise_1.Promise.reject(1)).thenSynchronous(function () {
+        return Promise_1.TSDNPromise.race(Promise_1.TSDNPromise.resolve(3).delayFromNow(20), Promise_1.TSDNPromise.resolve(2).delayAfterResolve(10), Promise_1.TSDNPromise.reject(1)).thenSynchronous(function () {
             assert.ok(false);
         }, function (e) {
             assert.equal(e, 1);
         });
     });
     it("should resolve the chain fulfilled promise result.", function () {
-        return new Promise_1.Promise((function (resolve) { return resolve(new Promise_1.Promise((function (resolve) { return resolve(Promise_1.Promise.resolve(1)); }))); }))
+        return new Promise_1.TSDNPromise((function (resolve) { return resolve(new Promise_1.TSDNPromise((function (resolve) { return resolve(Promise_1.TSDNPromise.resolve(1)); }))); }))
             .thenSynchronous(function (v) { return assert.equal(v, 1); }, function () { return assert.ok(false); });
     });
     it("should resolve the rejected promise result.", function () {
-        return new Promise_1.Promise((function (resolve) { return resolve(Promise_1.Promise.reject(BREAK)); }))
+        return new Promise_1.TSDNPromise((function (resolve) { return resolve(Promise_1.TSDNPromise.reject(BREAK)); }))
             .thenSynchronous(function () { return assert.ok(false); }, function (e) { return assert.equal(e, BREAK); });
     });
     it("should rejected a disposed promise-result..", function () {
-        return new Promise_1.Promise((function (resolve) {
-            var r = Promise_1.Promise.resolve(1);
+        return new Promise_1.TSDNPromise((function (resolve) {
+            var r = Promise_1.TSDNPromise.resolve(1);
             r.dispose();
             resolve(r);
         }))

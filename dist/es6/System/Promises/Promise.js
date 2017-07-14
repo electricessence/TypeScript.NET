@@ -29,7 +29,7 @@ function resolve(value, resolver, promiseFactory) {
         ? resolver(value)
         : value;
     return nextValue && isPromise(nextValue)
-        ? Promise.wrap(nextValue)
+        ? TSDNPromise.wrap(nextValue)
         : promiseFactory(nextValue);
 }
 function handleResolution(p, value, resolver) {
@@ -73,7 +73,7 @@ function handleSyncIfPossible(p, onFulfilled, onRejected) {
         return p.then(onFulfilled, onRejected);
 }
 function newODE() {
-    return new ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
+    return new ObjectDisposedException("TSDNPromise", "An underlying promise-result was disposed.");
 }
 export class PromiseState extends DisposableBase {
     constructor(_state, _result, _error) {
@@ -95,16 +95,16 @@ export class PromiseState extends DisposableBase {
         return this._state;
     }
     get isPending() {
-        return this.getState() === Promise.State.Pending;
+        return this.getState() === TSDNPromise.State.Pending;
     }
     get isSettled() {
-        return this.getState() != Promise.State.Pending; // Will also include undefined==0 aka disposed!=resolved.
+        return this.getState() != TSDNPromise.State.Pending; // Will also include undefined==0 aka disposed!=resolved.
     }
     get isFulfilled() {
-        return this.getState() === Promise.State.Fulfilled;
+        return this.getState() === TSDNPromise.State.Fulfilled;
     }
     get isRejected() {
-        return this.getState() === Promise.State.Rejected;
+        return this.getState() === TSDNPromise.State.Rejected;
     }
     /*
      * Providing overrides allows for special defer or lazy sub classes.
@@ -126,7 +126,7 @@ export class PromiseState extends DisposableBase {
 }
 export class PromiseBase extends PromiseState {
     constructor() {
-        super(Promise.State.Pending);
+        super(TSDNPromise.State.Pending);
         this._disposableObjectName = PROMISE;
     }
     thenThis(onFulfilled, onRejected) {
@@ -137,11 +137,11 @@ export class PromiseBase extends PromiseState {
      * Standard .then method that defers execution until resolved.
      * @param onFulfilled
      * @param onRejected
-     * @returns {Promise}
+     * @returns {TSDNPromise}
      */
     then(onFulfilled, onRejected) {
         this.throwIfDisposed();
-        return new Promise((resolve, reject) => {
+        return new TSDNPromise((resolve, reject) => {
             this.doneNow(result => handleResolutionMethods(resolve, reject, result, onFulfilled), error => onRejected
                 ? handleResolutionMethods(resolve, reject, error, onRejected)
                 : reject(error));
@@ -151,11 +151,11 @@ export class PromiseBase extends PromiseState {
      * Same as .then but doesn't trap errors.  Exceptions may end up being fatal.
      * @param onFulfilled
      * @param onRejected
-     * @returns {Promise}
+     * @returns {TSDNPromise}
      */
     thenAllowFatal(onFulfilled, onRejected) {
         this.throwIfDisposed();
-        return new Promise((resolve, reject) => {
+        return new TSDNPromise((resolve, reject) => {
             this.doneNow(result => resolve((onFulfilled ? onFulfilled(result) : result)), error => reject(onRejected ? onRejected(error) : error));
         });
     }
@@ -175,7 +175,7 @@ export class PromiseBase extends PromiseState {
      */
     delayFromNow(milliseconds = 0) {
         this.throwIfDisposed();
-        return new Promise((resolve, reject) => {
+        return new TSDNPromise((resolve, reject) => {
             defer(() => {
                 this.doneNow(v => resolve(v), e => reject(e));
             }, milliseconds);
@@ -192,7 +192,7 @@ export class PromiseBase extends PromiseState {
         this.throwIfDisposed();
         if (this.isSettled)
             return this.delayFromNow(milliseconds);
-        return new Promise((resolve, reject) => {
+        return new TSDNPromise((resolve, reject) => {
             this.doneNow(v => defer(() => resolve(v), milliseconds), e => defer(() => reject(e), milliseconds));
         }, true // Since the resolve/reject is deferred.
         );
@@ -246,11 +246,11 @@ export class Resolvable extends PromiseBase {
     doneNow(onFulfilled, onRejected) {
         this.throwIfDisposed();
         switch (this.state) {
-            case Promise.State.Fulfilled:
+            case TSDNPromise.State.Fulfilled:
                 if (onFulfilled)
                     onFulfilled(this._result);
                 break;
-            case Promise.State.Rejected:
+            case TSDNPromise.State.Rejected:
                 if (onRejected)
                     onRejected(this._error);
                 break;
@@ -260,13 +260,13 @@ export class Resolvable extends PromiseBase {
         this.throwIfDisposed();
         try {
             switch (this.state) {
-                case Promise.State.Fulfilled:
+                case TSDNPromise.State.Fulfilled:
                     return onFulfilled
-                        ? resolve(this._result, onFulfilled, Promise.resolve)
+                        ? resolve(this._result, onFulfilled, TSDNPromise.resolve)
                         : this; // Provided for catch cases.
-                case Promise.State.Rejected:
+                case TSDNPromise.State.Rejected:
                     return onRejected
-                        ? resolve(this._error, onRejected, Promise.resolve)
+                        ? resolve(this._error, onRejected, TSDNPromise.resolve)
                         : this;
             }
         }
@@ -292,7 +292,7 @@ export class Resolved extends Resolvable {
  */
 export class Fulfilled extends Resolved {
     constructor(value) {
-        super(Promise.State.Fulfilled, value);
+        super(TSDNPromise.State.Fulfilled, value);
     }
 }
 /**
@@ -300,7 +300,7 @@ export class Fulfilled extends Resolved {
  */
 export class Rejected extends Resolved {
     constructor(error) {
-        super(Promise.State.Rejected, VOID0, error);
+        super(TSDNPromise.State.Rejected, VOID0, error);
     }
 }
 /**
@@ -315,12 +315,12 @@ class PromiseWrapper extends Resolvable {
         if (!isPromise(_target))
             throw new ArgumentException(TARGET, "Must be a promise-like object.");
         _target.then((v) => {
-            this._state = Promise.State.Fulfilled;
+            this._state = TSDNPromise.State.Fulfilled;
             this._result = v;
             this._error = VOID0;
             this._target = VOID0;
         }, e => {
-            this._state = Promise.State.Rejected;
+            this._state = TSDNPromise.State.Rejected;
             this._error = e;
             this._target = VOID0;
         });
@@ -330,7 +330,7 @@ class PromiseWrapper extends Resolvable {
         let t = this._target;
         if (!t)
             return super.thenSynchronous(onFulfilled, onRejected);
-        return new Promise((resolve, reject) => {
+        return new TSDNPromise((resolve, reject) => {
             handleDispatch(t, result => handleResolutionMethods(resolve, reject, result, onFulfilled), error => onRejected
                 ? handleResolutionMethods(resolve, null, error, onRejected)
                 : reject(error));
@@ -352,7 +352,7 @@ class PromiseWrapper extends Resolvable {
 /**
  * This promise class that facilitates pending resolution.
  */
-export class Promise extends Resolvable {
+export class TSDNPromise extends Resolvable {
     /*
      * A note about deferring:
      * The caller can set resolveImmediate to true if they intend to initialize code that will end up being deferred itself.
@@ -372,7 +372,7 @@ export class Promise extends Resolvable {
         // Already fulfilled?
         if (this._state)
             return super.thenSynchronous(onFulfilled, onRejected);
-        const p = new Promise();
+        const p = new TSDNPromise();
         (this._waiting || (this._waiting = []))
             .push(pools.PromiseCallbacks.init(onFulfilled, onRejected, p));
         return p;
@@ -395,7 +395,7 @@ export class Promise extends Resolvable {
         if (this._resolvedCalled)
             throw new InvalidOperationException(".resolve() already called.");
         if (this.state)
-            throw new InvalidOperationException("Already resolved: " + Promise.State[this.state]);
+            throw new InvalidOperationException("Already resolved: " + TSDNPromise.State[this.state]);
         this._resolvedCalled = true;
         let state = 0;
         const rejectHandler = (reason) => {
@@ -446,13 +446,13 @@ export class Promise extends Resolvable {
             if (this._emitDisposalRejection(r))
                 return;
             switch (r.state) {
-                case Promise.State.Pending:
+                case TSDNPromise.State.Pending:
                     r.doneNow(v => this._resolveInternal(v), e => this._rejectInternal(e));
                     return;
-                case Promise.State.Rejected:
+                case TSDNPromise.State.Rejected:
                     this._rejectInternal(r.error);
                     return;
-                case Promise.State.Fulfilled:
+                case TSDNPromise.State.Fulfilled:
                     result = r.result;
                     break;
             }
@@ -461,7 +461,7 @@ export class Promise extends Resolvable {
             result.then(v => this._resolveInternal(v), e => this._rejectInternal(e));
         }
         else {
-            this._state = Promise.State.Fulfilled;
+            this._state = TSDNPromise.State.Fulfilled;
             this._result = result;
             this._error = VOID0;
             const o = this._waiting;
@@ -481,7 +481,7 @@ export class Promise extends Resolvable {
     _rejectInternal(error) {
         if (this.wasDisposed)
             return;
-        this._state = Promise.State.Rejected;
+        this._state = TSDNPromise.State.Rejected;
         this._error = error;
         const o = this._waiting;
         if (o) {
@@ -507,7 +507,7 @@ export class Promise extends Resolvable {
             throw new InvalidOperationException("Cannot resolve a promise as itself.");
         if (this._state) {
             // Same value? Ignore...
-            if (!throwIfSettled || this._state == Promise.State.Fulfilled && this._result === result)
+            if (!throwIfSettled || this._state == TSDNPromise.State.Fulfilled && this._result === result)
                 return;
             throw new InvalidOperationException("Changing the fulfilled state/value of a promise is not supported.");
         }
@@ -522,7 +522,7 @@ export class Promise extends Resolvable {
         this.throwIfDisposed();
         if (this._state) {
             // Same value? Ignore...
-            if (!throwIfSettled || this._state == Promise.State.Rejected && this._error === error)
+            if (!throwIfSettled || this._state == TSDNPromise.State.Rejected && this._error === error)
                 return;
             throw new InvalidOperationException("Changing the rejected state/value of a promise is not supported.");
         }
@@ -537,7 +537,7 @@ export class Promise extends Resolvable {
 /**
  * By providing an ArrayPromise we expose useful methods/shortcuts for dealing with array results.
  */
-export class ArrayPromise extends Promise {
+export class ArrayPromise extends TSDNPromise {
     /**
      * Simplifies the use of a map function on an array of results when the source is assured to be an array.
      * @param transform
@@ -592,7 +592,7 @@ export class PromiseCollection extends DisposableBase {
      */
     all() {
         this.throwIfDisposed();
-        return Promise.all(this._source);
+        return TSDNPromise.all(this._source);
     }
     /**
      * Creates a Promise that is resolved or rejected when any of the provided Promises are resolved
@@ -601,7 +601,7 @@ export class PromiseCollection extends DisposableBase {
      */
     race() {
         this.throwIfDisposed();
-        return Promise.race(this._source);
+        return TSDNPromise.race(this._source);
     }
     /**
      * Returns a promise that is fulfilled with array of provided promises when all provided promises have resolved (fulfill or reject).
@@ -610,7 +610,7 @@ export class PromiseCollection extends DisposableBase {
      */
     waitAll() {
         this.throwIfDisposed();
-        return Promise.waitAll(this._source);
+        return TSDNPromise.waitAll(this._source);
     }
     /**
      * Waits for all the values to resolve and then applies a transform.
@@ -643,7 +643,7 @@ export class PromiseCollection extends DisposableBase {
      */
     reduce(reduction, initialValue) {
         this.throwIfDisposed();
-        return Promise.wrap(this._source
+        return TSDNPromise.wrap(this._source
             .reduce((previous, current, i, array) => handleSyncIfPossible(previous, (p) => handleSyncIfPossible(current, (c) => reduction(p, c, i, array))), isPromise(initialValue)
             ? initialValue
             : new Fulfilled(initialValue)));
@@ -709,8 +709,8 @@ var pools;
         }
         function init(onFulfilled, onRejected, promise) {
             const c = getPool().take();
-            c.onFulfilled = onFulfilled;
-            c.onRejected = onRejected;
+            c.onFulfilled = onFulfilled || undefined;
+            c.onRejected = onRejected || undefined;
             c.promise = promise;
             return c;
         }
@@ -721,7 +721,7 @@ var pools;
         PromiseCallbacks.recycle = recycle;
     })(PromiseCallbacks = pools.PromiseCallbacks || (pools.PromiseCallbacks = {}));
 })(pools || (pools = {}));
-(function (Promise) {
+(function (TSDNPromise) {
     /**
      * The state of a promise.
      * https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
@@ -732,19 +732,19 @@ var pools;
         State[State["Pending"] = 0] = "Pending";
         State[State["Fulfilled"] = 1] = "Fulfilled";
         State[State["Rejected"] = -1] = "Rejected";
-    })(State = Promise.State || (Promise.State = {}));
+    })(State = TSDNPromise.State || (TSDNPromise.State = {}));
     Object.freeze(State);
     function factory(e) {
-        return new Promise(e);
+        return new TSDNPromise(e);
     }
-    Promise.factory = factory;
+    TSDNPromise.factory = factory;
     function group(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("promises");
         return new PromiseCollection(((first) instanceof (Array) ? first : [first])
             .concat(rest));
     }
-    Promise.group = group;
+    TSDNPromise.group = group;
     function all(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("promises");
@@ -797,7 +797,7 @@ var pools;
             }
         });
     }
-    Promise.all = all;
+    TSDNPromise.all = all;
     function waitAll(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("promises");
@@ -837,7 +837,7 @@ var pools;
             }
         });
     }
-    Promise.waitAll = waitAll;
+    TSDNPromise.waitAll = waitAll;
     function race(first, ...rest) {
         let promises = first && ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy?
         if (!promises || !promises.length || !(promises = promises.filter(v => v != null)).length)
@@ -852,7 +852,7 @@ var pools;
             if (p instanceof PromiseBase && p.isSettled)
                 return p;
         }
-        return new Promise((resolve, reject) => {
+        return new TSDNPromise((resolve, reject) => {
             let cleanup = () => {
                 reject = NULL;
                 resolve = NULL;
@@ -874,21 +874,21 @@ var pools;
             }
         });
     }
-    Promise.race = race;
+    TSDNPromise.race = race;
     function resolve(value) {
         return isPromise(value) ? wrap(value) : new Fulfilled(value);
     }
-    Promise.resolve = resolve;
+    TSDNPromise.resolve = resolve;
     /**
      * Syntactic shortcut for avoiding 'new'.
      * @param resolver
      * @param forceSynchronous
-     * @returns {Promise}
+     * @returns {TSDNPromise}
      */
     function using(resolver, forceSynchronous = false) {
-        return new Promise(resolver, forceSynchronous);
+        return new TSDNPromise(resolver, forceSynchronous);
     }
-    Promise.using = using;
+    TSDNPromise.using = using;
     function resolveAll(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("resolutions");
@@ -896,7 +896,7 @@ var pools;
             .concat(rest)
             .map((v) => resolve(v)));
     }
-    Promise.resolveAll = resolveAll;
+    TSDNPromise.resolveAll = resolveAll;
     /**
      * Creates a PromiseCollection containing promises that will resolve on the next tick using the transform function.
      * This utility function does not chain promises together to create the result,
@@ -906,7 +906,7 @@ var pools;
      * @returns {PromiseCollection<T>}
      */
     function map(source, transform) {
-        return new PromiseCollection(source.map(d => new Promise((r, j) => {
+        return new PromiseCollection(source.map(d => new TSDNPromise((r, j) => {
             try {
                 r(transform(d));
             }
@@ -915,7 +915,7 @@ var pools;
             }
         })));
     }
-    Promise.map = map;
+    TSDNPromise.map = map;
     /**
      * Creates a new rejected promise for the provided reason.
      * @param reason The reason the promise was rejected.
@@ -924,7 +924,7 @@ var pools;
     function reject(reason) {
         return new Rejected(reason);
     }
-    Promise.reject = reject;
+    TSDNPromise.reject = reject;
     /**
      * Takes any Promise-Like object and ensures an extended version of it from this module.
      * @param target The Promise-Like object
@@ -937,7 +937,7 @@ var pools;
             ? (target instanceof PromiseBase ? target : new PromiseWrapper(target))
             : new Fulfilled(target);
     }
-    Promise.wrap = wrap;
+    TSDNPromise.wrap = wrap;
     /**
      * A function that acts like a 'then' method (aka then-able) can be extended by providing a function that takes an onFulfill and onReject.
      * @param then
@@ -948,7 +948,8 @@ var pools;
             throw new ArgumentNullException(THEN);
         return new PromiseWrapper({ then: then });
     }
-    Promise.createFrom = createFrom;
-})(Promise || (Promise = {}));
-export default Promise;
+    TSDNPromise.createFrom = createFrom;
+})(TSDNPromise || (TSDNPromise = {}));
+export { TSDNPromise as Promise };
+export default TSDNPromise;
 //# sourceMappingURL=Promise.js.map

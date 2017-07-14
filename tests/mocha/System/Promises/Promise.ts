@@ -1,10 +1,10 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import {
-	Promise,
-	PromiseBase,
 	Fulfilled,
-	PromiseCollection
+	PromiseBase,
+	PromiseCollection,
+	TSDNPromise
 } from "../../../../dist/commonjs/System/Promises/Promise";
 import * as AU from "../../../../dist/commonjs/System/Collections/Array/Utility";
 import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
@@ -37,7 +37,7 @@ describe("computing sum of integers using promises", ()=>
 		let sw = Stopwatch.startNew();
 		return array
 			.reduce((promise:PromiseBase<number>, nextVal:number) =>
-				promise.thenSynchronous(currentVal=>currentVal + nextVal), Promise.resolve(0))
+				promise.thenSynchronous(currentVal=>currentVal + nextVal), TSDNPromise.resolve(0))
 			.thenSynchronous(value=>
 			{
 				sw.stop();
@@ -67,7 +67,7 @@ describe("computing sum of integers using promises", ()=>
 		let sw = Stopwatch.startNew();
 		return array
 			.reduce((promise:PromiseBase<number>, nextVal:number) =>
-				promise.then(currentVal=>currentVal + nextVal), Promise.resolve(0))
+				promise.then(currentVal=>currentVal + nextVal), TSDNPromise.resolve(0))
 			.then(value=>
 			{
 				sw.stop();
@@ -97,7 +97,7 @@ describe("computing sum of integers using promises", ()=>
 	{
 
 		let wasRun = false;
-		const r = Promise.resolve(true).then(() =>
+		const r = TSDNPromise.resolve(true).then(() =>
 		{
 			wasRun = true;
 		});
@@ -112,7 +112,7 @@ describe("Resolution and Rejection", ()=>
 {
 	it("should result in a fulfilled promise when given a value", ()=>
 	{
-		const f = Promise.resolve(5);
+		const f = TSDNPromise.resolve(5);
 		assert.equal(f.result, 5);
 		assert.equal(f.isSettled, true);
 		assert.equal(f.isFulfilled, true);
@@ -121,7 +121,7 @@ describe("Resolution and Rejection", ()=>
 
 	it("should result in a rejected promise when requesting rejected", ()=>
 	{
-		const f = Promise.reject("err");
+		const f = TSDNPromise.reject("err");
 		assert.equal(f.error, "err");
 		assert.equal(f.isSettled, true);
 		assert.equal(f.isFulfilled, false);
@@ -133,7 +133,7 @@ describe("Resolution and Rejection", ()=>
 		let nextTurn = false;
 
 		const resolution = "Ta-ram pam param!";
-		const pending = new Promise<any>();
+		const pending = new TSDNPromise<any>();
 		const count = 10;
 		let i = 0;
 
@@ -162,7 +162,7 @@ describe("Resolution and Rejection", ()=>
 	it("observers called even after throw (synchronous)", ()=>
 	{
 		let threw = false;
-		const pending = new Promise();
+		const pending = new TSDNPromise();
 		pending.thenSynchronous(()=>
 		{
 			threw = true;
@@ -181,7 +181,7 @@ describe("Resolution and Rejection", ()=>
 	it("observers called even after throw (asynchronous)", ()=>
 	{
 		let threw = false;
-		const pending = new Promise();
+		const pending = new TSDNPromise();
 		pending.thenSynchronous(()=>
 		{
 			threw = true;
@@ -227,7 +227,7 @@ describe("Resolution and Rejection", ()=>
 				assert.ok(!v);
 				return true; // *
 			})
-			.then<string>(v=>
+			.then(v=>
 			{
 				assert.ok(v);
 				throw BREAK; // *
@@ -237,7 +237,7 @@ describe("Resolution and Rejection", ()=>
 				return NO;
 			})
 			.then(<any>null, <any>null) // ensure pass through
-			.then(()=>
+			.then(v=>
 			{
 				// The previous promise threw/rejected so should never go here.
 				assert.ok(false);
@@ -287,24 +287,28 @@ describe("Resolution and Rejection", ()=>
 
 	it("should follow expected promise behavior flow for a resolved promise", ()=>
 	{
-		return testPromiseFlow(Promise.resolve(true));
+		return testPromiseFlow(TSDNPromise.resolve(true));
 	});
 
 
 	it("should follow expected promise behavior flow for a rejected promise", ()=>
 	{
 		return testPromiseFlow(
-			Promise
+			TSDNPromise
 				.reject(BREAK)
-				.catch(v=>
+				.then(v=>
+				{
+					assert.ok(false,"Fulfilled when it should have been rejected.");
+				},v=>
 				{
 					assert.equal(v, BREAK);
-					return true;
-				}));
+				})
+				.finally(()=>true)
+		);
 	});
 
 	it("should pass through",()=>{
-		return Promise.resolve(true)
+		return TSDNPromise.resolve(true)
 			.thenAllowFatal<void>(()=>{
 				// throw "BAM!";
 			});
@@ -312,7 +316,7 @@ describe("Resolution and Rejection", ()=>
 
 	it("should follow expected promise behavior flow for a pending then resolved promise", ()=>
 	{
-		const p = new Promise<boolean>();
+		const p = new TSDNPromise<boolean>();
 		assert.ok(p.isPending);
 		p.resolve(true);
 		return testPromiseFlow(p);
@@ -321,10 +325,10 @@ describe("Resolution and Rejection", ()=>
 
 	it("should be able to use a then-able", ()=>
 	{
-		const p:any = Promise.createFrom((r:Promise.Fulfill<boolean,boolean>) =>
+		const p:any = TSDNPromise.createFrom((r:TSDNPromise.Fulfill<boolean,boolean>) =>
 		{
 			r(true);
-			return Promise.resolve(true);
+			return TSDNPromise.resolve(true);
 		});
 		return testPromiseFlow(p);
 	});
@@ -376,8 +380,8 @@ describe("Resolution and Rejection", ()=>
 
 	it("should be able to use promise as a resolution", ()=>
 	{
-		const s = new Promise<boolean>();
-		const p = new Promise<boolean>(resolve =>
+		const s = new TSDNPromise<boolean>();
+		const p = new TSDNPromise<boolean>(resolve =>
 		{
 			defer(() => resolve(s));
 		});
@@ -393,12 +397,12 @@ describe("Resolution and Rejection", ()=>
 		{
 			resolve(4);
 		});
-		return Promise.waitAll<any>(
+		return TSDNPromise.waitAll<any>(
 			other,
-			Promise.resolve(3),
-			Promise.resolve(2),
-			Promise.reject(BREAK),
-			Promise.resolve(1)
+			TSDNPromise.resolve(3),
+			TSDNPromise.resolve(2),
+			TSDNPromise.reject(BREAK),
+			TSDNPromise.resolve(1)
 		).thenSynchronous((r:any[])=>
 		{
 			assert.equal(r[0].result, 4);
@@ -416,11 +420,11 @@ describe("Resolution and Rejection", ()=>
 		{
 			resolve(4);
 		});
-		return Promise.all(
+		return TSDNPromise.all(
 			other.delayFromNow(10).delayAfterResolve(10),
-			Promise.resolve(3),
-			Promise.resolve(2),
-			Promise.resolve(1)
+			TSDNPromise.resolve(3),
+			TSDNPromise.resolve(2),
+			TSDNPromise.resolve(1)
 		).thenSynchronous(r=>
 		{
 			assert.equal(r[0], 4);
@@ -436,12 +440,12 @@ describe("Resolution and Rejection", ()=>
 		{
 			resolve(4);
 		});
-		return Promise.all(
+		return TSDNPromise.all(
 			other,
-			Promise.resolve(3),
-			Promise.resolve(2),
-			Promise.resolve(1),
-			Promise.reject(-1)
+			TSDNPromise.resolve(3),
+			TSDNPromise.resolve(2),
+			TSDNPromise.resolve(1),
+			TSDNPromise.reject(-1)
 		).thenSynchronous(()=>
 		{
 			assert.ok(false);
@@ -457,11 +461,11 @@ describe("Resolution and Rejection", ()=>
 		{
 			reject(4);
 		});
-		return Promise.race(
+		return TSDNPromise.race(
 			other.delayAfterResolve(40),
-			Promise.resolve(3).delayFromNow(10),
-			Promise.resolve(2).delayFromNow(20),
-			Promise.resolve(1).delayFromNow(30)
+			TSDNPromise.resolve(3).delayFromNow(10),
+			TSDNPromise.resolve(2).delayFromNow(20),
+			TSDNPromise.resolve(1).delayFromNow(30)
 		).thenSynchronous(r=>
 		{
 			assert.equal(r, 3);
@@ -473,10 +477,10 @@ describe("Resolution and Rejection", ()=>
 
 	it("should be resolve the rejection", ()=>
 	{
-		return Promise.race(
-			Promise.resolve(3).delayFromNow(20),
-			Promise.resolve(2).delayAfterResolve(10),
-			Promise.reject(1)
+		return TSDNPromise.race(
+			TSDNPromise.resolve(3).delayFromNow(20),
+			TSDNPromise.resolve(2).delayAfterResolve(10),
+			TSDNPromise.reject(1)
 		).thenSynchronous(()=>
 		{
 			assert.ok(false);
@@ -487,23 +491,23 @@ describe("Resolution and Rejection", ()=>
 	});
 
 	it("should resolve the chain fulfilled promise result.", ()=>
-		new Promise((resolve=>resolve(new Promise((resolve=>resolve(Promise.resolve(1)))))))
+		new TSDNPromise((resolve=>resolve(new TSDNPromise((resolve=>resolve(TSDNPromise.resolve(1)))))))
 			.thenSynchronous(
 				v=>assert.equal(v, 1),
 				()=>assert.ok(false))
 	);
 
 	it("should resolve the rejected promise result.", ()=>
-		new Promise((resolve=>resolve(Promise.reject(BREAK))))
+		new TSDNPromise((resolve=>resolve(TSDNPromise.reject(BREAK))))
 			.thenSynchronous(
 				()=>assert.ok(false),
 				e=>assert.equal(e, BREAK))
 	);
 
 	it("should rejected a disposed promise-result..", ()=>
-		new Promise((resolve=>
+		new TSDNPromise((resolve=>
 		{
-			const r = Promise.resolve(1);
+			const r = TSDNPromise.resolve(1);
 			r.dispose();
 			resolve(r)
 		}))

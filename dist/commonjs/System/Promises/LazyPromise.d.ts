@@ -2,16 +2,16 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-import { Promise, PromiseBase } from "./Promise";
+import { TSDNPromise, PromiseBase } from "./Promise";
 /**
  * A promise that waits for the first then to trigger the resolver.
  */
-export declare class LazyPromise<T> extends Promise<T> {
+export declare class LazyPromise<T> extends TSDNPromise<T> {
     private _resolver;
-    constructor(_resolver: Promise.Executor<T>);
+    constructor(_resolver: TSDNPromise.Executor<T>);
     protected _onDispose(): void;
     private _onThen();
-    thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
+    thenSynchronous<TResult>(onFulfilled: TSDNPromise.Fulfill<T, TResult>, onRejected?: TSDNPromise.Reject<TResult>): PromiseBase<TResult>;
     doneNow(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
     /**
      * Will yield for a number of milliseconds from the time called before continuing.

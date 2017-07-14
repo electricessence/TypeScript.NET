@@ -318,6 +318,9 @@ export class InfiniteLinqEnumerable extends DisposableBase {
     select(selector) {
         return this._filterSelected(selector);
     }
+    map(selector) {
+        return this._filterSelected(selector);
+    }
     /*
     public static IEnumerable<TResult> SelectMany<TSource, TCollection, TResult>(
         this IEnumerable<TSource> source,
@@ -410,6 +413,9 @@ export class InfiniteLinqEnumerable extends DisposableBase {
         return this._filterSelected(selector, isNotNullOrUndefined);
     }
     where(predicate) {
+        return this._filterSelected(Functions.Identity, predicate);
+    }
+    filter(predicate) {
         return this._filterSelected(Functions.Identity, predicate);
     }
     nonNull() {
@@ -1160,6 +1166,9 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
     select(selector) {
         return super.select(selector);
     }
+    map(selector) {
+        return super.select(selector);
+    }
     selectMany(collectionSelector, resultSelector) {
         return this._selectMany(collectionSelector, resultSelector);
     }
@@ -1218,15 +1227,13 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
     count(predicate) {
         let count = 0;
         this.forEach(predicate
-            ?
-                (x, i) => {
-                    if (predicate(x, i))
-                        ++count;
-                }
-            :
-                () => {
+            ? (x, i) => {
+                if (predicate(x, i))
                     ++count;
-                });
+            }
+            : () => {
+                ++count;
+            });
         return count;
     }
     // Akin to '.every' on an array.
@@ -1276,37 +1283,33 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
     indexOf(value, compareSelector) {
         let found = -1;
         this.forEach(compareSelector
-            ?
-                (element, i) => {
-                    if (areEqualValues(compareSelector(element, i), compareSelector(value, i), true)) {
-                        found = i;
-                        return false;
-                    }
+            ? (element, i) => {
+                if (areEqualValues(compareSelector(element, i), compareSelector(value, i), true)) {
+                    found = i;
+                    return false;
                 }
-            :
-                (element, i) => {
-                    // Why?  Because NaN doesn't equal NaN. :P
-                    if (areEqualValues(element, value, true)) {
-                        found = i;
-                        return false;
-                    }
-                });
+            }
+            : (element, i) => {
+                // Why?  Because NaN doesn't equal NaN. :P
+                if (areEqualValues(element, value, true)) {
+                    found = i;
+                    return false;
+                }
+            });
         return found;
     }
     lastIndexOf(value, compareSelector) {
         let result = -1;
         this.forEach(compareSelector
-            ?
-                (element, i) => {
-                    if (areEqualValues(compareSelector(element, i), compareSelector(value, i), true))
-                        result
-                            = i;
-                }
-            :
-                (element, i) => {
-                    if (areEqualValues(element, value, true))
-                        result = i;
-                });
+            ? (element, i) => {
+                if (areEqualValues(compareSelector(element, i), compareSelector(value, i), true))
+                    result
+                        = i;
+            }
+            : (element, i) => {
+                if (areEqualValues(element, value, true))
+                    result = i;
+            });
         return result;
     }
     intersect(second, compareSelector) {
@@ -1497,11 +1500,28 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
     pairwise(selector) {
         return super.pairwise(selector);
     }
-    aggregate(func, seed) {
-        this.forEach((value, i) => {
-            seed = i ? func(seed, value, i) : value;
-        });
-        return seed;
+    aggregate(reduction, initialValue) {
+        if (initialValue == VOID0) {
+            this.forEach((value, i) => {
+                initialValue = i
+                    ? reduction(initialValue, value, i)
+                    : value;
+            });
+        }
+        else {
+            this.forEach((value, i) => {
+                initialValue = reduction(initialValue, value, i);
+            });
+        }
+        return initialValue;
+    }
+    /**
+     * Provided as an analog for array.reduce.  Simply a shortcut for aggregate.
+     * @param reduction
+     * @param initialValue
+     */
+    reduce(reduction, initialValue) {
+        return this.aggregate(reduction, initialValue);
     }
     average(selector = Type.numberOrNaN) {
         let count = 0;
@@ -1541,9 +1561,7 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
                 sum += value;
             else
                 sumInfinite +=
-                    value > 0 ?
-                        (+1) :
-                        (-1);
+                    value > 0 ? (+1) : (-1);
         });
         return isNaN(sum) ? NaN : (sumInfinite ? (sumInfinite * Infinity) : sum);
     }
@@ -1622,7 +1640,10 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
     // #endregion
     memoize() {
         let source = new LazyList(this);
-        return (new LinqEnumerable(() => source.getEnumerator(), () => { source.dispose(); source = null; }, this.isEndless));
+        return (new LinqEnumerable(() => source.getEnumerator(), () => {
+            source.dispose();
+            source = null;
+        }, this.isEndless));
     }
     throwWhenEmpty() {
         return this.doAction(RETURN, null, this.isEndless, count => {
@@ -2151,20 +2172,18 @@ function enumerableFrom(source, additional) {
         return new FiniteEnumerable(() => {
             let value;
             return new EnumeratorBase(() => { value = start; }, start < to
-                ?
-                    yielder => {
-                        let result = value <= to && yielder.yieldReturn(value);
-                        if (result)
-                            value += step;
-                        return result;
-                    }
-                :
-                    yielder => {
-                        let result = value >= to && yielder.yieldReturn(value);
-                        if (result)
-                            value -= step;
-                        return result;
-                    }, false);
+                ? yielder => {
+                    let result = value <= to && yielder.yieldReturn(value);
+                    if (result)
+                        value += step;
+                    return result;
+                }
+                : yielder => {
+                    let result = value >= to && yielder.yieldReturn(value);
+                    if (result)
+                        value -= step;
+                    return result;
+                }, false);
         });
     }
     Enumerable.rangeTo = rangeTo;
@@ -2201,33 +2220,31 @@ function enumerableFrom(source, additional) {
         if (isNaN(count) || count <= 0)
             return Enumerable.empty();
         return isFinite(count) && Integer.assert(count, "count")
-            ?
-                new FiniteEnumerable(() => {
-                    let c = count;
-                    let index = 0;
-                    return new EnumeratorBase(() => {
-                        index = 0;
-                    }, (yielder) => {
-                        throwIfDisposed(!factory);
-                        let current = index++;
-                        return current < c && yielder.yieldReturn(factory(current));
-                    }, false);
-                }, () => {
-                    factory = NULL;
-                })
-            :
-                new InfiniteLinqEnumerable(() => {
-                    let index = 0;
-                    return new EnumeratorBase(() => {
-                        index = 0;
-                    }, (yielder) => {
-                        throwIfDisposed(!factory);
-                        return yielder.yieldReturn(factory(index++));
-                    }, true // Is endless!
-                    );
-                }, () => {
-                    factory = NULL;
-                });
+            ? new FiniteEnumerable(() => {
+                let c = count;
+                let index = 0;
+                return new EnumeratorBase(() => {
+                    index = 0;
+                }, (yielder) => {
+                    throwIfDisposed(!factory);
+                    let current = index++;
+                    return current < c && yielder.yieldReturn(factory(current));
+                }, false);
+            }, () => {
+                factory = NULL;
+            })
+            : new InfiniteLinqEnumerable(() => {
+                let index = 0;
+                return new EnumeratorBase(() => {
+                    index = 0;
+                }, (yielder) => {
+                    throwIfDisposed(!factory);
+                    return yielder.yieldReturn(factory(index++));
+                }, true // Is endless!
+                );
+            }, () => {
+                factory = NULL;
+            });
     }
     Enumerable.generate = generate;
     var random;

@@ -146,7 +146,7 @@ var LazyPromise = (function (_super) {
         });
     };
     return LazyPromise;
-}(Promise_1.Promise));
+}(Promise_1.TSDNPromise));
 exports.LazyPromise = LazyPromise;
 exports.default = LazyPromise;
 //# sourceMappingURL=LazyPromise.js.map

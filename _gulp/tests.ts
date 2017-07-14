@@ -1,10 +1,10 @@
 import {BuildHelper, Module, Target} from "gulp-typescript-helper";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
-import {Promise} from "../source/System/Promises/Promise";
+import {TSDNPromise} from "../source/System/Promises/Promise";
 
 const renderer = BuildHelper
-	.inject(Promise.factory)
+	.inject(TSDNPromise.factory)
 	.defaults({
 		target: Target.ES5,
 		module: Module.UMD,

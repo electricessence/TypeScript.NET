@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
-import { ArrayPromise, Promise, PromiseCollection } from "../../Promises/Promise";
+import { ArrayPromise, TSDNPromise, PromiseCollection } from "../../Promises/Promise";
 import { Type } from "../../Types";
 import Worker from "../Worker";
 import { deferImmediate } from "../deferImmediate";
@@ -40,7 +40,7 @@ function interact(w, onMessage, onError, message) {
     if (message !== VOID0)
         w.postMessage(message);
 }
-class WorkerPromise extends Promise {
+class WorkerPromise extends TSDNPromise {
     constructor(worker, data) {
         super((resolve, reject) => {
             interact(worker, (response) => {
@@ -183,7 +183,7 @@ export class Parallel {
      * @param data
      * @param task
      * @param env
-     * @returns {Promise<U>|Promise}
+     * @returns {TSDNPromise<U>|TSDNPromise}
      */
     startNew(data, task, env) {
         const _ = this;
@@ -204,10 +204,10 @@ export class Parallel {
      * Is good for use with testing.
      * @param data
      * @param task
-     * @returns {Promise<U>|Promise}
+     * @returns {TSDNPromise<U>|TSDNPromise}
      */
     startLocal(data, task) {
-        return new Promise((resolve, reject) => {
+        return new TSDNPromise((resolve, reject) => {
             try {
                 resolve(task(data));
             }
@@ -241,12 +241,12 @@ export class Parallel {
                             ? "Workers do not exist and synchronous operation not allowed!"
                             : "'maxConcurrency' set to 0 but 'allowSynchronous' is false.");
                     // Concurrency doesn't matter in a single thread... Just queue it all up.
-                    return Promise.map(data, task);
+                    return TSDNPromise.map(data, task);
                 }
                 if (!result) {
                     // There is a small risk that the consumer could call .resolve() which would result in a double resolution.
                     // But it's important to minimize the number of objects created.
-                    result = data.map(d => new Promise());
+                    result = data.map(d => new TSDNPromise());
                 }
                 let next = () => {
                     if (error) {
@@ -315,7 +315,7 @@ export class Parallel {
                     if (!this.options.allowSynchronous)
                         throw new Error('Workers do not exist and synchronous operation not allowed!');
                     // Concurrency doesn't matter in a single thread... Just queue it all up.
-                    resolve(Promise.map(data, task).all());
+                    resolve(TSDNPromise.map(data, task).all());
                     return;
                 }
                 let next = () => {

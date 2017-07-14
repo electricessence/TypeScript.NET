@@ -344,6 +344,9 @@
         InfiniteLinqEnumerable.prototype.select = function (selector) {
             return this._filterSelected(selector);
         };
+        InfiniteLinqEnumerable.prototype.map = function (selector) {
+            return this._filterSelected(selector);
+        };
         /*
         public static IEnumerable<TResult> SelectMany<TSource, TCollection, TResult>(
             this IEnumerable<TSource> source,
@@ -438,6 +441,9 @@
             return this._filterSelected(selector, isNotNullOrUndefined);
         };
         InfiniteLinqEnumerable.prototype.where = function (predicate) {
+            return this._filterSelected(Functions.Identity, predicate);
+        };
+        InfiniteLinqEnumerable.prototype.filter = function (predicate) {
             return this._filterSelected(Functions.Identity, predicate);
         };
         InfiniteLinqEnumerable.prototype.nonNull = function () {
@@ -1222,6 +1228,9 @@
         LinqEnumerable.prototype.select = function (selector) {
             return _super.prototype.select.call(this, selector);
         };
+        LinqEnumerable.prototype.map = function (selector) {
+            return _super.prototype.select.call(this, selector);
+        };
         LinqEnumerable.prototype.selectMany = function (collectionSelector, resultSelector) {
             return this._selectMany(collectionSelector, resultSelector);
         };
@@ -1281,15 +1290,13 @@
         LinqEnumerable.prototype.count = function (predicate) {
             var count = 0;
             this.forEach(predicate
-                ?
-                    function (x, i) {
-                        if (predicate(x, i))
-                            ++count;
-                    }
-                :
-                    function () {
+                ? function (x, i) {
+                    if (predicate(x, i))
                         ++count;
-                    });
+                }
+                : function () {
+                    ++count;
+                });
             return count;
         };
         // Akin to '.every' on an array.
@@ -1339,37 +1346,33 @@
         LinqEnumerable.prototype.indexOf = function (value, compareSelector) {
             var found = -1;
             this.forEach(compareSelector
-                ?
-                    function (element, i) {
-                        if (Compare_1.areEqual(compareSelector(element, i), compareSelector(value, i), true)) {
-                            found = i;
-                            return false;
-                        }
+                ? function (element, i) {
+                    if (Compare_1.areEqual(compareSelector(element, i), compareSelector(value, i), true)) {
+                        found = i;
+                        return false;
                     }
-                :
-                    function (element, i) {
-                        // Why?  Because NaN doesn't equal NaN. :P
-                        if (Compare_1.areEqual(element, value, true)) {
-                            found = i;
-                            return false;
-                        }
-                    });
+                }
+                : function (element, i) {
+                    // Why?  Because NaN doesn't equal NaN. :P
+                    if (Compare_1.areEqual(element, value, true)) {
+                        found = i;
+                        return false;
+                    }
+                });
             return found;
         };
         LinqEnumerable.prototype.lastIndexOf = function (value, compareSelector) {
             var result = -1;
             this.forEach(compareSelector
-                ?
-                    function (element, i) {
-                        if (Compare_1.areEqual(compareSelector(element, i), compareSelector(value, i), true))
-                            result
-                                = i;
-                    }
-                :
-                    function (element, i) {
-                        if (Compare_1.areEqual(element, value, true))
-                            result = i;
-                    });
+                ? function (element, i) {
+                    if (Compare_1.areEqual(compareSelector(element, i), compareSelector(value, i), true))
+                        result
+                            = i;
+                }
+                : function (element, i) {
+                    if (Compare_1.areEqual(element, value, true))
+                        result = i;
+                });
             return result;
         };
         LinqEnumerable.prototype.intersect = function (second, compareSelector) {
@@ -1572,11 +1575,28 @@
         LinqEnumerable.prototype.pairwise = function (selector) {
             return _super.prototype.pairwise.call(this, selector);
         };
-        LinqEnumerable.prototype.aggregate = function (func, seed) {
-            this.forEach(function (value, i) {
-                seed = i ? func(seed, value, i) : value;
-            });
-            return seed;
+        LinqEnumerable.prototype.aggregate = function (reduction, initialValue) {
+            if (initialValue == VOID0) {
+                this.forEach(function (value, i) {
+                    initialValue = i
+                        ? reduction(initialValue, value, i)
+                        : value;
+                });
+            }
+            else {
+                this.forEach(function (value, i) {
+                    initialValue = reduction(initialValue, value, i);
+                });
+            }
+            return initialValue;
+        };
+        /**
+         * Provided as an analog for array.reduce.  Simply a shortcut for aggregate.
+         * @param reduction
+         * @param initialValue
+         */
+        LinqEnumerable.prototype.reduce = function (reduction, initialValue) {
+            return this.aggregate(reduction, initialValue);
         };
         LinqEnumerable.prototype.average = function (selector) {
             if (selector === void 0) { selector = Types_1.Type.numberOrNaN; }
@@ -1620,9 +1640,7 @@
                     sum += value;
                 else
                     sumInfinite +=
-                        value > 0 ?
-                            (+1) :
-                            (-1);
+                        value > 0 ? (+1) : (-1);
             });
             return isNaN(sum) ? NaN : (sumInfinite ? (sumInfinite * Infinity) : sum);
         };
@@ -1703,7 +1721,10 @@
         // #endregion
         LinqEnumerable.prototype.memoize = function () {
             var source = new LazyList_1.LazyList(this);
-            return (new LinqEnumerable(function () { return source.getEnumerator(); }, function () { source.dispose(); source = null; }, this.isEndless));
+            return (new LinqEnumerable(function () { return source.getEnumerator(); }, function () {
+                source.dispose();
+                source = null;
+            }, this.isEndless));
         };
         LinqEnumerable.prototype.throwWhenEmpty = function () {
             return this.doAction(RETURN, null, this.isEndless, function (count) {
@@ -2294,20 +2315,18 @@
             return new FiniteEnumerable(function () {
                 var value;
                 return new EnumeratorBase_1.EnumeratorBase(function () { value = start; }, start < to
-                    ?
-                        function (yielder) {
-                            var result = value <= to && yielder.yieldReturn(value);
-                            if (result)
-                                value += step;
-                            return result;
-                        }
-                    :
-                        function (yielder) {
-                            var result = value >= to && yielder.yieldReturn(value);
-                            if (result)
-                                value -= step;
-                            return result;
-                        }, false);
+                    ? function (yielder) {
+                        var result = value <= to && yielder.yieldReturn(value);
+                        if (result)
+                            value += step;
+                        return result;
+                    }
+                    : function (yielder) {
+                        var result = value >= to && yielder.yieldReturn(value);
+                        if (result)
+                            value -= step;
+                        return result;
+                    }, false);
             });
         }
         Enumerable.rangeTo = rangeTo;
@@ -2346,33 +2365,31 @@
             if (isNaN(count) || count <= 0)
                 return Enumerable.empty();
             return isFinite(count) && Integer_1.Integer.assert(count, "count")
-                ?
-                    new FiniteEnumerable(function () {
-                        var c = count;
-                        var index = 0;
-                        return new EnumeratorBase_1.EnumeratorBase(function () {
-                            index = 0;
-                        }, function (yielder) {
-                            throwIfDisposed(!factory);
-                            var current = index++;
-                            return current < c && yielder.yieldReturn(factory(current));
-                        }, false);
-                    }, function () {
-                        factory = NULL;
-                    })
-                :
-                    new InfiniteLinqEnumerable(function () {
-                        var index = 0;
-                        return new EnumeratorBase_1.EnumeratorBase(function () {
-                            index = 0;
-                        }, function (yielder) {
-                            throwIfDisposed(!factory);
-                            return yielder.yieldReturn(factory(index++));
-                        }, true // Is endless!
-                        );
-                    }, function () {
-                        factory = NULL;
-                    });
+                ? new FiniteEnumerable(function () {
+                    var c = count;
+                    var index = 0;
+                    return new EnumeratorBase_1.EnumeratorBase(function () {
+                        index = 0;
+                    }, function (yielder) {
+                        throwIfDisposed(!factory);
+                        var current = index++;
+                        return current < c && yielder.yieldReturn(factory(current));
+                    }, false);
+                }, function () {
+                    factory = NULL;
+                })
+                : new InfiniteLinqEnumerable(function () {
+                    var index = 0;
+                    return new EnumeratorBase_1.EnumeratorBase(function () {
+                        index = 0;
+                    }, function (yielder) {
+                        throwIfDisposed(!factory);
+                        return yielder.yieldReturn(factory(index++));
+                    }, true // Is endless!
+                    );
+                }, function () {
+                    factory = NULL;
+                });
         }
         Enumerable.generate = generate;
         var random;

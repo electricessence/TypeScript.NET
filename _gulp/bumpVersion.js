@@ -29,7 +29,7 @@
      * @returns {NodeJS.ReadableStream}
      */
     function bumpVersion(type) {
-        return __awaiter(this, void 0, Promise_1.Promise, function () {
+        return __awaiter(this, void 0, Promise_1.TSDNPromise, function () {
             var pkg, newVer;
             return __generator(this, function (_a) {
                 switch (_a.label) {

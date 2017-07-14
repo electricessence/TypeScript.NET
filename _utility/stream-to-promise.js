@@ -15,7 +15,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     var Promise_1 = require("../source/System/Promises/Promise");
     var stream_to_promise_agnostic_1 = require("stream-to-promise-agnostic");
-    exports.streamToPromise = stream_to_promise_agnostic_1.streamToPromise(Promise_1.Promise.factory);
+    exports.streamToPromise = stream_to_promise_agnostic_1.streamToPromise(Promise_1.TSDNPromise.factory);
     exports.default = exports.streamToPromise;
 });
 //# sourceMappingURL=stream-to-promise.js.map

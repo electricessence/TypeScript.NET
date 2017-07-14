@@ -14,7 +14,7 @@
     var gulp = require("gulp");
     var Promise_1 = require("../source/System/Promises/Promise");
     var renderer = gulp_typescript_helper_1.BuildHelper
-        .inject(Promise_1.Promise.factory)
+        .inject(Promise_1.TSDNPromise.factory)
         .defaults({
         target: gulp_typescript_helper_1.Target.ES5,
         module: gulp_typescript_helper_1.Module.UMD,

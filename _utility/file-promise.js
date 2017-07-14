@@ -21,7 +21,7 @@
     })(ENCODING = exports.ENCODING || (exports.ENCODING = {}));
     function readFile(path, encoding) {
         if (encoding === void 0) { encoding = ENCODING.UTF8; }
-        return new Promise_1.Promise(function (resolve, reject) {
+        return new Promise_1.TSDNPromise(function (resolve, reject) {
             fs.readFile(path, encoding, function (err, data) {
                 if (err)
                     reject(err);
@@ -32,7 +32,7 @@
     }
     exports.read = readFile;
     function writeFile(path, data, options) {
-        return Promise_1.Promise.using(function (resolve, reject) {
+        return Promise_1.TSDNPromise.using(function (resolve, reject) {
             fs.writeFile(path, data, options || {}, function (err) {
                 if (err)
                     reject(err);
@@ -50,7 +50,7 @@
         }
         json.read = read;
         function write(path, data, options) {
-            return Promise_1.Promise
+            return Promise_1.TSDNPromise
                 .using(function (resolve) { return resolve(JSON.stringify(data, null, 2)); })
                 .thenSynchronous(function (s) { return writeFile(path, s, options); });
         }

@@ -65,6 +65,7 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 	pairwise<TSelect>(selector:(prev:T, current:T) => TSelect):IInfiniteEnumerable<TSelect>;
 	scan(func:(a:T, b:T) => T, seed?:T):this;
 	select<TResult>(selector:SelectorWithIndex<T, TResult>):IInfiniteEnumerable<TResult>;
+	map<TResult>(selector:SelectorWithIndex<T, TResult>):IInfiniteEnumerable<TResult>;
 	selectMany<TResult>(collectionSelector:SelectorWithIndex<T, ForEachEnumerable<TResult> | null | undefined>):IInfiniteEnumerable<TResult>;
 	selectMany<TElement, TResult>(
 		collectionSelector:SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>,
@@ -72,6 +73,7 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 	choose():IInfiniteEnumerable<T>;
 	choose<TResult>(selector?:Selector<T, TResult>):IInfiniteEnumerable<TResult>;
 	where(predicate:PredicateWithIndex<T>):this;
+	filter(predicate:PredicateWithIndex<T>):this;
 	nonNull():this;
 	ofType<TType>(
 		type:{
@@ -134,6 +136,7 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 	takeExceptLast(count?:number):this;
 	skipToLast(count:number):this;
 	select<TResult>(selector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
+	map<TResult>(selector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	selectMany<TResult>(collectionSelector:SelectorWithIndex<T, ForEachEnumerable<TResult> | null | undefined>):ILinqEnumerable<TResult>;
 	selectMany<TElement, TResult>(
 		collectionSelector:SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>,
@@ -188,11 +191,15 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 	flatten():IInfiniteEnumerable<any>
 	pairwise<TSelect>(selector:(prev:T, current:T) => TSelect):ILinqEnumerable<TSelect>;
 	aggregate(
-		func:(previous:T, current:T, index:number) => T,
-		seed:T):T
-	aggregate(
-		func:(previous:T, current:T, index:number) => T,
-		seed?:T):T|undefined
+		reduction:(previous:T, current:T, index?:number) => T):T | undefined;
+	aggregate<U>(
+		reduction:(previous:U, current:T, index?:number) => U,
+		initialValue:U):U;
+	reduce(
+		reduction:(previous:T, current:T, index?:number) => T):T | undefined;
+	reduce<U>(
+		reduction:(previous:U, current:T, index?:number) => U,
+		initialValue:U):U;
 	average(selector:Selector<T, number>):number;
 	average(selector?:SelectorWithIndex<T, number>):number;
 	max():T | undefined;
@@ -212,8 +219,9 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 export interface NotEmptyEnumerable<T> extends ILinqEnumerable<T>
 {
 	aggregate(
-		func:(previous:T|undefined, current:T) => T,
-		seed?:T):T
+		reduction:(previous:T, current:T, index?:number) => T):T;
+	reduce(
+		reduction:(previous:T, current:T, index?:number) => T):T;
 
 	max():T
 	min():T

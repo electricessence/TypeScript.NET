@@ -67,7 +67,7 @@
             }, true) || this;
         }
         return WorkerPromise;
-    }(Promise_1.Promise));
+    }(Promise_1.TSDNPromise));
     var workers;
     (function (workers) {
         /*
@@ -206,7 +206,7 @@
          * @param data
          * @param task
          * @param env
-         * @returns {Promise<U>|Promise}
+         * @returns {TSDNPromise<U>|TSDNPromise}
          */
         Parallel.prototype.startNew = function (data, task, env) {
             var _ = this;
@@ -227,10 +227,10 @@
          * Is good for use with testing.
          * @param data
          * @param task
-         * @returns {Promise<U>|Promise}
+         * @returns {TSDNPromise<U>|TSDNPromise}
          */
         Parallel.prototype.startLocal = function (data, task) {
-            return new Promise_1.Promise(function (resolve, reject) {
+            return new Promise_1.TSDNPromise(function (resolve, reject) {
                 try {
                     resolve(task(data));
                 }
@@ -263,12 +263,12 @@
                             throw new Error(maxConcurrency
                                 ? "Workers do not exist and synchronous operation not allowed!"
                                 : "'maxConcurrency' set to 0 but 'allowSynchronous' is false.");
-                        return { value: Promise_1.Promise.map(data, task) };
+                        return { value: Promise_1.TSDNPromise.map(data, task) };
                     }
                     if (!result) {
                         // There is a small risk that the consumer could call .resolve() which would result in a double resolution.
                         // But it's important to minimize the number of objects created.
-                        result = data.map(function (d) { return new Promise_1.Promise(); });
+                        result = data.map(function (d) { return new Promise_1.TSDNPromise(); });
                     }
                     var next = function () {
                         if (error_1) {
@@ -346,7 +346,7 @@
                         if (!_this.options.allowSynchronous)
                             throw new Error('Workers do not exist and synchronous operation not allowed!');
                         // Concurrency doesn't matter in a single thread... Just queue it all up.
-                        resolve(Promise_1.Promise.map(data, task).all());
+                        resolve(Promise_1.TSDNPromise.map(data, task).all());
                         return { value: void 0 };
                     }
                     var next = function () {
