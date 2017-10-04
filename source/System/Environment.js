@@ -37,6 +37,9 @@
         && process.toString() === "[object process]"
         && process.nextTick != void 0;
     //noinspection JSUnusedAssignment
-    Object.freeze(exports);
+    try {
+        Object.freeze(exports);
+    }
+    catch (ex) { }
 });
 //# sourceMappingURL=Environment.js.map
