@@ -42,4 +42,5 @@ export const
 
 declare const exports:any;
 //noinspection JSUnusedAssignment
-Object.freeze(exports);
+try { Object.freeze(exports); }
+catch(ex) { }

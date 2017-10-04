@@ -87,12 +87,14 @@
     var builder = gulp_typescript_helper_1.BuildHelper
         .inject(Promise_1.TSDNPromise.factory)
         .fromTo(PATH.SOURCE, "./dist", DEFAULTS);
-    gulp.task(TASK.DIST_ES6, function () { return builder
-        .init(gulp_typescript_helper_1.Module.ES6, gulp_typescript_helper_1.Target.ES6, gulp_typescript_helper_1.Module.ES6)
-        .clear()
-        .removeExtraneousES6Helpers()
-        .execute()
-        .then(function () { return savePackage(gulp_typescript_helper_1.Module.ES6); }); });
+    gulp.task(TASK.DIST_ES6, function () {
+        return builder
+            .init(gulp_typescript_helper_1.Module.ES6, gulp_typescript_helper_1.Target.ES6, gulp_typescript_helper_1.Module.ES6)
+            .clear()
+            .removeExtraneousES6Helpers()
+            .execute()
+            .then(function () { return savePackage(gulp_typescript_helper_1.Module.ES6); });
+    });
     gulp.task(TASK.DIST_AMD, function () { return builder
         .init(gulp_typescript_helper_1.Module.AMD, gulp_typescript_helper_1.Target.ES5, gulp_typescript_helper_1.Module.AMD)
         .clear()

@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
-import { ArrayPromise, TSDNPromise, PromiseCollection } from "../../Promises/Promise";
+import { ArrayPromise, PromiseCollection, TSDNPromise } from "../../Promises/Promise";
 import { Type } from "../../Types";
 import Worker from "../Worker";
 import { deferImmediate } from "../deferImmediate";

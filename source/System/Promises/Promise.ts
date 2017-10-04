@@ -258,7 +258,7 @@ export abstract class PromiseBase<T>
 
 	then<TFulfilled = T, TRejected = never>(
 		onFulfilled:TSDNPromise.Fulfill<T, TFulfilled> | undefined | null,
-		onRejected?:TSDNPromise.Reject<TRejected> | undefined | null):PromiseBase<TFulfilled | TRejected>
+		onRejected?:TSDNPromise.Reject<TRejected> | undefined | null):PromiseBase<TFulfilled | TRejected> & Promise<TFulfilled | TRejected>
 	{
 		this.throwIfDisposed();
 
@@ -363,7 +363,7 @@ export abstract class PromiseBase<T>
 	 * @param onRejected
 	 * @returns {PromiseBase<TResult>}
 	 */
-	'catch'<TResult = never>(onRejected:TSDNPromise.Reject<TResult>):PromiseBase<T | TResult>
+	'catch'<TResult = never>(onRejected:TSDNPromise.Reject<TResult>):PromiseBase<T | TResult> & Promise<T | TResult>
 	{
 		return this.then(VOID0, onRejected)
 	}
@@ -462,8 +462,6 @@ export abstract class Resolvable<T>
 
 		throw new Error("Invalid state for a resolved promise.");
 	}
-
-
 
 }
 

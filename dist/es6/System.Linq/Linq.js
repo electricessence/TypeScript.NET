@@ -958,9 +958,6 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
         return new LinqEnumerable(() => _.getEnumerator());
     }
     // #region Indexing/Paging methods.
-    skip(count) {
-        return super.skip(count);
-    }
     skipWhile(predicate) {
         this.throwIfDisposed();
         return this.doAction((element, index) => predicate(element, index)

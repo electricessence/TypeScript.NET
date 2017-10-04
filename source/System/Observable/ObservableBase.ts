@@ -67,7 +67,7 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>
 		}
 		else
 		{
-			s = subscriber;
+			s = <IObserver<T>>subscriber;
 		}
 
 		return super.subscribe(s);

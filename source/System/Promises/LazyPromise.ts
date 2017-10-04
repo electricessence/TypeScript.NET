@@ -45,8 +45,8 @@ export class LazyPromise<T> extends TSDNPromise<T>
 	}
 
 	thenSynchronous<TResult>(
-		onFulfilled:TSDNPromise.Fulfill<T, TResult>,
-		onRejected?:TSDNPromise.Reject<TResult>):PromiseBase<TResult>
+		onFulfilled:TSDNPromise.Fulfill<T, TResult> | undefined | null,
+		onRejected?:TSDNPromise.Reject<TResult> | undefined | null):PromiseBase<TResult>
 	{
 		this._onThen();
 		return super.thenSynchronous(onFulfilled, onRejected);
