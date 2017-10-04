@@ -28,7 +28,7 @@ async function bumpVersion(type:string):NPromise<File[]>
 {
 	let pkg = await file.json.read<JsonMap>('./package.json');
 
-	let newVer = semver.inc(<string>pkg['version'], type);
+	let newVer = semver.inc(<string>pkg['version'], <any>type);
 	return stream.toPromise<File[]>(
 		gulp.src(['./bower.json', './package.json'])
 			.pipe(bump({version: newVer}))

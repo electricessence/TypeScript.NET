@@ -37,7 +37,6 @@ import {
 	Closure,
 	Comparison,
 	EqualityComparison,
-	Predicate,
 	PredicateWithIndex,
 	Selector,
 	SelectorWithIndex
@@ -284,7 +283,7 @@ export class InfiniteLinqEnumerable<T>
 	}
 
 	// #region Indexing/Paging methods.
-	skip(count:number):InfiniteLinqEnumerable<T>
+	skip(count:number):this
 	{
 		const _ = this;
 		_.throwIfDisposed();
@@ -462,7 +461,7 @@ export class InfiniteLinqEnumerable<T>
 		childrenSelector:(element:T | TNode) => ForEachEnumerable<TNode> | null | undefined,
 		resultSelector:(
 			element:TNode,
-			nestLevel:number) => any = Functions.Identity):LinqEnumerable<any>
+			nestLevel:number) => any = <any>Functions.Identity):LinqEnumerable<any>
 	{
 		const _ = this;
 		let disposed = !_.throwIfDisposed();
@@ -717,7 +716,7 @@ export class InfiniteLinqEnumerable<T>
 		selector:SelectorWithIndex<T, TResult>,
 		filter?:PredicateWithIndex<TResult>):LinqEnumerable<TResult>
 	protected _filterSelected(
-		selector:SelectorWithIndex<T, any> = Functions.Identity,
+		selector:SelectorWithIndex<T, any> = <any>Functions.Identity,
 		filter?:PredicateWithIndex<any>):LinqEnumerable<any>
 	{
 		const _ = this;
@@ -1129,7 +1128,7 @@ export class InfiniteLinqEnumerable<T>
 		outerKeySelector:Selector<T, TKey>,
 		innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner) => TResult,
-		compareSelector:Selector<TKey, string | number | symbol> = Functions.Identity):LinqEnumerable<TResult>
+		compareSelector:Selector<TKey, string | number | symbol> = <any>Functions.Identity):LinqEnumerable<TResult>
 	{
 
 		const _ = this;
@@ -1192,7 +1191,7 @@ export class InfiniteLinqEnumerable<T>
 		outerKeySelector:Selector<T, TKey>,
 		innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner[] | null) => TResult,
-		compareSelector:Selector<TKey, string | number | symbol> = Functions.Identity):LinqEnumerable<TResult>
+		compareSelector:Selector<TKey, string | number | symbol> = <any>Functions.Identity):LinqEnumerable<TResult>
 	{
 		const _ = this;
 
@@ -1302,7 +1301,7 @@ export class InfiniteLinqEnumerable<T>
 
 	union(
 		second:ForEachEnumerable<T>,
-		compareSelector:Selector<T, string | number | symbol> = Functions.Identity):this
+		compareSelector:Selector<T, string | number | symbol> = <any>Functions.Identity):this
 	{
 		const _ = this;
 		const isEndless = _._isEndless;
@@ -1724,11 +1723,6 @@ export class LinqEnumerable<T>
 
 // #region Indexing/Paging methods.
 
-	skip(count:number):LinqEnumerable<T>
-	{
-		return <any>super.skip(count);
-	}
-
 	skipWhile(predicate:PredicateWithIndex<T>):LinqEnumerable<T>
 	{
 		this.throwIfDisposed();
@@ -1954,8 +1948,8 @@ export class LinqEnumerable<T>
 
 	toLookup<TKey, TValue>(
 		keySelector:SelectorWithIndex<T, TKey>,
-		elementSelector:SelectorWithIndex<T, TValue>             = Functions.Identity,
-		compareSelector:Selector<TKey, string | number | symbol> = Functions.Identity):ILookup<TKey, TValue>
+		elementSelector:SelectorWithIndex<T, TValue>             = <any>Functions.Identity,
+		compareSelector:Selector<TKey, string | number | symbol> = <any>Functions.Identity):ILookup<TKey, TValue>
 	{
 		const dict:Dictionary<TKey, TValue[]> = new Dictionary<TKey, TValue[]>(compareSelector);
 		this.forEach(
@@ -1988,14 +1982,14 @@ export class LinqEnumerable<T>
 	toDictionary<TKey, TValue>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, TValue>,
-		compareSelector:Selector<TKey, string | number | symbol> = Functions.Identity):IDictionary<TKey, TValue>
+		compareSelector:Selector<TKey, string | number | symbol> = <any>Functions.Identity):IDictionary<TKey, TValue>
 	{
 		const dict:Dictionary<TKey, TValue> = new Dictionary<TKey, TValue>(compareSelector);
 		this.forEach((x, i) => dict.addByKeyValue(keySelector(x, i), elementSelector(x, i)));
 		return dict;
 	}
 
-	toJoinedString(separator:string = "", selector:Selector<T, string> = Functions.Identity)
+	toJoinedString(separator:string = "", selector:Selector<T, string> = <any>Functions.Identity)
 	{
 		return this
 			.select(selector)
@@ -2446,7 +2440,7 @@ export class LinqEnumerable<T>
 
 // #region Ordering Methods
 
-	orderBy<TKey extends Comparable>(keySelector:Selector<T, TKey> = Functions.Identity):IOrderedEnumerable<T>
+	orderBy<TKey extends Comparable>(keySelector:Selector<T, TKey> = <any>Functions.Identity):IOrderedEnumerable<T>
 	{
 		this.throwIfDisposed();
 		return new OrderedEnumerable<T, TKey>(this, keySelector, Order.Ascending);
@@ -2464,7 +2458,7 @@ export class LinqEnumerable<T>
 		return new OrderedEnumerable<T, any>(this, null, Order.Descending, null, comparison);
 	}
 
-	orderByDescending<TKey extends Comparable>(keySelector:Selector<T, TKey> = Functions.Identity):IOrderedEnumerable<T>
+	orderByDescending<TKey extends Comparable>(keySelector:Selector<T, TKey> = <any>Functions.Identity):IOrderedEnumerable<T>
 	{
 		this.throwIfDisposed();
 		return new OrderedEnumerable<T, TKey>(this, keySelector, Order.Descending);
@@ -2545,7 +2539,7 @@ export class LinqEnumerable<T>
 		elementSelector?:SelectorWithIndex<T, TElement> | Selector<T, TElement>,
 		compareSelector?:Selector<TKey, string | number | symbol>):LinqEnumerable<IGrouping<TKey, TElement>>
 	{
-		if(!elementSelector) elementSelector = Functions.Identity; // Allow for 'null' and not just undefined.
+		if(!elementSelector) elementSelector = <any>Functions.Identity; // Allow for 'null' and not just undefined.
 		return new LinqEnumerable<IGrouping<TKey, TElement>>(
 			() => this
 				.toLookup(keySelector, elementSelector, compareSelector)
@@ -2565,11 +2559,11 @@ export class LinqEnumerable<T>
 		resultSelector:(key:TKey, element:TElement[]) => IGrouping<TKey, TElement>
 			= (key:TKey, elements:TElement[]) => new Grouping<TKey, TElement>(key, elements),
 		compareSelector:Selector<TKey, any>
-			= Functions.Identity):LinqEnumerable<IGrouping<TKey, T>> | LinqEnumerable<IGrouping<TKey, TElement>>
+			= <any>Functions.Identity):LinqEnumerable<IGrouping<TKey, T>> | LinqEnumerable<IGrouping<TKey, TElement>>
 	{
 
 		const _ = this;
-		if(!elementSelector) elementSelector = Functions.Identity; // Allow for 'null' and not just undefined.
+		if(!elementSelector) elementSelector = <any>Functions.Identity; // Allow for 'null' and not just undefined.
 		return new LinqEnumerable<IGrouping<TKey, TElement>>(
 			() =>
 			{
@@ -2740,12 +2734,12 @@ export class LinqEnumerable<T>
 		return this.aggregate(Functions.Lesser);
 	}
 
-	maxBy(keySelector:Selector<T, Primitive> = Functions.Identity):T | undefined
+	maxBy(keySelector:Selector<T, Primitive> = <any>Functions.Identity):T | undefined
 	{
 		return this.aggregate((a:T, b:T) => (keySelector(a)>keySelector(b)) ? a : b);
 	}
 
-	minBy(keySelector:Selector<T, Primitive> = Functions.Identity):T | undefined
+	minBy(keySelector:Selector<T, Primitive> = <any>Functions.Identity):T | undefined
 	{
 		return this.aggregate((a:T, b:T) => (keySelector(a)<keySelector(b)) ? a : b);
 	}
@@ -2991,7 +2985,7 @@ class ArrayEnumerable<T>
 
 	// These methods should ALWAYS check for array length before attempting anything.
 
-	any(predicate?:Predicate<T>):boolean
+	any(predicate?:PredicateWithIndex<T>):boolean
 	{
 		const _ = this;
 		_.throwIfDisposed();
@@ -3001,7 +2995,7 @@ class ArrayEnumerable<T>
 		return !!len && (!predicate || super.any(predicate));
 	}
 
-	count(predicate?:Predicate<T>):number
+	count(predicate?:PredicateWithIndex<T>):number
 	{
 		const _ = this;
 		_.throwIfDisposed();
@@ -3137,7 +3131,7 @@ class ArrayEnumerable<T>
 	}
 
 
-	toJoinedString(separator:string = "", selector:Selector<T, string> = Functions.Identity)
+	toJoinedString(separator:string = "", selector:Selector<T, string> = <any>Functions.Identity)
 	{
 		const s = this._source;
 		return !selector && (s) instanceof (Array)
@@ -3891,7 +3885,7 @@ export module Enumerable
 	export function generate<T>(factory:(index:number) => T):InfiniteLinqEnumerable<T>;
 	export function generate<T>(factory:(index:number) => T, count:number):FiniteEnumerable<T>;
 	export function generate<T>(
-		factory:(index?:number) => T,
+		factory:Function,
 		count:number = Infinity):InfiniteLinqEnumerable<T>
 	{
 		if(!factory)

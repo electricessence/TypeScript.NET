@@ -1004,9 +1004,6 @@
             return new LinqEnumerable(function () { return _.getEnumerator(); });
         };
         // #region Indexing/Paging methods.
-        LinqEnumerable.prototype.skip = function (count) {
-            return _super.prototype.skip.call(this, count);
-        };
         LinqEnumerable.prototype.skipWhile = function (predicate) {
             this.throwIfDisposed();
             return this.doAction(function (element, index) {

@@ -70,12 +70,14 @@ const builder = BuildHelper
 
 gulp.task(
 	TASK.DIST_ES6,
-	() => builder
-		.init(Module.ES6, Target.ES6, Module.ES6)
-		.clear()
-		.removeExtraneousES6Helpers()
-		.execute()
-		.then(() => savePackage(Module.ES6))
+	() => {
+		return builder
+			.init(Module.ES6, Target.ES6, Module.ES6)
+			.clear()
+			.removeExtraneousES6Helpers()
+			.execute()
+			.then(() => savePackage(Module.ES6));
+	}
 );
 
 gulp.task(

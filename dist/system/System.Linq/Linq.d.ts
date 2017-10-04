@@ -35,7 +35,7 @@ export declare class InfiniteLinqEnumerable<T> extends DisposableBase implements
     doAction(action: ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>, initializer: Closure | null, isEndless: true, onComplete?: Action<number>): InfiniteLinqEnumerable<T>;
     doAction(action: ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>, initializer?: Closure | null, isEndless?: boolean | null | undefined, onComplete?: Action<number>): LinqEnumerable<T>;
     force(): void;
-    skip(count: number): InfiniteLinqEnumerable<T>;
+    skip(count: number): this;
     take(count: number): FiniteEnumerable<T>;
     elementAt(index: number): T;
     elementAtOrDefault(index: number): T | undefined;
@@ -108,7 +108,6 @@ export declare class InfiniteLinqEnumerable<T> extends DisposableBase implements
 export declare class LinqEnumerable<T> extends InfiniteLinqEnumerable<T> implements ILinqEnumerable<T> {
     constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: Closure | null, isEndless?: boolean);
     asEnumerable(): this;
-    skip(count: number): LinqEnumerable<T>;
     skipWhile(predicate: PredicateWithIndex<T>): LinqEnumerable<T>;
     takeWhile(predicate: PredicateWithIndex<T>): this;
     takeUntil(predicate: PredicateWithIndex<T>, includeUntilValue?: boolean): this;
