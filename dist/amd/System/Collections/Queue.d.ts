@@ -1,8 +1,8 @@
 /*!
- * @author electricessence / https://github.com/electricessence/
- * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+* @author electricessence / https://github.com/electricessence/
+* Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+*/
 import { CollectionBase } from "./CollectionBase";
 import { Action, ActionWithIndex, EqualityComparison, PredicateWithIndex } from "../FunctionTypes";
 import { IEnumerator } from "./Enumeration/IEnumerator";

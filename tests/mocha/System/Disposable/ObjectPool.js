@@ -1,9 +1,7 @@
 /*
 import ObjectPool from "../../../../dist/commonjs/System/Disposable/ObjectPool";
 import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
-
 const pool = new ObjectPool(40, ()=>new Array<any>(100));
-
 function fake(o:any) {}
 const TRIES:number = 1000;
 describe("should be performant", ()=>
@@ -19,12 +17,10 @@ describe("should be performant", ()=>
                 fake(a);
                 fake(b);
             }
-
         }).milliseconds) + " milliseconds using new only", ()=>
     {
         assert.ok(true);
     });
-
     it((n2=Stopwatch.measure(()=>
         {
             var a:any[], b:any[];
@@ -41,10 +37,8 @@ describe("should be performant", ()=>
     {
         assert.ok(true);
     });
-
     // if(n1<n2)
     // 	console.warn("ObjectPool is not outperforming 'new'.")
-
 });
 */
 //# sourceMappingURL=ObjectPool.js.map

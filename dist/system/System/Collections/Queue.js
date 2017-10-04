@@ -1,8 +1,8 @@
 /*!
- * @author electricessence / https://github.com/electricessence/
- * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+* @author electricessence / https://github.com/electricessence/
+* Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+*/
 System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -50,10 +50,10 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
             }
         ],
         execute: function () {/*!
-             * @author electricessence / https://github.com/electricessence/
-             * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
-             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-             */
+            * @author electricessence / https://github.com/electricessence/
+            * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+            * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+            */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
