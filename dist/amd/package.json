@@ -1,6 +1,6 @@
 {
   "name": "typescript-dotnet-amd",
-  "version": "4.9.8",
+  "version": "4.9.9",
   "license": "MIT",
   "author": "electricessence <npm@electrified.net>",
   "description": "A JavaScript-Friendly .NET Based TypeScript Library.",

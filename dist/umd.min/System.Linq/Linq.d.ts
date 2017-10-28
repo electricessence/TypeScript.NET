@@ -5,7 +5,7 @@
  */
 import { DisposableBase } from "../System/Disposable/DisposableBase";
 import { IEnumerator } from "../System/Collections/Enumeration/IEnumerator";
-import { Action, ActionWithIndex, Closure, Comparison, EqualityComparison, PredicateWithIndex, Selector, SelectorWithIndex, HashSelector } from "../System/FunctionTypes";
+import { Action, ActionWithIndex, Closure, Comparison, EqualityComparison, HashSelector, PredicateWithIndex, Selector, SelectorWithIndex } from "../System/FunctionTypes";
 import { IDictionary, IMap } from "../System/Collections/Dictionaries/IDictionary";
 import { Comparable } from "../System/IComparable";
 import { IFiniteEnumerable, IGrouping, IInfiniteEnumerable, ILinqEnumerable, ILookup, IOrderedEnumerable, NotEmptyEnumerable } from "./Enumerable";
