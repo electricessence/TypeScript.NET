@@ -11,7 +11,7 @@ import {
 import Functions from "../../../dist/commonjs/System/Functions";
 import {EmptyEnumerator} from "../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator";
 import {List} from "../../../dist/commonjs/System/Collections/List";
-import {ILinqEnumerable} from "../../../dist/commonjs/System.Linq/Enumerable";
+import {ILinqEnumerable, IInfiniteEnumerable} from "../../../dist/commonjs/System.Linq/Enumerable";
 
 
 interface TestItem
@@ -1211,10 +1211,10 @@ describe(".weave(enumerables)", () =>
 
 });
 
-describe("xxx", () =>
+describe(".takeExceptLast(n)", () =>
 {
 
-	it("yyy", () =>
+	it("should stop return results when n away from end of source.", () =>
 	{
 		const r = Enumerable([1, 2, 3, 4, 5, 6])
 			.skip(1)
@@ -1225,5 +1225,31 @@ describe("xxx", () =>
 		assert.equal(r[1], 3);
 		assert.equal(r[2], 4);
 	})
+
+});
+
+describe("Supported Enumerables", () =>
+{
+	const source = [1, 2, 3, 4, 5, 6];
+	it("Array", () =>
+	{
+		assert.doesNotThrow(()=>{
+			let i: ILinqEnumerable<number> = Enumerable.from(source);
+		});
+	});
+
+	it("List", () =>
+	{
+		assert.doesNotThrow(()=>{
+			let i: ILinqEnumerable<number> = Enumerable.from(new List<number>());
+		});
+	});
+
+	it("Lambda", () =>
+	{
+		assert.doesNotThrow(()=>{
+			let i: IInfiniteEnumerable<number> = Enumerable.from(()=>1);
+		});
+	});
 
 });

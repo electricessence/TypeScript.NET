@@ -796,8 +796,8 @@ describe(".weave(enumerables)", function () {
         assert.throws(function () { return Linq_1.Enumerable.weave(null); });
     });
 });
-describe("xxx", function () {
-    it("yyy", function () {
+describe(".takeExceptLast(n)", function () {
+    it("should stop return results when n away from end of source.", function () {
         var r = Linq_1.Enumerable([1, 2, 3, 4, 5, 6])
             .skip(1)
             .takeExceptLast(2)
@@ -805,6 +805,24 @@ describe("xxx", function () {
         assert.equal(r[0], 2);
         assert.equal(r[1], 3);
         assert.equal(r[2], 4);
+    });
+});
+describe("Supported Enumerables", function () {
+    var source = [1, 2, 3, 4, 5, 6];
+    it("Array", function () {
+        assert.doesNotThrow(function () {
+            var i = Linq_1.Enumerable.from(source);
+        });
+    });
+    it("List", function () {
+        assert.doesNotThrow(function () {
+            var i = Linq_1.Enumerable.from(new List_1.List());
+        });
+    });
+    it("Lambda", function () {
+        assert.doesNotThrow(function () {
+            var i = Linq_1.Enumerable.from(function () { return 1; });
+        });
     });
 });
 //# sourceMappingURL=Enumerable.js.map
