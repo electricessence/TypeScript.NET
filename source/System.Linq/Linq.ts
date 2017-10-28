@@ -37,6 +37,7 @@ import {
 	Closure,
 	Comparison,
 	EqualityComparison,
+	HashSelector,
 	PredicateWithIndex,
 	Selector,
 	SelectorWithIndex
@@ -826,7 +827,7 @@ export class InfiniteLinqEnumerable<T>
 
 	except(
 		second:ForEachEnumerable<T>,
-		compareSelector?:Selector<T, string | number | symbol>):this
+		compareSelector?:HashSelector<T>):this
 	{
 		const _ = this;
 		let disposed = !_.throwIfDisposed();
@@ -883,13 +884,13 @@ export class InfiniteLinqEnumerable<T>
 	}
 
 
-	distinct(compareSelector?:Selector<T, string | number | symbol>):this
+	distinct(compareSelector?:HashSelector<T>):this
 	{
 		return this.except(NULL, compareSelector);
 	}
 
 	// [0,0,0,1,1,1,2,2,2,0,0,0,1,1] results in [0,1,2,0,1];
-	distinctUntilChanged(compareSelector:Selector<T, any> = Functions.Identity):this
+	distinctUntilChanged(compareSelector:HashSelector<T> = <any>Functions.Identity):this
 	{
 
 		const _ = this;
@@ -1128,7 +1129,7 @@ export class InfiniteLinqEnumerable<T>
 		outerKeySelector:Selector<T, TKey>,
 		innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner) => TResult,
-		compareSelector:Selector<TKey, string | number | symbol> = <any>Functions.Identity):LinqEnumerable<TResult>
+		compareSelector:HashSelector<TKey> = <any>Functions.Identity):LinqEnumerable<TResult>
 	{
 
 		const _ = this;
@@ -1191,7 +1192,7 @@ export class InfiniteLinqEnumerable<T>
 		outerKeySelector:Selector<T, TKey>,
 		innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner[] | null) => TResult,
-		compareSelector:Selector<TKey, string | number | symbol> = <any>Functions.Identity):LinqEnumerable<TResult>
+		compareSelector:HashSelector<TKey> = <any>Functions.Identity):LinqEnumerable<TResult>
 	{
 		const _ = this;
 
@@ -1301,7 +1302,7 @@ export class InfiniteLinqEnumerable<T>
 
 	union(
 		second:ForEachEnumerable<T>,
-		compareSelector:Selector<T, string | number | symbol> = <any>Functions.Identity):this
+		compareSelector:HashSelector<T> = <any>Functions.Identity):this
 	{
 		const _ = this;
 		const isEndless = _._isEndless;
@@ -1689,6 +1690,16 @@ export class InfiniteLinqEnumerable<T>
 	}
 
 
+	memoize():InfiniteLinqEnumerable<T>
+	{
+		let source = new LazyList(this);
+		return <this>(new InfiniteLinqEnumerable<T>(() => source.getEnumerator(), () =>
+		{
+			source.dispose();
+			source = <any>null
+		}));
+	}
+
 }
 
 
@@ -1949,7 +1960,7 @@ export class LinqEnumerable<T>
 	toLookup<TKey, TValue>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, TValue>             = <any>Functions.Identity,
-		compareSelector:Selector<TKey, string | number | symbol> = <any>Functions.Identity):ILookup<TKey, TValue>
+		compareSelector:HashSelector<TKey> = <any>Functions.Identity):ILookup<TKey, TValue>
 	{
 		const dict:Dictionary<TKey, TValue[]> = new Dictionary<TKey, TValue[]>(compareSelector);
 		this.forEach(
@@ -1982,7 +1993,7 @@ export class LinqEnumerable<T>
 	toDictionary<TKey, TValue>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, TValue>,
-		compareSelector:Selector<TKey, string | number | symbol> = <any>Functions.Identity):IDictionary<TKey, TValue>
+		compareSelector:HashSelector<TKey> = <any>Functions.Identity):IDictionary<TKey, TValue>
 	{
 		const dict:Dictionary<TKey, TValue> = new Dictionary<TKey, TValue>(compareSelector);
 		this.forEach((x, i) => dict.addByKeyValue(keySelector(x, i), elementSelector(x, i)));
@@ -2326,7 +2337,7 @@ export class LinqEnumerable<T>
 
 	intersect(
 		second:ForEachEnumerable<T>,
-		compareSelector?:Selector<T, string | number | symbol>):this
+		compareSelector?:HashSelector<T>):this
 	{
 		const _ = this;
 		_.throwIfDisposed();
@@ -2526,18 +2537,18 @@ export class LinqEnumerable<T>
 	groupBy<TKey>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, T>,
-		compareSelector?:Selector<TKey, string | number | symbol>):LinqEnumerable<IGrouping<TKey, T>>;
+		compareSelector?:HashSelector<TKey>):LinqEnumerable<IGrouping<TKey, T>>;
 
 	groupBy<TKey, TElement>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, TElement>,
-		compareSelector?:Selector<TKey, string | number | symbol>):LinqEnumerable<IGrouping<TKey, TElement>>
+		compareSelector?:HashSelector<TKey>):LinqEnumerable<IGrouping<TKey, TElement>>
 
 
 	groupBy<TKey, TElement>(
 		keySelector:SelectorWithIndex<T, TKey> | Selector<T, TKey>,
 		elementSelector?:SelectorWithIndex<T, TElement> | Selector<T, TElement>,
-		compareSelector?:Selector<TKey, string | number | symbol>):LinqEnumerable<IGrouping<TKey, TElement>>
+		compareSelector?:HashSelector<TKey>):LinqEnumerable<IGrouping<TKey, TElement>>
 	{
 		if(!elementSelector) elementSelector = <any>Functions.Identity; // Allow for 'null' and not just undefined.
 		return new LinqEnumerable<IGrouping<TKey, TElement>>(
@@ -2887,7 +2898,7 @@ export class LinqEnumerable<T>
 
 	// #endregion
 
-	memoize():this
+	memoize():LinqEnumerable<T>
 	{
 		let source = new LazyList(this);
 		return <this>(new LinqEnumerable(() => source.getEnumerator(), () =>

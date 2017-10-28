@@ -14,7 +14,7 @@ import {IKeyValuePair} from "../../KeyValuePair";
 import {getIdentifier} from "./getIdentifier";
 import {IEnumerator} from "../Enumeration/IEnumerator";
 import {ILinkedNode} from "../ILinkedListNode";
-import {Selector} from "../../FunctionTypes";
+import {HashSelector} from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
@@ -66,7 +66,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	private readonly _buckets:IMap<LinkedNodeList<IHashEntry<TKey, IHashEntry<TKey, TValue>>>>;
 
 	constructor(
-		private readonly _keyGenerator?:Selector<TKey,string|number|symbol>)
+		private readonly _keyGenerator?:HashSelector<TKey>)
 	{
 		super();
 		this._entries = linkedNodeList();

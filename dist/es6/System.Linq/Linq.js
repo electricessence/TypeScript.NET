@@ -938,6 +938,13 @@ export class InfiniteLinqEnumerable extends DisposableBase {
             sharedEnumerator = NULL;
         }, _._isEndless);
     }
+    memoize() {
+        let source = new LazyList(this);
+        return (new InfiniteLinqEnumerable(() => source.getEnumerator(), () => {
+            source.dispose();
+            source = null;
+        }));
+    }
 }
 /**
  * Enumerable<T> is a wrapper class that allows more primitive enumerables to exhibit LINQ behavior.

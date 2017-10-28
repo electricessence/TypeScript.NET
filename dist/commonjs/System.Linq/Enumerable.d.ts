@@ -13,7 +13,8 @@ import {
 	EqualityComparison,
 	PredicateWithIndex,
 	Selector,
-	SelectorWithIndex
+	SelectorWithIndex,
+	HashSelector
 } from "../System/FunctionTypes";
 import {IDictionary, IMap} from "../System/Collections/Dictionaries/IDictionary";
 import {Comparable} from "../System/IComparable";
@@ -60,8 +61,8 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 	traverseDepthFirst<TNode, TResult>(
 		childrenSelector:(element:T | TNode) => ForEachEnumerable<TNode> | null | undefined,
 		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
-	flatten<TFlat>():IInfiniteEnumerable<TFlat>
-	flatten():IInfiniteEnumerable<any>
+	flatten<TFlat>():IInfiniteEnumerable<TFlat>;
+	flatten():IInfiniteEnumerable<any>;
 	pairwise<TSelect>(selector:(prev:T, current:T) => TSelect):IInfiniteEnumerable<TSelect>;
 	scan(func:(a:T, b:T) => T, seed?:T):this;
 	select<TResult>(selector:SelectorWithIndex<T, TResult>):IInfiniteEnumerable<TResult>;
@@ -79,9 +80,9 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 		type:{
 			new (...params:any[]):TType;
 		}):IInfiniteEnumerable<TType>;
-	except<TCompare>(second:ForEachEnumerable<T>, compareSelector?:Selector<T, TCompare>):this;
-	distinct(compareSelector?:Selector<T, string|number|symbol>):this
-	distinctUntilChanged(compareSelector?:Selector<T, any>):this
+	except(second:ForEachEnumerable<T>, compareSelector?:HashSelector<T>):this;
+	distinct(compareSelector?:HashSelector<T>):this
+	distinctUntilChanged(compareSelector?:HashSelector<T>):this
 	defaultIfEmpty(defaultValue?:T):this;
 	zip<TSecond, TResult>(
 		second:ForEachEnumerable<TSecond>,
@@ -93,15 +94,15 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 		inner:ForEachEnumerable<TInner>,
 		outerKeySelector:Selector<T, TKey>, innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner) => TResult,
-		compareSelector?:Selector<TKey, string|number|symbol>):ILinqEnumerable<TResult>;
-	groupJoin<TInner, TKey, TResult, TCompare>(
+		compareSelector?:HashSelector<TKey>):ILinqEnumerable<TResult>;
+	groupJoin<TInner, TKey, TResult>(
 		inner:ForEachEnumerable<TInner>,
 		outerKeySelector:Selector<T, TKey>, innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner[] | null) => TResult,
-		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<TResult>;
+		compareSelector?:HashSelector<TKey>):ILinqEnumerable<TResult>;
 	merge(enumerables:ArrayLike<ForEachEnumerable<T>>):this;
 	concat(...enumerables:Array<ForEachEnumerable<T>>):this;
-	union<TCompare>(second:ForEachEnumerable<T>, compareSelector?:Selector<T, TCompare>):this;
+	union(second:ForEachEnumerable<T>, compareSelector?:HashSelector<T>):this;
 	insertAt(index:number, other:ForEachEnumerable<T>):this;
 	alternateMultiple(sequence:ForEachEnumerable<T>):this;
 	alternateSingle(value:T):this;
@@ -110,13 +111,14 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 	finallyAction(action:Closure):this;
 	buffer(size:number):IInfiniteEnumerable<T[]>;
 	share():this;
+	memoize():IInfiniteEnumerable<T>
 }
 export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 {
 	skip(count:number):ILinqEnumerable<T>;
 	skipWhile(predicate:PredicateWithIndex<T>):ILinqEnumerable<T>;
-	takeWhile(predicate:PredicateWithIndex<T>):this;
-	takeUntil(predicate:PredicateWithIndex<T>, includeUntilValue?:boolean):this;
+	takeWhile(predicate:PredicateWithIndex<T>):ILinqEnumerable<T>;
+	takeUntil(predicate:PredicateWithIndex<T>, includeUntilValue?:boolean):ILinqEnumerable<T>;
 	forEach(action:ActionWithIndex<T>, max?:number):number;
 	forEach(action:PredicateWithIndex<T>, max?:number):number;
 	toArray(predicate?:PredicateWithIndex<T>):T[];
@@ -124,17 +126,17 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 	toLookup<TKey, TValue>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector?:SelectorWithIndex<T, TValue>,
-		compareSelector?:Selector<TKey, string|number|symbol>):ILookup<TKey, TValue>;
+		compareSelector?:HashSelector<TKey>):ILookup<TKey, TValue>;
 	toMap<TResult>(
-		keySelector:Selector<T, string|number|symbol>,
+		keySelector:HashSelector<T>,
 		elementSelector:Selector<T, TResult>):IMap<TResult>;
 	toDictionary<TKey, TValue>(
 		keySelector:SelectorWithIndex<T, TKey> | Selector<T, TKey>,
 		elementSelector:SelectorWithIndex<T, TValue> | Selector<T, TValue>,
-		compareSelector?:Selector<TKey, string|number|symbol>):IDictionary<TKey, TValue>;
+		compareSelector?:HashSelector<TKey>):IDictionary<TKey, TValue>;
 	toJoinedString(separator?:string, selector?:Selector<T, string>):string;
-	takeExceptLast(count?:number):this;
-	skipToLast(count:number):this;
+	takeExceptLast(count?:number):ILinqEnumerable<T>;
+	skipToLast(count:number):ILinqEnumerable<T>;
 	select<TResult>(selector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	map<TResult>(selector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	selectMany<TResult>(collectionSelector:SelectorWithIndex<T, ForEachEnumerable<TResult> | null | undefined>):ILinqEnumerable<TResult>;
@@ -143,8 +145,8 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 		resultSelector:(collection:T, element:TElement) => TResult):ILinqEnumerable<TResult>;
 	choose():ILinqEnumerable<T>;
 	choose<TResult>(selector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
-	reverse():this;
-	shuffle():this;
+	reverse():ILinqEnumerable<T>;
+	shuffle():ILinqEnumerable<T>;
 	count(predicate?:PredicateWithIndex<T>):number;
 	all(predicate:PredicateWithIndex<T>):boolean;
 	every(predicate:PredicateWithIndex<T>):boolean;
@@ -153,7 +155,7 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 	contains(value:T, compareSelector?:Selector<T, any>):boolean;
 	indexOf(value:T, compareSelector?:SelectorWithIndex<T, any>):number;
 	lastIndexOf(value:T, compareSelector?:SelectorWithIndex<T, any>):number;
-	intersect(second:ForEachEnumerable<T>, compareSelector?:Selector<T, string|number|symbol>):ILinqEnumerable<T>;
+	intersect(second:ForEachEnumerable<T>, compareSelector?:HashSelector<T>):ILinqEnumerable<T>;
 	sequenceEqual(second:ForEachEnumerable<T>, equalityComparer?:EqualityComparison<T>):boolean;
 	ofType<TType>(
 		type:{
@@ -176,17 +178,17 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 	groupBy<TKey>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, T>,
-		compareSelector?:Selector<TKey, string|number|symbol>):ILinqEnumerable<IGrouping<TKey, T>>;
+		compareSelector?:HashSelector<TKey>):ILinqEnumerable<IGrouping<TKey, T>>;
 	groupBy<TKey, TElement>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, TElement>,
-		compareSelector?:Selector<TKey, string|number|symbol>):ILinqEnumerable<IGrouping<TKey, TElement>>;
+		compareSelector?:HashSelector<TKey>):ILinqEnumerable<IGrouping<TKey, TElement>>;
 	partitionBy<TKey>(keySelector:Selector<T, TKey>):ILinqEnumerable<IGrouping<TKey, T>>;
 	partitionBy<TKey, TElement>(
 		keySelector:Selector<T,TKey>,
 		elementSelector?:Selector<T,TElement>,
 		resultSelector?:(key:TKey, element:TElement[]) => IGrouping<TKey, TElement>,
-		compareSelector?:Selector<TKey, any>):ILinqEnumerable<IGrouping<TKey, TElement>>;
+		compareSelector?:HashSelector<TKey>):ILinqEnumerable<IGrouping<TKey, TElement>>;
 	flatten<TFlat>():IInfiniteEnumerable<TFlat>
 	flatten():IInfiniteEnumerable<any>
 	pairwise<TSelect>(selector:(prev:T, current:T) => TSelect):ILinqEnumerable<TSelect>;
@@ -212,8 +214,8 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 	last():T;
 	lastOrDefault():T | undefined;
 	lastOrDefault(defaultValue:T):T;
-	memoize():this;
 	throwWhenEmpty():NotEmptyEnumerable<T>;
+	memoize():ILinqEnumerable<T>
 }
 
 export interface NotEmptyEnumerable<T> extends ILinqEnumerable<T>

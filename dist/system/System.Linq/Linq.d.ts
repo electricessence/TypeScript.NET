@@ -5,7 +5,7 @@
  */
 import { DisposableBase } from "../System/Disposable/DisposableBase";
 import { IEnumerator } from "../System/Collections/Enumeration/IEnumerator";
-import { Action, ActionWithIndex, Closure, Comparison, EqualityComparison, PredicateWithIndex, Selector, SelectorWithIndex } from "../System/FunctionTypes";
+import { Action, ActionWithIndex, Closure, Comparison, EqualityComparison, PredicateWithIndex, Selector, SelectorWithIndex, HashSelector } from "../System/FunctionTypes";
 import { IDictionary, IMap } from "../System/Collections/Dictionaries/IDictionary";
 import { Comparable } from "../System/IComparable";
 import { IFiniteEnumerable, IGrouping, IInfiniteEnumerable, ILinqEnumerable, ILookup, IOrderedEnumerable, NotEmptyEnumerable } from "./Enumerable";
@@ -74,9 +74,9 @@ export declare class InfiniteLinqEnumerable<T> extends DisposableBase implements
     ofType<TType>(type: {
         new (...params: any[]): TType;
     }): InfiniteLinqEnumerable<TType>;
-    except(second: ForEachEnumerable<T>, compareSelector?: Selector<T, string | number | symbol>): this;
-    distinct(compareSelector?: Selector<T, string | number | symbol>): this;
-    distinctUntilChanged(compareSelector?: Selector<T, any>): this;
+    except(second: ForEachEnumerable<T>, compareSelector?: HashSelector<T>): this;
+    distinct(compareSelector?: HashSelector<T>): this;
+    distinctUntilChanged(compareSelector?: HashSelector<T>): this;
     /**
      * Returns a single default value if empty.
      * @param defaultValue
@@ -85,11 +85,11 @@ export declare class InfiniteLinqEnumerable<T> extends DisposableBase implements
     defaultIfEmpty(defaultValue?: T): this;
     zip<TSecond, TResult>(second: ForEachEnumerable<TSecond>, resultSelector: (first: T, second: TSecond, index: number) => TResult): LinqEnumerable<TResult>;
     zipMultiple<TSecond, TResult>(second: ArrayLike<ForEachEnumerable<TSecond>>, resultSelector: (first: T, second: TSecond, index: number) => TResult): LinqEnumerable<TResult>;
-    join<TInner, TKey, TResult>(inner: ForEachEnumerable<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner) => TResult, compareSelector?: Selector<TKey, string | number | symbol>): LinqEnumerable<TResult>;
-    groupJoin<TInner, TKey, TResult>(inner: ForEachEnumerable<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner[] | null) => TResult, compareSelector?: Selector<TKey, string | number | symbol>): LinqEnumerable<TResult>;
+    join<TInner, TKey, TResult>(inner: ForEachEnumerable<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner) => TResult, compareSelector?: HashSelector<TKey>): LinqEnumerable<TResult>;
+    groupJoin<TInner, TKey, TResult>(inner: ForEachEnumerable<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner[] | null) => TResult, compareSelector?: HashSelector<TKey>): LinqEnumerable<TResult>;
     merge(enumerables: ArrayLike<ForEachEnumerable<T>>): this;
     concat(...enumerables: Array<ForEachEnumerable<T>>): this;
-    union(second: ForEachEnumerable<T>, compareSelector?: Selector<T, string | number | symbol>): this;
+    union(second: ForEachEnumerable<T>, compareSelector?: HashSelector<T>): this;
     insertAt(index: number, other: ForEachEnumerable<T>): this;
     alternateMultiple(sequence: ForEachEnumerable<T>): this;
     alternateSingle(value: T): this;
@@ -98,6 +98,7 @@ export declare class InfiniteLinqEnumerable<T> extends DisposableBase implements
     finallyAction(action: Closure): this;
     buffer(size: number): InfiniteLinqEnumerable<T[]>;
     share(): this;
+    memoize(): InfiniteLinqEnumerable<T>;
 }
 /**
  * Enumerable<T> is a wrapper class that allows more primitive enumerables to exhibit LINQ behavior.
@@ -119,9 +120,9 @@ export declare class LinqEnumerable<T> extends InfiniteLinqEnumerable<T> impleme
     forEach(action: PredicateWithIndex<T>, max?: number): number;
     toArray(predicate?: PredicateWithIndex<T>): T[];
     copyTo(target: T[], index?: number, count?: number): T[];
-    toLookup<TKey, TValue>(keySelector: SelectorWithIndex<T, TKey>, elementSelector?: SelectorWithIndex<T, TValue>, compareSelector?: Selector<TKey, string | number | symbol>): ILookup<TKey, TValue>;
+    toLookup<TKey, TValue>(keySelector: SelectorWithIndex<T, TKey>, elementSelector?: SelectorWithIndex<T, TValue>, compareSelector?: HashSelector<TKey>): ILookup<TKey, TValue>;
     toMap<TResult>(keySelector: SelectorWithIndex<T, string | number | symbol>, elementSelector: SelectorWithIndex<T, TResult>): IMap<TResult>;
-    toDictionary<TKey, TValue>(keySelector: SelectorWithIndex<T, TKey>, elementSelector: SelectorWithIndex<T, TValue>, compareSelector?: Selector<TKey, string | number | symbol>): IDictionary<TKey, TValue>;
+    toDictionary<TKey, TValue>(keySelector: SelectorWithIndex<T, TKey>, elementSelector: SelectorWithIndex<T, TValue>, compareSelector?: HashSelector<TKey>): IDictionary<TKey, TValue>;
     toJoinedString(separator?: string, selector?: Selector<T, string>): string;
     takeExceptLast(count?: number): this;
     skipToLast(count: number): this;
@@ -141,7 +142,7 @@ export declare class LinqEnumerable<T> extends InfiniteLinqEnumerable<T> impleme
     contains(value: T, compareSelector?: Selector<T, any>): boolean;
     indexOf(value: T, compareSelector?: SelectorWithIndex<T, any>): number;
     lastIndexOf(value: T, compareSelector?: SelectorWithIndex<T, any>): number;
-    intersect(second: ForEachEnumerable<T>, compareSelector?: Selector<T, string | number | symbol>): this;
+    intersect(second: ForEachEnumerable<T>, compareSelector?: HashSelector<T>): this;
     sequenceEqual(second: ForEachEnumerable<T>, equalityComparer?: EqualityComparison<T>): boolean;
     ofType<TType>(type: {
         new (...params: any[]): TType;
@@ -152,8 +153,8 @@ export declare class LinqEnumerable<T> extends InfiniteLinqEnumerable<T> impleme
     orderByDescending<TKey extends Comparable>(keySelector?: Selector<T, TKey>): IOrderedEnumerable<T>;
     buffer(size: number): LinqEnumerable<T[]>;
     groupBy<TKey>(keySelector: SelectorWithIndex<T, TKey>): LinqEnumerable<IGrouping<TKey, T>>;
-    groupBy<TKey>(keySelector: SelectorWithIndex<T, TKey>, elementSelector: SelectorWithIndex<T, T>, compareSelector?: Selector<TKey, string | number | symbol>): LinqEnumerable<IGrouping<TKey, T>>;
-    groupBy<TKey, TElement>(keySelector: SelectorWithIndex<T, TKey>, elementSelector: SelectorWithIndex<T, TElement>, compareSelector?: Selector<TKey, string | number | symbol>): LinqEnumerable<IGrouping<TKey, TElement>>;
+    groupBy<TKey>(keySelector: SelectorWithIndex<T, TKey>, elementSelector: SelectorWithIndex<T, T>, compareSelector?: HashSelector<TKey>): LinqEnumerable<IGrouping<TKey, T>>;
+    groupBy<TKey, TElement>(keySelector: SelectorWithIndex<T, TKey>, elementSelector: SelectorWithIndex<T, TElement>, compareSelector?: HashSelector<TKey>): LinqEnumerable<IGrouping<TKey, TElement>>;
     partitionBy<TKey>(keySelector: Selector<T, TKey>): LinqEnumerable<IGrouping<TKey, T>>;
     partitionBy<TKey, TElement>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, resultSelector?: (key: TKey, element: TElement[]) => IGrouping<TKey, TElement>, compareSelector?: Selector<TKey, any>): LinqEnumerable<IGrouping<TKey, TElement>>;
     flatten<TFlat>(): LinqEnumerable<TFlat>;
@@ -179,7 +180,7 @@ export declare class LinqEnumerable<T> extends InfiniteLinqEnumerable<T> impleme
     last(): T;
     lastOrDefault(): T | undefined;
     lastOrDefault(defaultValue: T): T;
-    memoize(): this;
+    memoize(): LinqEnumerable<T>;
     throwWhenEmpty(): NotEmptyEnumerable<T>;
 }
 export declare class FiniteEnumerable<T> extends LinqEnumerable<T> implements IFiniteEnumerable<T> {

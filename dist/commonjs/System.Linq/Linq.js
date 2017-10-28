@@ -971,6 +971,13 @@ var InfiniteLinqEnumerable = (function (_super) {
             sharedEnumerator = NULL;
         }, _._isEndless);
     };
+    InfiniteLinqEnumerable.prototype.memoize = function () {
+        var source = new LazyList_1.LazyList(this);
+        return (new InfiniteLinqEnumerable(function () { return source.getEnumerator(); }, function () {
+            source.dispose();
+            source = null;
+        }));
+    };
     return InfiniteLinqEnumerable;
 }(DisposableBase_1.DisposableBase));
 exports.InfiniteLinqEnumerable = InfiniteLinqEnumerable;

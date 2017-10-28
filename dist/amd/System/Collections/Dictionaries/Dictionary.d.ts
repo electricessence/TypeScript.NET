@@ -6,7 +6,7 @@
 import { IKeyValuePair } from "../../KeyValuePair";
 import { IEnumerator } from "../Enumeration/IEnumerator";
 import { ILinkedNode } from "../ILinkedListNode";
-import { Selector } from "../../FunctionTypes";
+import { HashSelector } from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
 export interface IHashEntry<TKey, TValue> extends ILinkedNode<IHashEntry<TKey, TValue>>, IKeyValuePair<TKey, TValue> {
 }
@@ -14,7 +14,7 @@ export declare class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValu
     private readonly _keyGenerator;
     private readonly _entries;
     private readonly _buckets;
-    constructor(_keyGenerator?: Selector<TKey, string | number | symbol>);
+    constructor(_keyGenerator?: HashSelector<TKey>);
     protected _onDispose(): void;
     protected getCount(): number;
     private _getBucket(hash, createIfMissing?);
