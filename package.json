@@ -50,6 +50,6 @@
     "stream-to-promise-agnostic": "^1.0.3",
     "ts-node": "^1.6.1",
     "typedoc": "^0.4.5",
-    "typescript": "^2.3.2"
+    "typescript": "2.3.2"
   }
 }
