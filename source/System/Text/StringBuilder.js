@@ -37,15 +37,15 @@
         }
         StringBuilder.prototype.appendSingle = function (item) {
             if (item != null) {
-                var _1 = this;
-                _1._latest = null;
+                var _ = this;
+                _._latest = null;
                 switch (typeof item) {
                     case Types_1.Type.OBJECT:
                     case Types_1.Type.FUNCTION:
                         item = item.toString();
                         break;
                 }
-                _1._partArray.push(item); // Other primitive types can keep their format since a number or boolean is a smaller footprint than a string.
+                _._partArray.push(item); // Other primitive types can keep their format since a number or boolean is a smaller footprint than a string.
             }
         };
         StringBuilder.prototype.appendThese = function (items) {
