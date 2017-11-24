@@ -197,8 +197,10 @@ export class PromiseState<T>
 
 export abstract class PromiseBase<T>
 	extends PromiseState<T>
-	implements PromiseLike<T>, Promise<T>
+	implements PromiseLike<T>// , Promise<T>
 {
+	//readonly [Symbol.toStringTag]: "Promise";
+
 	constructor()
 	{
 		super(TSDNPromise.State.Pending);

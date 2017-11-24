@@ -162,6 +162,7 @@ var PromiseState = (function (_super) {
 exports.PromiseState = PromiseState;
 var PromiseBase = (function (_super) {
     __extends(PromiseBase, _super);
+    //readonly [Symbol.toStringTag]: "Promise";
     function PromiseBase() {
         var _this = _super.call(this, TSDNPromise.State.Pending) || this;
         _this._disposableObjectName = PROMISE;

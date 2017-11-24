@@ -200,6 +200,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             exports_1("PromiseState", PromiseState);
             PromiseBase = (function (_super) {
                 __extends(PromiseBase, _super);
+                //readonly [Symbol.toStringTag]: "Promise";
                 function PromiseBase() {
                     var _this = _super.call(this, TSDNPromise.State.Pending) || this;
                     _this._disposableObjectName = PROMISE;

@@ -125,6 +125,7 @@ export class PromiseState extends DisposableBase {
     }
 }
 export class PromiseBase extends PromiseState {
+    //readonly [Symbol.toStringTag]: "Promise";
     constructor() {
         super(TSDNPromise.State.Pending);
         this._disposableObjectName = PROMISE;

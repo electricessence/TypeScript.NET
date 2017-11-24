@@ -24,7 +24,7 @@ export declare class PromiseState<T> extends DisposableBase {
     protected getError(): any;
     readonly error: any;
 }
-export declare abstract class PromiseBase<T> extends PromiseState<T> implements PromiseLike<T>, Promise<T> {
+export declare abstract class PromiseBase<T> extends PromiseState<T> implements PromiseLike<T> {
     constructor();
     /**
      * .doneNow is provided as a non-standard means that synchronously resolves as the end of a promise chain.
