@@ -54,7 +54,7 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
      * @param onRejected
      * @returns {TSDNPromise}
      */
-    then<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | undefined | null): PromiseBase<TFulfilled | TRejected> & Promise<TFulfilled | TRejected>;
+    then<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | undefined | null): PromiseBase<TFulfilled | TRejected>;
     /**
      * Same as .then but doesn't trap errors.  Exceptions may end up being fatal.
      * @param onFulfilled
@@ -87,7 +87,7 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
      * @param onRejected
      * @returns {PromiseBase<TResult>}
      */
-    'catch'<TResult = never>(onRejected: TSDNPromise.Reject<TResult>): PromiseBase<T | TResult> & Promise<T | TResult>;
+    'catch'<TResult = never>(onRejected: TSDNPromise.Reject<TResult>): PromiseBase<T | TResult>;
     /**
      * Shortcut for trapping a rejection but will allow exceptions to propagate within the onRejected handler.
      * @param onRejected
