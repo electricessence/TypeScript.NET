@@ -26,7 +26,28 @@ describe(".format(source,..args)", function () {
 });
 describe(".supplant(source,..args)", function () {
     it("should replace contents of a string", function () {
-        assert.equal(TextUtility.supplant("Hello, my name is {name} and I like {like}. {x} {y}", { name: "George", like: "cheese", x: {} }), "Hello, my name is George and I like cheese. [object Object] {y}");
+        assert.equal(TextUtility.supplant("Hello, my name is {name} and I like {like}. {x} {y}", {
+            name: "George",
+            like: "cheese",
+            x: {}
+        }), "Hello, my name is George and I like cheese. [object Object] {y}");
+    });
+});
+describe(".startsWith(source,pattern)", function () {
+    it("should detect pattern at beginning", function () {
+        return assert.ok(TextUtility.startsWith("Hello, my name is", "Hello"));
+    });
+    it("should not detect pattern at beginning", function () {
+        return assert.ok(!TextUtility.startsWith("Hello, my name is", "is"));
+    });
+});
+describe(".endsWith(source,pattern)", function () {
+    it("should detect pattern at beginning", function () {
+        return assert.ok(TextUtility.endsWith("Hello, my name is", "is"));
+    });
+    it("should not detect pattern at beginning", function () {
+        assert.ok(!TextUtility.endsWith("Hello, my name is", "Hello"));
+        assert.ok(!TextUtility.endsWith("Hello, my name is", "is "));
     });
 });
 //# sourceMappingURL=Utility.js.map
