@@ -126,7 +126,7 @@ Istanbul is used for code coverage.  Current coverage is good if not reasonable.
 Currently the unit test cover many example usages.
 
 ## Documentation
-Currently improving over time using JSDoc style comments and [TypeDoc](http://typedoc.io/).
+Currently improving over time using JSDoc style comments and [TypeDoc](http://typedoc.org/).
 View Documentation: [electricessence.github.io/TypeScript.NET/documentation](http://electricessence.github.io/TypeScript.NET/documentation/)
 
 Documentation has a tendency to lag behind and TypeDoc is also lagging on updates.
