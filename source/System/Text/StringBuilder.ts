@@ -23,7 +23,7 @@ export class StringBuilder implements IDisposable
 	// ... and since this may end up being a large array container, might be a good idea to allow for flexible cleanup.
 {
 	//noinspection JSMismatchedCollectionQueryUpdate
-	private _partArray:any[];
+	private readonly _partArray:any[];
 	private _latest:string|null; // AKA persistentString
 
 	constructor(...initial:any[])
@@ -99,15 +99,15 @@ export class StringBuilder implements IDisposable
 	}
 	 /**/
 
-	get isEmpty()
+	get isEmpty():boolean
 	{
 		return this._partArray.length===0;
 	}
 
-	toString()
+	toString():string
 	{
 		let latest = this._latest;
-		if(!latest==null)
+		if(latest==null)
 			this._latest = latest = this._partArray.join();
 
 		return latest;
