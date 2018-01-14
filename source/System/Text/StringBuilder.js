@@ -24,16 +24,17 @@
      * It is clearly inefficient to use a StringBuilder or LinkedList to build a string when you have a small set of string portions.
      * StringBuilder will really show it's benefit likely somewhere above 1000 items.
      *****************************/
+    var EMPTY = "";
+    var NEWLINE = "\r\n";
     var StringBuilder = (function () {
         function StringBuilder() {
             var initial = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 initial[_i] = arguments[_i];
             }
-            var _ = this;
-            _._latest = null;
-            _._partArray = [];
-            _.appendThese(initial);
+            this._latest = null;
+            this._partArray = [];
+            this.appendThese(initial);
         }
         StringBuilder.prototype.appendSingle = function (item) {
             if (item != null) {
@@ -74,7 +75,7 @@
             items.forEach(function (i) {
                 if (i != null) {
                     _.appendSingle(i);
-                    _._partArray.push("\r\n");
+                    _._partArray.push(NEWLINE);
                 }
             });
             return _;
@@ -99,8 +100,8 @@
         });
         StringBuilder.prototype.toString = function () {
             var latest = this._latest;
-            if (!latest == null)
-                this._latest = latest = this._partArray.join();
+            if (latest == null)
+                this._latest = latest = this._partArray.join(EMPTY);
             return latest;
         };
         StringBuilder.prototype.join = function (delimiter) {

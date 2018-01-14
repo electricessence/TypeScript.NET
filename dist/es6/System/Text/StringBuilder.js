@@ -13,12 +13,13 @@ import { Type } from "../Types";
  * It is clearly inefficient to use a StringBuilder or LinkedList to build a string when you have a small set of string portions.
  * StringBuilder will really show it's benefit likely somewhere above 1000 items.
  *****************************/
+const EMPTY = "";
+const NEWLINE = "\r\n";
 export class StringBuilder {
     constructor(...initial) {
-        const _ = this;
-        _._latest = null;
-        _._partArray = [];
-        _.appendThese(initial);
+        this._latest = null;
+        this._partArray = [];
+        this.appendThese(initial);
     }
     appendSingle(item) {
         if (item != null) {
@@ -51,7 +52,7 @@ export class StringBuilder {
         items.forEach(i => {
             if (i != null) {
                 _.appendSingle(i);
-                _._partArray.push("\r\n");
+                _._partArray.push(NEWLINE);
             }
         });
         return _;
@@ -69,8 +70,8 @@ export class StringBuilder {
     }
     toString() {
         let latest = this._latest;
-        if (!latest == null)
-            this._latest = latest = this._partArray.join();
+        if (latest == null)
+            this._latest = latest = this._partArray.join(EMPTY);
         return latest;
     }
     join(delimiter) {

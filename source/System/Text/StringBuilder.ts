@@ -17,6 +17,8 @@ import {IDisposable} from "../Disposable/IDisposable";
  * StringBuilder will really show it's benefit likely somewhere above 1000 items.
  *****************************/
 
+const EMPTY = "";
+const NEWLINE = "\r\n";
 
 export class StringBuilder implements IDisposable
 	// Adding IDisposable allows for use with System.using();
@@ -28,10 +30,9 @@ export class StringBuilder implements IDisposable
 
 	constructor(...initial:any[])
 	{
-		const _ = this;
-		_._latest = null;
-		_._partArray = [];
-		_.appendThese(initial);
+		this._latest = null;
+		this._partArray = [];
+		this.appendThese(initial);
 	}
 
 	private appendSingle(item:any):void
@@ -80,7 +81,7 @@ export class StringBuilder implements IDisposable
 				if(i!=null)
 				{
 					_.appendSingle(i);
-					_._partArray.push("\r\n");
+					_._partArray.push(NEWLINE);
 				}
 			}
 		);
@@ -108,7 +109,7 @@ export class StringBuilder implements IDisposable
 	{
 		let latest = this._latest;
 		if(latest==null)
-			this._latest = latest = this._partArray.join();
+			this._latest = latest = this._partArray.join(EMPTY);
 
 		return latest;
 	}

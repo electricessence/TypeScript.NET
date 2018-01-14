@@ -6,7 +6,7 @@
 System.register(["../Types"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, StringBuilder;
+    var Types_1, EMPTY, NEWLINE, StringBuilder;
     return {
         setters: [
             function (Types_1_1) {
@@ -27,16 +27,17 @@ System.register(["../Types"], function (exports_1, context_1) {
              * It is clearly inefficient to use a StringBuilder or LinkedList to build a string when you have a small set of string portions.
              * StringBuilder will really show it's benefit likely somewhere above 1000 items.
              *****************************/
+            EMPTY = "";
+            NEWLINE = "\r\n";
             StringBuilder = (function () {
                 function StringBuilder() {
                     var initial = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
                         initial[_i] = arguments[_i];
                     }
-                    var _ = this;
-                    _._latest = null;
-                    _._partArray = [];
-                    _.appendThese(initial);
+                    this._latest = null;
+                    this._partArray = [];
+                    this.appendThese(initial);
                 }
                 StringBuilder.prototype.appendSingle = function (item) {
                     if (item != null) {
@@ -77,7 +78,7 @@ System.register(["../Types"], function (exports_1, context_1) {
                     items.forEach(function (i) {
                         if (i != null) {
                             _.appendSingle(i);
-                            _._partArray.push("\r\n");
+                            _._partArray.push(NEWLINE);
                         }
                     });
                     return _;
@@ -99,8 +100,8 @@ System.register(["../Types"], function (exports_1, context_1) {
                 });
                 StringBuilder.prototype.toString = function () {
                     var latest = this._latest;
-                    if (!latest == null)
-                        this._latest = latest = this._partArray.join();
+                    if (latest == null)
+                        this._latest = latest = this._partArray.join(EMPTY);
                     return latest;
                 };
                 StringBuilder.prototype.join = function (delimiter) {
