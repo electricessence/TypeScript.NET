@@ -28,7 +28,7 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp", "../Exceptions/Argu
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
             VOID0 = void 0;
-            DateTime = (function () {
+            DateTime = /** @class */ (function () {
                 function DateTime(value, kind) {
                     if (value === void 0) { value = new Date(); }
                     if (kind === void 0) { kind = DateTime.Kind.Local; }

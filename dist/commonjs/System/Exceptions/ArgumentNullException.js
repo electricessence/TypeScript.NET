@@ -10,7 +10,7 @@ var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var NAME = 'ArgumentNullException';
-var ArgumentNullException = (function (_super) {
+var ArgumentNullException = /** @class */ (function (_super) {
     __extends(ArgumentNullException, _super);
     function ArgumentNullException(paramName, message, innerException) {
         if (message === void 0) { message = "'" + paramName + "' is null (or undefined)."; }

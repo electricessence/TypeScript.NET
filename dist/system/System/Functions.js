@@ -15,7 +15,7 @@ System.register([], function (exports_1, context_1) {
             /**
              * Can be used statically or extended for varying different reusable function signatures.
              */
-            Functions = (function () {
+            Functions = /** @class */ (function () {
                 function Functions() {
                 }
                 //noinspection JSMethodCanBeStatic

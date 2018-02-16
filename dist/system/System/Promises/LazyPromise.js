@@ -31,7 +31,7 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
             /**
              * A promise that waits for the first then to trigger the resolver.
              */
-            LazyPromise = (function (_super) {
+            LazyPromise = /** @class */ (function (_super) {
                 __extends(LazyPromise, _super);
                 function LazyPromise(_resolver) {
                     var _this = _super.call(this) || this;

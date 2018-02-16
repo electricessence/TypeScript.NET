@@ -16,7 +16,7 @@
     var RegularExpressions_1 = require("./RegularExpressions");
     var EmptyEnumerator_1 = require("../Collections/Enumeration/EmptyEnumerator");
     var EnumeratorBase_1 = require("../Collections/Enumeration/EnumeratorBase");
-    var RegexMatchEnumerator = (function () {
+    var RegexMatchEnumerator = /** @class */ (function () {
         function RegexMatchEnumerator(pattern) {
             if (pattern instanceof RegularExpressions_1.Regex) {
                 this._pattern = pattern;

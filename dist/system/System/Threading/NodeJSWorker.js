@@ -19,7 +19,7 @@ System.register(["../Observable/ObservableBase", "../../extends"], function (exp
             /**
              * This class takes the place of a WebWorker
              */
-            NodeJSWorker = (function (_super) {
+            NodeJSWorker = /** @class */ (function (_super) {
                 __extends(NodeJSWorker, _super);
                 function NodeJSWorker(url) {
                     var _this = _super.call(this) || this;

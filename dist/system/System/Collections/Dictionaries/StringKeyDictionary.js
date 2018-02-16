@@ -25,7 +25,7 @@ System.register(["../../Compare", "./DictionaryBase", "../../../extends"], funct
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
-            StringKeyDictionary = (function (_super) {
+            StringKeyDictionary = /** @class */ (function (_super) {
                 __extends(StringKeyDictionary, _super);
                 function StringKeyDictionary() {
                     var _this = _super !== null && _super.apply(this, arguments) || this;

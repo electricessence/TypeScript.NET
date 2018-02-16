@@ -19,7 +19,7 @@
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var NAME = 'NullReferenceException';
-    var NullReferenceException = (function (_super) {
+    var NullReferenceException = /** @class */ (function (_super) {
         __extends(NullReferenceException, _super);
         function NullReferenceException() {
             return _super !== null && _super.apply(this, arguments) || this;

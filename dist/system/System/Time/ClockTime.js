@@ -29,7 +29,7 @@ System.register(["./TimeQuantity", "../../extends"], function (exports_1, contex
              */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
-            ClockTime = (function (_super) {
+            ClockTime = /** @class */ (function (_super) {
                 __extends(ClockTime, _super);
                 function ClockTime() {
                     var args = [];

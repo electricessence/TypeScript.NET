@@ -1,6 +1,6 @@
 ///<reference types="gulp-typedoc"/>
 
-import {Target, Module} from "gulp-typescript-helper";
+import {Module, Target} from "gulp-typescript-helper";
 import * as PATH from "./constants/Paths";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
@@ -26,7 +26,7 @@ gulp.task(
 		console.log('Building TypeDocs...');
 		return gulp
 			.src(PATH.SOURCE)
-			.pipe(typedoc(typedocOptions))
+			.pipe(typedoc(<any>typedocOptions))
 			;
 
 	});

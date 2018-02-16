@@ -117,7 +117,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             //noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0, NULL = null, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
-            PromiseState = (function (_super) {
+            PromiseState = /** @class */ (function (_super) {
                 __extends(PromiseState, _super);
                 function PromiseState(_state, _result, _error) {
                     var _this = _super.call(this) || this;
@@ -198,7 +198,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 return PromiseState;
             }(DisposableBase_1.DisposableBase));
             exports_1("PromiseState", PromiseState);
-            PromiseBase = (function (_super) {
+            PromiseBase = /** @class */ (function (_super) {
                 __extends(PromiseBase, _super);
                 //readonly [Symbol.toStringTag]: "Promise";
                 function PromiseBase() {
@@ -336,7 +336,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 return PromiseBase;
             }(PromiseState));
             exports_1("PromiseBase", PromiseBase);
-            Resolvable = (function (_super) {
+            Resolvable = /** @class */ (function (_super) {
                 __extends(Resolvable, _super);
                 function Resolvable() {
                     return _super !== null && _super.apply(this, arguments) || this;
@@ -379,7 +379,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             /**
              * The simplest usable version of a promise which returns synchronously the resolved state provided.
              */
-            Resolved = (function (_super) {
+            Resolved = /** @class */ (function (_super) {
                 __extends(Resolved, _super);
                 function Resolved(state, result, error) {
                     var _this = _super.call(this) || this;
@@ -394,7 +394,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             /**
              * A fulfilled Resolved<T>.  Provided for readability.
              */
-            Fulfilled = (function (_super) {
+            Fulfilled = /** @class */ (function (_super) {
                 __extends(Fulfilled, _super);
                 function Fulfilled(value) {
                     return _super.call(this, TSDNPromise.State.Fulfilled, value) || this;
@@ -405,7 +405,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             /**
              * A rejected Resolved<T>.  Provided for readability.
              */
-            Rejected = (function (_super) {
+            Rejected = /** @class */ (function (_super) {
                 __extends(Rejected, _super);
                 function Rejected(error) {
                     return _super.call(this, TSDNPromise.State.Rejected, VOID0, error) || this;
@@ -416,7 +416,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             /**
              * Provided as a means for extending the interface of other PromiseLike<T> objects.
              */
-            PromiseWrapper = (function (_super) {
+            PromiseWrapper = /** @class */ (function (_super) {
                 __extends(PromiseWrapper, _super);
                 function PromiseWrapper(_target) {
                     var _this = _super.call(this) || this;
@@ -465,7 +465,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             /**
              * This promise class that facilitates pending resolution.
              */
-            TSDNPromise = (function (_super) {
+            TSDNPromise = /** @class */ (function (_super) {
                 __extends(TSDNPromise, _super);
                 /*
                  * A note about deferring:
@@ -663,7 +663,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             /**
              * By providing an ArrayPromise we expose useful methods/shortcuts for dealing with array results.
              */
-            ArrayPromise = (function (_super) {
+            ArrayPromise = /** @class */ (function (_super) {
                 __extends(ArrayPromise, _super);
                 function ArrayPromise() {
                     return _super !== null && _super.apply(this, arguments) || this;
@@ -700,7 +700,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             /**
              * A Promise collection exposes useful methods for handling a collection of promises and their results.
              */
-            PromiseCollection = (function (_super) {
+            PromiseCollection = /** @class */ (function (_super) {
                 __extends(PromiseCollection, _super);
                 function PromiseCollection(source) {
                     var _this = _super.call(this) || this;

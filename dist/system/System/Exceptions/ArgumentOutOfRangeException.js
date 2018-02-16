@@ -24,7 +24,7 @@ System.register(["./ArgumentException", "../../extends"], function (exports_1, c
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'ArgumentOutOfRangeException';
-            ArgumentOutOfRangeException = (function (_super) {
+            ArgumentOutOfRangeException = /** @class */ (function (_super) {
                 __extends(ArgumentOutOfRangeException, _super);
                 function ArgumentOutOfRangeException(paramName, actualValue, message, innerException) {
                     if (message === void 0) { message = ' '; }

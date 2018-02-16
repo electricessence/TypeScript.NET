@@ -200,7 +200,7 @@ System.register(["../Types", "./Scheme", "./QueryParams", "../Text/Utility", "..
              * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
              * ICloneable&lt;Uri&gt; is not used to prevent unnecessary copying of values that won't change.
              */
-            Uri = (function () {
+            Uri = /** @class */ (function () {
                 /**
                  * @param scheme The user name, password, or other user-specific information associated with the specified URI.
                  * @param userInfo The host component of this instance.

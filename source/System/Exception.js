@@ -18,7 +18,7 @@
     /**
      * Represents errors that occur during application execution.
      */
-    var Exception = (function () {
+    var Exception = /** @class */ (function () {
         /**
          * Initializes a new instance of the Exception class with a specified error message and optionally a reference to the inner exception that is the cause of this exception.
          * @param message

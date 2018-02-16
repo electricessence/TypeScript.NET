@@ -8,7 +8,7 @@ var EnumeratorBase_1 = require("./EnumeratorBase");
 var extends_1 = require("../../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
-var IndexEnumerator = (function (_super) {
+var IndexEnumerator = /** @class */ (function (_super) {
     __extends(IndexEnumerator, _super);
     function IndexEnumerator(sourceFactory) {
         var _this = this;

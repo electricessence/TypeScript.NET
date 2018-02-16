@@ -25,7 +25,7 @@
     var __extends = extends_1.default;
     var VOID0 = void 0;
     var OTHER = 'other';
-    var SetBase = (function (_super) {
+    var SetBase = /** @class */ (function (_super) {
         __extends(SetBase, _super);
         function SetBase(source) {
             var _this = _super.call(this, VOID0, Compare_1.areEqual) || this;

@@ -19,7 +19,7 @@
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var VOID0 = void 0;
-    var StringKeyDictionary = (function (_super) {
+    var StringKeyDictionary = /** @class */ (function (_super) {
         __extends(StringKeyDictionary, _super);
         function StringKeyDictionary() {
             var _this = _super !== null && _super.apply(this, arguments) || this;

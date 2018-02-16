@@ -19,7 +19,7 @@
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var NAME = 'ArgumentOutOfRangeException';
-    var ArgumentOutOfRangeException = (function (_super) {
+    var ArgumentOutOfRangeException = /** @class */ (function (_super) {
         __extends(ArgumentOutOfRangeException, _super);
         function ArgumentOutOfRangeException(paramName, actualValue, message, innerException) {
             if (message === void 0) { message = ' '; }

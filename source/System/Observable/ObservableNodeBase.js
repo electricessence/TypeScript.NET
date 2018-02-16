@@ -20,7 +20,7 @@
     var extends_1 = require("../../extends");
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
-    var ObservableNodeBase = (function (_super) {
+    var ObservableNodeBase = /** @class */ (function (_super) {
         __extends(ObservableNodeBase, _super);
         function ObservableNodeBase() {
             return _super !== null && _super.apply(this, arguments) || this;

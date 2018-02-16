@@ -18,7 +18,7 @@
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     // We need a non-resettable lazy to ensure it can be passed safely around.
-    var Lazy = (function (_super) {
+    var Lazy = /** @class */ (function (_super) {
         __extends(Lazy, _super);
         function Lazy(valueFactory, trapExceptions, allowReset) {
             if (trapExceptions === void 0) { trapExceptions = false; }
@@ -56,7 +56,7 @@
         return Lazy;
     }(ResolverBase_1.ResolverBase));
     exports.Lazy = Lazy;
-    var ResettableLazy = (function (_super) {
+    var ResettableLazy = /** @class */ (function (_super) {
         __extends(ResettableLazy, _super);
         function ResettableLazy(valueFactory, trapExceptions) {
             if (trapExceptions === void 0) { trapExceptions = false; }

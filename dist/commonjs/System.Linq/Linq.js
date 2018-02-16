@@ -49,7 +49,7 @@ function isNotNullOrUndefined(e) {
     return e != null;
 }
 // Leave internal to avoid accidental overwriting.
-var LinqFunctions = (function (_super) {
+var LinqFunctions = /** @class */ (function (_super) {
     __extends(LinqFunctions, _super);
     function LinqFunctions() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -78,7 +78,7 @@ function getEmptyEnumerator() {
  *
  * I'm not sure if it's the best option to just use overrides, but it honors the typing properly.
  */
-var InfiniteLinqEnumerable = (function (_super) {
+var InfiniteLinqEnumerable = /** @class */ (function (_super) {
     __extends(InfiniteLinqEnumerable, _super);
     function InfiniteLinqEnumerable(_enumeratorFactory, finalizer) {
         var _this = _super.call(this, finalizer) || this;
@@ -836,7 +836,7 @@ var InfiniteLinqEnumerable = (function (_super) {
                     buffer = enumerator.current;
             }, function (yielder) {
                 switch (mode) {
-                    case 0 /* Break */:
+                    case 0 /* Break */:// We're done?
                         return yielder.yieldBreak();
                     case 2 /* Skip */:
                         if (alternateEnumerator.moveNext())
@@ -987,7 +987,7 @@ exports.InfiniteLinqEnumerable = InfiniteLinqEnumerable;
  * In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
  * In this case, we use Enumerable<T> as the underlying class that is being chained.
  */
-var LinqEnumerable = (function (_super) {
+var LinqEnumerable = /** @class */ (function (_super) {
     __extends(LinqEnumerable, _super);
     function LinqEnumerable(enumeratorFactory, finalizer, isEndless) {
         var _this = _super.call(this, enumeratorFactory, finalizer) || this;
@@ -1725,7 +1725,7 @@ var LinqEnumerable = (function (_super) {
 }(InfiniteLinqEnumerable));
 exports.LinqEnumerable = LinqEnumerable;
 // Provided for type guarding.
-var FiniteEnumerable = (function (_super) {
+var FiniteEnumerable = /** @class */ (function (_super) {
     __extends(FiniteEnumerable, _super);
     function FiniteEnumerable(enumeratorFactory, finalizer) {
         var _this = _super.call(this, enumeratorFactory, finalizer, false) || this;
@@ -1735,7 +1735,7 @@ var FiniteEnumerable = (function (_super) {
     return FiniteEnumerable;
 }(LinqEnumerable));
 exports.FiniteEnumerable = FiniteEnumerable;
-var ArrayEnumerable = (function (_super) {
+var ArrayEnumerable = /** @class */ (function (_super) {
     __extends(ArrayEnumerable, _super);
     function ArrayEnumerable(source) {
         var _this = _super.call(this, function () {
@@ -1881,7 +1881,8 @@ var ArrayEnumerable = (function (_super) {
     };
     return ArrayEnumerable;
 }(FiniteEnumerable));
-var Grouping = (function (_super) {
+exports.ArrayEnumerable = ArrayEnumerable;
+var Grouping = /** @class */ (function (_super) {
     __extends(Grouping, _super);
     function Grouping(_groupKey, elements) {
         var _this = _super.call(this, elements) || this;
@@ -1898,7 +1899,8 @@ var Grouping = (function (_super) {
     });
     return Grouping;
 }(ArrayEnumerable));
-var Lookup = (function () {
+exports.Grouping = Grouping;
+var Lookup = /** @class */ (function () {
     function Lookup(_dictionary) {
         this._dictionary = _dictionary;
     }
@@ -1933,7 +1935,8 @@ var Lookup = (function () {
     };
     return Lookup;
 }());
-var OrderedEnumerable = (function (_super) {
+exports.Lookup = Lookup;
+var OrderedEnumerable = /** @class */ (function (_super) {
     __extends(OrderedEnumerable, _super);
     function OrderedEnumerable(source, keySelector, order, parent, comparer) {
         if (comparer === void 0) { comparer = Compare_1.compare; }
@@ -1999,6 +2002,7 @@ var OrderedEnumerable = (function (_super) {
     };
     return OrderedEnumerable;
 }(FiniteEnumerable));
+exports.OrderedEnumerable = OrderedEnumerable;
 // A private static helper for the weave function.
 function nextEnumerator(queue, e) {
     if (e) {

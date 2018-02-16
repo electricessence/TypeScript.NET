@@ -19,7 +19,7 @@
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var NAME = 'InvalidOperationException';
-    var InvalidOperationException = (function (_super) {
+    var InvalidOperationException = /** @class */ (function (_super) {
         __extends(InvalidOperationException, _super);
         function InvalidOperationException() {
             return _super !== null && _super.apply(this, arguments) || this;

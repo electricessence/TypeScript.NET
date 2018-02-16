@@ -17,7 +17,7 @@
     function getTimestampMilliseconds() {
         return (new Date()).getTime();
     }
-    var Stopwatch = (function () {
+    var Stopwatch = /** @class */ (function () {
         function Stopwatch() {
             this.reset();
         }

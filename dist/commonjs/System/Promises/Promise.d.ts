@@ -9,9 +9,9 @@ import { Closure } from "../FunctionTypes";
 export declare type Resolver = (v: TSDNPromise.Resolution<any>) => any;
 export declare class PromiseState<T> extends DisposableBase {
     protected _state: TSDNPromise.State;
-    protected _result: T;
+    protected _result: T | undefined;
     protected _error: any;
-    constructor(_state: TSDNPromise.State, _result?: T, _error?: any);
+    constructor(_state: TSDNPromise.State, _result?: T | undefined, _error?: any);
     protected _onDispose(): void;
     protected getState(): TSDNPromise.State;
     readonly state: TSDNPromise.State;

@@ -18,7 +18,7 @@ System.register([], function (exports_1, context_1) {
             /**
              * Represents errors that occur during application execution.
              */
-            Exception = (function () {
+            Exception = /** @class */ (function () {
                 /**
                  * Initializes a new instance of the Exception class with a specified error message and optionally a reference to the inner exception that is the cause of this exception.
                  * @param message

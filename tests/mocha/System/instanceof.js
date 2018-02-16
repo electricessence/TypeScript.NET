@@ -9,12 +9,12 @@ var CollectionBase_1 = require("../../../dist/commonjs/System/Collections/Collec
 var extends_1 = require("../../../dist/commonjs/extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
-var A = (function () {
+var A = /** @class */ (function () {
     function A() {
     }
     return A;
 }());
-var B = (function (_super) {
+var B = /** @class */ (function (_super) {
     __extends(B, _super);
     function B() {
         return _super.call(this) || this;

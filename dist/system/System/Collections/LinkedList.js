@@ -79,7 +79,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
             /*
              * An internal node is used to manage the order without exposing underlying link chain to the consumer.
              */
-            InternalNode = (function () {
+            InternalNode = /** @class */ (function () {
                 function InternalNode(value, previous, next) {
                     this.value = value;
                     this.previous = previous;
@@ -92,7 +92,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 };
                 return InternalNode;
             }());
-            LinkedList = (function (_super) {
+            LinkedList = /** @class */ (function (_super) {
                 __extends(LinkedList, _super);
                 function LinkedList(source, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
@@ -282,7 +282,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
             }(CollectionBase_1.CollectionBase));
             exports_1("LinkedList", LinkedList);
             // Use an internal node class to prevent mucking up the LinkedList.
-            LinkedListNode = (function () {
+            LinkedListNode = /** @class */ (function () {
                 function LinkedListNode(_list, _nodeInternal) {
                     this._list = _list;
                     this._nodeInternal = _nodeInternal;

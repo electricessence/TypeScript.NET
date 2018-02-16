@@ -24,7 +24,7 @@ System.register(["./SystemException", "../../extends"], function (exports_1, con
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'NullReferenceException';
-            NullReferenceException = (function (_super) {
+            NullReferenceException = /** @class */ (function (_super) {
                 __extends(NullReferenceException, _super);
                 function NullReferenceException() {
                     return _super !== null && _super.apply(this, arguments) || this;

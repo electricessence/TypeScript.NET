@@ -26,7 +26,7 @@
      * we have to prevent getValue from double triggering the value factory (optimistic concurrency)
      * or returning return a value that is intermediate between resolving and resolved.
      */
-    var ResolverBase = (function (_super) {
+    var ResolverBase = /** @class */ (function (_super) {
         __extends(ResolverBase, _super);
         function ResolverBase(_valueFactory, _trapExceptions, _allowReset) {
             if (_allowReset === void 0) { _allowReset = false; }

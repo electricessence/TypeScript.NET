@@ -12,7 +12,7 @@ var Integer_1 = require("../../Integer");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var VOID0 = void 0;
-var OrderedStringKeyDictionary = (function (_super) {
+var OrderedStringKeyDictionary = /** @class */ (function (_super) {
     __extends(OrderedStringKeyDictionary, _super);
     function OrderedStringKeyDictionary() {
         var _this = _super.call(this) || this;

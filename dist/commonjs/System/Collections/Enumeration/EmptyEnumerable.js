@@ -5,7 +5,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 var EmptyEnumerator_1 = require("./EmptyEnumerator");
-var EmptyEnumerable = (function () {
+var EmptyEnumerable = /** @class */ (function () {
     function EmptyEnumerable() {
         this.isEndless = false;
     }

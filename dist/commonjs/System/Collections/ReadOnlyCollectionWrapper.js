@@ -11,7 +11,7 @@ var Types_1 = require("../Types");
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
-var ReadOnlyCollectionWrapper = (function (_super) {
+var ReadOnlyCollectionWrapper = /** @class */ (function (_super) {
     __extends(ReadOnlyCollectionWrapper, _super);
     function ReadOnlyCollectionWrapper(collection) {
         var _this = _super.call(this) || this;

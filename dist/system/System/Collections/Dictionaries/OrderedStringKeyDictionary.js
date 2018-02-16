@@ -31,7 +31,7 @@ System.register(["./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeEx
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
-            OrderedStringKeyDictionary = (function (_super) {
+            OrderedStringKeyDictionary = /** @class */ (function (_super) {
                 __extends(OrderedStringKeyDictionary, _super);
                 function OrderedStringKeyDictionary() {
                     var _this = _super.call(this) || this;

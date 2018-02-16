@@ -15,7 +15,7 @@ var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = "Must be less than or equal to " + ABSOLUTE_MAX_SIZE + ".";
-var ObjectPool = (function (_super) {
+var ObjectPool = /** @class */ (function (_super) {
     __extends(ObjectPool, _super);
     function ObjectPool(_maxSize, _generator, _recycler) {
         var _this = _super.call(this) || this;

@@ -9,12 +9,12 @@ import { IValidationResult } from "./IValidationResult";
  */
 export default class ValidationResult implements IValidationResult, IEquatable<IValidationResult> {
     readonly isValid: boolean;
-    readonly message: string;
+    readonly message: string | undefined;
     readonly data: any;
     /**
      * Allows for rare cases that ValidationResult.valid and ValidationResult.invalid() don't cover.
      */
-    constructor(isValid?: boolean, message?: string, data?: any);
+    constructor(isValid?: boolean, message?: string | undefined, data?: any);
     /**
      * Allows for comparing another IValidationResult to see if they are equal.
      */

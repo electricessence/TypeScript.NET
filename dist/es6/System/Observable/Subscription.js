@@ -7,7 +7,6 @@
 /**
  * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.
  */
-// For compatibility with (let, const, function, class);
 export class Subscription {
     constructor(_subscribable, _subscriber) {
         this._subscribable = _subscribable;

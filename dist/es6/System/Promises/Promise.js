@@ -689,7 +689,7 @@ var pools;
     // 	if(c instanceof Promise && c.constructor==Promise) pending.recycle(c);
     // 	else c.dispose();
     // }
-    var PromiseCallbacks;
+    let PromiseCallbacks;
     (function (PromiseCallbacks) {
         let pool;
         //noinspection JSUnusedLocalSymbols
@@ -728,7 +728,7 @@ var pools;
      * https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
      * If a promise is disposed the value will be undefined which will also evaluate (promise.state)==false.
      */
-    var State;
+    let State;
     (function (State) {
         State[State["Pending"] = 0] = "Pending";
         State[State["Fulfilled"] = 1] = "Fulfilled";

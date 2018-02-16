@@ -8,7 +8,7 @@ var VALID = null;
 /**
  * A class for generating responses to validation.
  */
-var ValidationResult = (function () {
+var ValidationResult = /** @class */ (function () {
     /**
      * Allows for rare cases that ValidationResult.valid and ValidationResult.invalid() don't cover.
      */

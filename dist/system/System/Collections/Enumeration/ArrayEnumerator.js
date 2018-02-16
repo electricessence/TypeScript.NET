@@ -24,7 +24,7 @@ System.register(["./IndexEnumerator", "../../Types", "../../../extends"], functi
              */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
-            ArrayEnumerator = (function (_super) {
+            ArrayEnumerator = /** @class */ (function (_super) {
                 __extends(ArrayEnumerator, _super);
                 function ArrayEnumerator(arrayOrFactory, start, step) {
                     if (start === void 0) { start = 0; }

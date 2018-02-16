@@ -17,7 +17,7 @@ var KeyNotFoundException_1 = require("../KeyNotFoundException");
 var __extends = extends_1.default;
 var VOID0 = void 0;
 // Design Note: Should DictionaryAbstractBase be IDisposable?
-var DictionaryBase = (function (_super) {
+var DictionaryBase = /** @class */ (function (_super) {
     __extends(DictionaryBase, _super);
     function DictionaryBase(source) {
         return _super.call(this, source) || this;

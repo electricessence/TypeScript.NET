@@ -17,7 +17,7 @@ var Types_1 = require("../Types");
  *****************************/
 var EMPTY = "";
 var NEWLINE = "\r\n";
-var StringBuilder = (function () {
+var StringBuilder = /** @class */ (function () {
     function StringBuilder() {
         var initial = [];
         for (var _i = 0; _i < arguments.length; _i++) {

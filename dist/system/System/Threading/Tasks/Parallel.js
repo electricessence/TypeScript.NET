@@ -70,7 +70,7 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                 env: {},
                 envNamespace: 'env'
             };
-            WorkerPromise = (function (_super) {
+            WorkerPromise = /** @class */ (function (_super) {
                 __extends(WorkerPromise, _super);
                 function WorkerPromise(worker, data) {
                     return _super.call(this, function (resolve, reject) {
@@ -132,7 +132,7 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                 }
                 workers.getNew = getNew;
             })(workers || (workers = {}));
-            Parallel = (function () {
+            Parallel = /** @class */ (function () {
                 function Parallel(options) {
                     this.options = extend(defaults, options);
                     this._requiredScripts = [];

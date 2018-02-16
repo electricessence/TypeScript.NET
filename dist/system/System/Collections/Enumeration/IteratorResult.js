@@ -13,7 +13,7 @@ System.register([], function (exports_1, context_1) {
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
             VOID0 = void 0;
-            IteratorResult = (function () {
+            IteratorResult = /** @class */ (function () {
                 function IteratorResult(value, index, done) {
                     if (done === void 0) { done = false; }
                     this.value = value;

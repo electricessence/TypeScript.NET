@@ -47,15 +47,6 @@ import {Comparable} from "../System/IComparable";
 import {IComparer} from "../System/IComparer";
 import {IKeyValuePair} from "../System/KeyValuePair";
 import {Order} from "../System/Collections/Sorting/Order";
-import {
-	IFiniteEnumerable,
-	IGrouping,
-	IInfiniteEnumerable,
-	ILinqEnumerable,
-	ILookup,
-	IOrderedEnumerable,
-	NotEmptyEnumerable
-} from "./Enumerable";
 import {EnumerableAction} from "./EnumerableAction";
 import {IndexEnumerator} from "../System/Collections/Enumeration/IndexEnumerator";
 import {Primitive} from "../System/Primitive";
@@ -133,7 +124,6 @@ function getEmptyEnumerator():IEnumerator<any>
 
 export class InfiniteLinqEnumerable<T>
 	extends DisposableBase
-	implements IInfiniteEnumerable<T>
 {
 	constructor(
 		protected _enumeratorFactory:() => IEnumerator<T>,
@@ -1137,7 +1127,7 @@ export class InfiniteLinqEnumerable<T>
 			() =>
 			{
 				let outerEnumerator:IEnumerator<T>;
-				let lookup:ILookup<TKey, TInner>;
+				let lookup:Lookup<TKey, TInner>;
 				let innerElements:TInner[] | null;
 				let innerCount:number = 0;
 
@@ -1200,7 +1190,7 @@ export class InfiniteLinqEnumerable<T>
 			() =>
 			{
 				let enumerator:IEnumerator<T>;
-				let lookup:ILookup<TKey, TInner>;
+				let lookup:Lookup<TKey, TInner>;
 
 				return new EnumeratorBase<TResult>(
 					() =>
@@ -1711,7 +1701,6 @@ export class InfiniteLinqEnumerable<T>
  */
 export class LinqEnumerable<T>
 	extends InfiniteLinqEnumerable<T>
-	implements ILinqEnumerable<T>
 {
 
 	constructor(
@@ -1960,7 +1949,7 @@ export class LinqEnumerable<T>
 	toLookup<TKey, TValue>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, TValue>             = <any>Functions.Identity,
-		compareSelector:HashSelector<TKey> = <any>Functions.Identity):ILookup<TKey, TValue>
+		compareSelector:HashSelector<TKey> = <any>Functions.Identity):Lookup<TKey, TValue>
 	{
 		const dict:Dictionary<TKey, TValue[]> = new Dictionary<TKey, TValue[]>(compareSelector);
 		this.forEach(
@@ -2532,50 +2521,50 @@ export class LinqEnumerable<T>
 
 	// Originally contained a result selector (not common use), but this could be done simply by a select statement after.
 
-	groupBy<TKey>(keySelector:SelectorWithIndex<T, TKey>):LinqEnumerable<IGrouping<TKey, T>>;
+	groupBy<TKey>(keySelector:SelectorWithIndex<T, TKey>):LinqEnumerable<Grouping<TKey, T>>;
 
 	groupBy<TKey>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, T>,
-		compareSelector?:HashSelector<TKey>):LinqEnumerable<IGrouping<TKey, T>>;
+		compareSelector?:HashSelector<TKey>):LinqEnumerable<Grouping<TKey, T>>;
 
 	groupBy<TKey, TElement>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, TElement>,
-		compareSelector?:HashSelector<TKey>):LinqEnumerable<IGrouping<TKey, TElement>>
+		compareSelector?:HashSelector<TKey>):LinqEnumerable<Grouping<TKey, TElement>>
 
 
 	groupBy<TKey, TElement>(
 		keySelector:SelectorWithIndex<T, TKey> | Selector<T, TKey>,
 		elementSelector?:SelectorWithIndex<T, TElement> | Selector<T, TElement>,
-		compareSelector?:HashSelector<TKey>):LinqEnumerable<IGrouping<TKey, TElement>>
+		compareSelector?:HashSelector<TKey>):LinqEnumerable<Grouping<TKey, TElement>>
 	{
 		if(!elementSelector) elementSelector = <any>Functions.Identity; // Allow for 'null' and not just undefined.
-		return new LinqEnumerable<IGrouping<TKey, TElement>>(
+		return new LinqEnumerable<Grouping<TKey, TElement>>(
 			() => this
 				.toLookup(keySelector, elementSelector, compareSelector)
 				.getEnumerator()
 		);
 	}
 
-	partitionBy<TKey>(keySelector:Selector<T, TKey>):LinqEnumerable<IGrouping<TKey, T>>;
+	partitionBy<TKey>(keySelector:Selector<T, TKey>):LinqEnumerable<Grouping<TKey, T>>;
 	partitionBy<TKey, TElement>(
 		keySelector:Selector<T, TKey>,
 		elementSelector?:Selector<T, TElement>,
-		resultSelector?:(key:TKey, element:TElement[]) => IGrouping<TKey, TElement>,
-		compareSelector?:Selector<TKey, any>):LinqEnumerable<IGrouping<TKey, TElement>>;
+		resultSelector?:(key:TKey, element:TElement[]) => Grouping<TKey, TElement>,
+		compareSelector?:Selector<TKey, any>):LinqEnumerable<Grouping<TKey, TElement>>;
 	partitionBy<TKey, TElement>(
 		keySelector:Selector<T, TKey>,
 		elementSelector?:Selector<T, TElement>,
-		resultSelector:(key:TKey, element:TElement[]) => IGrouping<TKey, TElement>
+		resultSelector:(key:TKey, element:TElement[]) => Grouping<TKey, TElement>
 			= (key:TKey, elements:TElement[]) => new Grouping<TKey, TElement>(key, elements),
 		compareSelector:Selector<TKey, any>
-			= <any>Functions.Identity):LinqEnumerable<IGrouping<TKey, T>> | LinqEnumerable<IGrouping<TKey, TElement>>
+			= <any>Functions.Identity):LinqEnumerable<Grouping<TKey, T>> | LinqEnumerable<Grouping<TKey, TElement>>
 	{
 
 		const _ = this;
 		if(!elementSelector) elementSelector = <any>Functions.Identity; // Allow for 'null' and not just undefined.
-		return new LinqEnumerable<IGrouping<TKey, TElement>>(
+		return new LinqEnumerable<Grouping<TKey, TElement>>(
 			() =>
 			{
 				let enumerator:IEnumerator<T>;
@@ -2584,7 +2573,7 @@ export class LinqEnumerable<T>
 				let group:TElement[] | null;
 				let len:number;
 
-				return new EnumeratorBase<IGrouping<TKey, TElement>>(
+				return new EnumeratorBase<Grouping<TKey, TElement>>(
 					() =>
 					{
 						throwIfDisposed(!elementSelector);
@@ -2618,7 +2607,7 @@ export class LinqEnumerable<T>
 								break;
 						}
 
-						let result:IGrouping<TKey, TElement>
+						let result:Grouping<TKey, TElement>
 							    = resultSelector(key, group);
 
 						if(hasNext)
@@ -2917,10 +2906,22 @@ export class LinqEnumerable<T>
 	}
 }
 
+export interface NotEmptyEnumerable<T> extends LinqEnumerable<T>
+{
+	aggregate(
+		reduction:(previous:T, current:T, index?:number) => T):T;
+	reduce(
+		reduction:(previous:T, current:T, index?:number) => T):T;
+
+	max():T
+	min():T
+	maxBy(keySelector?:Selector<T, Primitive>):T
+	minBy(keySelector?:Selector<T, Primitive>):T
+}
+
 // Provided for type guarding.
 export class FiniteEnumerable<T>
 	extends LinqEnumerable<T>
-	implements IFiniteEnumerable<T>
 {
 	constructor(
 		enumeratorFactory:() => IEnumerator<T>,
@@ -2932,7 +2933,15 @@ export class FiniteEnumerable<T>
 
 }
 
-class ArrayEnumerable<T>
+export interface IOrderedEnumerable<T> extends FiniteEnumerable<T>
+{
+	thenBy(keySelector:(value:T) => any):IOrderedEnumerable<T>;
+	thenByDescending(keySelector:(value:T) => any):IOrderedEnumerable<T>;
+	thenUsing(comparison:Comparison<T>):IOrderedEnumerable<T>;
+	thenUsingReversed(comparison:Comparison<T>):IOrderedEnumerable<T>;
+}
+
+export class ArrayEnumerable<T>
 	extends FiniteEnumerable<T>
 {
 	private _source:ArrayLike<T>;
@@ -3153,9 +3162,8 @@ class ArrayEnumerable<T>
 }
 
 
-class Grouping<TKey, TElement>
+export class Grouping<TKey, TElement>
 	extends ArrayEnumerable<TElement>
-	implements IGrouping<TKey, TElement>
 {
 
 	constructor(private _groupKey:TKey, elements:TElement[])
@@ -3170,8 +3178,7 @@ class Grouping<TKey, TElement>
 	}
 }
 
-class Lookup<TKey, TElement>
-	implements ILookup<TKey, TElement>
+export class Lookup<TKey, TElement>
 {
 
 	constructor(private _dictionary:IDictionary<TKey, TElement[]>)
@@ -3224,9 +3231,8 @@ class Lookup<TKey, TElement>
 }
 
 
-class OrderedEnumerable<T, TOrderBy extends Comparable>
+export class OrderedEnumerable<T, TOrderBy extends Comparable>
 	extends FiniteEnumerable<T>
-	implements IOrderedEnumerable<T>
 {
 
 	constructor(

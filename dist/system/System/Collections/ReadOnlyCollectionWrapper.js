@@ -30,7 +30,7 @@ System.register(["../Exceptions/ArgumentNullException", "./ReadOnlyCollectionBas
              */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
-            ReadOnlyCollectionWrapper = (function (_super) {
+            ReadOnlyCollectionWrapper = /** @class */ (function (_super) {
                 __extends(ReadOnlyCollectionWrapper, _super);
                 function ReadOnlyCollectionWrapper(collection) {
                     var _this = _super.call(this) || this;

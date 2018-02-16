@@ -34,7 +34,7 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = "EventDispatcherEntry";
-            EventDispatcherEntry = (function (_super) {
+            EventDispatcherEntry = /** @class */ (function (_super) {
                 __extends(EventDispatcherEntry, _super);
                 function EventDispatcherEntry(type, listener, params, finalizer) {
                     var _this = _super.call(this, finalizer) || this;

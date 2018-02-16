@@ -22,7 +22,7 @@ export declare class ObjectPool<T> extends DisposableBase {
      * By default will clear after 5 seconds of non-use.
      */
     autoClearTimeout: number;
-    constructor(_maxSize: number, _generator?: (...args: any[]) => T, _recycler?: (o: T) => void);
+    constructor(_maxSize: number, _generator?: ((...args: any[]) => T) | undefined, _recycler?: ((o: T) => void) | undefined);
     /**
      * Defines the maximum at which trimming should allow.
      * @returns {number}

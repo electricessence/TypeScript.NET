@@ -22,7 +22,7 @@
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var NAME = "EventDispatcherEntry";
-    var EventDispatcherEntry = (function (_super) {
+    var EventDispatcherEntry = /** @class */ (function (_super) {
         __extends(EventDispatcherEntry, _super);
         function EventDispatcherEntry(type, listener, params, finalizer) {
             var _this = _super.call(this, finalizer) || this;

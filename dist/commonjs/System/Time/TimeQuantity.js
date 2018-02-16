@@ -10,7 +10,7 @@ var Lazy_1 = require("../Lazy");
 /**
  * This class provides a simple means for storing and calculating time quantities.
  */
-var TimeQuantity = (function () {
+var TimeQuantity = /** @class */ (function () {
     function TimeQuantity(_quantity) {
         if (_quantity === void 0) { _quantity = 0; }
         this._quantity = _quantity;

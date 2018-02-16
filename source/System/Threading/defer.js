@@ -16,7 +16,7 @@
     var extends_1 = require("../../extends");
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
-    var DeferBase = (function () {
+    var DeferBase = /** @class */ (function () {
         function DeferBase() {
         }
         DeferBase.prototype.dispose = function () {
@@ -24,7 +24,7 @@
         };
         return DeferBase;
     }());
-    var Defer = (function (_super) {
+    var Defer = /** @class */ (function (_super) {
         __extends(Defer, _super);
         function Defer(task, delay, payload) {
             if (delay === void 0) { delay = 0; }
@@ -50,7 +50,7 @@
         };
         return Defer;
     }(DeferBase));
-    var DeferInterval = (function (_super) {
+    var DeferInterval = /** @class */ (function (_super) {
         __extends(DeferInterval, _super);
         function DeferInterval(task, interval, _remaining) {
             if (_remaining === void 0) { _remaining = Infinity; }

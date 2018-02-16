@@ -17,7 +17,7 @@
     var extends_1 = require("../../../extends");
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
-    var ReadOnlyArrayWrapper = (function (_super) {
+    var ReadOnlyArrayWrapper = /** @class */ (function (_super) {
         __extends(ReadOnlyArrayWrapper, _super);
         function ReadOnlyArrayWrapper(array) {
             var _this = _super.call(this, array) || this;

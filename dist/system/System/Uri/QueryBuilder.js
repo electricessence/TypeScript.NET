@@ -35,7 +35,7 @@ System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictio
              *
              * In other languages, dictionaries are not reliable for retaining the order of stored values. So for certainty and flexibility we use an ordered dictionary as a base class.
              */
-            QueryBuilder = (function (_super) {
+            QueryBuilder = /** @class */ (function (_super) {
                 __extends(QueryBuilder, _super);
                 function QueryBuilder(query, decodeValues) {
                     if (decodeValues === void 0) { decodeValues = true; }

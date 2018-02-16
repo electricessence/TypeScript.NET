@@ -17,7 +17,7 @@ var extends_1 = require("../../../extends");
 var __extends = extends_1.default;
 var VOID0 = void 0;
 // LinkedList for Dictionary
-var HashEntry = (function () {
+var HashEntry = /** @class */ (function () {
     function HashEntry(key, value, previous, next) {
         this.key = key;
         this.value = value;
@@ -36,7 +36,7 @@ function linkedNodeList(recycle) {
         return linkedListPool.take();
     linkedListPool.add(recycle);
 }
-var Dictionary = (function (_super) {
+var Dictionary = /** @class */ (function (_super) {
     __extends(Dictionary, _super);
     function Dictionary(_keyGenerator) {
         var _this = _super.call(this) || this;

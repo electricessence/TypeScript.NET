@@ -9,7 +9,7 @@ var TimeQuantity_1 = require("./TimeQuantity");
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
-var ClockTime = (function (_super) {
+var ClockTime = /** @class */ (function (_super) {
     __extends(ClockTime, _super);
     function ClockTime() {
         var args = [];

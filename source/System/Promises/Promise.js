@@ -88,7 +88,7 @@
     function newODE() {
         return new ObjectDisposedException_1.ObjectDisposedException("TSDNPromise", "An underlying promise-result was disposed.");
     }
-    var PromiseState = (function (_super) {
+    var PromiseState = /** @class */ (function (_super) {
         __extends(PromiseState, _super);
         function PromiseState(_state, _result, _error) {
             var _this = _super.call(this) || this;
@@ -169,7 +169,7 @@
         return PromiseState;
     }(DisposableBase_1.DisposableBase));
     exports.PromiseState = PromiseState;
-    var PromiseBase = (function (_super) {
+    var PromiseBase = /** @class */ (function (_super) {
         __extends(PromiseBase, _super);
         //readonly [Symbol.toStringTag]: "Promise";
         function PromiseBase() {
@@ -307,7 +307,7 @@
         return PromiseBase;
     }(PromiseState));
     exports.PromiseBase = PromiseBase;
-    var Resolvable = (function (_super) {
+    var Resolvable = /** @class */ (function (_super) {
         __extends(Resolvable, _super);
         function Resolvable() {
             return _super !== null && _super.apply(this, arguments) || this;
@@ -350,7 +350,7 @@
     /**
      * The simplest usable version of a promise which returns synchronously the resolved state provided.
      */
-    var Resolved = (function (_super) {
+    var Resolved = /** @class */ (function (_super) {
         __extends(Resolved, _super);
         function Resolved(state, result, error) {
             var _this = _super.call(this) || this;
@@ -365,7 +365,7 @@
     /**
      * A fulfilled Resolved<T>.  Provided for readability.
      */
-    var Fulfilled = (function (_super) {
+    var Fulfilled = /** @class */ (function (_super) {
         __extends(Fulfilled, _super);
         function Fulfilled(value) {
             return _super.call(this, TSDNPromise.State.Fulfilled, value) || this;
@@ -376,7 +376,7 @@
     /**
      * A rejected Resolved<T>.  Provided for readability.
      */
-    var Rejected = (function (_super) {
+    var Rejected = /** @class */ (function (_super) {
         __extends(Rejected, _super);
         function Rejected(error) {
             return _super.call(this, TSDNPromise.State.Rejected, VOID0, error) || this;
@@ -387,7 +387,7 @@
     /**
      * Provided as a means for extending the interface of other PromiseLike<T> objects.
      */
-    var PromiseWrapper = (function (_super) {
+    var PromiseWrapper = /** @class */ (function (_super) {
         __extends(PromiseWrapper, _super);
         function PromiseWrapper(_target) {
             var _this = _super.call(this) || this;
@@ -436,7 +436,7 @@
     /**
      * This promise class that facilitates pending resolution.
      */
-    var TSDNPromise = (function (_super) {
+    var TSDNPromise = /** @class */ (function (_super) {
         __extends(TSDNPromise, _super);
         /*
          * A note about deferring:
@@ -634,7 +634,7 @@
     /**
      * By providing an ArrayPromise we expose useful methods/shortcuts for dealing with array results.
      */
-    var ArrayPromise = (function (_super) {
+    var ArrayPromise = /** @class */ (function (_super) {
         __extends(ArrayPromise, _super);
         function ArrayPromise() {
             return _super !== null && _super.apply(this, arguments) || this;
@@ -671,7 +671,7 @@
     /**
      * A Promise collection exposes useful methods for handling a collection of promises and their results.
      */
-    var PromiseCollection = (function (_super) {
+    var PromiseCollection = /** @class */ (function (_super) {
         __extends(PromiseCollection, _super);
         function PromiseCollection(source) {
             var _this = _super.call(this) || this;

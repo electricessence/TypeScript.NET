@@ -19,7 +19,7 @@ System.register(["../Time/TimeSpan"], function (exports_1, context_1) {
              * @author electricessence / https://github.com/electricessence/
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
-            Stopwatch = (function () {
+            Stopwatch = /** @class */ (function () {
                 function Stopwatch() {
                     this.reset();
                 }

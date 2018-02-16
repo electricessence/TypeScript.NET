@@ -19,7 +19,7 @@
     var extends_1 = require("../../../extends");
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
-    var KeySortedContext = (function (_super) {
+    var KeySortedContext = /** @class */ (function (_super) {
         __extends(KeySortedContext, _super);
         function KeySortedContext(next, _keySelector, order, comparer) {
             if (order === void 0) { order = 1 /* Ascending */; }

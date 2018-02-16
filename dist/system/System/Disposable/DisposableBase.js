@@ -16,7 +16,7 @@ System.register(["./ObjectDisposedException"], function (exports_1, context_1) {
              * @author electricessence / https://github.com/electricessence/
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
-            DisposableBase = (function () {
+            DisposableBase = /** @class */ (function () {
                 function DisposableBase(__finalizer) {
                     this.__finalizer = __finalizer;
                     this.__wasDisposed = false;

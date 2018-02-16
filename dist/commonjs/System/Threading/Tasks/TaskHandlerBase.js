@@ -12,7 +12,7 @@ var NAME = "TaskHandlerBase";
 /**
  * A simple class for handling potentially repeated executions either deferred or immediate.
  */
-var TaskHandlerBase = (function (_super) {
+var TaskHandlerBase = /** @class */ (function (_super) {
     __extends(TaskHandlerBase, _super);
     function TaskHandlerBase() {
         var _this = _super.call(this) || this;

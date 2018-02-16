@@ -16,7 +16,7 @@ System.register(["./EmptyEnumerator"], function (exports_1, context_1) {
              * @author electricessence / https://github.com/electricessence/
              * Licensing: MIT
              */
-            EmptyEnumerable = (function () {
+            EmptyEnumerable = /** @class */ (function () {
                 function EmptyEnumerable() {
                     this.isEndless = false;
                 }

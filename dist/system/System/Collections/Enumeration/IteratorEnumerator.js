@@ -27,7 +27,7 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function (export
              *
              *
              */
-            IteratorEnumerator = (function (_super) {
+            IteratorEnumerator = /** @class */ (function (_super) {
                 __extends(IteratorEnumerator, _super);
                 /**
                  * @param _iterator

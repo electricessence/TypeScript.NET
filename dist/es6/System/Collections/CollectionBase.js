@@ -305,8 +305,8 @@ export class CollectionBase extends DisposableBase {
             : [];
     }
     /**
-     * .linq will return an ILinqEnumerable if .linqAsync() has completed successfully or the default module loader is NodeJS+CommonJS.
-     * @returns {ILinqEnumerable}
+     * .linq will return an LinqEnumerable if .linqAsync() has completed successfully or the default module loader is NodeJS+CommonJS.
+     * @returns {LinqEnumerable}
      */
     get linq() {
         this.throwIfDisposed();
@@ -320,7 +320,7 @@ export class CollectionBase extends DisposableBase {
             this._linq = e = r && r(LINQ_PATH).default.from(this);
             if (!e) {
                 throw isRequireJS
-                    ? `using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.
+                    ? `using .linq to load and initialize a LinqEnumerable is currently only supported within a NodeJS environment.
 Import System.Linq/Linq and use Enumerable.from(e) instead.
 You can also preload the Linq module as a dependency or use .linqAsync(callback) for AMD/RequireJS.`
                     : "There was a problem importing System.Linq/Linq";
@@ -331,11 +331,11 @@ You can also preload the Linq module as a dependency or use .linqAsync(callback)
     /**
      * .linqAsync() is for use with deferred loading.
      * Ensures an instance of the Linq extensions is available and then passes it to the callback.
-     * Returns an ILinqEnumerable if one is already available, otherwise undefined.
-     * Passing no parameters will still initiate loading and initializing the ILinqEnumerable which can be useful for pre-loading.
-     * Any call to .linqAsync() where an ILinqEnumerable is returned can be assured that any subsequent calls to .linq will return the same instance.
+     * Returns an LinqEnumerable if one is already available, otherwise undefined.
+     * Passing no parameters will still initiate loading and initializing the LinqEnumerable which can be useful for pre-loading.
+     * Any call to .linqAsync() where an LinqEnumerable is returned can be assured that any subsequent calls to .linq will return the same instance.
      * @param callback
-     * @returns {ILinqEnumerable}
+     * @returns {LinqEnumerable}
      */
     linqAsync(callback) {
         this.throwIfDisposed();

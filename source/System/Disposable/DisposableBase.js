@@ -14,7 +14,7 @@
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ObjectDisposedException_1 = require("./ObjectDisposedException");
-    var DisposableBase = (function () {
+    var DisposableBase = /** @class */ (function () {
         function DisposableBase(__finalizer) {
             this.__finalizer = __finalizer;
             this.__wasDisposed = false;

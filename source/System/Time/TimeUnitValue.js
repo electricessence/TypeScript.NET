@@ -21,7 +21,7 @@
     /**
      * TimeUnitValue allows for passing around a reference to a changeable measure of time coerced by its unit type.
      */
-    var TimeUnitValue = (function (_super) {
+    var TimeUnitValue = /** @class */ (function (_super) {
         __extends(TimeUnitValue, _super);
         function TimeUnitValue(value, _units) {
             var _this = _super.call(this, typeof value == 'number'

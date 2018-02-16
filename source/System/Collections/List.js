@@ -23,7 +23,7 @@
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var VOID0 = void 0;
-    var List = (function (_super) {
+    var List = /** @class */ (function (_super) {
         __extends(List, _super);
         function List(source, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }

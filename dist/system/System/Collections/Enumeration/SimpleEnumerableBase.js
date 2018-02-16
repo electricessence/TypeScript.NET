@@ -17,7 +17,7 @@ System.register(["./IteratorResult"], function (exports_1, context_1) {
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
             VOID0 = void 0;
-            SimpleEnumerableBase = (function () {
+            SimpleEnumerableBase = /** @class */ (function () {
                 function SimpleEnumerableBase() {
                     this.reset();
                 }

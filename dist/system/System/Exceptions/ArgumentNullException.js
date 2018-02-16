@@ -24,7 +24,7 @@ System.register(["./ArgumentException", "../../extends"], function (exports_1, c
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'ArgumentNullException';
-            ArgumentNullException = (function (_super) {
+            ArgumentNullException = /** @class */ (function (_super) {
                 __extends(ArgumentNullException, _super);
                 function ArgumentNullException(paramName, message, innerException) {
                     if (message === void 0) { message = "'" + paramName + "' is null (or undefined)."; }

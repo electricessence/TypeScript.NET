@@ -24,7 +24,7 @@ System.register(["../Exceptions/SystemException", "../../extends"], function (ex
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'KeyNotFoundException ';
-            KeyNotFoundException = (function (_super) {
+            KeyNotFoundException = /** @class */ (function (_super) {
                 __extends(KeyNotFoundException, _super);
                 function KeyNotFoundException() {
                     return _super !== null && _super.apply(this, arguments) || this;

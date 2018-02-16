@@ -44,7 +44,7 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
             __extends = extends_1.default;
             VOID0 = void 0;
             // Design Note: Should DictionaryAbstractBase be IDisposable?
-            DictionaryBase = (function (_super) {
+            DictionaryBase = /** @class */ (function (_super) {
                 __extends(DictionaryBase, _super);
                 function DictionaryBase(source) {
                     return _super.call(this, source) || this;

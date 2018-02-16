@@ -39,7 +39,7 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
             //noinspection SpellCheckingInspection
             NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
             LINQ_PATH = "../../System.Linq/Linq";
-            CollectionBase = (function (_super) {
+            CollectionBase = /** @class */ (function (_super) {
                 __extends(CollectionBase, _super);
                 function CollectionBase(source, _equalityComparer) {
                     if (_equalityComparer === void 0) { _equalityComparer = Compare_1.areEqual; }
@@ -352,8 +352,8 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                 };
                 Object.defineProperty(CollectionBase.prototype, "linq", {
                     /**
-                     * .linq will return an ILinqEnumerable if .linqAsync() has completed successfully or the default module loader is NodeJS+CommonJS.
-                     * @returns {ILinqEnumerable}
+                     * .linq will return an LinqEnumerable if .linqAsync() has completed successfully or the default module loader is NodeJS+CommonJS.
+                     * @returns {LinqEnumerable}
                      */
                     get: function () {
                         this.throwIfDisposed();
@@ -367,7 +367,7 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                             this._linq = e = r && r(LINQ_PATH).default.from(this);
                             if (!e) {
                                 throw Environment_1.isRequireJS
-                                    ? "using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.\nImport System.Linq/Linq and use Enumerable.from(e) instead.\nYou can also preload the Linq module as a dependency or use .linqAsync(callback) for AMD/RequireJS."
+                                    ? "using .linq to load and initialize a LinqEnumerable is currently only supported within a NodeJS environment.\nImport System.Linq/Linq and use Enumerable.from(e) instead.\nYou can also preload the Linq module as a dependency or use .linqAsync(callback) for AMD/RequireJS."
                                     : "There was a problem importing System.Linq/Linq";
                             }
                         }
@@ -379,11 +379,11 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                 /**
                  * .linqAsync() is for use with deferred loading.
                  * Ensures an instance of the Linq extensions is available and then passes it to the callback.
-                 * Returns an ILinqEnumerable if one is already available, otherwise undefined.
-                 * Passing no parameters will still initiate loading and initializing the ILinqEnumerable which can be useful for pre-loading.
-                 * Any call to .linqAsync() where an ILinqEnumerable is returned can be assured that any subsequent calls to .linq will return the same instance.
+                 * Returns an LinqEnumerable if one is already available, otherwise undefined.
+                 * Passing no parameters will still initiate loading and initializing the LinqEnumerable which can be useful for pre-loading.
+                 * Any call to .linqAsync() where an LinqEnumerable is returned can be assured that any subsequent calls to .linq will return the same instance.
                  * @param callback
-                 * @returns {ILinqEnumerable}
+                 * @returns {LinqEnumerable}
                  */
                 CollectionBase.prototype.linqAsync = function (callback) {
                     var _this = this;

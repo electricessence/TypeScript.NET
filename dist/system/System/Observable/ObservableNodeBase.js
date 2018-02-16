@@ -25,7 +25,7 @@ System.register(["./ObservableBase", "../../extends"], function (exports_1, cont
              */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
-            ObservableNodeBase = (function (_super) {
+            ObservableNodeBase = /** @class */ (function (_super) {
                 __extends(ObservableNodeBase, _super);
                 function ObservableNodeBase() {
                     return _super !== null && _super.apply(this, arguments) || this;

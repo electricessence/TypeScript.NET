@@ -22,7 +22,7 @@ System.register(["./RegularExpressions", "../Collections/Enumeration/EmptyEnumer
              * @author electricessence / https://github.com/electricessence/
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
-            RegexMatchEnumerator = (function () {
+            RegexMatchEnumerator = /** @class */ (function () {
                 function RegexMatchEnumerator(pattern) {
                     if (pattern instanceof RegularExpressions_1.Regex) {
                         this._pattern = pattern;

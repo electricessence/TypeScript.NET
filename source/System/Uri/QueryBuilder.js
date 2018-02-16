@@ -25,7 +25,7 @@
      *
      * In other languages, dictionaries are not reliable for retaining the order of stored values. So for certainty and flexibility we use an ordered dictionary as a base class.
      */
-    var QueryBuilder = (function (_super) {
+    var QueryBuilder = /** @class */ (function (_super) {
         __extends(QueryBuilder, _super);
         function QueryBuilder(query, decodeValues) {
             if (decodeValues === void 0) { decodeValues = true; }

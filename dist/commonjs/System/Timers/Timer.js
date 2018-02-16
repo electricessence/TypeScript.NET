@@ -11,7 +11,7 @@ var __extends = extends_1.default;
 /**
  * A timer class that uses an Observable pattern to allow for subscribing to ticks.
  */
-var Timer = (function (_super) {
+var Timer = /** @class */ (function (_super) {
     __extends(Timer, _super);
     function Timer(_interval, _maxCount, _initialDelay) {
         if (_maxCount === void 0) { _maxCount = Infinity; }

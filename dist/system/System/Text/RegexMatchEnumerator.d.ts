@@ -10,5 +10,5 @@ export declare class RegexMatchEnumerator {
     matches(input: string): IEnumerator<Match>;
     static matches(input: string, pattern: string | RegExp | Regex): IEnumerator<Match>;
 }
-declare var _default: typeof RegexMatchEnumerator.matches;
+declare const _default: typeof RegexMatchEnumerator.matches;
 export default _default;

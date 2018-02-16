@@ -14,7 +14,7 @@ export declare class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValu
     private readonly _keyGenerator;
     private readonly _entries;
     private readonly _buckets;
-    constructor(_keyGenerator?: HashSelector<TKey>);
+    constructor(_keyGenerator?: HashSelector<TKey> | undefined);
     protected _onDispose(): void;
     protected getCount(): number;
     private _getBucket(hash, createIfMissing?);

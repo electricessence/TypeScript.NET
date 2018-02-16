@@ -19,7 +19,7 @@
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var NAME = 'UnsupportedEnumerableException';
-    var UnsupportedEnumerableException = (function (_super) {
+    var UnsupportedEnumerableException = /** @class */ (function (_super) {
         __extends(UnsupportedEnumerableException, _super);
         function UnsupportedEnumerableException(message) {
             return _super.call(this, message || "Unsupported enumerable.") || this;

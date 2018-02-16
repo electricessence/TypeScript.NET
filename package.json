@@ -1,6 +1,6 @@
 {
   "name": "typescript-dotnet",
-  "version": "4.9.11",
+  "version": "4.10.0",
   "license": "MIT",
   "author": "electricessence <npm@electrified.net>",
   "description": "A JavaScript-Friendly .NET Based TypeScript Library.",
@@ -33,6 +33,7 @@
   ],
   "devDependencies": {
     "@types/gulp": "^3.8.32",
+    "@types/gulp-sourcemaps": "0.0.32",
     "@types/gulp-typedoc": "0.0.29",
     "@types/mocha": "^2.2.32",
     "@types/qunit": "^2.0.31",
@@ -50,6 +51,6 @@
     "stream-to-promise-agnostic": "^1.0.3",
     "ts-node": "^1.6.1",
     "typedoc": "^0.4.5",
-    "typescript": "2.3.2"
+    "typescript": "^2.7.2"
   }
 }

@@ -5,13 +5,12 @@ import {contains, repeat} from "../../../dist/commonjs/System/Collections/Array/
 import * as Procedure from "../../../dist/commonjs/System/Collections/Array/Procedure";
 import {
 	Enumerable,
-	LinqEnumerable,
-	InfiniteLinqEnumerable
+	InfiniteLinqEnumerable,
+	LinqEnumerable
 } from "../../../dist/commonjs/System.Linq/Linq";
 import Functions from "../../../dist/commonjs/System/Functions";
 import {EmptyEnumerator} from "../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator";
 import {List} from "../../../dist/commonjs/System/Collections/List";
-import {ILinqEnumerable, IInfiniteEnumerable} from "../../../dist/commonjs/System.Linq/Enumerable";
 
 
 interface TestItem
@@ -94,7 +93,7 @@ Object.freeze(source);
 
 // Compile test:
 //noinspection JSUnusedLocalSymbols
-function compileTest():ILinqEnumerable<TestItem>
+function compileTest():LinqEnumerable<TestItem>
 {
 	const list = new List(source);
 	return list.linq.orderBy(v => v.a)
@@ -413,10 +412,10 @@ describe(".groupBy(selector)", () =>
 			.groupBy(o => o.b);
 
 		const C = sourceArrayEnumerable
-			.groupBy(o => o.b, <any>null, Functions.Identity);
+			.groupBy(o => o.b, <any>null, <any>Functions.Identity);
 
 		const D = sourceArrayEnumerable
-			.groupBy(o => o.b, Functions.Identity, Functions.Identity);
+			.groupBy(o => o.b, Functions.Identity, <any>Functions.Identity);
 
 
 		assert.ok(B.first().sequenceEqual(C.first()));
@@ -1234,21 +1233,21 @@ describe("Supported Enumerables", () =>
 	it("Array", () =>
 	{
 		assert.doesNotThrow(()=>{
-			let i: ILinqEnumerable<number> = Enumerable.from(source);
+			let i: LinqEnumerable<number> = Enumerable.from(source);
 		});
 	});
 
 	it("List", () =>
 	{
 		assert.doesNotThrow(()=>{
-			let i: ILinqEnumerable<number> = Enumerable.from(new List<number>());
+			let i: LinqEnumerable<number> = Enumerable.from(new List<number>());
 		});
 	});
 
 	it("Lambda", () =>
 	{
 		assert.doesNotThrow(()=>{
-			let i: IInfiniteEnumerable<number> = Enumerable.from(()=>1);
+			let i: InfiniteLinqEnumerable<number> = Enumerable.from(()=>1);
 		});
 	});
 

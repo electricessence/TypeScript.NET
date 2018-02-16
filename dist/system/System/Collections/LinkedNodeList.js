@@ -57,7 +57,7 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
              *
              * The count (or length) of this LinkedNodeList is not tracked since it could be corrupted at any time.
              */
-            LinkedNodeList = (function () {
+            LinkedNodeList = /** @class */ (function () {
                 function LinkedNodeList() {
                     this._first = null;
                     this._last = null;

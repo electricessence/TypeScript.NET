@@ -27,7 +27,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
              */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
-            DeferBase = (function () {
+            DeferBase = /** @class */ (function () {
                 function DeferBase() {
                 }
                 DeferBase.prototype.dispose = function () {
@@ -35,7 +35,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
                 };
                 return DeferBase;
             }());
-            Defer = (function (_super) {
+            Defer = /** @class */ (function (_super) {
                 __extends(Defer, _super);
                 function Defer(task, delay, payload) {
                     if (delay === void 0) { delay = 0; }
@@ -61,7 +61,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
                 };
                 return Defer;
             }(DeferBase));
-            DeferInterval = (function (_super) {
+            DeferInterval = /** @class */ (function (_super) {
                 __extends(DeferInterval, _super);
                 function DeferInterval(task, interval, _remaining) {
                     if (_remaining === void 0) { _remaining = Infinity; }

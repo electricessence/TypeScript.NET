@@ -19,7 +19,7 @@ System.register(["../Types"], function (exports_1, context_1) {
             /**
              * An alternative to Date or DateTime.  Is a model representing the exact date and time.
              */
-            TimeStamp = (function () {
+            TimeStamp = /** @class */ (function () {
                 function TimeStamp(year, month, day, hour, minute, second, millisecond, tick) {
                     // Add validation or properly carry out of range values?
                     if (day === void 0) { day = 1; }

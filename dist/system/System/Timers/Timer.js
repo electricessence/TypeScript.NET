@@ -24,7 +24,7 @@ System.register(["../Observable/ObservableBase", "../../extends"], function (exp
             /**
              * A timer class that uses an Observable pattern to allow for subscribing to ticks.
              */
-            Timer = (function (_super) {
+            Timer = /** @class */ (function (_super) {
                 __extends(Timer, _super);
                 function Timer(_interval, _maxCount, _initialDelay) {
                     if (_maxCount === void 0) { _maxCount = Infinity; }

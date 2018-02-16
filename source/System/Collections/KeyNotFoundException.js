@@ -19,7 +19,7 @@
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var NAME = 'KeyNotFoundException ';
-    var KeyNotFoundException = (function (_super) {
+    var KeyNotFoundException = /** @class */ (function (_super) {
         __extends(KeyNotFoundException, _super);
         function KeyNotFoundException() {
             return _super !== null && _super.apply(this, arguments) || this;

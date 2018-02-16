@@ -21,7 +21,7 @@
      * A simplified stripped down enumerator that until disposed will infinitely return the provided factory.
      * This is analogous to a 'generator' and has a compatible interface.
      */
-    var InfiniteEnumerator = (function (_super) {
+    var InfiniteEnumerator = /** @class */ (function (_super) {
         __extends(InfiniteEnumerator, _super);
         /**
          * See InfiniteValueFactory

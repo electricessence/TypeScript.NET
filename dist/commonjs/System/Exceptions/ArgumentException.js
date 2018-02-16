@@ -11,7 +11,7 @@ var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var NAME = 'ArgumentException';
-var ArgumentException = (function (_super) {
+var ArgumentException = /** @class */ (function (_super) {
     __extends(ArgumentException, _super);
     // For simplicity and consistency, lets stick with 1 signature.
     function ArgumentException(paramName, message, innerException, beforeSealing) {

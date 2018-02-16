@@ -22,7 +22,7 @@ System.register(["./ResolverBase", "../extends"], function (exports_1, context_1
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             // We need a non-resettable lazy to ensure it can be passed safely around.
-            Lazy = (function (_super) {
+            Lazy = /** @class */ (function (_super) {
                 __extends(Lazy, _super);
                 function Lazy(valueFactory, trapExceptions, allowReset) {
                     if (trapExceptions === void 0) { trapExceptions = false; }
@@ -60,7 +60,7 @@ System.register(["./ResolverBase", "../extends"], function (exports_1, context_1
                 return Lazy;
             }(ResolverBase_1.ResolverBase));
             exports_1("Lazy", Lazy);
-            ResettableLazy = (function (_super) {
+            ResettableLazy = /** @class */ (function (_super) {
                 __extends(ResettableLazy, _super);
                 function ResettableLazy(valueFactory, trapExceptions) {
                     if (trapExceptions === void 0) { trapExceptions = false; }

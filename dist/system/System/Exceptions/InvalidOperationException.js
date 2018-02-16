@@ -24,7 +24,7 @@ System.register(["./SystemException", "../../extends"], function (exports_1, con
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'InvalidOperationException';
-            InvalidOperationException = (function (_super) {
+            InvalidOperationException = /** @class */ (function (_super) {
                 __extends(InvalidOperationException, _super);
                 function InvalidOperationException() {
                     return _super !== null && _super.apply(this, arguments) || this;

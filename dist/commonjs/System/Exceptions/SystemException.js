@@ -10,7 +10,7 @@ var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var NAME = 'SystemException';
-var SystemException = (function (_super) {
+var SystemException = /** @class */ (function (_super) {
     __extends(SystemException, _super);
     function SystemException() {
         return _super !== null && _super.apply(this, arguments) || this;

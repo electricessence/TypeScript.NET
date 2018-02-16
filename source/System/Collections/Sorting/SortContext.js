@@ -14,7 +14,7 @@
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Values = require("../../Compare");
-    var SortContext = (function () {
+    var SortContext = /** @class */ (function () {
         function SortContext(_next, _comparer, _order) {
             if (_comparer === void 0) { _comparer = Values.compare; }
             if (_order === void 0) { _order = 1 /* Ascending */; }

@@ -24,7 +24,7 @@ System.register(["../../Exceptions/SystemException", "../../../extends"], functi
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'UnsupportedEnumerableException';
-            UnsupportedEnumerableException = (function (_super) {
+            UnsupportedEnumerableException = /** @class */ (function (_super) {
                 __extends(UnsupportedEnumerableException, _super);
                 function UnsupportedEnumerableException(message) {
                     return _super.call(this, message || "Unsupported enumerable.") || this;

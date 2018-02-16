@@ -29,7 +29,7 @@ var __extends = extends_1.default;
  *
  * The count (or length) of this LinkedNodeList is not tracked since it could be corrupted at any time.
  */
-var LinkedNodeList = (function () {
+var LinkedNodeList = /** @class */ (function () {
     function LinkedNodeList() {
         this._first = null;
         this._last = null;

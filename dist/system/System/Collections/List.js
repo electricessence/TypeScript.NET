@@ -37,7 +37,7 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
-            List = (function (_super) {
+            List = /** @class */ (function (_super) {
                 __extends(List, _super);
                 function List(source, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }

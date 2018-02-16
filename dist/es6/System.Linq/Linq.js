@@ -807,7 +807,7 @@ export class InfiniteLinqEnumerable extends DisposableBase {
                     buffer = enumerator.current;
             }, (yielder) => {
                 switch (mode) {
-                    case 0 /* Break */:
+                    case 0 /* Break */:// We're done?
                         return yielder.yieldBreak();
                     case 2 /* Skip */:
                         if (alternateEnumerator.moveNext())
@@ -1663,7 +1663,7 @@ export class FiniteEnumerable extends LinqEnumerable {
         this._disposableObjectName = "FiniteEnumerable";
     }
 }
-class ArrayEnumerable extends FiniteEnumerable {
+export class ArrayEnumerable extends FiniteEnumerable {
     constructor(source) {
         super(() => {
             _.throwIfDisposed();
@@ -1797,7 +1797,7 @@ class ArrayEnumerable extends FiniteEnumerable {
             : super.toJoinedString(separator, selector);
     }
 }
-class Grouping extends ArrayEnumerable {
+export class Grouping extends ArrayEnumerable {
     constructor(_groupKey, elements) {
         super(elements);
         this._groupKey = _groupKey;
@@ -1807,7 +1807,7 @@ class Grouping extends ArrayEnumerable {
         return this._groupKey;
     }
 }
-class Lookup {
+export class Lookup {
     constructor(_dictionary) {
         this._dictionary = _dictionary;
     }
@@ -1837,7 +1837,7 @@ class Lookup {
         });
     }
 }
-class OrderedEnumerable extends FiniteEnumerable {
+export class OrderedEnumerable extends FiniteEnumerable {
     constructor(source, keySelector, order, parent, comparer = compareValues) {
         super(NULL);
         this.source = source;
@@ -2251,7 +2251,7 @@ function enumerableFrom(source, additional) {
             });
     }
     Enumerable.generate = generate;
-    var random;
+    let random;
     (function (random) {
         function floats(maxExclusive = 1) {
             return generate(Random.generate(maxExclusive));

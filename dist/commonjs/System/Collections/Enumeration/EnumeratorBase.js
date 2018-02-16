@@ -22,7 +22,7 @@ function yielder(recycle) {
         return yielderPool.take();
     yielderPool.add(recycle);
 }
-var Yielder = (function () {
+var Yielder = /** @class */ (function () {
     function Yielder() {
         this._current = VOID0;
         this._index = NaN;
@@ -59,7 +59,7 @@ var Yielder = (function () {
 var NAME = "EnumeratorBase";
 // "Enumerator" is conflict JScript's "Enumerator"
 // Naming this class EnumeratorBase to avoid collision with IE.
-var EnumeratorBase = (function (_super) {
+var EnumeratorBase = /** @class */ (function (_super) {
     __extends(EnumeratorBase, _super);
     function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
         var _this = _super.call(this) || this;

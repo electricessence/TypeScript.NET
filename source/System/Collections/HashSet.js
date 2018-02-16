@@ -20,7 +20,7 @@
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var VOID0 = void 0;
-    var HashSet = (function (_super) {
+    var HashSet = /** @class */ (function (_super) {
         __extends(HashSet, _super);
         function HashSet(source, keyGenerator) {
             var _this = _super.call(this) || this;

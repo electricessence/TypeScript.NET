@@ -31,7 +31,7 @@ System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", 
              * A simplified synchronous (but deferrable) version of Task<T>
              * Asynchronous operations should use Promise<T>.
              */
-            Task = (function (_super) {
+            Task = /** @class */ (function (_super) {
                 __extends(Task, _super);
                 function Task(valueFactory) {
                     var _this = _super.call(this) || this;

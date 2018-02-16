@@ -63,7 +63,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
             GROW_FACTOR_HALF = 100;
             DEFAULT_CAPACITY = MINIMUM_GROW;
             emptyArray = Object.freeze([]);
-            Queue = (function (_super) {
+            Queue = /** @class */ (function (_super) {
                 __extends(Queue, _super);
                 function Queue(source, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }

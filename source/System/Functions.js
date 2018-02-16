@@ -16,7 +16,7 @@
     /**
      * Can be used statically or extended for varying different reusable function signatures.
      */
-    var Functions = (function () {
+    var Functions = /** @class */ (function () {
         function Functions() {
         }
         //noinspection JSMethodCanBeStatic

@@ -58,5 +58,5 @@ setupPipe(2);
 //setup(7);
 setupMap(1);
 setupMap(2);
-// setupMap(3); 
+// setupMap(3);
 //# sourceMappingURL=Parallel.js.map

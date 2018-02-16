@@ -10,7 +10,7 @@ var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var NAME = 'NotImplementedException';
-var NotImplementedException = (function (_super) {
+var NotImplementedException = /** @class */ (function (_super) {
     __extends(NotImplementedException, _super);
     function NotImplementedException() {
         return _super !== null && _super.apply(this, arguments) || this;

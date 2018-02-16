@@ -49,7 +49,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
                 RegexOptions.W = _W;
             })(RegexOptions || (RegexOptions = {}));
             exports_1("RegexOptions", RegexOptions);
-            Regex = (function () {
+            Regex = /** @class */ (function () {
                 function Regex(pattern, options) {
                     var extra = [];
                     for (var _i = 2; _i < arguments.length; _i++) {
@@ -167,7 +167,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
                 return Regex;
             }());
             exports_1("Regex", Regex);
-            Capture = (function () {
+            Capture = /** @class */ (function () {
                 function Capture(value, index) {
                     if (value === void 0) { value = EMPTY; }
                     if (index === void 0) { index = -1; }
@@ -188,7 +188,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
                 return Capture;
             }());
             exports_1("Capture", Capture);
-            Group = (function (_super) {
+            Group = /** @class */ (function (_super) {
                 __extends(Group, _super);
                 function Group(value, index) {
                     if (value === void 0) { value = EMPTY; }
@@ -214,7 +214,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
             exports_1("Group", Group);
             EmptyGroup = new Group();
             EmptyGroup.freeze();
-            Match = (function (_super) {
+            Match = /** @class */ (function (_super) {
                 __extends(Match, _super);
                 function Match(value, index, groups, namedGroups) {
                     if (value === void 0) { value = EMPTY; }

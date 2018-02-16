@@ -11,10 +11,7 @@
 /**
  * An error in the eval() function has occurred.
  */
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */ export const Error = 'Error';
+export const Error = 'Error';
 /**
  * An error in the eval() function has occurred.
  */

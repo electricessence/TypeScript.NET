@@ -18,7 +18,7 @@
     var extends_1 = require("../../../extends");
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
-    var TaskHandler = (function (_super) {
+    var TaskHandler = /** @class */ (function (_super) {
         __extends(TaskHandler, _super);
         function TaskHandler(_action) {
             var _this = _super.call(this) || this;

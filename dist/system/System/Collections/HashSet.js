@@ -39,7 +39,7 @@ System.register(["../Types", "./SetBase", "../Exceptions/ArgumentNullException",
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
-            HashSet = (function (_super) {
+            HashSet = /** @class */ (function (_super) {
                 __extends(HashSet, _super);
                 function HashSet(source, keyGenerator) {
                     var _this = _super.call(this) || this;

@@ -25,7 +25,7 @@ System.register(["../../Disposable/DisposableBase", "../../../extends"], functio
             /**
              * A simple class for handling potentially repeated executions either deferred or immediate.
              */
-            TaskHandlerBase = (function (_super) {
+            TaskHandlerBase = /** @class */ (function (_super) {
                 __extends(TaskHandlerBase, _super);
                 function TaskHandlerBase() {
                     var _this = _super.call(this) || this;

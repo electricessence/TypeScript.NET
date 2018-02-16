@@ -12,7 +12,7 @@ var extends_1 = require("../../extends");
 var Integer_1 = require("../Integer");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
-var LazyList = (function (_super) {
+var LazyList = /** @class */ (function (_super) {
     __extends(LazyList, _super);
     function LazyList(source) {
         var _this = _super.call(this) || this;

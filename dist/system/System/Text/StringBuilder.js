@@ -29,7 +29,7 @@ System.register(["../Types"], function (exports_1, context_1) {
              *****************************/
             EMPTY = "";
             NEWLINE = "\r\n";
-            StringBuilder = (function () {
+            StringBuilder = /** @class */ (function () {
                 function StringBuilder() {
                     var initial = [];
                     for (var _i = 0; _i < arguments.length; _i++) {

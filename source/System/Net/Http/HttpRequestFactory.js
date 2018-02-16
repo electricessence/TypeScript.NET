@@ -24,7 +24,7 @@
     /**
      * This class exposes a factory for making requests to prepared uri and params.
      */
-    var HttpRequestFactory = (function (_super) {
+    var HttpRequestFactory = /** @class */ (function (_super) {
         __extends(HttpRequestFactory, _super);
         function HttpRequestFactory(_http, uriDefaults) {
             var _this = _super.call(this) || this;

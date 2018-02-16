@@ -10,7 +10,7 @@ var ClockTime_1 = require("./ClockTime");
 var TimeStamp_1 = require("./TimeStamp");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var VOID0 = void 0;
-var DateTime = (function () {
+var DateTime = /** @class */ (function () {
     function DateTime(value, kind) {
         if (value === void 0) { value = new Date(); }
         if (kind === void 0) { kind = DateTime.Kind.Local; }

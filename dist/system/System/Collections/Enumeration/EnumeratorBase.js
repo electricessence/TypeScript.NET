@@ -40,7 +40,7 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
-            Yielder = (function () {
+            Yielder = /** @class */ (function () {
                 function Yielder() {
                     this._current = VOID0;
                     this._index = NaN;
@@ -77,7 +77,7 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
             NAME = "EnumeratorBase";
             // "Enumerator" is conflict JScript's "Enumerator"
             // Naming this class EnumeratorBase to avoid collision with IE.
-            EnumeratorBase = (function (_super) {
+            EnumeratorBase = /** @class */ (function (_super) {
                 __extends(EnumeratorBase, _super);
                 function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
                     var _this = _super.call(this) || this;

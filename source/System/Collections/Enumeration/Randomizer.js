@@ -19,7 +19,7 @@
      * Creates a randomized version of the source.
      * Note: An iterator will always require a arrayCopy (buffer) to pull random results one by one.
      */
-    var Randomizer = (function (_super) {
+    var Randomizer = /** @class */ (function (_super) {
         __extends(Randomizer, _super);
         function Randomizer(source, _allowReset) {
             if (_allowReset === void 0) { _allowReset = false; }

@@ -17,7 +17,7 @@
     /**
      * An alternative to Date or DateTime.  Is a model representing the exact date and time.
      */
-    var TimeStamp = (function () {
+    var TimeStamp = /** @class */ (function () {
         function TimeStamp(year, month, day, hour, minute, second, millisecond, tick) {
             // Add validation or properly carry out of range values?
             if (day === void 0) { day = 1; }

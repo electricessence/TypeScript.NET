@@ -32,7 +32,7 @@ System.register(["./ReadOnlyCollectionBase", "../Exceptions/ArgumentOutOfRangeEx
              */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
-            LazyList = (function (_super) {
+            LazyList = /** @class */ (function (_super) {
                 __extends(LazyList, _super);
                 function LazyList(source) {
                     var _this = _super.call(this) || this;

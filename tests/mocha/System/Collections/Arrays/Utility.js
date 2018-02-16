@@ -372,5 +372,5 @@ function outputMeasured(suffix, closure) {
 // interface LinkedNextNode {
 // 	value:number;
 // 	next:LinkedNextNode;
-// } 
+// }
 //# sourceMappingURL=Utility.js.map

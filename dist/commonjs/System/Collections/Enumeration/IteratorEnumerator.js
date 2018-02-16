@@ -14,7 +14,7 @@ var __extends = extends_1.default;
  *
  *
  */
-var IteratorEnumerator = (function (_super) {
+var IteratorEnumerator = /** @class */ (function (_super) {
     __extends(IteratorEnumerator, _super);
     /**
      * @param _iterator

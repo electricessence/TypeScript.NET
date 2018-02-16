@@ -19,7 +19,7 @@ System.register([], function (exports_1, context_1) {
             /**
              * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.
              */
-            Subscription = (function () {
+            Subscription = /** @class */ (function () {
                 function Subscription(_subscribable, _subscriber) {
                     this._subscribable = _subscribable;
                     this._subscriber = _subscriber;

@@ -25,7 +25,7 @@ System.register(["../Compare", "./TimeUnit", "../Lazy"], function (exports_1, co
             /**
              * This class provides a simple means for storing and calculating time quantities.
              */
-            TimeQuantity = (function () {
+            TimeQuantity = /** @class */ (function () {
                 function TimeQuantity(_quantity) {
                     if (_quantity === void 0) { _quantity = 0; }
                     this._quantity = _quantity;

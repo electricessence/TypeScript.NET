@@ -24,7 +24,7 @@ System.register(["./SystemException", "../../extends"], function (exports_1, con
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'NotImplementedException';
-            NotImplementedException = (function (_super) {
+            NotImplementedException = /** @class */ (function (_super) {
                 __extends(NotImplementedException, _super);
                 function NotImplementedException() {
                     return _super !== null && _super.apply(this, arguments) || this;

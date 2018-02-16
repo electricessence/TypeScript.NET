@@ -38,7 +38,7 @@ System.register(["../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../
             /**
              * TimeSpan expands on TimeQuantity to provide an class that is similar to .NET's TimeSpan including many useful static methods.
              */
-            TimeSpan = (function (_super) {
+            TimeSpan = /** @class */ (function (_super) {
                 __extends(TimeSpan, _super);
                 // In .NET the default type is Ticks, but for JavaScript, we will use Milliseconds.
                 function TimeSpan(value, units) {

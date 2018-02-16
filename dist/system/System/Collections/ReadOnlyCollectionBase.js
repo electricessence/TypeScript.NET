@@ -21,7 +21,7 @@ System.register(["./CollectionBase", "../../extends"], function (exports_1, cont
              */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
-            ReadOnlyCollectionBase = (function (_super) {
+            ReadOnlyCollectionBase = /** @class */ (function (_super) {
                 __extends(ReadOnlyCollectionBase, _super);
                 function ReadOnlyCollectionBase() {
                     return _super !== null && _super.apply(this, arguments) || this;

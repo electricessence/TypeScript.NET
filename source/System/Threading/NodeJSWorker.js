@@ -18,7 +18,7 @@
     /**
      * This class takes the place of a WebWorker
      */
-    var NodeJSWorker = (function (_super) {
+    var NodeJSWorker = /** @class */ (function (_super) {
         __extends(NodeJSWorker, _super);
         function NodeJSWorker(url) {
             var _this = _super.call(this) || this;

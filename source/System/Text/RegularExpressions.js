@@ -50,7 +50,7 @@
         RegexOptions.IGNORE_PATTERN_WHITESPACE = _W;
         RegexOptions.W = _W;
     })(RegexOptions = exports.RegexOptions || (exports.RegexOptions = {}));
-    var Regex = (function () {
+    var Regex = /** @class */ (function () {
         function Regex(pattern, options) {
             var extra = [];
             for (var _i = 2; _i < arguments.length; _i++) {
@@ -168,7 +168,7 @@
         return Regex;
     }());
     exports.Regex = Regex;
-    var Capture = (function () {
+    var Capture = /** @class */ (function () {
         function Capture(value, index) {
             if (value === void 0) { value = EMPTY; }
             if (index === void 0) { index = -1; }
@@ -189,7 +189,7 @@
         return Capture;
     }());
     exports.Capture = Capture;
-    var Group = (function (_super) {
+    var Group = /** @class */ (function (_super) {
         __extends(Group, _super);
         function Group(value, index) {
             if (value === void 0) { value = EMPTY; }
@@ -215,7 +215,7 @@
     exports.Group = Group;
     var EmptyGroup = new Group();
     EmptyGroup.freeze();
-    var Match = (function (_super) {
+    var Match = /** @class */ (function (_super) {
         __extends(Match, _super);
         function Match(value, index, groups, namedGroups) {
             if (value === void 0) { value = EMPTY; }

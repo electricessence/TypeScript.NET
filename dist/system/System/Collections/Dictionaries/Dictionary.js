@@ -52,7 +52,7 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
             __extends = extends_1.default;
             VOID0 = void 0;
             // LinkedList for Dictionary
-            HashEntry = (function () {
+            HashEntry = /** @class */ (function () {
                 function HashEntry(key, value, previous, next) {
                     this.key = key;
                     this.value = value;
@@ -61,7 +61,7 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
                 }
                 return HashEntry;
             }());
-            Dictionary = (function (_super) {
+            Dictionary = /** @class */ (function (_super) {
                 __extends(Dictionary, _super);
                 function Dictionary(_keyGenerator) {
                     var _this = _super.call(this) || this;

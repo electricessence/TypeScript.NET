@@ -21,7 +21,7 @@ System.register(["./EnumeratorBase", "../../../extends"], function (exports_1, c
              */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
-            IndexEnumerator = (function (_super) {
+            IndexEnumerator = /** @class */ (function (_super) {
                 __extends(IndexEnumerator, _super);
                 function IndexEnumerator(sourceFactory) {
                     var _this = this;

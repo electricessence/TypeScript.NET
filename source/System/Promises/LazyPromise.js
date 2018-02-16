@@ -23,7 +23,7 @@
     /**
      * A promise that waits for the first then to trigger the resolver.
      */
-    var LazyPromise = (function (_super) {
+    var LazyPromise = /** @class */ (function (_super) {
         __extends(LazyPromise, _super);
         function LazyPromise(_resolver) {
             var _this = _super.call(this) || this;

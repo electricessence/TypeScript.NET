@@ -9,7 +9,7 @@ var extends_1 = require("../../../dist/commonjs/extends");
 var __extends = extends_1.default;
 describe('.hasMember()', function () {
     it('should detect a positive match for prototype functions', function () {
-        var A = (function (_super) {
+        var A = /** @class */ (function (_super) {
             __extends(A, _super);
             function A() {
                 return _super !== null && _super.apply(this, arguments) || this;

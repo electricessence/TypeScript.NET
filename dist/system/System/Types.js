@@ -22,7 +22,7 @@ System.register([], function (exports_1, context_1) {
             /**
              * Exposes easy access to type information including inquiring about members.
              */
-            TypeInfo = (function () {
+            TypeInfo = /** @class */ (function () {
                 function TypeInfo(target, onBeforeFreeze) {
                     this.isBoolean = false;
                     this.isNumber = false;

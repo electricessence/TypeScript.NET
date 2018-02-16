@@ -24,7 +24,7 @@ System.register(["../Exception", "../../extends"], function (exports_1, context_
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'SystemException';
-            SystemException = (function (_super) {
+            SystemException = /** @class */ (function (_super) {
                 __extends(SystemException, _super);
                 function SystemException() {
                     return _super !== null && _super.apply(this, arguments) || this;

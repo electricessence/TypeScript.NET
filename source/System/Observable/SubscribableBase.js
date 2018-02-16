@@ -24,7 +24,7 @@
     var __extends = extends_1.default;
     var NAME = "SubscribableBase";
     // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
-    var SubscribableBase = (function (_super) {
+    var SubscribableBase = /** @class */ (function (_super) {
         __extends(SubscribableBase, _super);
         function SubscribableBase() {
             var _this = _super.call(this) || this;

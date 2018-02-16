@@ -10,7 +10,7 @@ var typeInfoRegistry = {};
 /**
  * Exposes easy access to type information including inquiring about members.
  */
-var TypeInfo = (function () {
+var TypeInfo = /** @class */ (function () {
     function TypeInfo(target, onBeforeFreeze) {
         this.isBoolean = false;
         this.isNumber = false;

@@ -25,7 +25,7 @@
     /**
      * TimeSpan expands on TimeQuantity to provide an class that is similar to .NET's TimeSpan including many useful static methods.
      */
-    var TimeSpan = (function (_super) {
+    var TimeSpan = /** @class */ (function (_super) {
         __extends(TimeSpan, _super);
         // In .NET the default type is Ticks, but for JavaScript, we will use Milliseconds.
         function TimeSpan(value, units) {

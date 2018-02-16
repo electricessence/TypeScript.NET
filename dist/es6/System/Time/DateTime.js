@@ -296,7 +296,7 @@ export class DateTime {
 }
 // Extend DateTime's usefulness.
 (function (DateTime) {
-    var Kind;
+    let Kind;
     (function (Kind) {
         Kind[Kind["Unspecified"] = 0] = "Unspecified";
         Kind[Kind["Local"] = 1] = "Local";

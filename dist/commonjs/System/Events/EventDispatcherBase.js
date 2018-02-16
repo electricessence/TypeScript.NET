@@ -19,7 +19,7 @@ function entryFinalizer() {
     p.dispatcher = null;
 }
 var NAME = "EventDispatcherBase";
-var EventDispatcherBase = (function (_super) {
+var EventDispatcherBase = /** @class */ (function (_super) {
     __extends(EventDispatcherBase, _super);
     function EventDispatcherBase() {
         var _this = _super.call(this) || this;

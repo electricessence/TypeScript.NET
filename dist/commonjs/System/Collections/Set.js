@@ -13,7 +13,7 @@ var __extends = extends_1.default;
 function getId(obj) {
     return getIdentifier_1.getIdentifier(obj, typeof obj != Types_1.Type.BOOLEAN);
 }
-var Set = (function (_super) {
+var Set = /** @class */ (function (_super) {
     __extends(Set, _super);
     function Set(source) {
         return _super.call(this, source, getId) || this;

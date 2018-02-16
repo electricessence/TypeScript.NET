@@ -9,7 +9,7 @@ import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
 import { Action, ActionWithIndex, EqualityComparison, PredicateWithIndex } from "../FunctionTypes";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";
 import { ArrayLikeWritable } from "./Array/ArrayLikeWritable";
-import { ILinqEnumerable } from "../../System.Linq/Enumerable";
+import { LinqEnumerable } from "../../System.Linq/Linq";
 export declare abstract class CollectionBase<T> extends DisposableBase implements ICollection<T>, IEnumerateEach<T> {
     protected _equalityComparer: EqualityComparison<T | null | undefined>;
     constructor(source?: IEnumerableOrArray<T> | IEnumerator<T>, _equalityComparer?: EqualityComparison<T | null | undefined>);
@@ -114,18 +114,18 @@ export declare abstract class CollectionBase<T> extends DisposableBase implement
     toArray(): T[];
     private _linq?;
     /**
-     * .linq will return an ILinqEnumerable if .linqAsync() has completed successfully or the default module loader is NodeJS+CommonJS.
-     * @returns {ILinqEnumerable}
+     * .linq will return an LinqEnumerable if .linqAsync() has completed successfully or the default module loader is NodeJS+CommonJS.
+     * @returns {LinqEnumerable}
      */
-    readonly linq: ILinqEnumerable<T>;
+    readonly linq: LinqEnumerable<T>;
     /**
      * .linqAsync() is for use with deferred loading.
      * Ensures an instance of the Linq extensions is available and then passes it to the callback.
-     * Returns an ILinqEnumerable if one is already available, otherwise undefined.
-     * Passing no parameters will still initiate loading and initializing the ILinqEnumerable which can be useful for pre-loading.
-     * Any call to .linqAsync() where an ILinqEnumerable is returned can be assured that any subsequent calls to .linq will return the same instance.
+     * Returns an LinqEnumerable if one is already available, otherwise undefined.
+     * Passing no parameters will still initiate loading and initializing the LinqEnumerable which can be useful for pre-loading.
+     * Any call to .linqAsync() where an LinqEnumerable is returned can be assured that any subsequent calls to .linq will return the same instance.
      * @param callback
-     * @returns {ILinqEnumerable}
+     * @returns {LinqEnumerable}
      */
-    linqAsync(callback?: Action<ILinqEnumerable<T>>): ILinqEnumerable<T> | undefined;
+    linqAsync(callback?: Action<LinqEnumerable<T>>): LinqEnumerable<T> | undefined;
 }

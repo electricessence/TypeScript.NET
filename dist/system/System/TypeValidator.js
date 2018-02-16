@@ -60,7 +60,7 @@ System.register(["./Types", "./Compare", "../extends"], function (exports_1, con
              */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
-            TypeInfoHelper = (function (_super) {
+            TypeInfoHelper = /** @class */ (function (_super) {
                 __extends(TypeInfoHelper, _super);
                 function TypeInfoHelper(value) {
                     return _super.call(this, value, function (self) { return self._value = value; }) || this;
@@ -118,7 +118,7 @@ System.register(["./Types", "./Compare", "../extends"], function (exports_1, con
                 return TypeInfoHelper;
             }(Types_1.TypeInfo));
             exports_1("TypeInfoHelper", TypeInfoHelper);
-            TypeValidator = (function () {
+            TypeValidator = /** @class */ (function () {
                 function TypeValidator(_typeDescriptor) {
                     this._typeDescriptor = _typeDescriptor;
                     Object.freeze(this);

@@ -27,7 +27,7 @@ System.register(["../../Compare", "./SortContext", "../../Functions", "../../../
              */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
-            KeySortedContext = (function (_super) {
+            KeySortedContext = /** @class */ (function (_super) {
                 __extends(KeySortedContext, _super);
                 function KeySortedContext(next, _keySelector, order, comparer) {
                     if (order === void 0) { order = 1 /* Ascending */; }

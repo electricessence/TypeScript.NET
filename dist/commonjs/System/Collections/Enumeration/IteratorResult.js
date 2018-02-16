@@ -5,7 +5,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 var VOID0 = void 0;
-var IteratorResult = (function () {
+var IteratorResult = /** @class */ (function () {
     function IteratorResult(value, index, done) {
         if (done === void 0) { done = false; }
         this.value = value;

@@ -41,7 +41,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
             __extends = extends_1.default;
             VOID0 = void 0;
             OTHER = 'other';
-            SetBase = (function (_super) {
+            SetBase = /** @class */ (function (_super) {
                 __extends(SetBase, _super);
                 function SetBase(source) {
                     var _this = _super.call(this, VOID0, Compare_1.areEqual) || this;

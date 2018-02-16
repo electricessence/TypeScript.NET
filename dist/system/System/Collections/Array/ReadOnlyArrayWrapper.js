@@ -21,7 +21,7 @@ System.register(["../ReadOnlyCollectionWrapper", "../../../extends"], function (
              */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
-            ReadOnlyArrayWrapper = (function (_super) {
+            ReadOnlyArrayWrapper = /** @class */ (function (_super) {
                 __extends(ReadOnlyArrayWrapper, _super);
                 function ReadOnlyArrayWrapper(array) {
                     var _this = _super.call(this, array) || this;

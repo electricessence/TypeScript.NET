@@ -18,7 +18,7 @@
     /**
      * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.
      */
-    var Subscription = (function () {
+    var Subscription = /** @class */ (function () {
         function Subscription(_subscribable, _subscriber) {
             this._subscribable = _subscribable;
             this._subscriber = _subscriber;

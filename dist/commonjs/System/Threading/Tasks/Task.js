@@ -14,7 +14,7 @@ var __extends = extends_1.default;
  * A simplified synchronous (but deferrable) version of Task<T>
  * Asynchronous operations should use Promise<T>.
  */
-var Task = (function (_super) {
+var Task = /** @class */ (function (_super) {
     __extends(Task, _super);
     function Task(valueFactory) {
         var _this = _super.call(this) || this;

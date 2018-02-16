@@ -32,7 +32,7 @@
     var extends_1 = require("../extends");
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
-    var TypeInfoHelper = (function (_super) {
+    var TypeInfoHelper = /** @class */ (function (_super) {
         __extends(TypeInfoHelper, _super);
         function TypeInfoHelper(value) {
             return _super.call(this, value, function (self) { return self._value = value; }) || this;
@@ -98,7 +98,7 @@
         }
         return false;
     }
-    var TypeValidator = (function () {
+    var TypeValidator = /** @class */ (function () {
         function TypeValidator(_typeDescriptor) {
             this._typeDescriptor = _typeDescriptor;
             Object.freeze(this);

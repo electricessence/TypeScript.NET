@@ -5,10 +5,7 @@
 /**
  * Can be used statically or extended for varying different reusable function signatures.
  */
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */ export class Functions {
+export class Functions {
     //noinspection JSMethodCanBeStatic
     /**
      * A typed method for use with simple selection of the parameter.

@@ -25,7 +25,7 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function (export
              * A simplified stripped down enumerator that until disposed will infinitely return the provided factory.
              * This is analogous to a 'generator' and has a compatible interface.
              */
-            InfiniteEnumerator = (function (_super) {
+            InfiniteEnumerator = /** @class */ (function (_super) {
                 __extends(InfiniteEnumerator, _super);
                 /**
                  * See InfiniteValueFactory

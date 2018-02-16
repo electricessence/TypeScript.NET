@@ -19,7 +19,7 @@
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var NAME = 'ObjectDisposedException';
-    var ObjectDisposedException = (function (_super) {
+    var ObjectDisposedException = /** @class */ (function (_super) {
         __extends(ObjectDisposedException, _super);
         // For simplicity and consistency, lets stick with 1 signature.
         function ObjectDisposedException(objectName, message, innerException) {

@@ -164,7 +164,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
             VOID0 = void 0;
             NULL = null;
             // Leave internal to avoid accidental overwriting.
-            LinqFunctions = (function (_super) {
+            LinqFunctions = /** @class */ (function (_super) {
                 __extends(LinqFunctions, _super);
                 function LinqFunctions() {
                     return _super !== null && _super.apply(this, arguments) || this;
@@ -189,7 +189,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
              *
              * I'm not sure if it's the best option to just use overrides, but it honors the typing properly.
              */
-            InfiniteLinqEnumerable = (function (_super) {
+            InfiniteLinqEnumerable = /** @class */ (function (_super) {
                 __extends(InfiniteLinqEnumerable, _super);
                 function InfiniteLinqEnumerable(_enumeratorFactory, finalizer) {
                     var _this = _super.call(this, finalizer) || this;
@@ -947,7 +947,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                                 buffer = enumerator.current;
                         }, function (yielder) {
                             switch (mode) {
-                                case 0 /* Break */:
+                                case 0 /* Break */:// We're done?
                                     return yielder.yieldBreak();
                                 case 2 /* Skip */:
                                     if (alternateEnumerator.moveNext())
@@ -1098,7 +1098,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
              * In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
              * In this case, we use Enumerable<T> as the underlying class that is being chained.
              */
-            LinqEnumerable = (function (_super) {
+            LinqEnumerable = /** @class */ (function (_super) {
                 __extends(LinqEnumerable, _super);
                 function LinqEnumerable(enumeratorFactory, finalizer, isEndless) {
                     var _this = _super.call(this, enumeratorFactory, finalizer) || this;
@@ -1836,7 +1836,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
             }(InfiniteLinqEnumerable));
             exports_1("LinqEnumerable", LinqEnumerable);
             // Provided for type guarding.
-            FiniteEnumerable = (function (_super) {
+            FiniteEnumerable = /** @class */ (function (_super) {
                 __extends(FiniteEnumerable, _super);
                 function FiniteEnumerable(enumeratorFactory, finalizer) {
                     var _this = _super.call(this, enumeratorFactory, finalizer, false) || this;
@@ -1846,7 +1846,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                 return FiniteEnumerable;
             }(LinqEnumerable));
             exports_1("FiniteEnumerable", FiniteEnumerable);
-            ArrayEnumerable = (function (_super) {
+            ArrayEnumerable = /** @class */ (function (_super) {
                 __extends(ArrayEnumerable, _super);
                 function ArrayEnumerable(source) {
                     var _this = _super.call(this, function () {
@@ -1992,7 +1992,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                 };
                 return ArrayEnumerable;
             }(FiniteEnumerable));
-            Grouping = (function (_super) {
+            exports_1("ArrayEnumerable", ArrayEnumerable);
+            Grouping = /** @class */ (function (_super) {
                 __extends(Grouping, _super);
                 function Grouping(_groupKey, elements) {
                     var _this = _super.call(this, elements) || this;
@@ -2009,7 +2010,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                 });
                 return Grouping;
             }(ArrayEnumerable));
-            Lookup = (function () {
+            exports_1("Grouping", Grouping);
+            Lookup = /** @class */ (function () {
                 function Lookup(_dictionary) {
                     this._dictionary = _dictionary;
                 }
@@ -2044,7 +2046,8 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                 };
                 return Lookup;
             }());
-            OrderedEnumerable = (function (_super) {
+            exports_1("Lookup", Lookup);
+            OrderedEnumerable = /** @class */ (function (_super) {
                 __extends(OrderedEnumerable, _super);
                 function OrderedEnumerable(source, keySelector, order, parent, comparer) {
                     if (comparer === void 0) { comparer = Compare_1.compare; }
@@ -2110,6 +2113,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                 };
                 return OrderedEnumerable;
             }(FiniteEnumerable));
+            exports_1("OrderedEnumerable", OrderedEnumerable);
             (function (Enumerable) {
                 function from(source) {
                     var additional = [];

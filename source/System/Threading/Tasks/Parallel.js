@@ -55,7 +55,7 @@
         if (message !== VOID0)
             w.postMessage(message);
     }
-    var WorkerPromise = (function (_super) {
+    var WorkerPromise = /** @class */ (function (_super) {
         __extends(WorkerPromise, _super);
         function WorkerPromise(worker, data) {
             return _super.call(this, function (resolve, reject) {
@@ -118,7 +118,7 @@
         }
         workers.getNew = getNew;
     })(workers || (workers = {}));
-    var Parallel = (function () {
+    var Parallel = /** @class */ (function () {
         function Parallel(options) {
             this.options = extend(defaults, options);
             this._requiredScripts = [];

@@ -40,7 +40,7 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
             __extends = extends_1.default;
             DISPOSING = 'disposing', DISPOSED = 'disposed';
             NAME = "EventDispatcherBase";
-            EventDispatcherBase = (function (_super) {
+            EventDispatcherBase = /** @class */ (function (_super) {
                 __extends(EventDispatcherBase, _super);
                 function EventDispatcherBase() {
                     var _this = _super.call(this) || this;

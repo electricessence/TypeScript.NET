@@ -24,7 +24,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
              * A simple event dispatcher provided as an alternative to built-in event.
              * If just dispatching a payload to a uniform set of functions, it may be better to just use the utilities in System/Collections/Array/Dispatch.
              */
-            EventSimple = (function () {
+            EventSimple = /** @class */ (function () {
                 function EventSimple() {
                     this._listeners = [];
                 }

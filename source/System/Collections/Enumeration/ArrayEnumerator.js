@@ -18,7 +18,7 @@
     var extends_1 = require("../../../extends");
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
-    var ArrayEnumerator = (function (_super) {
+    var ArrayEnumerator = /** @class */ (function (_super) {
         __extends(ArrayEnumerator, _super);
         function ArrayEnumerator(arrayOrFactory, start, step) {
             if (start === void 0) { start = 0; }

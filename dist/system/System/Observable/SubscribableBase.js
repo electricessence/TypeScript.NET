@@ -36,7 +36,7 @@ System.register(["../Collections/LinkedNodeList", "../Disposable/dispose", "./Su
             __extends = extends_1.default;
             NAME = "SubscribableBase";
             // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
-            SubscribableBase = (function (_super) {
+            SubscribableBase = /** @class */ (function (_super) {
                 __extends(SubscribableBase, _super);
                 function SubscribableBase() {
                     var _this = _super.call(this) || this;

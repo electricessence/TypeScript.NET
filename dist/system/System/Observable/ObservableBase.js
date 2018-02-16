@@ -52,7 +52,7 @@ System.register(["./SubscribableBase", "../../extends"], function (exports_1, co
             //noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
-            ObservableBase = (function (_super) {
+            ObservableBase = /** @class */ (function (_super) {
                 __extends(ObservableBase, _super);
                 function ObservableBase() {
                     return _super !== null && _super.apply(this, arguments) || this;

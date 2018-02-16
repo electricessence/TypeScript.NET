@@ -8,7 +8,7 @@ var CollectionBase_1 = require("./CollectionBase");
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
-var ReadOnlyCollectionBase = (function (_super) {
+var ReadOnlyCollectionBase = /** @class */ (function (_super) {
     __extends(ReadOnlyCollectionBase, _super);
     function ReadOnlyCollectionBase() {
         return _super !== null && _super.apply(this, arguments) || this;

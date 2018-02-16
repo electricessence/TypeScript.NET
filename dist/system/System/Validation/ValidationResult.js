@@ -16,7 +16,7 @@ System.register([], function (exports_1, context_1) {
             /**
              * A class for generating responses to validation.
              */
-            ValidationResult = (function () {
+            ValidationResult = /** @class */ (function () {
                 /**
                  * Allows for rare cases that ValidationResult.valid and ValidationResult.invalid() don't cover.
                  */

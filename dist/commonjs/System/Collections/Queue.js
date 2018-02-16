@@ -24,7 +24,7 @@ var SHRINK_THRESHOLD = 32; // Unused?
 var GROW_FACTOR_HALF = 100;
 var DEFAULT_CAPACITY = MINIMUM_GROW;
 var emptyArray = Object.freeze([]);
-var Queue = (function (_super) {
+var Queue = /** @class */ (function (_super) {
     __extends(Queue, _super);
     function Queue(source, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }

@@ -21,7 +21,7 @@
      * A simple event dispatcher provided as an alternative to built-in event.
      * If just dispatching a payload to a uniform set of functions, it may be better to just use the utilities in System/Collections/Array/Dispatch.
      */
-    var EventSimple = (function () {
+    var EventSimple = /** @class */ (function () {
         function EventSimple() {
             this._listeners = [];
         }
