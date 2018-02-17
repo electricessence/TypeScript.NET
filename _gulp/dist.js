@@ -48,7 +48,7 @@
                             if (!fields[key])
                                 delete pkg[key];
                         }
-                        pkg["name"] += "-" + dist;
+                        pkg["name"] += "-" + dist.toLowerCase();
                         return [2 /*return*/, pkg];
                 }
             });

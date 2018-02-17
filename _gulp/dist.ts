@@ -35,7 +35,7 @@ async function getPackage(dist:string):NPromise<JsonMap>
 		if(!fields[key])
 			delete pkg[key];
 	}
-	pkg["name"] += "-" + dist;
+	pkg["name"] += "-" + dist.toLowerCase();
 	return pkg;
 
 }
