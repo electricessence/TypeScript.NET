@@ -449,7 +449,7 @@ export class Parallel
 	map<T,U>(data:T[], task:(data:T) => U, env?:any):ArrayPromise<U>
 	{
 		if(!data || !data.length)
-			return ArrayPromise.fulfilled(data && []);
+			return ArrayPromise.fulfilled<U>([]);
 
 		// Would return the same result, but has extra overhead.
 		// return this.pipe(data,task).all();

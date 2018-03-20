@@ -17,13 +17,13 @@ export declare class EnumeratorBase<T> extends DisposableBase implements IEnumer
     readonly index: number;
     constructor(initializer: Closure | null, tryGetNext: (yielder: IYield<T>) => boolean, isEndless?: boolean);
     constructor(initializer: Closure | null, tryGetNext: (yielder: IYield<T>) => boolean, disposer?: Closure | null, isEndless?: boolean);
-    protected _isEndless: boolean;
+    protected _isEndless: boolean | undefined;
     readonly isEndless: boolean | undefined;
     /**
      * Added for compatibility but only works if the enumerator is active.
      */
     reset(): void;
-    private _assertBadState();
+    private _assertValidState();
     /**
      * Passes the current value to the out callback if the enumerator is active.
      * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.

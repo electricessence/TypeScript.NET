@@ -3,11 +3,12 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../Types");
 /**
  * An alternative to Date or DateTime.  Is a model representing the exact date and time.
  */
-var TimeStamp = (function () {
+var TimeStamp = /** @class */ (function () {
     function TimeStamp(year, month, day, hour, minute, second, millisecond, tick) {
         // Add validation or properly carry out of range values?
         if (day === void 0) { day = 1; }
@@ -43,5 +44,4 @@ var TimeStamp = (function () {
     return TimeStamp;
 }());
 exports.TimeStamp = TimeStamp;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TimeStamp;

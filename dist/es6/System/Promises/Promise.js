@@ -77,11 +77,10 @@ function newODE() {
 }
 export class PromiseState extends DisposableBase {
     constructor(_state, _result, _error) {
-        super();
+        super(PROMISE_STATE);
         this._state = _state;
         this._result = _result;
         this._error = _error;
-        this._disposableObjectName = PROMISE_STATE;
     }
     _onDispose() {
         this._state = VOID0;
@@ -128,8 +127,15 @@ export class PromiseBase extends PromiseState {
     //readonly [Symbol.toStringTag]: "Promise";
     constructor() {
         super(TSDNPromise.State.Pending);
+        // @ts-ignore
         this._disposableObjectName = PROMISE;
     }
+    /**
+     * Same as 'thenSynchronous' but does not return the result.  Returns the current promise instead.
+     * You may not need an additional promise result, and this will not create a new one.
+     * @param onFulfilled
+     * @param onRejected
+     */
     thenThis(onFulfilled, onRejected) {
         this.doneNow(onFulfilled, onRejected);
         return this;
@@ -547,7 +553,7 @@ export class ArrayPromise extends TSDNPromise {
     map(transform) {
         this.throwIfDisposed();
         return new ArrayPromise(resolve => {
-            this.doneNow((result) => resolve(result.map(transform)));
+            this.doneNow(result => resolve(result.map(transform)));
         }, true);
     }
     /**
@@ -558,7 +564,7 @@ export class ArrayPromise extends TSDNPromise {
      */
     reduce(reduction, initialValue) {
         return this
-            .thenSynchronous((result) => result.reduce(reduction, initialValue));
+            .thenSynchronous(result => result.reduce(reduction, initialValue));
     }
     static fulfilled(value) {
         return new ArrayPromise(resolve => value, true);
@@ -570,8 +576,7 @@ const PROMISE_COLLECTION = "PromiseCollection";
  */
 export class PromiseCollection extends DisposableBase {
     constructor(source) {
-        super();
-        this._disposableObjectName = PROMISE_COLLECTION;
+        super(PROMISE_COLLECTION);
         this._source = source && source.slice() || [];
     }
     _onDispose() {
@@ -622,7 +627,7 @@ export class PromiseCollection extends DisposableBase {
         this.throwIfDisposed();
         return new ArrayPromise(resolve => {
             this.all()
-                .doneNow((result) => resolve(result.map(transform)));
+                .doneNow(result => resolve(result.map(transform)));
         }, true);
     }
     /**

@@ -3,6 +3,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Compare_1 = require("../../Compare");
 var Enumerator_1 = require("../Enumeration/Enumerator");
 var CollectionBase_1 = require("../CollectionBase");
@@ -16,10 +17,10 @@ var KeyNotFoundException_1 = require("../KeyNotFoundException");
 var __extends = extends_1.default;
 var VOID0 = void 0;
 // Design Note: Should DictionaryAbstractBase be IDisposable?
-var DictionaryBase = (function (_super) {
+var DictionaryBase = /** @class */ (function (_super) {
     __extends(DictionaryBase, _super);
     function DictionaryBase(source) {
-        _super.call(this, source);
+        return _super.call(this, source) || this;
     }
     //noinspection JSUnusedLocalSymbols
     DictionaryBase.prototype._onValueModified = function (key, value, old) {
@@ -184,5 +185,4 @@ var DictionaryBase = (function (_super) {
     return DictionaryBase;
 }(CollectionBase_1.CollectionBase));
 exports.DictionaryBase = DictionaryBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = DictionaryBase;

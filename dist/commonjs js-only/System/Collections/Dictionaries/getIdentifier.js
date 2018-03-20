@@ -1,4 +1,9 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../../Types");
 var VOID0 = void 0;
 var NULL = "null", GET_SYMBOL = "getSymbol", GET_HASH_CODE = "getHashCode";
@@ -29,5 +34,4 @@ function getIdentifier(obj, throwIfUnknown) {
         : Object.prototype.toString.call(obj);
 }
 exports.getIdentifier = getIdentifier;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = getIdentifier;

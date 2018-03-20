@@ -3,6 +3,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Compare_1 = require("../Compare");
 var Utility_1 = require("./Array/Utility");
 var Enumerator_1 = require("./Enumeration/Enumerator");
@@ -13,18 +14,19 @@ var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var VOID0 = void 0;
-var List = (function (_super) {
+var List = /** @class */ (function (_super) {
     __extends(List, _super);
     function List(source, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-        _super.call(this, VOID0, equalityComparer);
-        if (Array.isArray(source)) {
-            this._source = source.slice();
+        var _this = _super.call(this, VOID0, equalityComparer) || this;
+        if ((source) instanceof (Array)) {
+            _this._source = source.slice();
         }
         else {
-            this._source = [];
-            this._importEntries(source);
+            _this._source = [];
+            _this._importEntries(source);
         }
+        return _this;
     }
     List.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
@@ -122,6 +124,14 @@ var List = (function (_super) {
             return yielder.yieldReturn(source[index++]);
         });
     };
+    /**
+     * Sorts the underlying array.
+     * @param compareFn The name of the function used to determine the order of the elements. If omitted, the elements are sorted in ascending, ASCII character order.
+     */
+    List.prototype.sort = function (compareFn) {
+        this._source.sort(compareFn);
+        return this;
+    };
     List.prototype.forEach = function (action, useCopy) {
         var s = this._source;
         return Enumerator_1.forEach(useCopy ? s.slice() : this, action);
@@ -129,5 +139,4 @@ var List = (function (_super) {
     return List;
 }(CollectionBase_1.CollectionBase));
 exports.List = List;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = List;

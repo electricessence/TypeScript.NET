@@ -17,7 +17,7 @@ const __extends = __extendsImport;
 export default class Timer extends ObservableBase<number> implements ITimer, ICancellable
 {
 
-	private _cancel:Closure | null;
+	private _cancel:Closure | undefined;
 	private _count:number = 0;
 
 	constructor(
@@ -143,7 +143,7 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 		if(this._cancel)
 		{
 			this._cancel();
-			this._cancel = null;
+			this._cancel = undefined;
 			return true;
 		}
 		return false;

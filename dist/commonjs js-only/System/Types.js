@@ -1,14 +1,21 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
 var VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _SYMBOL = "symbol", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { }, LENGTH = "length";
 // Only used for primitives.
 var typeInfoRegistry = {};
 /**
  * Exposes easy access to type information including inquiring about members.
  */
-var TypeInfo = (function () {
+var TypeInfo = /** @class */ (function () {
     function TypeInfo(target, onBeforeFreeze) {
         this.isBoolean = false;
         this.isNumber = false;
+        this.isFinite = false;
+        this.isValidNumber = false;
         this.isString = false;
         this.isTrueNaN = false;
         this.isObject = false;
@@ -17,6 +24,8 @@ var TypeInfo = (function () {
         this.isNull = false;
         this.isPrimitive = false;
         this.isSymbol = false;
+        this.isArray = false;
+        this.isNullOrUndefined = false;
         switch (this.type = typeof target) {
             case _BOOLEAN:
                 this.isBoolean = true;
@@ -44,7 +53,7 @@ var TypeInfo = (function () {
                     this.isPrimitive = true;
                 }
                 else {
-                    this.isArray = Array.isArray(target);
+                    this.isArray = (target) instanceof (Array);
                     this.isObject = true;
                 }
                 break;
@@ -94,10 +103,30 @@ var TypeInfo = (function () {
             typeInfoRegistry[type] = info = new TypeInfo(target);
         return info;
     };
+    /**
+     * Returns true if the target matches the type (instanceof).
+     * @param type
+     * @returns {boolean}
+     */
+    TypeInfo.prototype.is = function (type) {
+        return this.target instanceof type;
+    };
+    /**
+     * Returns null if the target does not match the type (instanceof).
+     * Otherwise returns the target as the type.
+     * @param type
+     * @returns {T|null}
+     */
+    TypeInfo.prototype.as = function (type) {
+        return this.target instanceof type ? this.target : null;
+    };
     return TypeInfo;
 }());
 exports.TypeInfo = TypeInfo;
-var Type;
+function Type(target) {
+    return new TypeInfo(target);
+}
+exports.Type = Type;
 (function (Type) {
     /**
      * typeof true
@@ -135,12 +164,33 @@ var Type;
      */
     Type.FUNCTION = _FUNCTION;
     /**
+     * Returns true if the target matches the type (instanceof).
+     * @param target
+     * @param type
+     * @returns {T|null}
+     */
+    function is(target, type) {
+        return target instanceof type;
+    }
+    Type.is = is;
+    /**
+     * Returns null if the target does not match the type (instanceof).
+     * Otherwise returns the target as the type.
+     * @param target
+     * @param type
+     * @returns {T|null}
+     */
+    function as(target, type) {
+        return target instanceof type ? target : null;
+    }
+    Type.as = as;
+    /**
      * Returns true if the value parameter is null or undefined.
      * @param value
      * @returns {boolean}
      */
     function isNullOrUndefined(value) {
-        return value === null || value === VOID0;
+        return value == null;
     }
     Type.isNullOrUndefined = isNullOrUndefined;
     /**
@@ -155,13 +205,12 @@ var Type;
     /**
      * Returns true if the value parameter is a number.
      * @param value
-     * @param allowNaN Default is true.
+     * @param ignoreNaN Default is false. When true, NaN is not considered a number and will return false.
      * @returns {boolean}
      */
-    function isNumber(value, allowNaN) {
-        if (allowNaN === VOID0)
-            allowNaN = true;
-        return typeof value === _NUMBER && (allowNaN || !isNaN(value));
+    function isNumber(value, ignoreNaN) {
+        if (ignoreNaN === void 0) { ignoreNaN = false; }
+        return typeof value === _NUMBER && (!ignoreNaN || !isNaN(value));
     }
     Type.isNumber = isNumber;
     /**
@@ -204,6 +253,12 @@ var Type;
         return false;
     }
     Type.isPrimitive = isPrimitive;
+    /**
+     * For detecting if the value can be used as a key.
+     * @param value
+     * @param allowUndefined
+     * @returns {boolean|boolean}
+     */
     function isPrimitiveOrSymbol(value, allowUndefined) {
         if (allowUndefined === void 0) { allowUndefined = false; }
         return typeof value === _SYMBOL ? true : isPrimitive(value, allowUndefined);
@@ -254,14 +309,35 @@ var Type;
         return isNaN(value) ? NaN : value;
     }
     Type.numberOrNaN = numberOrNaN;
+    /**
+     * Returns a TypeInfo object for the target.
+     * @param target
+     * @returns {TypeInfo}
+     */
     function of(target) {
         return TypeInfo.getFor(target);
     }
     Type.of = of;
-    function hasMember(instance, property) {
-        return instance && !isPrimitive(instance) && (property) in (instance);
+    /**
+     * Will detect if a member exists (using 'in').
+     * Returns true if a property or method exists on the object or its prototype.
+     * @param instance
+     * @param property Name of the member.
+     * @param ignoreUndefined When ignoreUndefined is true, if the member exists but is undefined, it will return false.
+     * @returns {boolean}
+     */
+    function hasMember(instance, property, ignoreUndefined) {
+        if (ignoreUndefined === void 0) { ignoreUndefined = true; }
+        return instance && !isPrimitive(instance) && (property) in (instance) && (ignoreUndefined || instance[property] !== VOID0);
     }
     Type.hasMember = hasMember;
+    /**
+     * Returns true if the member matches the type.
+     * @param instance
+     * @param property
+     * @param type
+     * @returns {boolean}
+     */
     function hasMemberOfType(instance, property, type) {
         return hasMember(instance, property) && typeof (instance[property]) === type;
     }
@@ -288,5 +364,4 @@ var Type;
     Type.isArrayLike = isArrayLike;
 })(Type = exports.Type || (exports.Type = {}));
 Object.freeze(Type);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Type;

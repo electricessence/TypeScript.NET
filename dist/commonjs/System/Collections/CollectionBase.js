@@ -20,14 +20,12 @@ var CollectionBase = /** @class */ (function (_super) {
     __extends(CollectionBase, _super);
     function CollectionBase(source, _equalityComparer) {
         if (_equalityComparer === void 0) { _equalityComparer = Compare_1.areEqual; }
-        var _this = _super.call(this) || this;
+        var _this = _super.call(this, NAME) || this;
         _this._equalityComparer = _equalityComparer;
-        var _ = _this;
-        _._disposableObjectName = NAME;
-        _._importEntries(source);
-        _._updateRecursion = 0;
-        _._modifiedCount = 0;
-        _._version = 0;
+        _this._importEntries(source);
+        _this._updateRecursion = 0;
+        _this._modifiedCount = 0;
+        _this._version = 0;
         return _this;
     }
     Object.defineProperty(CollectionBase.prototype, "count", {

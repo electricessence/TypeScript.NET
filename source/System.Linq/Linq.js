@@ -90,10 +90,9 @@
     var InfiniteLinqEnumerable = /** @class */ (function (_super) {
         __extends(InfiniteLinqEnumerable, _super);
         function InfiniteLinqEnumerable(_enumeratorFactory, finalizer) {
-            var _this = _super.call(this, finalizer) || this;
+            var _this = _super.call(this, "InfiniteLinqEnumerable", finalizer) || this;
             _this._enumeratorFactory = _enumeratorFactory;
             _this._isEndless = true;
-            _this._disposableObjectName = "InfiniteLinqEnumerable";
             return _this;
         }
         Object.defineProperty(InfiniteLinqEnumerable.prototype, "isEndless", {
@@ -1001,6 +1000,7 @@
         function LinqEnumerable(enumeratorFactory, finalizer, isEndless) {
             var _this = _super.call(this, enumeratorFactory, finalizer) || this;
             _this._isEndless = isEndless;
+            // @ts-ignore
             _this._disposableObjectName = "LinqEnumerable";
             return _this;
         }
@@ -1744,6 +1744,7 @@
         __extends(FiniteEnumerable, _super);
         function FiniteEnumerable(enumeratorFactory, finalizer) {
             var _this = _super.call(this, enumeratorFactory, finalizer, false) || this;
+            // @ts-ignore
             _this._disposableObjectName = "FiniteEnumerable";
             return _this;
         }
@@ -1761,8 +1762,9 @@
                 });
             }) || this;
             var _ = _this;
-            _._disposableObjectName = "ArrayEnumerable";
-            _._source = source;
+            // @ts-ignore
+            _this._disposableObjectName = "ArrayEnumerable";
+            _this._source = source;
             return _this;
         }
         ArrayEnumerable.prototype._onDispose = function () {
@@ -1902,6 +1904,7 @@
         function Grouping(_groupKey, elements) {
             var _this = _super.call(this, elements) || this;
             _this._groupKey = _groupKey;
+            // @ts-ignore
             _this._disposableObjectName = "Grouping";
             return _this;
         }
@@ -1962,6 +1965,7 @@
             _this.parent = parent;
             _this.comparer = comparer;
             Enumerator_1.throwIfEndless(source && source.isEndless);
+            // @ts-ignore
             _this._disposableObjectName = "OrderedEnumerable";
             return _this;
         }

@@ -73,7 +73,7 @@ export module RegexOptions
 export class Regex
 {
 	private readonly _re:RegExp;
-	private readonly _keys:string[];
+	private readonly _keys:string[]|undefined;
 
 	constructor(
 		pattern:string|RegExp,

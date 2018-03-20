@@ -207,7 +207,7 @@ export class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime>
 		);
 	}
 
-	private _time:ClockTime|null;
+	private _time:ClockTime|undefined;
 
 	/**
 	 * Returns the time of day represented by a ClockTime object.

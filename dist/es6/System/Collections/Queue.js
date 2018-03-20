@@ -23,29 +23,28 @@ const emptyArray = Object.freeze([]);
 export class Queue extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(VOID0, equalityComparer);
-        const _ = this;
-        _._head = 0;
-        _._tail = 0;
-        _._size = 0;
+        this._head = 0;
+        this._tail = 0;
+        this._size = 0;
         if (!source)
-            _._array = emptyArray;
+            this._array = emptyArray;
         else {
             if (Type.isNumber(source)) {
                 const capacity = source;
                 assertIntegerZeroOrGreater(capacity, "capacity");
-                _._array = capacity
+                this._array = capacity
                     ? AU.initialize(capacity)
                     : emptyArray;
             }
             else {
                 const se = source;
-                _._array = AU.initialize(Type.isArrayLike(se)
+                this._array = AU.initialize(Type.isArrayLike(se)
                     ? se.length
                     : DEFAULT_CAPACITY);
-                _._importEntries(se);
+                this._importEntries(se);
             }
         }
-        _._capacity = _._array.length;
+        this._capacity = this._array.length;
     }
     getCount() {
         return this._size;

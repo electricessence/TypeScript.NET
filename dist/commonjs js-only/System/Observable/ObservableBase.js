@@ -5,15 +5,16 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * C# Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var SubscribableBase_1 = require("./SubscribableBase");
 var extends_1 = require("../../extends");
 //noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
-var ObservableBase = (function (_super) {
+var ObservableBase = /** @class */ (function (_super) {
     __extends(ObservableBase, _super);
     function ObservableBase() {
-        _super.apply(this, arguments);
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     ObservableBase.prototype._onNext = function (value) {
         processAction(this._getSubscribers(), function (s) { s.onNext && s.onNext(value); });
@@ -71,5 +72,4 @@ function processAction(observers, handler) {
             };
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ObservableBase;

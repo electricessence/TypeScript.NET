@@ -129,9 +129,8 @@ export class InfiniteLinqEnumerable<T>
 		protected _enumeratorFactory:() => IEnumerator<T>,
 		finalizer?:Closure | null)
 	{
-		super(finalizer);
+		super("InfiniteLinqEnumerable", finalizer);
 		this._isEndless = true;
-		this._disposableObjectName = "InfiniteLinqEnumerable";
 	}
 
 	protected _isEndless:boolean | undefined;
@@ -1710,6 +1709,7 @@ export class LinqEnumerable<T>
 	{
 		super(enumeratorFactory, finalizer);
 		this._isEndless = isEndless;
+		// @ts-ignore
 		this._disposableObjectName = "LinqEnumerable";
 	}
 
@@ -2706,7 +2706,7 @@ export class LinqEnumerable<T>
 		reduction:(previous:U, current:T, index?:number) => U,
 		initialValue?:U):U | undefined
 	{
-		return this.aggregate(reduction, initialValue);
+		return this.aggregate(<any>reduction, initialValue);
 	}
 
 	average(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
@@ -2928,6 +2928,7 @@ export class FiniteEnumerable<T>
 		finalizer?:Closure)
 	{
 		super(enumeratorFactory, finalizer, false);
+		// @ts-ignore
 		this._disposableObjectName = "FiniteEnumerable";
 	}
 
@@ -2960,8 +2961,9 @@ export class ArrayEnumerable<T>
 		});
 
 		const _ = this;
-		_._disposableObjectName = "ArrayEnumerable";
-		_._source = source;
+		// @ts-ignore
+		this._disposableObjectName = "ArrayEnumerable";
+		this._source = source;
 
 	}
 
@@ -3169,6 +3171,7 @@ export class Grouping<TKey, TElement>
 	constructor(private _groupKey:TKey, elements:TElement[])
 	{
 		super(elements);
+		// @ts-ignore
 		this._disposableObjectName = "Grouping";
 	}
 
@@ -3244,6 +3247,7 @@ export class OrderedEnumerable<T, TOrderBy extends Comparable>
 	{
 		super(NULL);
 		throwIfEndless(source && source.isEndless);
+		// @ts-ignore
 		this._disposableObjectName = "OrderedEnumerable";
 	}
 

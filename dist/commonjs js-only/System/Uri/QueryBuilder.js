@@ -3,10 +3,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../Types");
 var OrderedStringKeyDictionary_1 = require("../Collections/Dictionaries/OrderedStringKeyDictionary");
 var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
-var QueryParams = require("./QueryParams");
+var QueryParams_1 = require("./QueryParams");
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
@@ -15,12 +16,13 @@ var __extends = extends_1.default;
  *
  * In other languages, dictionaries are not reliable for retaining the order of stored values. So for certainty and flexibility we use an ordered dictionary as a base class.
  */
-var QueryBuilder = (function (_super) {
+var QueryBuilder = /** @class */ (function (_super) {
     __extends(QueryBuilder, _super);
     function QueryBuilder(query, decodeValues) {
         if (decodeValues === void 0) { decodeValues = true; }
-        _super.call(this);
-        this.importQuery(query, decodeValues);
+        var _this = _super.call(this) || this;
+        _this.importQuery(query, decodeValues);
+        return _this;
     }
     QueryBuilder.init = function (query, decodeValues) {
         if (decodeValues === void 0) { decodeValues = true; }
@@ -50,10 +52,10 @@ var QueryBuilder = (function (_super) {
         if (deserialize === void 0) { deserialize = true; }
         if (decodeValues === void 0) { decodeValues = true; }
         var _ = this;
-        QueryParams.parse(values, function (key, value) {
+        QueryParams_1.parse(values, function (key, value) {
             if (_.containsKey(key)) {
                 var prev = _.getValue(key);
-                if (Array.isArray(prev))
+                if ((prev) instanceof (Array))
                     prev.push(value);
                 else
                     _.setValue(key, [prev, value]);
@@ -67,7 +69,7 @@ var QueryBuilder = (function (_super) {
      * Returns the encoded URI string
      */
     QueryBuilder.prototype.encode = function (prefixIfNotEmpty) {
-        return QueryParams.encode(this, prefixIfNotEmpty);
+        return QueryParams_1.encode(this, prefixIfNotEmpty);
     };
     QueryBuilder.prototype.toString = function () {
         return this.encode();
@@ -75,5 +77,4 @@ var QueryBuilder = (function (_super) {
     return QueryBuilder;
 }(OrderedStringKeyDictionary_1.OrderedStringKeyDictionary));
 exports.QueryBuilder = QueryBuilder;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = QueryBuilder;

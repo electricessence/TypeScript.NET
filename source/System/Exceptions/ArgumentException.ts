@@ -17,7 +17,8 @@ export {Error};
 export class ArgumentException extends SystemException
 {
 
-	paramName:string;
+	// @ts-ignore TS2564: Since this does actually get initialized.
+	readonly paramName:string;
 
 	// For simplicity and consistency, lets stick with 1 signature.
 	constructor(

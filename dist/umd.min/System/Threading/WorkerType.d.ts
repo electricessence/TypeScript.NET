@@ -3,10 +3,12 @@
  * Licensing: MIT
  */
 
+import {Action} from "../FunctionTypes";
+
 export declare interface WorkerLike
 {
-	onmessage:(message:{data:any})=>void;
-	onerror:(error:any)=>void;
+	onmessage:Action<{data:any}> | null | undefined;
+	onerror:Action<any> | null | undefined;
 
 	postMessage(obj:any):void;
 	terminate():void;

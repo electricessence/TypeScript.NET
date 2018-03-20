@@ -71,10 +71,9 @@ function getEmptyEnumerator() {
  */
 export class InfiniteLinqEnumerable extends DisposableBase {
     constructor(_enumeratorFactory, finalizer) {
-        super(finalizer);
+        super("InfiniteLinqEnumerable", finalizer);
         this._enumeratorFactory = _enumeratorFactory;
         this._isEndless = true;
-        this._disposableObjectName = "InfiniteLinqEnumerable";
     }
     get isEndless() {
         return this._isEndless;
@@ -956,6 +955,7 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
     constructor(enumeratorFactory, finalizer, isEndless) {
         super(enumeratorFactory, finalizer);
         this._isEndless = isEndless;
+        // @ts-ignore
         this._disposableObjectName = "LinqEnumerable";
     }
     // Return a default (unfiltered) enumerable.
@@ -1660,6 +1660,7 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
 export class FiniteEnumerable extends LinqEnumerable {
     constructor(enumeratorFactory, finalizer) {
         super(enumeratorFactory, finalizer, false);
+        // @ts-ignore
         this._disposableObjectName = "FiniteEnumerable";
     }
 }
@@ -1673,8 +1674,9 @@ export class ArrayEnumerable extends FiniteEnumerable {
             });
         });
         const _ = this;
-        _._disposableObjectName = "ArrayEnumerable";
-        _._source = source;
+        // @ts-ignore
+        this._disposableObjectName = "ArrayEnumerable";
+        this._source = source;
     }
     _onDispose() {
         super._onDispose();
@@ -1801,6 +1803,7 @@ export class Grouping extends ArrayEnumerable {
     constructor(_groupKey, elements) {
         super(elements);
         this._groupKey = _groupKey;
+        // @ts-ignore
         this._disposableObjectName = "Grouping";
     }
     get key() {
@@ -1846,6 +1849,7 @@ export class OrderedEnumerable extends FiniteEnumerable {
         this.parent = parent;
         this.comparer = comparer;
         throwIfEndless(source && source.isEndless);
+        // @ts-ignore
         this._disposableObjectName = "OrderedEnumerable";
     }
     createOrderedEnumerable(keySelector, order) {

@@ -7,6 +7,7 @@
 import {WorkerLike} from "./WorkerType";
 import {ObservableBase} from "../Observable/ObservableBase";
 import __extendsImport from "../../extends";
+import {Action} from "../FunctionTypes";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -19,8 +20,8 @@ const ps = require("child_process");
 export class NodeJSWorker extends ObservableBase<any> implements WorkerLike
 {
 	private _process:any;
-	onmessage:(message:{data:any})=>void;
-	onerror:(error:any)=>void;
+	onmessage:Action<{data:any}> | undefined;
+	onerror:Action<any> | undefined;
 
 	constructor(url:string)
 	{

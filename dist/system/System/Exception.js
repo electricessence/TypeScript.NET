@@ -48,7 +48,9 @@ System.register([], function (exports_1, context_1) {
                             || '';
                         this.stack = _.toStringWithoutBrackets() + stack;
                     }
-                    catch (ex) { }
+                    catch (ex) {
+                        this.stack = "";
+                    }
                     Object.freeze(_);
                 }
                 /**

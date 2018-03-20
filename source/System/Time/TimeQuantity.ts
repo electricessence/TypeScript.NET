@@ -58,6 +58,7 @@ export class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITim
 		return compare(this.getTotalMilliseconds(), other && other.total && other.total.milliseconds);
 	}
 
+	// @ts-ignore;
 	protected _total:Lazy<ITimeMeasurement>;
 
 	protected _resetTotal():void

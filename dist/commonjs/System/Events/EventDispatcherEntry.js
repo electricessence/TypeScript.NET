@@ -16,7 +16,7 @@ var NAME = "EventDispatcherEntry";
 var EventDispatcherEntry = /** @class */ (function (_super) {
     __extends(EventDispatcherEntry, _super);
     function EventDispatcherEntry(type, listener, params, finalizer) {
-        var _this = _super.call(this, finalizer) || this;
+        var _this = _super.call(this, NAME, finalizer) || this;
         _this.type = type;
         _this.listener = listener;
         _this.params = params;
@@ -28,7 +28,6 @@ var EventDispatcherEntry = /** @class */ (function (_super) {
         _.type = type;
         _.listener = listener;
         _.params = params;
-        _._disposableObjectName = NAME;
         return _this;
     }
     EventDispatcherEntry.prototype._onDispose = function () {

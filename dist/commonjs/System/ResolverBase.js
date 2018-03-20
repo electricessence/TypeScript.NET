@@ -21,11 +21,10 @@ var ResolverBase = /** @class */ (function (_super) {
     __extends(ResolverBase, _super);
     function ResolverBase(_valueFactory, _trapExceptions, _allowReset) {
         if (_allowReset === void 0) { _allowReset = false; }
-        var _this = _super.call(this) || this;
+        var _this = _super.call(this, NAME) || this;
         _this._valueFactory = _valueFactory;
         _this._trapExceptions = _trapExceptions;
         _this._allowReset = _allowReset;
-        _this._disposableObjectName = NAME;
         if (!_valueFactory)
             throw new ArgumentNullException_1.ArgumentNullException("valueFactory");
         _this._isValueCreated = false;

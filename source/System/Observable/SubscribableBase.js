@@ -27,9 +27,7 @@
     var SubscribableBase = /** @class */ (function (_super) {
         __extends(SubscribableBase, _super);
         function SubscribableBase() {
-            var _this = _super.call(this) || this;
-            _this._disposableObjectName = NAME;
-            return _this;
+            return _super.call(this, NAME) || this;
         }
         SubscribableBase.prototype._getSubscribers = function () {
             var s = this.__subscriptions;
@@ -38,7 +36,7 @@
                 : null;
         };
         SubscribableBase.prototype._findEntryNode = function (subscriber) {
-            var s = this.__subscriptions;
+            var s = this.__subscriptions || null;
             return s && s.find(function (n) { return !!n.value && n.value.subscriber === subscriber; });
         };
         // It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.

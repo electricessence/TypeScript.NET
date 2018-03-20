@@ -10,17 +10,18 @@ import { EventDispatcherEntry } from "./EventDispatcherEntry";
 // noinspection JSUnusedLocalSymbols
 const DISPOSING = 'disposing', DISPOSED = 'disposed';
 function entryFinalizer() {
-    const p = this.params;
-    p.dispatcher.removeEntry(this);
+    // @ts-ignore
+    const _ = this;
+    const p = _.params;
+    p.dispatcher.removeEntry(_);
     p.dispatcher = null;
 }
 const NAME = "EventDispatcherBase";
 export default class EventDispatcherBase extends DisposableBase {
     constructor() {
-        super();
+        super(NAME);
         // When dispatching events, we need a way to prevent recursion when disposing.
         this._isDisposing = false;
-        this._disposableObjectName = NAME;
     }
     addEventListener(type, listener, priority = 0) {
         let e = this._entries;
@@ -43,10 +44,12 @@ export default class EventDispatcherBase extends DisposableBase {
     }
     hasEventListener(type, listener) {
         const e = this._entries;
-        return e && e.some((value) => type == value.type && (!listener || listener == value.listener));
+        return !!e && e.some((value) => type == value.type && (!listener || listener == value.listener));
     }
     removeEventListener(type, listener) {
-        dispose.these.noCopy(this._entries.filter(entry => entry.matches(type, listener)));
+        const e = this._entries;
+        if (e)
+            dispose.these.noCopy(e.filter(entry => entry.matches(type, listener)));
     }
     dispatchEvent(e, params) {
         const _ = this;

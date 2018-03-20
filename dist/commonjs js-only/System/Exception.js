@@ -1,9 +1,15 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
 var NAME = 'Exception';
 /**
  * Represents errors that occur during application execution.
  */
-var Exception = (function () {
+var Exception = /** @class */ (function () {
     /**
      * Initializes a new instance of the Exception class with a specified error message and optionally a reference to the inner exception that is the cause of this exception.
      * @param message
@@ -33,7 +39,9 @@ var Exception = (function () {
                 || '';
             this.stack = _.toStringWithoutBrackets() + stack;
         }
-        catch (ex) { }
+        catch (ex) {
+            this.stack = "";
+        }
         Object.freeze(_);
     }
     /**
@@ -65,5 +73,4 @@ var Exception = (function () {
     return Exception;
 }());
 exports.Exception = Exception;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Exception;

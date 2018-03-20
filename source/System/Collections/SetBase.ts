@@ -35,7 +35,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 
 	protected abstract newUsing(source?:IEnumerableOrArray<T>):SetBase<T>;
 
-	protected _set:LinkedNodeList<ILinkedNodeWithValue<T>>;
+	protected _set:LinkedNodeList<ILinkedNodeWithValue<T>>|undefined;
 
 	protected _getSet():LinkedNodeList<ILinkedNodeWithValue<T>>
 	{
@@ -230,9 +230,11 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number
 	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>, useCopy?:boolean):number
 	{
+		const s = this._set;
+		if(!s) return 0;
 		return useCopy
 			? super.forEach(action, useCopy)
-			: this._set.forEach((node, i)=>action(<any>node.value, i));
+			: s.forEach((node, i)=>action(<any>node.value, i));
 	}
 
 	protected _removeNode(node:ILinkedNodeWithValue<T>|null|undefined):boolean

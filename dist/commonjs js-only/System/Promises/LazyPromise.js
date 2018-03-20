@@ -3,6 +3,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Promise_1 = require("./Promise");
 var defer_1 = require("../Threading/defer");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
@@ -13,14 +14,15 @@ var VOID0 = void 0;
 /**
  * A promise that waits for the first then to trigger the resolver.
  */
-var LazyPromise = (function (_super) {
+var LazyPromise = /** @class */ (function (_super) {
     __extends(LazyPromise, _super);
     function LazyPromise(_resolver) {
-        _super.call(this);
-        this._resolver = _resolver;
+        var _this = _super.call(this) || this;
+        _this._resolver = _resolver;
         if (!_resolver)
             throw new ArgumentNullException_1.ArgumentNullException("resolver");
-        this._resolvedCalled = true;
+        _this._resolvedCalled = true;
+        return _this;
     }
     LazyPromise.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
@@ -38,9 +40,9 @@ var LazyPromise = (function (_super) {
         this._onThen();
         return _super.prototype.thenSynchronous.call(this, onFulfilled, onRejected);
     };
-    LazyPromise.prototype.thenThis = function (onFulfilled, onRejected) {
+    LazyPromise.prototype.doneNow = function (onFulfilled, onRejected) {
         this._onThen();
-        return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
+        _super.prototype.doneNow.call(this, onFulfilled, onRejected);
     };
     // NOTE: For a LazyPromise we need to be careful not to trigger the resolve for delay.
     /**
@@ -72,7 +74,7 @@ var LazyPromise = (function (_super) {
         return new LazyPromise(function (resolve, reject) {
             // A lazy promise only enters here if something called for a resolution.
             pass = function () {
-                _this.thenThis(function (v) { return resolve(v); }, function (e) { return reject(e); });
+                _this.doneNow(function (v) { return resolve(v); }, function (e) { return reject(e); });
                 timeout.dispose();
                 timeout = VOID0;
                 pass = VOID0;
@@ -119,23 +121,23 @@ var LazyPromise = (function (_super) {
                 if (finalize)
                     timeout = defer_1.defer(finalize, milliseconds);
             };
-            // Calling super.thenThis does not trigger resolution.
+            // Calling super.doneNow does not trigger resolution.
             // This simply waits for resolution to happen.
             // Is effectively the timer by when resolution has occurred.
-            _super.prototype.thenThis.call(this, detector, detector);
+            _super.prototype.doneNow.call(this, detector, detector);
             //noinspection JSUnusedAssignment
             detector = null;
         }
         return new LazyPromise(function (resolve, reject) {
             // Because of the lazy nature of this promise, this could enter here at any time.
             if (_this.isPending) {
-                _this.thenThis(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
+                _this.doneNow(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
                 finalize();
             }
             else {
                 // We don't know when this resolved and could have happened anytime after calling this delay method.
                 pass = function () {
-                    _this.thenThis(function (v) { return resolve(v); }, function (e) { return reject(e); });
+                    _this.doneNow(function (v) { return resolve(v); }, function (e) { return reject(e); });
                 };
                 // Already finalized (aka resolved after a timeout)? Go now!
                 if (!finalize)
@@ -144,7 +146,6 @@ var LazyPromise = (function (_super) {
         });
     };
     return LazyPromise;
-}(Promise_1.Promise));
+}(Promise_1.TSDNPromise));
 exports.LazyPromise = LazyPromise;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = LazyPromise;

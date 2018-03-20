@@ -3,9 +3,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var ObjectDisposedException_1 = require("./ObjectDisposedException");
-var DisposableBase = (function () {
-    function DisposableBase(__finalizer) {
+var DisposableBase = /** @class */ (function () {
+    function DisposableBase(_disposableObjectName, __finalizer) {
+        this._disposableObjectName = _disposableObjectName;
         this.__finalizer = __finalizer;
         this.__wasDisposed = false;
     }
@@ -44,5 +46,4 @@ var DisposableBase = (function () {
     return DisposableBase;
 }());
 exports.DisposableBase = DisposableBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = DisposableBase;

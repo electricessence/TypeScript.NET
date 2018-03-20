@@ -20,8 +20,7 @@ export abstract class TaskHandlerBase extends DisposableBase implements ICancell
 
 	constructor()
 	{
-		super();
-		this._disposableObjectName = NAME;
+		super(NAME);
 		this._timeoutId = null;
 		this._status = TaskStatus.Created
 	}

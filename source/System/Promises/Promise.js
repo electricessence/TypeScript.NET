@@ -91,11 +91,10 @@
     var PromiseState = /** @class */ (function (_super) {
         __extends(PromiseState, _super);
         function PromiseState(_state, _result, _error) {
-            var _this = _super.call(this) || this;
+            var _this = _super.call(this, PROMISE_STATE) || this;
             _this._state = _state;
             _this._result = _result;
             _this._error = _error;
-            _this._disposableObjectName = PROMISE_STATE;
             return _this;
         }
         PromiseState.prototype._onDispose = function () {
@@ -174,9 +173,16 @@
         //readonly [Symbol.toStringTag]: "Promise";
         function PromiseBase() {
             var _this = _super.call(this, TSDNPromise.State.Pending) || this;
+            // @ts-ignore
             _this._disposableObjectName = PROMISE;
             return _this;
         }
+        /**
+         * Same as 'thenSynchronous' but does not return the result.  Returns the current promise instead.
+         * You may not need an additional promise result, and this will not create a new one.
+         * @param onFulfilled
+         * @param onRejected
+         */
         PromiseBase.prototype.thenThis = function (onFulfilled, onRejected) {
             this.doneNow(onFulfilled, onRejected);
             return this;
@@ -674,8 +680,7 @@
     var PromiseCollection = /** @class */ (function (_super) {
         __extends(PromiseCollection, _super);
         function PromiseCollection(source) {
-            var _this = _super.call(this) || this;
-            _this._disposableObjectName = PROMISE_COLLECTION;
+            var _this = _super.call(this, PROMISE_COLLECTION) || this;
             _this._source = source && source.slice() || [];
             return _this;
         }

@@ -13,7 +13,7 @@ import { ArgumentException } from "../Exceptions/ArgumentException";
 const OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = `Must be less than or equal to ${ABSOLUTE_MAX_SIZE}.`;
 export class ObjectPool extends DisposableBase {
     constructor(_maxSize, _generator, _recycler) {
-        super();
+        super(OBJECT_POOL);
         this._maxSize = _maxSize;
         this._generator = _generator;
         this._recycler = _recycler;
@@ -27,12 +27,11 @@ export class ObjectPool extends DisposableBase {
             throw new ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_LTM);
         this._localAbsMaxSize = Math.min(_maxSize * 2, ABSOLUTE_MAX_SIZE);
         const _ = this;
-        _._disposableObjectName = OBJECT_POOL;
-        _._pool = [];
-        _._trimmer = new TaskHandler(() => _._trim());
+        this._pool = [];
+        this._trimmer = new TaskHandler(() => _._trim());
         const clear = () => _._clear();
-        _._flusher = new TaskHandler(clear);
-        _._autoFlusher = new TaskHandler(clear);
+        this._flusher = new TaskHandler(clear);
+        this._autoFlusher = new TaskHandler(clear);
     }
     /**
      * Defines the maximum at which trimming should allow.

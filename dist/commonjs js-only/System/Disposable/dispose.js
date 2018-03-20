@@ -3,6 +3,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../Types");
 /**
  * Takes any number of disposables as arguments and attempts to dispose them.
@@ -15,18 +16,28 @@ var Types_1 = require("../Types");
 function dispose() {
     var disposables = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        disposables[_i - 0] = arguments[_i];
+        disposables[_i] = arguments[_i];
     }
     // The disposables arguments array is effectively localized so it's safe.
     disposeTheseInternal(disposables, false);
 }
 exports.dispose = dispose;
-var dispose;
 (function (dispose) {
+    /**
+     * Use this when only disposing one object to avoid creation of arrays.
+     * @param disposable
+     * @param trapExceptions
+     */
+    function single(disposable, trapExceptions) {
+        if (trapExceptions === void 0) { trapExceptions = false; }
+        if (disposable)
+            disposeSingle(disposable, trapExceptions);
+    }
+    dispose.single = single;
     function deferred() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
+            disposables[_i] = arguments[_i];
         }
         these.deferred(disposables);
     }
@@ -40,7 +51,7 @@ var dispose;
     function withoutException() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
+            disposables[_i] = arguments[_i];
         }
         // The disposables arguments array is effectively localized so it's safe.
         return disposeTheseInternal(disposables, true);
@@ -58,7 +69,6 @@ var dispose;
             : void 0;
     }
     dispose.these = these;
-    var these;
     (function (these) {
         function deferred(disposables, delay) {
             if (delay === void 0) { delay = 0; }
@@ -69,6 +79,18 @@ var dispose;
             }
         }
         these.deferred = deferred;
+        /**
+         * Use this unsafe method when guaranteed not to cause events that will make modifications to the disposables array.
+         * @param disposables
+         * @param trapExceptions
+         * @returns {any[]}
+         */
+        function noCopy(disposables, trapExceptions) {
+            return disposables && disposables.length
+                ? disposeTheseInternal(disposables, trapExceptions)
+                : void 0;
+        }
+        these.noCopy = noCopy;
     })(these = dispose.these || (dispose.these = {}));
 })(dispose = exports.dispose || (exports.dispose = {}));
 /**
@@ -101,9 +123,8 @@ exports.using = using;
  */
 function disposeSingle(disposable, trapExceptions) {
     if (disposable
-        && Types_1.Type.of(disposable)
-            .member('dispose')
-            .isFunction) {
+        && typeof disposable == Types_1.Type.OBJECT
+        && typeof disposable['dispose'] == "function") {
         if (trapExceptions) {
             try {
                 disposable.dispose();
@@ -118,7 +139,7 @@ function disposeSingle(disposable, trapExceptions) {
     return null;
 }
 /**
- * This dispose method assumes it's working on a local copy and is unsafe for external use.
+ * This dispose method assumes it's working on a local arrayCopy and is unsafe for external use.
  */
 function disposeTheseInternal(disposables, trapExceptions, index) {
     if (index === void 0) { index = 0; }
@@ -156,5 +177,4 @@ function disposeTheseInternal(disposables, trapExceptions, index) {
     }
     return exceptions;
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = dispose;

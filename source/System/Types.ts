@@ -50,6 +50,8 @@ export class TypeInfo
 	{
 		this.isBoolean = false;
 		this.isNumber = false;
+		this.isFinite = false;
+		this.isValidNumber = false;
 		this.isString = false;
 		this.isTrueNaN = false;
 		this.isObject = false;
@@ -58,6 +60,8 @@ export class TypeInfo
 		this.isNull = false;
 		this.isPrimitive = false;
 		this.isSymbol = false;
+		this.isArray = false;
+		this.isNullOrUndefined = false;
 
 		switch(this.type = typeof target)
 		{
@@ -174,8 +178,13 @@ export function Type(target:any):TypeInfo
 	return new TypeInfo(target);
 }
 
+
+
+
 export module Type
 {
+
+
 	/**
 	 * typeof true
 	 * @type {string}
@@ -411,7 +420,7 @@ export module Type
 	 */
 	export function hasMemberOfType<T>(
 		instance:any, property:string,
-		type:TypeValue.Any):instance is T
+		type:TypeValue):instance is T
 	{
 		return hasMember(instance, property) && typeof(instance[property])===type;
 	}

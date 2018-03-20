@@ -3,10 +3,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../../../Types");
 var Compare_1 = require("../../../Compare");
 function ensureArray(value) {
-    return Array.isArray(value)
+    return (value) instanceof (Array)
         ? value
         : [value];
 }
@@ -31,7 +32,7 @@ function ensureArray(value) {
  * @param selector
  * @param order
  * @param equivalentToNaN
- * @returns {function((TSource|TSource[]), (TSource|TSource[])): CompareResult}
+ * @returns {(a:TSource, b:TSource)=>CompareResult}
  */
 function createComparer(selector, order, equivalentToNaN) {
     if (order === void 0) { order = 1 /* Ascending */; }
@@ -42,7 +43,7 @@ function createComparer(selector, order, equivalentToNaN) {
         var aValue = ensureArray(selector(a));
         var bValue = ensureArray(selector(b));
         var len = Math.min(aValue.length, bValue.length);
-        var oArray = Array.isArray(order) ? order : null;
+        var oArray = (order) instanceof (Array) ? order : null;
         for (var i = 0; i < len; i++) {
             var vA = aValue[i], vB = bValue[i];
             var o = oArray

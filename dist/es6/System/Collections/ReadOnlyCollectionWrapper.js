@@ -15,12 +15,12 @@ export default class ReadOnlyCollectionWrapper extends ReadOnlyCollectionBase {
         const _ = this;
         // Attempting to avoid contact with the original collection.
         if (Type.isArrayLike(collection)) {
-            _._getCount = () => collection.length;
-            _._getEnumerator = () => enumeratorFrom(collection);
+            this.__getCount = () => collection.length;
+            this.__getEnumerator = () => enumeratorFrom(collection);
         }
         else {
-            _._getCount = () => collection.count;
-            _._getEnumerator = () => collection.getEnumerator();
+            this.__getCount = () => collection.count;
+            this.__getEnumerator = () => collection.getEnumerator();
         }
     }
     _getCount() {
@@ -33,8 +33,9 @@ export default class ReadOnlyCollectionWrapper extends ReadOnlyCollectionBase {
     }
     _onDispose() {
         super._onDispose();
-        this.__getCount = null;
-        this.__getEnumerator = null;
+        const _ = this;
+        _.__getCount = null;
+        _.__getEnumerator = null;
     }
 }
 //# sourceMappingURL=ReadOnlyCollectionWrapper.js.map

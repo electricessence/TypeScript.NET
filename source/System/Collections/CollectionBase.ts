@@ -34,15 +34,13 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	constructor(
 		source?:IEnumerableOrArray<T>|IEnumerator<T>,
-		protected _equalityComparer:EqualityComparison<T|null|undefined> = areEqual)
+		protected _equalityComparer:EqualityComparison<T> = areEqual)
 	{
-		super();
-		const _ = this;
-		_._disposableObjectName = NAME;
-		_._importEntries(source);
-		_._updateRecursion = 0;
-		_._modifiedCount = 0;
-		_._version = 0;
+		super(NAME);
+		this._importEntries(source);
+		this._updateRecursion = 0;
+		this._modifiedCount = 0;
+		this._version = 0;
 	}
 
 

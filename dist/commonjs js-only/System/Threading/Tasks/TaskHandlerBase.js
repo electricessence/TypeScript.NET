@@ -3,6 +3,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var DisposableBase_1 = require("../../Disposable/DisposableBase");
 var extends_1 = require("../../../extends");
 // noinspection JSUnusedLocalSymbols
@@ -11,13 +12,13 @@ var NAME = "TaskHandlerBase";
 /**
  * A simple class for handling potentially repeated executions either deferred or immediate.
  */
-var TaskHandlerBase = (function (_super) {
+var TaskHandlerBase = /** @class */ (function (_super) {
     __extends(TaskHandlerBase, _super);
     function TaskHandlerBase() {
-        _super.call(this);
-        this._disposableObjectName = NAME;
-        this._timeoutId = null;
-        this._status = 0 /* Created */;
+        var _this = _super.call(this, NAME) || this;
+        _this._timeoutId = null;
+        _this._status = 0 /* Created */;
+        return _this;
     }
     Object.defineProperty(TaskHandlerBase.prototype, "isScheduled", {
         get: function () {
@@ -31,11 +32,12 @@ var TaskHandlerBase = (function (_super) {
      * @param defer Optional time to wait until triggering.
      */
     TaskHandlerBase.prototype.start = function (defer) {
+        if (defer === void 0) { defer = 0; }
         this.throwIfDisposed();
         this.cancel();
         this._status = 1 /* WaitingToRun */;
         if (!(defer > 0))
-            defer = 0;
+            defer = 0; // A negation is used to catch edge cases.
         if (isFinite(defer))
             this._timeoutId = setTimeout(TaskHandlerBase._handler, defer, this);
     };
@@ -82,5 +84,4 @@ var TaskHandlerBase = (function (_super) {
     return TaskHandlerBase;
 }(DisposableBase_1.DisposableBase));
 exports.TaskHandlerBase = TaskHandlerBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TaskHandlerBase;

@@ -22,7 +22,7 @@
     (function (Integer) {
         Integer.MAX_32_BIT = 2147483647;
         Integer.MAX_VALUE = 9007199254740991;
-        var NUMBER = "number";
+        var NUMBER = "number" /* Number */;
         /**
          * Converts any number to its 32bit counterpart.
          * Throws if conversion is not possible.

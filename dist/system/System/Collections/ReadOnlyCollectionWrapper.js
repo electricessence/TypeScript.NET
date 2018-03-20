@@ -39,12 +39,12 @@ System.register(["../Exceptions/ArgumentNullException", "./ReadOnlyCollectionBas
                     var _ = _this;
                     // Attempting to avoid contact with the original collection.
                     if (Types_1.Type.isArrayLike(collection)) {
-                        _._getCount = function () { return collection.length; };
-                        _._getEnumerator = function () { return Enumerator_1.from(collection); };
+                        _this.__getCount = function () { return collection.length; };
+                        _this.__getEnumerator = function () { return Enumerator_1.from(collection); };
                     }
                     else {
-                        _._getCount = function () { return collection.count; };
-                        _._getEnumerator = function () { return collection.getEnumerator(); };
+                        _this.__getCount = function () { return collection.count; };
+                        _this.__getEnumerator = function () { return collection.getEnumerator(); };
                     }
                     return _this;
                 }
@@ -58,8 +58,9 @@ System.register(["../Exceptions/ArgumentNullException", "./ReadOnlyCollectionBas
                 };
                 ReadOnlyCollectionWrapper.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);
-                    this.__getCount = null;
-                    this.__getEnumerator = null;
+                    var _ = this;
+                    _.__getCount = null;
+                    _.__getEnumerator = null;
                 };
                 return ReadOnlyCollectionWrapper;
             }(ReadOnlyCollectionBase_1.ReadOnlyCollectionBase));

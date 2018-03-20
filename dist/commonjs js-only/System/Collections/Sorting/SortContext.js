@@ -3,8 +3,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Values = require("../../Compare");
-var SortContext = (function () {
+var SortContext = /** @class */ (function () {
     function SortContext(_next, _comparer, _order) {
         if (_comparer === void 0) { _comparer = Values.compare; }
         if (_order === void 0) { _order = 1 /* Ascending */; }
@@ -22,7 +23,7 @@ var SortContext = (function () {
         configurable: true
     });
     /**
-     * Generates an array of indexes from the source in order of their expected sort without modifying the source.
+     * Generates an array of indexes from the source in order of their expected internalSort without modifying the source.
      * @param source
      * @returns {number[]}
      */
@@ -50,5 +51,4 @@ var SortContext = (function () {
     return SortContext;
 }());
 exports.SortContext = SortContext;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SortContext;

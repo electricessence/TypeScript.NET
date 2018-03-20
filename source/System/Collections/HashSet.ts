@@ -43,7 +43,7 @@ extends SetBase<T>
 		return new HashSet<T>(source,this._keyGenerator);
 	}
 
-	private _registry:IMap<IMap<ILinkedNodeWithValue<T>>>;
+	private _registry:IMap<IMap<ILinkedNodeWithValue<T>>>|undefined;
 
 	protected _addInternal(item:T):boolean
 	{
@@ -99,7 +99,7 @@ extends SetBase<T>
 
 		if(node)
 		{
-			delete t[<any>item];
+			delete t![<any>item];
 			const s = this._set;
 			if(s && s.removeNode(node))
 			{
@@ -112,7 +112,7 @@ extends SetBase<T>
 
 }
 
-function wipe(map:IMap<any>, depth:number = 1):void
+function wipe(map:IMap<any>|undefined, depth:number = 1):void
 {
 	if(map && depth)
 	{

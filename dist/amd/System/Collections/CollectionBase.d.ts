@@ -11,8 +11,8 @@ import { IEnumerableOrArray } from "./IEnumerableOrArray";
 import { ArrayLikeWritable } from "./Array/ArrayLikeWritable";
 import { LinqEnumerable } from "../../System.Linq/Linq";
 export declare abstract class CollectionBase<T> extends DisposableBase implements ICollection<T>, IEnumerateEach<T> {
-    protected _equalityComparer: EqualityComparison<T | null | undefined>;
-    constructor(source?: IEnumerableOrArray<T> | IEnumerator<T>, _equalityComparer?: EqualityComparison<T | null | undefined>);
+    protected _equalityComparer: EqualityComparison<T>;
+    constructor(source?: IEnumerableOrArray<T> | IEnumerator<T>, _equalityComparer?: EqualityComparison<T>);
     protected abstract getCount(): number;
     readonly count: number;
     protected getIsReadOnly(): boolean;

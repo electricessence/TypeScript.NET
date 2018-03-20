@@ -14,14 +14,12 @@ const NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CM
 const LINQ_PATH = "../../System.Linq/Linq";
 export class CollectionBase extends DisposableBase {
     constructor(source, _equalityComparer = areEqual) {
-        super();
+        super(NAME);
         this._equalityComparer = _equalityComparer;
-        const _ = this;
-        _._disposableObjectName = NAME;
-        _._importEntries(source);
-        _._updateRecursion = 0;
-        _._modifiedCount = 0;
-        _._version = 0;
+        this._importEntries(source);
+        this._updateRecursion = 0;
+        this._modifiedCount = 0;
+        this._version = 0;
     }
     get count() {
         return this.getCount();

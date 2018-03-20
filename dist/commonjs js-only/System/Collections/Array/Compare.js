@@ -3,6 +3,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Values = require("../../Compare");
 var Types_1 = require("../../Types");
 /*  validateSize: Utility for quick validation/invalidation of array equality.
@@ -36,7 +37,7 @@ function areAllEqual(arrays, strict, equalityComparer) {
         strict = true;
     }
     var first = arrays[0];
-    for (var i = 0, l = arrays.length; i < l; i++) {
+    for (var i = 1, l = arrays.length; i < l; i++) {
         if (!areEqual(first, arrays[i], strict, equalityComparer))
             return false;
     }
@@ -60,7 +61,7 @@ function areEqual(a, b, strict, equalityComparer) {
     return true;
 }
 exports.areEqual = areEqual;
-function sort(a, comparer) {
+function internalSort(a, comparer) {
     if (!a || a.length < 2)
         return a;
     var len = a.length;
@@ -84,8 +85,8 @@ function areEquivalent(a, b, comparer) {
         return len;
     // There might be a better more performant way to do this, but for the moment, this
     // works quite well.
-    a = sort(a, comparer);
-    b = sort(b, comparer);
+    a = internalSort(a, comparer);
+    b = internalSort(b, comparer);
     for (var i = 0; i < len; i++) {
         if (comparer(a[i], b[i]) !== 0)
             return false;

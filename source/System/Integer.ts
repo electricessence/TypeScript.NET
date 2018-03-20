@@ -16,7 +16,7 @@ export module Integer
 {
 	export const MAX_32_BIT:number = 2147483647;
 	export const MAX_VALUE:number = 9007199254740991;
-	const NUMBER:TypeValue.Number = "number";
+	const NUMBER = TypeValue.Number;
 
 	/**
 	 * Converts any number to its 32bit counterpart.

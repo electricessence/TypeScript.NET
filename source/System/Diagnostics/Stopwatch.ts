@@ -20,10 +20,13 @@ class Stopwatch implements ITimer
 		return getTimestampMilliseconds();
 	}
 
+	// @ts-ignore;
 	private _elapsed:number;
+	// @ts-ignore;
 	private _startTimeStamp:number;
-
+	// @ts-ignore;
 	private _isRunning:boolean;
+	
 	get isRunning():boolean
 	{
 		return this._isRunning;

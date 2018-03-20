@@ -23,18 +23,19 @@
     var __extends = extends_1.default;
     var DISPOSING = 'disposing', DISPOSED = 'disposed';
     function entryFinalizer() {
-        var p = this.params;
-        p.dispatcher.removeEntry(this);
+        // @ts-ignore
+        var _ = this;
+        var p = _.params;
+        p.dispatcher.removeEntry(_);
         p.dispatcher = null;
     }
     var NAME = "EventDispatcherBase";
     var EventDispatcherBase = /** @class */ (function (_super) {
         __extends(EventDispatcherBase, _super);
         function EventDispatcherBase() {
-            var _this = _super.call(this) || this;
+            var _this = _super.call(this, NAME) || this;
             // When dispatching events, we need a way to prevent recursion when disposing.
             _this._isDisposing = false;
-            _this._disposableObjectName = NAME;
             return _this;
         }
         EventDispatcherBase.prototype.addEventListener = function (type, listener, priority) {
@@ -60,12 +61,14 @@
         };
         EventDispatcherBase.prototype.hasEventListener = function (type, listener) {
             var e = this._entries;
-            return e && e.some(function (value) {
+            return !!e && e.some(function (value) {
                 return type == value.type && (!listener || listener == value.listener);
             });
         };
         EventDispatcherBase.prototype.removeEventListener = function (type, listener) {
-            dispose_1.dispose.these.noCopy(this._entries.filter(function (entry) { return entry.matches(type, listener); }));
+            var e = this._entries;
+            if (e)
+                dispose_1.dispose.these.noCopy(e.filter(function (entry) { return entry.matches(type, listener); }));
         };
         EventDispatcherBase.prototype.dispatchEvent = function (e, params) {
             var _this = this;

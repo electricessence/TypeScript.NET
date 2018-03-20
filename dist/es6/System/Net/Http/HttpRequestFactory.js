@@ -13,9 +13,8 @@ const NAME = 'HttpRequestFactory';
  */
 export class HttpRequestFactory extends DisposableBase {
     constructor(_http, uriDefaults) {
-        super();
+        super(NAME);
         this._http = _http;
-        this._disposableObjectName = NAME;
         if (!_http)
             throw new ArgumentNullException('_http');
         this._uriDefaults = Uri.from(uriDefaults);

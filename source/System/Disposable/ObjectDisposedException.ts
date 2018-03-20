@@ -18,17 +18,18 @@ export {Error};
 export class ObjectDisposedException extends InvalidOperationException
 {
 
-	readonly objectName:string;
+	// @ts-ignore TS2564: Since this does actually get initialized.
+	readonly objectName:string|null;
 
 	// For simplicity and consistency, lets stick with 1 signature.
 	constructor(
-		objectName:string,
+		objectName:string|null,
 		message?:string,
 		innerException?:Error)
 	{
 		super(message || '', innerException, (_)=>
 		{
-			(<any>_).objectName = objectName;
+			_.objectName = objectName;
 		});
 	}
 

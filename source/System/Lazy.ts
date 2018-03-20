@@ -18,6 +18,7 @@ export class Lazy<T> extends ResolverBase<T> implements ILazy<T>
 	constructor(valueFactory:Func<T>, trapExceptions:boolean = false, allowReset:boolean = false)
 	{
 		super(valueFactory, trapExceptions, allowReset);
+		// @ts-ignore // Force this override.
 		this._disposableObjectName = 'Lazy';
 		this._isValueCreated = false;
 	}
@@ -54,6 +55,7 @@ export class ResettableLazy<T> extends Lazy<T>
 	constructor(valueFactory:Func<T>, trapExceptions:boolean = false)
 	{
 		super(valueFactory, trapExceptions, true);
+		// @ts-ignore // Force this override.
 		this._disposableObjectName = 'ResettableLazy';
 	}
 

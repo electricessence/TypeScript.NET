@@ -1,9 +1,10 @@
 "use strict";
 /*!
- * @author electricessence / https://github.com/electricessence/
- * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+* @author electricessence / https://github.com/electricessence/
+* Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+*/
+Object.defineProperty(exports, "__esModule", { value: true });
 var Compare_1 = require("../Compare");
 var AU = require("./Array/Utility");
 var Types_1 = require("../Types");
@@ -23,34 +24,34 @@ var SHRINK_THRESHOLD = 32; // Unused?
 var GROW_FACTOR_HALF = 100;
 var DEFAULT_CAPACITY = MINIMUM_GROW;
 var emptyArray = Object.freeze([]);
-var Queue = (function (_super) {
+var Queue = /** @class */ (function (_super) {
     __extends(Queue, _super);
     function Queue(source, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-        _super.call(this, VOID0, equalityComparer);
-        var _ = this;
-        _._head = 0;
-        _._tail = 0;
-        _._size = 0;
+        var _this = _super.call(this, VOID0, equalityComparer) || this;
+        _this._head = 0;
+        _this._tail = 0;
+        _this._size = 0;
         if (!source)
-            _._array = emptyArray;
+            _this._array = emptyArray;
         else {
             if (Types_1.Type.isNumber(source)) {
                 var capacity = source;
                 assertIntegerZeroOrGreater(capacity, "capacity");
-                _._array = capacity
+                _this._array = capacity
                     ? AU.initialize(capacity)
                     : emptyArray;
             }
             else {
                 var se = source;
-                _._array = AU.initialize(Types_1.Type.isArrayLike(se)
+                _this._array = AU.initialize(Types_1.Type.isArrayLike(se)
                     ? se.length
                     : DEFAULT_CAPACITY);
-                _._importEntries(se);
+                _this._importEntries(se);
             }
         }
-        _._capacity = _._array.length;
+        _this._capacity = _this._array.length;
+        return _this;
     }
     Queue.prototype.getCount = function () {
         return this._size;
@@ -74,6 +75,7 @@ var Queue = (function (_super) {
     };
     //noinspection JSUnusedLocalSymbols
     Queue.prototype._removeInternal = function (item, max) {
+        //noinspection HtmlUnknownTag
         throw new NotImplementedException_1.NotImplementedException("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
             " since it would require destroying the underlying array to remove the item.");
     };
@@ -134,13 +136,13 @@ var Queue = (function (_super) {
         if (capacity > len)
             _.throwIfDisposed();
         if (capacity == len)
-            return;
+            return this;
         var head = _._head, tail = _._tail, size = _._size;
         // Special case where we can simply extend the length of the array. (JavaScript only)
         if (array != emptyArray && capacity > len && head < tail) {
             array.length = _._capacity = capacity;
             _._version++;
-            return;
+            return this;
         }
         // We create a new array because modifying an existing one could be slow.
         var newArray = AU.initialize(capacity);
@@ -158,9 +160,10 @@ var Queue = (function (_super) {
         _._head = 0;
         _._tail = (size == capacity) ? 0 : size;
         _._signalModification(true);
+        return this;
     };
     Queue.prototype.enqueue = function (item) {
-        this.add(item);
+        return this.add(item);
     };
     Queue.prototype._tryDequeueInternal = function (out) {
         var _ = this;
@@ -252,5 +255,4 @@ function assertIntegerZeroOrGreater(value, property) {
     Integer_1.Integer.assert(value, property);
     return assertZeroOrGreater(value, property);
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Queue;

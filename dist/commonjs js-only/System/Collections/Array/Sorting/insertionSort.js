@@ -1,4 +1,9 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
 var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
 /**
  * https://en.wikipedia.org/wiki/Insertion_sort

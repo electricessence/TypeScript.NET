@@ -3,8 +3,7 @@
     "module": "umd",
     "target": "es5",
     "sourceMap": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
+    "strict": true,
     "removeComments": false,
     "noEmitHelpers": true,
     "moduleResolution": "node"

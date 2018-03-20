@@ -73,9 +73,11 @@ const NAME = "EnumeratorBase";
 export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 {
 
-	private _yielder:Yielder<T>;
+	// @ts-ignore;
+	private _yielder:Yielder<T>|undefined;
+	// @ts-ignore;
 	private _state:EnumeratorState;
-	private _disposer:()=>void;
+	private _disposer:Closure|undefined;
 
 	get current():T|undefined
 	{
@@ -99,14 +101,14 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		disposer?:Closure|null,
 		isEndless?:boolean);
 	constructor(
-		private _initializer:Closure,
+		private _initializer:Closure|null,
 		private _tryGetNext:(yielder:IYield<T>) => boolean,
 		disposer?:Closure|boolean|null,
 		isEndless?:boolean)
 	{
-		super();
-		this._disposableObjectName = NAME;
+		super(NAME);
 		this.reset();
+
 		if(Type.isBoolean(isEndless))
 			this._isEndless = isEndless;
 		else if(Type.isBoolean(disposer))
@@ -116,7 +118,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 			this._disposer = disposer;
 	}
 
-	protected _isEndless:boolean;
+	protected _isEndless:boolean|undefined;
 	/*
 	 * Provides a mechanism to indicate if this enumerable never ends.
 	 * If set to true, some operations that expect a finite result may throw.
@@ -143,7 +145,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		if(y) yielder(y); // recycle until actually needed.
 	}
 
-	private _assertBadState() {
+	private _assertValidState() {
 		const _ = this;
 		switch(_._state)
 		{
@@ -161,7 +163,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	 * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
 	 */
 	tryGetCurrent(out:Action<T>):boolean {
-		this._assertBadState();
+		this._assertValidState();
 		if(this._state===EnumeratorState.Active) {
 			out(<T>this.current);
 			return true;
@@ -181,7 +183,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	{
 		const _ = this;
 
-		_._assertBadState();
+		_._assertValidState();
 
 		try
 		{
@@ -195,7 +197,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 						initializer();
 				// fall through
 				case EnumeratorState.Active:
-					if(_._tryGetNext(_._yielder))
+					if(_._tryGetNext(_._yielder!))
 					{
 						return true;
 					}
@@ -255,7 +257,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	'return'(value?:any):IIteratorResult<any>
 	{
 		const _ = this;
-		_._assertBadState();
+		_._assertValidState();
 
 		try
 		{
@@ -283,12 +285,12 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		_._isEndless = false;
 		const disposer = _._disposer;
 
-		_._initializer = <any>null;
-		_._disposer = <any>null;
+		_._initializer = null;
+		_._disposer = undefined;
 
 
 		const y = _._yielder;
-		_._yielder = <any>null;
+		_._yielder = undefined;
 		this._state = EnumeratorState.Disposed;
 
 		if(y) yielder(y);

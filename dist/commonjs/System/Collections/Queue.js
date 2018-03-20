@@ -29,29 +29,28 @@ var Queue = /** @class */ (function (_super) {
     function Queue(source, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         var _this = _super.call(this, VOID0, equalityComparer) || this;
-        var _ = _this;
-        _._head = 0;
-        _._tail = 0;
-        _._size = 0;
+        _this._head = 0;
+        _this._tail = 0;
+        _this._size = 0;
         if (!source)
-            _._array = emptyArray;
+            _this._array = emptyArray;
         else {
             if (Types_1.Type.isNumber(source)) {
                 var capacity = source;
                 assertIntegerZeroOrGreater(capacity, "capacity");
-                _._array = capacity
+                _this._array = capacity
                     ? AU.initialize(capacity)
                     : emptyArray;
             }
             else {
                 var se = source;
-                _._array = AU.initialize(Types_1.Type.isArrayLike(se)
+                _this._array = AU.initialize(Types_1.Type.isArrayLike(se)
                     ? se.length
                     : DEFAULT_CAPACITY);
-                _._importEntries(se);
+                _this._importEntries(se);
             }
         }
-        _._capacity = _._array.length;
+        _this._capacity = _this._array.length;
         return _this;
     }
     Queue.prototype.getCount = function () {

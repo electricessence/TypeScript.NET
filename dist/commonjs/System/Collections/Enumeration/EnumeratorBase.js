@@ -62,10 +62,9 @@ var NAME = "EnumeratorBase";
 var EnumeratorBase = /** @class */ (function (_super) {
     __extends(EnumeratorBase, _super);
     function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
-        var _this = _super.call(this) || this;
+        var _this = _super.call(this, NAME) || this;
         _this._initializer = _initializer;
         _this._tryGetNext = _tryGetNext;
-        _this._disposableObjectName = NAME;
         _this.reset();
         if (Types_1.Type.isBoolean(isEndless))
             _this._isEndless = isEndless;
@@ -116,7 +115,7 @@ var EnumeratorBase = /** @class */ (function (_super) {
         if (y)
             yielder(y); // recycle until actually needed.
     };
-    EnumeratorBase.prototype._assertBadState = function () {
+    EnumeratorBase.prototype._assertValidState = function () {
         var _ = this;
         switch (_._state) {
             case 3 /* Faulted */:
@@ -132,7 +131,7 @@ var EnumeratorBase = /** @class */ (function (_super) {
      * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
      */
     EnumeratorBase.prototype.tryGetCurrent = function (out) {
-        this._assertBadState();
+        this._assertValidState();
         if (this._state === 1 /* Active */) {
             out(this.current);
             return true;
@@ -152,7 +151,7 @@ var EnumeratorBase = /** @class */ (function (_super) {
      */
     EnumeratorBase.prototype.moveNext = function () {
         var _ = this;
-        _._assertBadState();
+        _._assertValidState();
         try {
             switch (_._state) {
                 case 0 /* Before */:
@@ -210,7 +209,7 @@ var EnumeratorBase = /** @class */ (function (_super) {
     };
     EnumeratorBase.prototype['return'] = function (value) {
         var _ = this;
-        _._assertBadState();
+        _._assertValidState();
         try {
             return value === VOID0 || _._state === 2 /* Completed */ || _._state === 4 /* Interrupted */
                 ? IteratorResult_1.IteratorResult.Done
@@ -232,9 +231,9 @@ var EnumeratorBase = /** @class */ (function (_super) {
         _._isEndless = false;
         var disposer = _._disposer;
         _._initializer = null;
-        _._disposer = null;
+        _._disposer = undefined;
         var y = _._yielder;
-        _._yielder = null;
+        _._yielder = undefined;
         this._state = 5 /* Disposed */;
         if (y)
             yielder(y);

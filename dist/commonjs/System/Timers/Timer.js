@@ -114,7 +114,7 @@ var Timer = /** @class */ (function (_super) {
     Timer.prototype.cancel = function () {
         if (this._cancel) {
             this._cancel();
-            this._cancel = null;
+            this._cancel = undefined;
             return true;
         }
         return false;

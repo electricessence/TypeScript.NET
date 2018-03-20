@@ -344,7 +344,7 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                 Parallel.prototype.map = function (data, task, env) {
                     var _this = this;
                     if (!data || !data.length)
-                        return Promise_1.ArrayPromise.fulfilled(data && []);
+                        return Promise_1.ArrayPromise.fulfilled([]);
                     // Would return the same result, but has extra overhead.
                     // return this.pipe(data,task).all();
                     data = data.slice(); // Never use the original.

@@ -48,7 +48,9 @@
                     || '';
                 this.stack = _.toStringWithoutBrackets() + stack;
             }
-            catch (ex) { }
+            catch (ex) {
+                this.stack = "";
+            }
             Object.freeze(_);
         }
         /**

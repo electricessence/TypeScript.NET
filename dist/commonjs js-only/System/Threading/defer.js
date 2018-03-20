@@ -1,8 +1,13 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
-var DeferBase = (function () {
+var DeferBase = /** @class */ (function () {
     function DeferBase() {
     }
     DeferBase.prototype.dispose = function () {
@@ -10,13 +15,15 @@ var DeferBase = (function () {
     };
     return DeferBase;
 }());
-var Defer = (function (_super) {
+var Defer = /** @class */ (function (_super) {
     __extends(Defer, _super);
     function Defer(task, delay, payload) {
-        _super.call(this);
+        if (delay === void 0) { delay = 0; }
+        var _this = _super.call(this) || this;
         if (!(delay > 0))
             delay = 0; // covers undefined and null.
-        this._id = setTimeout(Defer.handler, delay, task, this, payload);
+        _this._id = setTimeout(Defer.handler, delay, task, _this, payload);
+        return _this;
     }
     Defer.prototype.cancel = function () {
         var id = this._id;
@@ -34,17 +41,18 @@ var Defer = (function (_super) {
     };
     return Defer;
 }(DeferBase));
-var DeferInterval = (function (_super) {
+var DeferInterval = /** @class */ (function (_super) {
     __extends(DeferInterval, _super);
     function DeferInterval(task, interval, _remaining) {
         if (_remaining === void 0) { _remaining = Infinity; }
-        _super.call(this);
-        this._remaining = _remaining;
-        if (interval === null || interval === void (0))
+        var _this = _super.call(this) || this;
+        _this._remaining = _remaining;
+        if (interval == null)
             throw "'interval' must be a valid number.";
         if (interval < 0)
             throw "'interval' cannot be negative.";
-        this._id = setInterval(DeferInterval.handler, interval, task, this);
+        _this._id = setInterval(DeferInterval.handler, interval, task, _this);
+        return _this;
     }
     DeferInterval.prototype.cancel = function () {
         var id = this._id;
@@ -71,5 +79,4 @@ function interval(task, interval, count) {
     return new DeferInterval(task, interval, count);
 }
 exports.interval = interval;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = defer;

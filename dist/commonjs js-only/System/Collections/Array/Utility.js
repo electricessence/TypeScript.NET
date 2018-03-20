@@ -3,86 +3,19 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../../Types");
 var Integer_1 = require("../../Integer");
 var Compare_1 = require("../../Compare");
 var ArgumentException_1 = require("../../Exceptions/ArgumentException");
 var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var ArgumentOutOfRangeException_1 = require("../../Exceptions/ArgumentOutOfRangeException");
-/**
- * Initializes an array depending on the requested capacity.
- * The returned array will have a .length equal to the value provided.
- * @param length
- * @returns {T[]}
- */
-function initialize(length) {
-    Integer_1.Integer.assert(length, 'length');
-    // This logic is based upon JS performance tests that show a significant difference at the level of 65536.
-    var array;
-    if (length > 65536)
-        array = new Array(length);
-    else {
-        array = [];
-        array.length = length;
-    }
-    return array;
-}
-exports.initialize = initialize;
-/**
- *
- * @param source
- * @param sourceIndex
- * @param length
- * @returns {any}
- */
-function copy(source, sourceIndex, length) {
-    if (sourceIndex === void 0) { sourceIndex = 0; }
-    if (length === void 0) { length = Infinity; }
-    if (!source)
-        return source; // may have passed zero? undefined? or null?
-    return copyTo(source, initialize(Math.min(length, Math.max(source.length - sourceIndex, 0))), sourceIndex, 0, length);
-}
-exports.copy = copy;
+var initialize_1 = require("./initialize");
+exports.initialize = initialize_1.initialize;
+var copy_1 = require("./copy");
+exports.copy = copy_1.copy;
+exports.copyTo = copy_1.copyTo;
 var CBN = 'Cannot be null.', CB0 = 'Cannot be zero.', CBL0 = 'Cannot be less than zero.', VFN = 'Must be a valid finite number';
-/**
- * Copies one array to another.
- * @param source
- * @param destination
- * @param sourceIndex
- * @param destinationIndex
- * @param length An optional limit to stop copying.
- * @returns The destination array.
- */
-function copyTo(source, destination, sourceIndex, destinationIndex, length) {
-    if (sourceIndex === void 0) { sourceIndex = 0; }
-    if (destinationIndex === void 0) { destinationIndex = 0; }
-    if (length === void 0) { length = Infinity; }
-    if (!source)
-        throw new ArgumentNullException_1.ArgumentNullException('source', CBN);
-    if (!destination)
-        throw new ArgumentNullException_1.ArgumentNullException('destination', CBN);
-    if (sourceIndex < 0)
-        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('sourceIndex', sourceIndex, CBL0);
-    var sourceLength = source.length;
-    if (!sourceLength)
-        return destination;
-    if (sourceIndex >= sourceLength)
-        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Must be less than the length of the source array.');
-    if (destination.length < 0)
-        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('destinationIndex', destinationIndex, CBL0);
-    var maxLength = source.length - sourceIndex;
-    if (isFinite(length) && length > maxLength)
-        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Source index + length cannot exceed the length of the source array.');
-    length = Math.min(length, maxLength);
-    var newLength = destinationIndex + length;
-    if (newLength > destination.length)
-        destination.length = newLength;
-    for (var i = 0; i < length; i++) {
-        destination[destinationIndex + i] = source[sourceIndex + i];
-    }
-    return destination;
-}
-exports.copyTo = copyTo;
 /**
  * Checks to see where the provided array contains an item/value.
  * If the array value is null, then -1 is returned.
@@ -96,7 +29,7 @@ function indexOf(array, item, equalityComparer) {
     var len = array && array.length;
     if (len) {
         // NaN NEVER evaluates its equality so be careful.
-        if (Array.isArray(array) && !Types_1.Type.isTrueNaN(item))
+        if ((array) instanceof (Array) && !Types_1.Type.isTrueNaN(item))
             return array.indexOf(item);
         for (var i = 0; i < len; i++) {
             // 'areEqual' includes NaN==NaN evaluation.
@@ -129,12 +62,13 @@ exports.contains = contains;
  * @returns {number}
  */
 function replace(array, old, newValue, max) {
+    if (max === void 0) { max = Infinity; }
     if (!array || !array.length || max === 0)
         return 0;
     if (max < 0)
         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('max', max, CBL0);
     if (!max)
-        max = Infinity;
+        max = Infinity; // just in case.
     var count = 0;
     for (var i = 0, len = array.length; i < len; i++) {
         if (array[i] === old) {
@@ -211,7 +145,9 @@ function findIndex(array, predicate) {
     if (!Types_1.Type.isFunction(predicate))
         throw new ArgumentException_1.ArgumentException('predicate', 'Must be a function.');
     var len = array.length;
-    if (Array.isArray(array)) {
+    if (!Types_1.Type.isNumber(len, true) || len < 0)
+        throw new ArgumentException_1.ArgumentException('array', 'Does not have a valid length.');
+    if ((array) instanceof (Array)) {
         for (var i = 0; i < len; i++) {
             if (predicate(array[i], i))
                 return i;
@@ -277,6 +213,7 @@ exports.removeIndex = removeIndex;
  * @returns {number} The number of times the value was found and removed.
  */
 function remove(array, value, max, equalityComparer) {
+    if (max === void 0) { max = Infinity; }
     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
     if (!array || !array.length || max === 0)
         return 0;
@@ -320,7 +257,7 @@ function repeat(element, count) {
     Integer_1.Integer.assert(count, 'count');
     if (count < 0)
         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('count', count, CBL0);
-    var result = initialize(count);
+    var result = initialize_1.initialize(count);
     for (var i = 0; i < count; i++) {
         result[i] = element;
     }
@@ -342,7 +279,7 @@ function range(first, count, step) {
         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('count', count, VFN);
     if (count < 0)
         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('count', count, CBL0);
-    var result = initialize(count);
+    var result = initialize_1.initialize(count);
     for (var i = 0; i < count; i++) {
         result[i] = first;
         first += step;
@@ -365,6 +302,8 @@ function rangeUntil(first, until, step) {
 }
 exports.rangeUntil = rangeUntil;
 function distinct(source) {
+    if (!source)
+        return []; // Allowing for null facilitates regex filtering.
     var seen = {};
     return source.filter(function (e) { return !(e in seen) && (seen[e] = true); });
 }
@@ -381,7 +320,7 @@ function flatten(a, recurseDepth) {
     var result = [];
     for (var i = 0; i < a.length; i++) {
         var x = a[i];
-        if (Array.isArray(x)) {
+        if ((x) instanceof (Array)) {
             if (recurseDepth > 0)
                 x = flatten(x, recurseDepth - 1);
             for (var n = 0; n < x.length; n++)

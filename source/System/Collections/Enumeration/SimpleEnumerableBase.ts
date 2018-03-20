@@ -14,6 +14,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 {
 
 	protected _current:T|undefined;
+	// @ts-ignore
 	protected _index:number;
 
 	constructor()

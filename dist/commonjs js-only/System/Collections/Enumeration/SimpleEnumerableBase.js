@@ -1,11 +1,12 @@
+"use strict";
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var IteratorResult_1 = require("./IteratorResult");
 var VOID0 = void 0;
-var SimpleEnumerableBase = (function () {
+var SimpleEnumerableBase = /** @class */ (function () {
     function SimpleEnumerableBase() {
         this.reset();
     }
@@ -77,5 +78,4 @@ var SimpleEnumerableBase = (function () {
     return SimpleEnumerableBase;
 }());
 exports.SimpleEnumerableBase = SimpleEnumerableBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SimpleEnumerableBase;

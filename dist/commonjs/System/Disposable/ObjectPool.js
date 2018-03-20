@@ -18,7 +18,7 @@ var OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 6553
 var ObjectPool = /** @class */ (function (_super) {
     __extends(ObjectPool, _super);
     function ObjectPool(_maxSize, _generator, _recycler) {
-        var _this = _super.call(this) || this;
+        var _this = _super.call(this, OBJECT_POOL) || this;
         _this._maxSize = _maxSize;
         _this._generator = _generator;
         _this._recycler = _recycler;
@@ -32,12 +32,11 @@ var ObjectPool = /** @class */ (function (_super) {
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_LTM);
         _this._localAbsMaxSize = Math.min(_maxSize * 2, ABSOLUTE_MAX_SIZE);
         var _ = _this;
-        _._disposableObjectName = OBJECT_POOL;
-        _._pool = [];
-        _._trimmer = new TaskHandler_1.TaskHandler(function () { return _._trim(); });
+        _this._pool = [];
+        _this._trimmer = new TaskHandler_1.TaskHandler(function () { return _._trim(); });
         var clear = function () { return _._clear(); };
-        _._flusher = new TaskHandler_1.TaskHandler(clear);
-        _._autoFlusher = new TaskHandler_1.TaskHandler(clear);
+        _this._flusher = new TaskHandler_1.TaskHandler(clear);
+        _this._autoFlusher = new TaskHandler_1.TaskHandler(clear);
         return _this;
     }
     Object.defineProperty(ObjectPool.prototype, "maxSize", {

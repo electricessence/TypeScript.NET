@@ -3,6 +3,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var DisposableBase_1 = require("./Disposable/DisposableBase");
 var ArgumentNullException_1 = require("./Exceptions/ArgumentNullException");
 var extends_1 = require("../extends");
@@ -16,18 +17,18 @@ var NAME = "ResolverBase";
  * we have to prevent getValue from double triggering the value factory (optimistic concurrency)
  * or returning return a value that is intermediate between resolving and resolved.
  */
-var ResolverBase = (function (_super) {
+var ResolverBase = /** @class */ (function (_super) {
     __extends(ResolverBase, _super);
     function ResolverBase(_valueFactory, _trapExceptions, _allowReset) {
         if (_allowReset === void 0) { _allowReset = false; }
-        _super.call(this);
-        this._valueFactory = _valueFactory;
-        this._trapExceptions = _trapExceptions;
-        this._allowReset = _allowReset;
-        this._disposableObjectName = NAME;
+        var _this = _super.call(this, NAME) || this;
+        _this._valueFactory = _valueFactory;
+        _this._trapExceptions = _trapExceptions;
+        _this._allowReset = _allowReset;
         if (!_valueFactory)
             throw new ArgumentNullException_1.ArgumentNullException("valueFactory");
-        this._isValueCreated = false;
+        _this._isValueCreated = false;
+        return _this;
     }
     ResolverBase.prototype.getError = function () {
         return this._error;
@@ -95,5 +96,4 @@ var ResolverBase = (function (_super) {
     return ResolverBase;
 }(DisposableBase_1.DisposableBase));
 exports.ResolverBase = ResolverBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ResolverBase;

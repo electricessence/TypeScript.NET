@@ -1,3 +1,4 @@
+"use strict";
 // import * as TARGET from "./gulp/constants/Targets";
 // import * as MODULE from "./gulp/constants/ModuleTypes";
 // import * as TASK from "./gulp/constants/TaskNames";

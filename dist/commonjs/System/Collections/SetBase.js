@@ -166,9 +166,12 @@ var SetBase = /** @class */ (function (_super) {
             : EmptyEnumerator_1.EmptyEnumerator;
     };
     SetBase.prototype.forEach = function (action, useCopy) {
+        var s = this._set;
+        if (!s)
+            return 0;
         return useCopy
             ? _super.prototype.forEach.call(this, action, useCopy)
-            : this._set.forEach(function (node, i) { return action(node.value, i); });
+            : s.forEach(function (node, i) { return action(node.value, i); });
     };
     SetBase.prototype._removeNode = function (node) {
         return !!node

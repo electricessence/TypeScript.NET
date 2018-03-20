@@ -22,7 +22,7 @@ extends DisposableBase
 {
 
 	// Use a linked list since it's much easier to remove a subscriber from anywhere in the list.
-	private __subscriptions:LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>>;
+	private __subscriptions:LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>> | undefined;
 
 	protected _getSubscribers():TSubscriber[]|null
 	{
@@ -34,14 +34,13 @@ extends DisposableBase
 
 	constructor()
 	{
-		super();
-		this._disposableObjectName = NAME;
+		super(NAME);
 	}
 
 	private _findEntryNode(
 		subscriber:TSubscriber):ILinkedNodeWithValue<Subscription<TSubscriber>>|null
 	{
-		const s = this.__subscriptions;
+		const s = this.__subscriptions || null;
 		return s && s.find(n=>!!n.value && n.value.subscriber===subscriber);
 	}
 
@@ -73,7 +72,7 @@ extends DisposableBase
 		if(n)
 		{
 			const s = n.value;
-			_.__subscriptions.removeNode(n);
+			_.__subscriptions!.removeNode(n);
 			if(s) s.dispose(); // Prevent further usage of a dead subscription.
 		}
 	}

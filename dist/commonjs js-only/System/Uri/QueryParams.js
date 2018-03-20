@@ -3,7 +3,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-var Serialization = require("../Serialization/Utility");
+Object.defineProperty(exports, "__esModule", { value: true });
+var Serialize = require("../Serialization/Utility");
 var Types_1 = require("../Types");
 var KeyValueExtract_1 = require("../KeyValueExtract");
 var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
@@ -59,7 +60,7 @@ function encodeValue(value) {
         return v;
     }
     else {
-        return encodeURIComponent(Serialization.toString(value));
+        return encodeURIComponent(Serialize.toString(value));
     }
 }
 exports.encodeValue = encodeValue;
@@ -97,7 +98,7 @@ function parse(query, entryHandler, deserialize, decodeValues) {
                 if (decodeValues)
                     value = decodeURIComponent(value);
                 if (deserialize)
-                    value = Serialization.toPrimitive(value);
+                    value = Serialize.toPrimitive(value);
                 entryHandler(key, value);
             }
         }
@@ -118,7 +119,7 @@ function parseToMap(query, deserialize, decodeValues) {
     parse(query, function (key, value) {
         if ((key) in (result)) {
             var prev = result[key];
-            if (!(Array.isArray(prev)))
+            if (!((prev) instanceof (Array)))
                 result[key] = prev = [prev];
             prev.push(value);
         }

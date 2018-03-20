@@ -4,6 +4,7 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Compare_1 = require("../Compare");
 var LinkedNodeList_1 = require("./LinkedNodeList");
 var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
@@ -24,7 +25,7 @@ var VOID0 = void 0;
 /*
  * An internal node is used to manage the order without exposing underlying link chain to the consumer.
  */
-var InternalNode = (function () {
+var InternalNode = /** @class */ (function () {
     function InternalNode(value, previous, next) {
         this.value = value;
         this.previous = previous;
@@ -69,13 +70,14 @@ function detachExternal(node) {
         node.external = VOID0;
     }
 }
-var LinkedList = (function (_super) {
+var LinkedList = /** @class */ (function (_super) {
     __extends(LinkedList, _super);
     function LinkedList(source, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-        _super.call(this, VOID0, equalityComparer);
-        this._listInternal = new LinkedNodeList_1.LinkedNodeList();
-        this._importEntries(source);
+        var _this = _super.call(this, VOID0, equalityComparer) || this;
+        _this._listInternal = new LinkedNodeList_1.LinkedNodeList();
+        _this._importEntries(source);
+        return _this;
     }
     LinkedList.prototype.assertVersion = function (version) {
         if (this._listInternal)
@@ -205,9 +207,10 @@ var LinkedList = (function (_super) {
         this.assertModifiable();
         this._listInternal.addNodeBefore(new InternalNode(entry));
         this._signalModification(true);
+        return this;
     };
     LinkedList.prototype.addLast = function (entry) {
-        this.add(entry);
+        return this.add(entry);
     };
     LinkedList.prototype._removeNodeInternal = function (node) {
         var _ = this;
@@ -244,18 +247,20 @@ var LinkedList = (function (_super) {
         _.assertModifiable();
         _._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, _));
         _._signalModification(true);
+        return this;
     };
     LinkedList.prototype.addAfter = function (after, entry) {
         var _ = this;
         _.assertModifiable();
         _._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, _));
         _._signalModification(true);
+        return this;
     };
     return LinkedList;
 }(CollectionBase_1.CollectionBase));
 exports.LinkedList = LinkedList;
 // Use an internal node class to prevent mucking up the LinkedList.
-var LinkedListNode = (function () {
+var LinkedListNode = /** @class */ (function () {
     function LinkedListNode(_list, _nodeInternal) {
         this._list = _list;
         this._nodeInternal = _nodeInternal;
@@ -302,10 +307,12 @@ var LinkedListNode = (function () {
     LinkedListNode.prototype.addBefore = function (entry) {
         this.throwIfDetached();
         this._list.addBefore(this, entry);
+        return this;
     };
     LinkedListNode.prototype.addAfter = function (entry) {
         this.throwIfDetached();
         this._list.addAfter(this, entry);
+        return this;
     };
     LinkedListNode.prototype.remove = function () {
         var _ = this;
@@ -320,5 +327,4 @@ var LinkedListNode = (function () {
     };
     return LinkedListNode;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = LinkedList;

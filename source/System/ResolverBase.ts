@@ -22,15 +22,14 @@ export abstract class ResolverBase<T> extends DisposableBase
 {
 
 	protected _isValueCreated:boolean|null; // null = 'creating'
-	protected _value:T;
+	protected _value:T|undefined;
 
 	constructor(
 		protected _valueFactory:Func<T>,
 		private readonly _trapExceptions:boolean,
 		private readonly _allowReset:boolean = false)
 	{
-		super();
-		this._disposableObjectName = NAME;
+		super(NAME);
 		if(!_valueFactory) throw new ArgumentNullException("valueFactory");
 		this._isValueCreated = false;
 	}
@@ -85,7 +84,7 @@ export abstract class ResolverBase<T> extends DisposableBase
 		}
 
 
-		return _._value;
+		return _._value!;
 
 	}
 

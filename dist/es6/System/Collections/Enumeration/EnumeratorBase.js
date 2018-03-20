@@ -47,10 +47,9 @@ const NAME = "EnumeratorBase";
 // Naming this class EnumeratorBase to avoid collision with IE.
 export class EnumeratorBase extends DisposableBase {
     constructor(_initializer, _tryGetNext, disposer, isEndless) {
-        super();
+        super(NAME);
         this._initializer = _initializer;
         this._tryGetNext = _tryGetNext;
-        this._disposableObjectName = NAME;
         this.reset();
         if (Type.isBoolean(isEndless))
             this._isEndless = isEndless;
@@ -88,7 +87,7 @@ export class EnumeratorBase extends DisposableBase {
         if (y)
             yielder(y); // recycle until actually needed.
     }
-    _assertBadState() {
+    _assertValidState() {
         const _ = this;
         switch (_._state) {
             case 3 /* Faulted */:
@@ -104,7 +103,7 @@ export class EnumeratorBase extends DisposableBase {
      * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
      */
     tryGetCurrent(out) {
-        this._assertBadState();
+        this._assertValidState();
         if (this._state === 1 /* Active */) {
             out(this.current);
             return true;
@@ -120,7 +119,7 @@ export class EnumeratorBase extends DisposableBase {
      */
     moveNext() {
         const _ = this;
-        _._assertBadState();
+        _._assertValidState();
         try {
             switch (_._state) {
                 case 0 /* Before */:
@@ -178,7 +177,7 @@ export class EnumeratorBase extends DisposableBase {
     }
     'return'(value) {
         const _ = this;
-        _._assertBadState();
+        _._assertValidState();
         try {
             return value === VOID0 || _._state === 2 /* Completed */ || _._state === 4 /* Interrupted */
                 ? IteratorResult.Done
@@ -200,9 +199,9 @@ export class EnumeratorBase extends DisposableBase {
         _._isEndless = false;
         const disposer = _._disposer;
         _._initializer = null;
-        _._disposer = null;
+        _._disposer = undefined;
         const y = _._yielder;
-        _._yielder = null;
+        _._yielder = undefined;
         this._state = 5 /* Disposed */;
         if (y)
             yielder(y);

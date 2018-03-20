@@ -1,18 +1,19 @@
+"use strict";
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/system.systemexception%28v=vs.110%29.aspx
  */
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var Exception_1 = require("../Exception");
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var NAME = 'SystemException';
-var SystemException = (function (_super) {
+var SystemException = /** @class */ (function (_super) {
     __extends(SystemException, _super);
     function SystemException() {
-        _super.apply(this, arguments);
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     /*
         constructor(
@@ -29,5 +30,4 @@ var SystemException = (function (_super) {
     return SystemException;
 }(Exception_1.Exception));
 exports.SystemException = SystemException;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SystemException;

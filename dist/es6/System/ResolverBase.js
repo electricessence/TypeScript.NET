@@ -15,11 +15,10 @@ const NAME = "ResolverBase";
  */
 export class ResolverBase extends DisposableBase {
     constructor(_valueFactory, _trapExceptions, _allowReset = false) {
-        super();
+        super(NAME);
         this._valueFactory = _valueFactory;
         this._trapExceptions = _trapExceptions;
         this._allowReset = _allowReset;
-        this._disposableObjectName = NAME;
         if (!_valueFactory)
             throw new ArgumentNullException("valueFactory");
         this._isValueCreated = false;

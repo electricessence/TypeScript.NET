@@ -155,9 +155,12 @@ export class SetBase extends CollectionBase {
             : EmptyEnumerator;
     }
     forEach(action, useCopy) {
+        const s = this._set;
+        if (!s)
+            return 0;
         return useCopy
             ? super.forEach(action, useCopy)
-            : this._set.forEach((node, i) => action(node.value, i));
+            : s.forEach((node, i) => action(node.value, i));
     }
     _removeNode(node) {
         return !!node

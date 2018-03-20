@@ -12,6 +12,8 @@ export class TypeInfo {
     constructor(target, onBeforeFreeze) {
         this.isBoolean = false;
         this.isNumber = false;
+        this.isFinite = false;
+        this.isValidNumber = false;
         this.isString = false;
         this.isTrueNaN = false;
         this.isObject = false;
@@ -20,6 +22,8 @@ export class TypeInfo {
         this.isNull = false;
         this.isPrimitive = false;
         this.isSymbol = false;
+        this.isArray = false;
+        this.isNullOrUndefined = false;
         switch (this.type = typeof target) {
             case _BOOLEAN:
                 this.isBoolean = true;

@@ -5,15 +5,16 @@
  */
 import { WorkerLike } from "./WorkerType";
 import { ObservableBase } from "../Observable/ObservableBase";
+import { Action } from "../FunctionTypes";
 /**
  * This class takes the place of a WebWorker
  */
 export declare class NodeJSWorker extends ObservableBase<any> implements WorkerLike {
     private _process;
-    onmessage: (message: {
+    onmessage: Action<{
         data: any;
-    }) => void;
-    onerror: (error: any) => void;
+    }> | undefined;
+    onerror: Action<any> | undefined;
     constructor(url: string);
     protected _onNext(data: any): void;
     protected _onError(error: any): void;

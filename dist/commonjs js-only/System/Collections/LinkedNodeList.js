@@ -3,7 +3,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-var TextUtility = require("../Text/Utility");
+Object.defineProperty(exports, "__esModule", { value: true });
+var Utility_1 = require("../Text/Utility");
 var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
 var ArgumentException_1 = require("../Exceptions/ArgumentException");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
@@ -28,7 +29,7 @@ var __extends = extends_1.default;
  *
  * The count (or length) of this LinkedNodeList is not tracked since it could be corrupted at any time.
  */
-var LinkedNodeList = (function () {
+var LinkedNodeList = /** @class */ (function () {
     function LinkedNodeList() {
         this._first = null;
         this._last = null;
@@ -226,7 +227,7 @@ var LinkedNodeList = (function () {
         else
             b = true;
         if (a !== b) {
-            throw new ArgumentException_1.ArgumentException('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
+            throw new ArgumentException_1.ArgumentException('node', Utility_1.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
         }
         var removed = !a && !b;
         if (removed) {
@@ -240,15 +241,18 @@ var LinkedNodeList = (function () {
     /**
      * Adds a node to the end of the list.
      * @param node
+     * @returns {LinkedNodeList}
      */
     LinkedNodeList.prototype.addNode = function (node) {
         this.addNodeAfter(node);
+        return this;
     };
     /**
      * Inserts a node before the specified 'before' node.
      * If no 'before' node is specified, it inserts it as the first node.
      * @param node
      * @param before
+     * @returns {LinkedNodeList}
      */
     LinkedNodeList.prototype.addNodeBefore = function (node, before) {
         if (before === void 0) { before = null; }
@@ -272,12 +276,14 @@ var LinkedNodeList = (function () {
         }
         _._version++;
         _.unsafeCount++;
+        return this;
     };
     /**
      * Inserts a node after the specified 'after' node.
      * If no 'after' node is specified, it appends it as the last node.
      * @param node
      * @param after
+     * @returns {LinkedNodeList}
      */
     LinkedNodeList.prototype.addNodeAfter = function (node, after) {
         if (after === void 0) { after = null; }
@@ -301,17 +307,19 @@ var LinkedNodeList = (function () {
         }
         _._version++;
         _.unsafeCount++;
+        return _;
     };
     /**
      * Takes and existing node and replaces it.
      * @param node
      * @param replacement
+     * @returns {any}
      */
     LinkedNodeList.prototype.replace = function (node, replacement) {
         if (node == null)
             throw new ArgumentNullException_1.ArgumentNullException('node');
         if (node == replacement)
-            return;
+            return this;
         assertValidDetached(replacement, 'replacement');
         var _ = this;
         replacement.previous = node.previous;
@@ -325,6 +333,7 @@ var LinkedNodeList = (function () {
         if (node == _._last)
             _._last = replacement;
         _._version++;
+        return _;
     };
     LinkedNodeList.valueEnumeratorFrom = function (list) {
         if (!list)
@@ -366,5 +375,4 @@ function assertValidDetached(node, propName) {
     if (node.next || node.previous)
         throw new InvalidOperationException_1.InvalidOperationException("Cannot add a node to a LinkedNodeList that is already linked.");
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = LinkedNodeList;
