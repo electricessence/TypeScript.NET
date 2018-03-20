@@ -5,7 +5,7 @@
 System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Environment", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, Environment_1, extends_1, __extends, NAME, CMDC, CMRO, LINQ_PATH, CollectionBase;
+    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, Environment_1, extends_1, __extends, REQUIRE, NAME, CMDC, CMRO, TWAPIL, LINQ_PATH, CollectionBase;
     return {
         setters: [
             function (Enumerator_1_1) {
@@ -37,7 +37,7 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
             //noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             //noinspection SpellCheckingInspection
-            NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
+            REQUIRE = "require", NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", TWAPIL = "There was a problem importing System.Linq/Linq";
             LINQ_PATH = "../../System.Linq/Linq";
             CollectionBase = /** @class */ (function (_super) {
                 __extends(CollectionBase, _super);
@@ -359,14 +359,14 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                         if (!e) {
                             var r = void 0;
                             try {
-                                r = eval('require');
+                                r = eval(REQUIRE);
                             }
                             catch (ex) { }
                             this._linq = e = r && r(LINQ_PATH).default.from(this);
                             if (!e) {
                                 throw Environment_1.isRequireJS
                                     ? "using .linq to load and initialize a LinqEnumerable is currently only supported within a NodeJS environment.\nImport System.Linq/Linq and use Enumerable.from(e) instead.\nYou can also preload the Linq module as a dependency or use .linqAsync(callback) for AMD/RequireJS."
-                                    : "There was a problem importing System.Linq/Linq";
+                                    : TWAPIL;
                             }
                         }
                         return e;
@@ -389,13 +389,13 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                     var e = this._linq;
                     if (!e) {
                         if (Environment_1.isRequireJS) {
-                            eval("require")([LINQ_PATH], function (linq) {
+                            eval(REQUIRE)([LINQ_PATH], function (linq) {
                                 // Could end up being called more than once, be sure to check for ._linq before setting...
                                 e = _this._linq;
                                 if (!e)
                                     _this._linq = e = linq.default.from(_this);
                                 if (!e)
-                                    throw "There was a problem importing System.Linq/Linq";
+                                    throw TWAPIL;
                                 if (callback)
                                     callback(e);
                                 callback = void 0; // In case this is return synchronously..

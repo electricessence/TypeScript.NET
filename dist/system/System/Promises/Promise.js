@@ -66,7 +66,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
     function newODE() {
         return new ObjectDisposedException_1.ObjectDisposedException("TSDNPromise", "An underlying promise-result was disposed.");
     }
-    var Types_1, deferImmediate_1, DisposableBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ObjectPool_1, Set_1, defer_1, ObjectDisposedException_1, extends_1, __extends, VOID0, NULL, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, TSDNPromise, ArrayPromise, PROMISE_COLLECTION, PromiseCollection, pools;
+    var Types_1, deferImmediate_1, DisposableBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ObjectPool_1, Set_1, defer_1, ObjectDisposedException_1, extends_1, __extends, VOID0, NULL, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, TSDNPromise, ArrayPromise, PROMISE_COLLECTION, PromiseCollection, Pool;
     return {
         setters: [
             function (Types_1_1) {
@@ -496,7 +496,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                         return _super.prototype.thenSynchronous.call(this, onFulfilled, onRejected);
                     var p = new TSDNPromise();
                     (this._waiting || (this._waiting = []))
-                        .push(pools.PromiseCallbacks.init(onFulfilled, onRejected, p));
+                        .push(Pool.init(onFulfilled, onRejected, p));
                     return p;
                 };
                 TSDNPromise.prototype.doneNow = function (onFulfilled, onRejected) {
@@ -505,7 +505,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     if (this._state)
                         return _super.prototype.doneNow.call(this, onFulfilled, onRejected);
                     (this._waiting || (this._waiting = []))
-                        .push(pools.PromiseCallbacks.init(onFulfilled, onRejected));
+                        .push(Pool.init(onFulfilled, onRejected));
                 };
                 TSDNPromise.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);
@@ -595,7 +595,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                             for (var _i = 0, o_1 = o; _i < o_1.length; _i++) {
                                 var c = o_1[_i];
                                 var onFulfilled = c.onFulfilled, promise = c.promise;
-                                pools.PromiseCallbacks.recycle(c);
+                                Pool.recycle(c);
                                 //let ex =
                                 handleResolution(promise, result, onFulfilled);
                                 //if(!p && ex) console.error("Unhandled exception in onFulfilled:",ex);
@@ -615,7 +615,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                         for (var _i = 0, o_2 = o; _i < o_2.length; _i++) {
                             var c = o_2[_i];
                             var onRejected = c.onRejected, promise = c.promise;
-                            pools.PromiseCallbacks.recycle(c);
+                            Pool.recycle(c);
                             if (onRejected) {
                                 //let ex =
                                 handleResolution(promise, error, onRejected);
@@ -798,77 +798,37 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 return PromiseCollection;
             }(DisposableBase_1.DisposableBase));
             exports_1("PromiseCollection", PromiseCollection);
-            (function (pools) {
-                // export module pending
-                // {
-                //
-                //
-                // 	var pool:ObjectPool<Promise<any>>;
-                //
-                // 	function getPool()
-                // 	{
-                // 		return pool || (pool = new ObjectPool<Promise<any>>(40, factory, c=>c.dispose()));
-                // 	}
-                //
-                // 	function factory():Promise<any>
-                // 	{
-                // 		return new Promise();
-                // 	}
-                //
-                // 	export function get():Promise<any>
-                // 	{
-                // 		var p:any = getPool().take();
-                // 		p.__wasDisposed = false;
-                // 		p._state = Promise.State.Pending;
-                // 		return p;
-                // 	}
-                //
-                // 	export function recycle<T>(c:Promise<T>):void
-                // 	{
-                // 		if(c) getPool().add(c);
-                // 	}
-                //
-                // }
-                //
-                // export function recycle<T>(c:PromiseBase<T>):void
-                // {
-                // 	if(!c) return;
-                // 	if(c instanceof Promise && c.constructor==Promise) pending.recycle(c);
-                // 	else c.dispose();
-                // }
-                var PromiseCallbacks;
-                (function (PromiseCallbacks) {
-                    var pool;
-                    //noinspection JSUnusedLocalSymbols
-                    function getPool() {
-                        return pool
-                            || (pool = new ObjectPool_1.ObjectPool(40, factory, function (c) {
-                                c.onFulfilled = NULL;
-                                c.onRejected = NULL;
-                                c.promise = NULL;
-                            }));
-                    }
-                    function factory() {
-                        return {
-                            onFulfilled: NULL,
-                            onRejected: NULL,
-                            promise: NULL
-                        };
-                    }
-                    function init(onFulfilled, onRejected, promise) {
-                        var c = getPool().take();
-                        c.onFulfilled = onFulfilled || undefined;
-                        c.onRejected = onRejected || undefined;
-                        c.promise = promise;
-                        return c;
-                    }
-                    PromiseCallbacks.init = init;
-                    function recycle(c) {
-                        getPool().add(c);
-                    }
-                    PromiseCallbacks.recycle = recycle;
-                })(PromiseCallbacks = pools.PromiseCallbacks || (pools.PromiseCallbacks = {}));
-            })(pools || (pools = {}));
+            (function (Pool) {
+                var pool;
+                //noinspection JSUnusedLocalSymbols
+                function getPool() {
+                    return pool
+                        || (pool = new ObjectPool_1.ObjectPool(40, factory, function (c) {
+                            c.onFulfilled = NULL;
+                            c.onRejected = NULL;
+                            c.promise = NULL;
+                        }));
+                }
+                function factory() {
+                    return {
+                        onFulfilled: NULL,
+                        onRejected: NULL,
+                        promise: NULL
+                    };
+                }
+                function init(onFulfilled, onRejected, promise) {
+                    var c = getPool().take();
+                    c.onFulfilled = onFulfilled || undefined;
+                    c.onRejected = onRejected || undefined;
+                    c.promise = promise;
+                    return c;
+                }
+                Pool.init = init;
+                function recycle(c) {
+                    getPool().add(c);
+                }
+                Pool.recycle = recycle;
+            })(Pool || (Pool = {}));
             (function (TSDNPromise) {
                 /**
                  * The state of a promise.

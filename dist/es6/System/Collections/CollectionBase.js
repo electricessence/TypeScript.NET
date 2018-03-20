@@ -10,7 +10,7 @@ import { DisposableBase } from "../Disposable/DisposableBase";
 import { isCommonJS, isNodeJS, isRequireJS } from "../Environment";
 //noinspection JSUnusedLocalSymbols
 //noinspection SpellCheckingInspection
-const NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
+const REQUIRE = "require", NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", TWAPIL = "There was a problem importing System.Linq/Linq";
 const LINQ_PATH = "../../System.Linq/Linq";
 export class CollectionBase extends DisposableBase {
     constructor(source, _equalityComparer = areEqual) {
@@ -312,7 +312,7 @@ export class CollectionBase extends DisposableBase {
         if (!e) {
             let r;
             try {
-                r = eval('require');
+                r = eval(REQUIRE);
             }
             catch (ex) { }
             this._linq = e = r && r(LINQ_PATH).default.from(this);
@@ -321,7 +321,7 @@ export class CollectionBase extends DisposableBase {
                     ? `using .linq to load and initialize a LinqEnumerable is currently only supported within a NodeJS environment.
 Import System.Linq/Linq and use Enumerable.from(e) instead.
 You can also preload the Linq module as a dependency or use .linqAsync(callback) for AMD/RequireJS.`
-                    : "There was a problem importing System.Linq/Linq";
+                    : TWAPIL;
             }
         }
         return e;
@@ -340,13 +340,13 @@ You can also preload the Linq module as a dependency or use .linqAsync(callback)
         let e = this._linq;
         if (!e) {
             if (isRequireJS) {
-                eval("require")([LINQ_PATH], (linq) => {
+                eval(REQUIRE)([LINQ_PATH], (linq) => {
                     // Could end up being called more than once, be sure to check for ._linq before setting...
                     e = this._linq;
                     if (!e)
                         this._linq = e = linq.default.from(this);
                     if (!e)
-                        throw "There was a problem importing System.Linq/Linq";
+                        throw TWAPIL;
                     if (callback)
                         callback(e);
                     callback = void 0; // In case this is return synchronously..
