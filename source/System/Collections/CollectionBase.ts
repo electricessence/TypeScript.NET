@@ -28,7 +28,7 @@ const
 	CMRO = "Cannot modify a read-only collection.",
 	TWAPIL = "There was a problem importing System.Linq/Linq";
 const
-	LINQ_PATH = "../../System.Linq/Linq";
+	LINQ_PATH = /* webpackChunkName: "Linq" */ "../../System.Linq/Linq";
 
 export abstract class CollectionBase<T>
 extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
