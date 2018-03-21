@@ -11,10 +11,7 @@ import {Action} from "../FunctionTypes";
 import {IReadOnlyList} from "./IList";
 import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
 import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
-import __extendsImport from "../../extends";
 import {Integer} from "../Integer";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 export class LazyList<T> extends ReadOnlyCollectionBase<T> implements IReadOnlyList<T>
 {

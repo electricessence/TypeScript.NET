@@ -6,10 +6,7 @@
 ///<reference types="node"/>
 import {WorkerLike} from "./WorkerType";
 import {ObservableBase} from "../Observable/ObservableBase";
-import __extendsImport from "../../extends";
 import {Action} from "../FunctionTypes";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const ps = require("child_process");
 //import {ChildProcess} from "child_process";

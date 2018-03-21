@@ -16,9 +16,6 @@ import {ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {ISet} from "./ISet";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const VOID0:undefined = void 0;
 const OTHER = 'other';

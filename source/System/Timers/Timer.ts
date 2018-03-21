@@ -6,10 +6,7 @@
 import {ICancellable} from "../Threading/ICancellable";
 import {ObservableBase} from "../Observable/ObservableBase";
 import {ITimer} from "./ITimer";
-import __extendsImport from "../../extends";
 import {Closure} from "../FunctionTypes";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 /**
  * A timer class that uses an Observable pattern to allow for subscribing to ticks.

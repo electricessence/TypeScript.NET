@@ -9,10 +9,6 @@ import {isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
 import {UriComponent} from "./UriComponent";
 import {QueryParam} from "./QueryParam";
 import {encode, parse} from "./QueryParams";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
-
 
 /**
  * Provides a means for parsing and building a set of parameters.

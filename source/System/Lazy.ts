@@ -6,9 +6,6 @@
 import {ILazy} from "./ILazy";
 import {Func} from "./FunctionTypes";
 import {ResolverBase} from "./ResolverBase";
-import __extendsImport from "../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 
 // We need a non-resettable lazy to ensure it can be passed safely around.

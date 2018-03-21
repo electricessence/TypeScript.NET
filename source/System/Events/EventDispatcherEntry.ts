@@ -10,10 +10,7 @@ import {ArgumentException} from "../Exceptions/ArgumentException";
 import {areEquivalent} from "../Compare";
 import {IEventListener} from "./IEventListener";
 import {IEquatable} from "../IEquatable";
-import __extendsImport from "../../extends";
 import {Closure} from "../FunctionTypes";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const NAME = "EventDispatcherEntry";
 export class EventDispatcherEntry<TParams>

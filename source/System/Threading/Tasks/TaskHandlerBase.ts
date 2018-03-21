@@ -6,9 +6,6 @@
 import {DisposableBase} from "../../Disposable/DisposableBase";
 import {ICancellable} from "../ICancellable";
 import {TaskStatus} from "./TaskStatus";
-import __extendsImport from "../../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const NAME = "TaskHandlerBase";
 /**

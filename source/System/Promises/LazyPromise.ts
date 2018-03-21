@@ -3,14 +3,13 @@
  * Licensing: MIT
  */
 
-import {PromiseBase, TSDNPromise} from "./Promise";
 import {Closure} from "../FunctionTypes";
 import {ICancellable} from "../Threading/ICancellable";
+import {Executor, Fulfill, Reject} from "./PromiseTypes";
 import {defer} from "../Threading/defer";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
+import PromiseBase from "./PromiseBase";
+import TSDNPromise from "./Promise";
 
 const VOID0:any = void 0;
 
@@ -20,7 +19,7 @@ const VOID0:any = void 0;
 export class LazyPromise<T> extends TSDNPromise<T>
 {
 
-	constructor(private _resolver:TSDNPromise.Executor<T>)
+	constructor(private _resolver:Executor<T>)
 	{
 		super();
 		if(!_resolver) throw new ArgumentNullException("resolver");
@@ -45,8 +44,8 @@ export class LazyPromise<T> extends TSDNPromise<T>
 	}
 
 	thenSynchronous<TResult>(
-		onFulfilled:TSDNPromise.Fulfill<T, TResult> | undefined | null,
-		onRejected?:TSDNPromise.Reject<TResult> | undefined | null):PromiseBase<TResult>
+		onFulfilled:Fulfill<T, TResult> | undefined | null,
+		onRejected?:Reject<TResult> | undefined | null):PromiseBase<TResult>
 	{
 		this._onThen();
 		return super.thenSynchronous(onFulfilled, onRejected);

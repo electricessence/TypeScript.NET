@@ -8,14 +8,14 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../source/System/Promises/Promise", "stream-to-promise-agnostic"], factory);
+        define(["require", "exports", "stream-to-promise-agnostic", "../source/System/Promises/Functions/create"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var Promise_1 = require("../source/System/Promises/Promise");
     var stream_to_promise_agnostic_1 = require("stream-to-promise-agnostic");
-    exports.streamToPromise = stream_to_promise_agnostic_1.streamToPromise(Promise_1.TSDNPromise.factory);
+    var create_1 = require("../source/System/Promises/Functions/create");
+    exports.streamToPromise = stream_to_promise_agnostic_1.streamToPromise(create_1.default);
     exports.default = exports.streamToPromise;
 });
 //# sourceMappingURL=stream-to-promise.js.map

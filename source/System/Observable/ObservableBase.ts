@@ -10,9 +10,6 @@ import {IObservable} from "./IObservable";
 import {IObserver} from "./IObserver";
 import {IDisposable} from "../Disposable/IDisposable";
 import {Action, Closure} from "../FunctionTypes";
-import __extendsImport from "../../extends";
-//noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
 

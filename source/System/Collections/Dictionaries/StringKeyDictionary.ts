@@ -7,9 +7,6 @@ import {areEqual} from "../../Compare";
 import {IMap, IStringKeyDictionary} from "./IDictionary";
 import {IKeyValuePair} from "../../KeyValuePair";
 import {DictionaryBase} from "./DictionaryBase";
-import __extendsImport from "../../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const VOID0:undefined = void 0;
 

@@ -16,9 +16,6 @@ import {CollectionBase} from "./CollectionBase";
 import {Action, ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const VOID0:undefined = void 0;
 const MINIMUM_GROW:number = 4;

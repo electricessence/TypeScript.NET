@@ -1,5 +1,5 @@
 export const enum TypeValue
-{
+	{
 	Boolean = 'boolean',
 	Number = 'number',
 	String = 'string',

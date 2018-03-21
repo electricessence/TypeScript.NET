@@ -16,9 +16,6 @@ import {IEnumerator} from "../Enumeration/IEnumerator";
 import {ILinkedNode} from "../ILinkedListNode";
 import {HashSelector} from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
-import __extendsImport from "../../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const VOID0:undefined = void 0;
 

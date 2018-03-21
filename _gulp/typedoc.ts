@@ -4,7 +4,7 @@ import {Module, Target} from "gulp-typescript-helper";
 import * as PATH from "./constants/Paths";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
-import typedoc = require("gulp-typedoc");
+const typedoc = require("gulp-typedoc");
 
 gulp.task(
 	TASK.TYPEDOC, ()=>

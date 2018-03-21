@@ -5,9 +5,6 @@
 
 import {ICancellable} from "./ICancellable";
 import {Closure, Func} from "../FunctionTypes";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 abstract class DeferBase implements ICancellable
 {

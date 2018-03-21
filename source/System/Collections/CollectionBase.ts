@@ -11,14 +11,11 @@ import {DisposableBase} from "../Disposable/DisposableBase";
 import {ICollection} from "./ICollection";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
-import {Action, ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
+import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
 import {LinqEnumerable} from "../../System.Linq/Linq";
-import {isCommonJS, isNodeJS, isRequireJS} from "../Environment";
-import __extendsImport from "../../extends";
-//noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
+import {isRequireJS} from "../Environment";
 
 //noinspection SpellCheckingInspection
 const
@@ -451,46 +448,54 @@ You can also preload the Linq module as a dependency or use .linqAsync(callback)
 		return e;
 	}
 
-	/**
-	 * .linqAsync() is for use with deferred loading.
-	 * Ensures an instance of the Linq extensions is available and then passes it to the callback.
-	 * Returns an LinqEnumerable if one is already available, otherwise undefined.
-	 * Passing no parameters will still initiate loading and initializing the LinqEnumerable which can be useful for pre-loading.
-	 * Any call to .linqAsync() where an LinqEnumerable is returned can be assured that any subsequent calls to .linq will return the same instance.
-	 * @param callback
-	 * @returns {LinqEnumerable}
-	 */
-	linqAsync(callback?:Action<LinqEnumerable<T>>):LinqEnumerable<T>|undefined
-	{
-		this.throwIfDisposed();
-		let e = this._linq;
-
-		if(!e)
-		{
-			if(isRequireJS)
-			{
-				eval(REQUIRE)([LINQ_PATH], (linq:any) =>
-				{
-					// Could end up being called more than once, be sure to check for ._linq before setting...
-					e = this._linq;
-					if(!e) this._linq = e = linq.default.from(this);
-					if(!e) throw TWAPIL;
-					if(callback) callback(e);
-					callback = void 0; // In case this is return synchronously..
-				});
-			}
-			else if(isNodeJS && isCommonJS)
-			{
-				e = this.linq;
-			}
-			else
-			{
-				throw "Cannot find a compatible loader for importing System.Linq/Linq";
-			}
-		}
-
-		if(e && callback) callback(e);
-
-		return e;
-	}
+	// private _linqAsync:PromiseLike<LinqEnumerable<T>>|undefined;
+	// /**
+	//  * .linqAsync() is for use with deferred loading.
+	//  * Ensures an instance of the Linq extensions is available and then passes it to the callback.
+	//  * Returns an LinqEnumerable if one is already available, otherwise undefined.
+	//  * Passing no parameters will still initiate loading and initializing the LinqEnumerable which can be useful for pre-loading.
+	//  * Any call to .linqAsync() where an LinqEnumerable is returned can be assured that any subsequent calls to .linq will return the same instance.
+	//  * @returns {Promise<LinqEnumerable>}
+	//  */
+	// linqAsync():PromiseLike<LinqEnumerable<T>>
+	// {
+	// 	this.throwIfDisposed();
+	// 	let p = this._linqAsync;
+	// 	if(!p) {
+	//
+	// 		let e = this._linq;
+	// 		p = e ? new Fulfilled(e) : import(LINQ_PATH).then(Linq=>Linq(this));
+	// 		this._linqAsync = p;
+	// 	}
+	// 	return p;
+	//
+	// 	if(e) return e;
+	// 	if(!e)
+	// 	{
+	// 		if(isRequireJS)
+	// 		{
+	// 			eval(REQUIRE)([LINQ_PATH], (linq:any) =>
+	// 			{
+	// 				// Could end up being called more than once, be sure to check for ._linq before setting...
+	// 				e = this._linq;
+	// 				if(!e) this._linq = e = linq.default.from(this);
+	// 				if(!e) throw TWAPIL;
+	// 				if(callback) callback(e);
+	// 				callback = void 0; // In case this is return synchronously..
+	// 			});
+	// 		}
+	// 		else if(isNodeJS && isCommonJS)
+	// 		{
+	// 			e = this.linq;
+	// 		}
+	// 		else
+	// 		{
+	// 			throw "Cannot find a compatible loader for importing System.Linq/Linq";
+	// 		}
+	// 	}
+	//
+	// 	if(e && callback) callback(e);
+	//
+	// 	return e;
+	// }
 }

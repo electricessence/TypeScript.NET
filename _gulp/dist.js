@@ -4,11 +4,12 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "gulp-typescript-helper", "./constants/Paths", "gulp", "./constants/TaskNames", "../_utility/file-promise", "../_utility/stream-to-promise", "../source/System/Promises/Promise", "../source/awaiter", "../source/generator"], factory);
+        define(["require", "exports", "tslib", "gulp-typescript-helper", "./constants/Paths", "gulp", "./constants/TaskNames", "../_utility/file-promise", "../_utility/stream-to-promise", "../source/System/Promises/Promise", "../source/System/Promises/Functions/create"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var tslib_1 = require("tslib");
     var gulp_typescript_helper_1 = require("gulp-typescript-helper");
     var PATH = require("./constants/Paths");
     var gulp = require("gulp");
@@ -16,12 +17,7 @@
     var File = require("../_utility/file-promise");
     var stream_to_promise_1 = require("../_utility/stream-to-promise");
     var Promise_1 = require("../source/System/Promises/Promise");
-    var awaiter_1 = require("../source/awaiter");
-    var generator_1 = require("../source/generator");
-    // noinspection JSUnusedLocalSymbols
-    var __awaiter = awaiter_1.default;
-    // noinspection JSUnusedLocalSymbols
-    var __generator = generator_1.default;
+    var create_1 = require("../source/System/Promises/Functions/create");
     var fields = {
         "name": true,
         "version": true,
@@ -34,9 +30,9 @@
         "browser": true
     };
     function getPackage(dist) {
-        return __awaiter(this, void 0, Promise_1.TSDNPromise, function () {
+        return tslib_1.__awaiter(this, void 0, Promise_1.TSDNPromise, function () {
             var pkg, _i, _a, key;
-            return __generator(this, function (_b) {
+            return tslib_1.__generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4 /*yield*/, File.json.read('./package.json')];
                     case 1:
@@ -56,9 +52,9 @@
     }
     function savePackage(dist, folder) {
         if (folder === void 0) { folder = dist; }
-        return __awaiter(this, void 0, Promise_1.TSDNPromise, function () {
+        return tslib_1.__awaiter(this, void 0, Promise_1.TSDNPromise, function () {
             var pkg;
-            return __generator(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, getPackage(dist)];
                     case 1:
@@ -85,7 +81,7 @@
         moduleResolution: "node"
     });
     var builder = gulp_typescript_helper_1.BuildHelper
-        .inject(Promise_1.TSDNPromise.factory)
+        .inject(create_1.default)
         .fromTo(PATH.SOURCE, "./dist", DEFAULTS);
     gulp.task(TASK.DIST_ES6, function () {
         return builder
@@ -114,6 +110,7 @@
         sourceMap: false
     })
         .clear()
+        //.minify()
         .execute()
         .then(function () { return savePackage(gulp_typescript_helper_1.Module.COMMONJS + '-js-only', gulp_typescript_helper_1.Module.COMMONJS + ' js-only'); }); });
     gulp.task(TASK.DIST_COMMONJS, function () { return builder

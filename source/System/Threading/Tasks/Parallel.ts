@@ -4,7 +4,6 @@
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
 
-import {ArrayPromise, PromiseBase, PromiseCollection, TSDNPromise} from "../../Promises/Promise";
 import {Type} from "../../Types";
 import Worker from "../Worker";
 import {WorkerLike} from "../WorkerType";
@@ -12,9 +11,11 @@ import {deferImmediate} from "../deferImmediate";
 import {isNodeJS} from "../../Environment";
 import {ObjectPool} from "../../Disposable/ObjectPool";
 import {IMap} from "../../../IMap";
-import __extendsImport from "../../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
+import map from "../../Promises/Functions/map";
+import TSDNPromise from "../../Promises/Promise";
+import {PromiseCollection} from "../../Promises/PromiseCollection";
+import {ArrayPromise} from "../../Promises/ArrayPromise";
+import PromiseBase from "../../Promises/PromiseBase";
 
 declare const navigator:any;
 declare const __dirname:string;
@@ -369,7 +370,7 @@ export class Parallel
 							:"'maxConcurrency' set to 0 but 'allowSynchronous' is false.");
 
 					// Concurrency doesn't matter in a single thread... Just queue it all up.
-					return TSDNPromise.map(data, task);
+					return map(data, task);
 				}
 
 				if(!result)
@@ -473,7 +474,7 @@ export class Parallel
 						throw new Error('Workers do not exist and synchronous operation not allowed!');
 
 					// Concurrency doesn't matter in a single thread... Just queue it all up.
-					resolve(TSDNPromise.map(data, task).all());
+					resolve(map(data, task).all());
 					return;
 				}
 

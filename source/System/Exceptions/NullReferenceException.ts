@@ -6,9 +6,6 @@
 
 
 import {SystemException, Error} from "./SystemException";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const NAME:string = 'NullReferenceException';
 

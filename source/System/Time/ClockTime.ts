@@ -7,10 +7,6 @@
 import {TimeQuantity} from "./TimeQuantity";
 import {IClockTime} from "./ITimeStamp";
 import {Milliseconds, Minutes, Seconds, Ticks} from "./HowMany";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
-
 
 export class ClockTime extends TimeQuantity implements IClockTime
 {

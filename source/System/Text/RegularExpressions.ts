@@ -7,9 +7,6 @@
 import {IMap} from "../../IMap";
 import {Primitive} from "../Primitive";
 import {SelectorWithIndex} from "../FunctionTypes";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const EMPTY:string = "";
 

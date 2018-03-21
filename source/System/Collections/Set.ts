@@ -9,11 +9,6 @@ import {ISymbolizable} from "./Dictionaries/IDictionary";
 import {HashSet} from "./HashSet";
 import {Primitive} from "../Primitive";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
-
-
 
 function getId(obj:any):string|number|symbol {
 	return getIdentifier(obj, typeof obj!=Type.BOOLEAN);

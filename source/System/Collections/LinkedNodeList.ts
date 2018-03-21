@@ -15,10 +15,6 @@ import {ILinkedNodeList} from "./ILinkedList";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {ActionWithIndex, PredicateWithIndex, Selector, SelectorWithIndex} from "../FunctionTypes";
 import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
-
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:

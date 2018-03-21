@@ -11,13 +11,6 @@ import {HttpMethod} from "./HttpMethod";
 import {Uri} from "../../Uri/Uri";
 import {IUri} from "../../Uri/IUri";
 import {IHttpRequestAdapter} from "./IHttpRequestAdapter";
-import __extendsImport from "../../../extends";
-import GET = HttpMethod.GET;
-import PUT = HttpMethod.PUT;
-import POST = HttpMethod.POST;
-import DELETE = HttpMethod.DELETE;
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 const NAME = 'HttpRequestFactory';
 /**
  * This class exposes a factory for making requests to prepared uri and params.

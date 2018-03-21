@@ -4,22 +4,17 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "gulp", "semver", "../_utility/file-promise", "../_utility/stream-to-promise", "../source/System/Promises/Promise", "../source/awaiter", "../source/generator"], factory);
+        define(["require", "exports", "tslib", "gulp", "semver", "../_utility/file-promise", "../_utility/stream-to-promise", "../source/System/Promises/Promise"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var tslib_1 = require("tslib");
     var gulp = require("gulp");
     var semver = require("semver");
     var file = require("../_utility/file-promise");
     var stream_to_promise_1 = require("../_utility/stream-to-promise");
     var Promise_1 = require("../source/System/Promises/Promise");
-    var awaiter_1 = require("../source/awaiter");
-    var generator_1 = require("../source/generator");
-    // noinspection JSUnusedLocalSymbols
-    var __awaiter = awaiter_1.default;
-    // noinspection JSUnusedLocalSymbols
-    var __generator = generator_1.default;
     // No tsd yet.
     var bump = require('gulp-bump');
     var VERSION_BUMP_MINOR = 'version-bump-minor', VERSION_BUMP_PATCH = 'version-bump-patch';
@@ -29,9 +24,9 @@
      * @returns {NodeJS.ReadableStream}
      */
     function bumpVersion(type) {
-        return __awaiter(this, void 0, Promise_1.TSDNPromise, function () {
+        return tslib_1.__awaiter(this, void 0, Promise_1.TSDNPromise, function () {
             var pkg, newVer;
-            return __generator(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, file.json.read('./package.json')];
                     case 1:

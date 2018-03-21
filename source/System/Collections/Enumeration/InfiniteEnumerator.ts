@@ -4,9 +4,6 @@
  */
 
 import {SimpleEnumerableBase} from "./SimpleEnumerableBase";
-import __extendsImport from "../../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 /**
  * An aggregate/reduce style factory function that expects a previous value and the current index of the enumeration.

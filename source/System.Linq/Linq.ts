@@ -58,12 +58,8 @@ import {
 	InfiniteEnumerator,
 	InfiniteValueFactory
 } from "../System/Collections/Enumeration/InfiniteEnumerator";
-import __extendsImport from "../extends";
 import {LazyList} from "../System/Collections/LazyList";
 import disposeSingle = dispose.single;
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
-
 
 // #region Local Constants.
 

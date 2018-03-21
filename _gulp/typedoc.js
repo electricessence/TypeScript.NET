@@ -5,7 +5,7 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "gulp-typescript-helper", "./constants/Paths", "./constants/TaskNames", "gulp", "gulp-typedoc"], factory);
+        define(["require", "exports", "gulp-typescript-helper", "./constants/Paths", "./constants/TaskNames", "gulp"], factory);
     }
 })(function (require, exports) {
     "use strict";

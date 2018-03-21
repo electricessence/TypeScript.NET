@@ -19,10 +19,6 @@
 
 import {Type, TypeInfo} from "./Types";
 import {areEqual} from "./Compare";
-import __extendsImport from "../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
-
 
 export class TypeInfoHelper extends TypeInfo
 {

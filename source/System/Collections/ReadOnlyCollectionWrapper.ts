@@ -9,9 +9,6 @@ import {ICollection} from "./ICollection";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {from as enumeratorFrom} from "./Enumeration/Enumerator";
 import {Type} from "../Types";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 export default class ReadOnlyCollectionWrapper<T> extends ReadOnlyCollectionBase<T>
 {

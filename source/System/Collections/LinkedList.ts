@@ -15,9 +15,6 @@ import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../Functi
 import {ILinkedList} from "./ILinkedList";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IDisposable} from "../Disposable/IDisposable";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const VOID0:undefined = void 0;
 

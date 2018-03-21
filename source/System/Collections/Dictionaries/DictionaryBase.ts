@@ -14,11 +14,8 @@ import {IKeyValuePair, KeyValuePair} from "../../KeyValuePair";
 import {IDictionary} from "./IDictionary";
 import {IEnumerator} from "../Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "../IEnumerableOrArray";
-import __extendsImport from "../../../extends";
 import {KeyNotFoundException} from "../KeyNotFoundException";
 import {Action} from "../../FunctionTypes";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const VOID0:undefined = void 0;
 

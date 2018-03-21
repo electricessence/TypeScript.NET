@@ -7,12 +7,7 @@ import {JsonMap} from "../source/JSON";
 import {IMap} from "../source/IMap";
 import {streamToPromise as stream} from "../_utility/stream-to-promise";
 import {TSDNPromise as NPromise} from "../source/System/Promises/Promise";
-import awaiter from "../source/awaiter";
-import generator from "../source/generator";
-// noinspection JSUnusedLocalSymbols
-const __awaiter = awaiter;
-// noinspection JSUnusedLocalSymbols
-const __generator = generator;
+import create from "../source/System/Promises/Functions/create";
 
 const fields:IMap<boolean> = {
 	"name": true,
@@ -65,7 +60,7 @@ const DEFAULTS:CoreTypeScriptOptions = Object.freeze(<CoreTypeScriptOptions>{
 });
 
 const builder = BuildHelper
-	.inject(NPromise.factory)
+	.inject(create)
 	.fromTo(PATH.SOURCE, "./dist", DEFAULTS);
 
 gulp.task(

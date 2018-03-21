@@ -4,8 +4,10 @@
  */
 
 import * as fs from "fs";
-import {PromiseBase, TSDNPromise} from "../source/System/Promises/Promise";
 import {JsonArray, JsonData, JsonMap} from "../source/JSON";
+import using from "../source/System/Promises/Functions/using";
+import TSDNPromise from "../source/System/Promises/Promise";
+import PromiseBase from "../source/System/Promises/PromiseBase";
 
 
 export module ENCODING
@@ -40,7 +42,7 @@ function readFile(path:string, encoding:string = ENCODING.UTF8):TSDNPromise<stri
 
 function writeFile(path:string, data:string, options?:WriteOptions):PromiseBase<void>
 {
-	return TSDNPromise.using<void>((resolve, reject)=>
+	return using<void>((resolve, reject)=>
 	{
 		fs.writeFile(
 			path,
@@ -72,8 +74,7 @@ export module json
 
 	export function write(path:string, data:JsonData, options?:WriteOptions):PromiseBase<void>
 	{
-		return TSDNPromise
-			.using<string>(resolve=>resolve(JSON.stringify(data, null, 2)))
+		return using<string>(resolve=>resolve(JSON.stringify(data, null, 2)))
 			.thenSynchronous(s=>writeFile(path, s, options));
 	}
 

@@ -6,9 +6,6 @@
 import {DisposableBase} from "./Disposable/DisposableBase";
 import {Func} from "./FunctionTypes";
 import {ArgumentNullException} from "./Exceptions/ArgumentNullException";
-import __extendsImport from "../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 const NULL:any = null;
 const NAME:string = "ResolverBase";
 

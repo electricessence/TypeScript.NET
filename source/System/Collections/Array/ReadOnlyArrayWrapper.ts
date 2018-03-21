@@ -4,9 +4,6 @@
  */
 
 import ReadOnlyCollectionWrapper from "../ReadOnlyCollectionWrapper";
-import __extendsImport from "../../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 export default class ReadOnlyArrayWrapper<T> extends ReadOnlyCollectionWrapper<T>
 {

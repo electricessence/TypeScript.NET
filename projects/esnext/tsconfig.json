@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es5",
+    "declaration": true,
+    "sourceMap": true,
+    "strict": true,
+    "removeComments": false,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "outDir": "../../dist/esnext"
+  },
+  "include": [
+    "../../source"
+  ]
+}

@@ -4,9 +4,6 @@
  */
 
 import {EnumeratorBase} from "./EnumeratorBase";
-import __extendsImport from "../../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 export interface IndexEnumeratorSource<T> {
 	source:{ [index:number]:T };

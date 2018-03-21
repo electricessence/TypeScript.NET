@@ -10,10 +10,6 @@ import {ILinkedNodeWithValue} from "./ILinkedListNode";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {Selector} from "../FunctionTypes";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
-
 
 const VOID0:undefined = void 0;
 

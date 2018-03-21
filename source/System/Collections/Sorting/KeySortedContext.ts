@@ -10,9 +10,6 @@ import {Comparison, Selector} from "../../FunctionTypes";
 import {Comparable} from "../../IComparable";
 import {IComparer} from "../../IComparer";
 import {Order} from "./Order";
-import __extendsImport from "../../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 export class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>
 {

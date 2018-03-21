@@ -14,10 +14,7 @@ import {IList} from "./IList";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
-import __extendsImport from "../../extends";
 import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const VOID0:undefined = void 0;
 export class List<T>

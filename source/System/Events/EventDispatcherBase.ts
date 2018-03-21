@@ -10,9 +10,6 @@ import {dispose} from "../Disposable/dispose";
 import {IEventListener} from "./IEventListener";
 import {EventDispatcherEntry} from "./EventDispatcherEntry";
 import {IEventDispatcher} from "./IEventDispatcher";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const DISPOSING:string = 'disposing',
       DISPOSED:string  = 'disposed';

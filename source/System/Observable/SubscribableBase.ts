@@ -11,9 +11,6 @@ import {Subscription} from "./Subscription";
 import {ILinkedNodeWithValue} from "../Collections/ILinkedListNode";
 import {IDisposable} from "../Disposable/IDisposable";
 import {DisposableBase} from "../Disposable/DisposableBase";
-import __extendsImport from "../../extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
 
 const NAME = "SubscribableBase";
 // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
