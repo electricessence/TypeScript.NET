@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Type} from "../Types";
-import {IDisposable} from "./IDisposable";
+import IDisposable from "./IDisposable";
+import TypeOfValue from "../TypeOfValue";
 
 // Allows for more flexible parameters.
 export type DisposableItem = IDisposable|null|undefined;
@@ -18,13 +18,13 @@ export type DisposableItemArray = Array<DisposableItem>|null|undefined;
  * Can accept <any> and will ignore objects that don't have a dispose() method.
  * @param disposables
  */
-export function dispose(...disposables:DisposableItem[]):void
+function dispose(...disposables:DisposableItem[]):void
 {
 	// The disposables arguments array is effectively localized so it's safe.
 	disposeTheseInternal(disposables, false);
 }
 
-export module dispose
+module dispose
 {
 
 	/**
@@ -136,7 +136,7 @@ function disposeSingle(
 {
 	if(
 		disposable
-		&& typeof disposable==Type.OBJECT
+		&& typeof disposable==TypeOfValue.Object
 		&& typeof disposable['dispose'] == "function"
 	)
 	{

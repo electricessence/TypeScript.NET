@@ -6,11 +6,11 @@
 import {areEqual} from "../../Compare";
 import {IMap, IStringKeyDictionary} from "./IDictionary";
 import {IKeyValuePair} from "../../KeyValuePair";
-import {DictionaryBase} from "./DictionaryBase";
+import DictionaryBase from "./DictionaryBase";
 
 const VOID0:undefined = void 0;
 
-export class StringKeyDictionary<TValue>
+export default class StringKeyDictionary<TValue>
 extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 {
 
@@ -146,5 +146,3 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 
 
 }
-
-export default StringKeyDictionary;

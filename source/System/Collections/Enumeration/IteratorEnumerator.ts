@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {IIterator} from "./IIterator";
-import {SimpleEnumerableBase} from "./SimpleEnumerableBase";
+import IIterator from "./IIterator";
+import SimpleEnumerableBase from "./SimpleEnumerableBase";
 
 /**
  * A simplified stripped down enumerator that until disposed will infinitely return the provided factory.
@@ -12,7 +12,7 @@ import {SimpleEnumerableBase} from "./SimpleEnumerableBase";
  *
  *
  */
-export class IteratorEnumerator<T> extends SimpleEnumerableBase<T>
+export default class IteratorEnumerator<T> extends SimpleEnumerableBase<T>
 {
 	/**
 	 * @param _iterator
@@ -55,5 +55,3 @@ export class IteratorEnumerator<T> extends SimpleEnumerableBase<T>
 		return Boolean(this._isEndless) && super.getIsEndless();
 	}
 }
-
-export default IteratorEnumerator;

@@ -4,18 +4,18 @@
  */
 
 import {areEqual, compare} from "../Compare";
-import {TimeUnit} from "./TimeUnit";
+import TimeUnit from "./TimeUnit";
 import {Milliseconds, Ticks} from "./HowMany";
-import {IEquatable} from "../IEquatable";
-import {IComparable} from "../IComparable";
-import {ITimeQuantity} from "./ITimeQuantity";
-import {ITimeMeasurement} from "./ITimeMeasurement";
-import {Lazy} from "../Lazy";
+import IEquatable from "../IEquatable";
+import IComparable from "../IComparable";
+import ITimeQuantity from "./ITimeQuantity";
+import ITimeMeasurement from "./ITimeMeasurement";
+import Lazy from "../Lazy";
 
 /**
  * This class provides a simple means for storing and calculating time quantities.
  */
-export class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITimeQuantity>, ITimeQuantity
+export default class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITimeQuantity>, ITimeQuantity
 {
 
 	constructor(protected _quantity:number = 0)
@@ -101,5 +101,3 @@ export class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITim
 		return TimeUnit.fromMilliseconds(this.getTotalMilliseconds(), units);
 	}
 }
-
-export default TimeQuantity;

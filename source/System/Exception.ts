@@ -4,9 +4,8 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import {IDisposable} from "./Disposable/IDisposable";
-import {IMap} from "../IMap";
-const NAME:string = 'Exception';
+import IDisposable from "./Disposable/IDisposable";
+import IMap from "../IMap";
 
 // Avoid importing node reference..
 export interface Error {
@@ -17,7 +16,7 @@ export interface Error {
 /**
  * Represents errors that occur during application execution.
  */
-export class Exception implements Error, IDisposable
+export default class Exception implements Error, IDisposable
 {
 	/**
 	 * A string representation of the error type.
@@ -74,12 +73,13 @@ export class Exception implements Error, IDisposable
 	}
 
 
+	// noinspection JSMethodCanBeStatic
 	/**
 	 * A string representation of the error type.
 	 * The default is 'Error'.
 	 */
 	protected getName():string
-	{ return NAME; }
+	{ return 'Exception'; }
 
 	/**
 	 * The string representation of the Exception instance.
@@ -109,5 +109,3 @@ export class Exception implements Error, IDisposable
 		}
 	}
 }
-
-export default Exception;

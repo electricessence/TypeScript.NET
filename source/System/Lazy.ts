@@ -3,13 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {ILazy} from "./ILazy";
 import {Func} from "./FunctionTypes";
-import {ResolverBase} from "./ResolverBase";
+import ILazy from "./ILazy";
+import ResolverBase from "./ResolverBase";
 
 
 // We need a non-resettable lazy to ensure it can be passed safely around.
-export class Lazy<T> extends ResolverBase<T> implements ILazy<T>
+export default class Lazy<T> extends ResolverBase<T> implements ILazy<T>
 {
 
 	constructor(valueFactory:Func<T>, trapExceptions:boolean = false, allowReset:boolean = false)
@@ -61,5 +61,3 @@ export class ResettableLazy<T> extends Lazy<T>
 		return new ResettableLazy<T>(valueFactory, trapExceptions);
 	}
 }
-
-export default Lazy;

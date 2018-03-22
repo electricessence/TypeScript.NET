@@ -1,21 +1,21 @@
 ﻿﻿/*!
- * @author electricessence / https://github.com/electricessence/
+ * @author: electricessence / https://github.com/electricessence/
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
 import {areEqual} from "../Compare";
 import * as AU from "./Array/Utility";
-import {Type} from "../Types";
-import {Integer} from "../Integer";
-import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
-import {NotImplementedException} from "../Exceptions/NotImplementedException";
-import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
-import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
-import {CollectionBase} from "./CollectionBase";
+import Type from "../Types";
+import Integer from "../Integer";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
+import NotImplementedException from "../Exceptions/NotImplementedException";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import CollectionBase from "./CollectionBase";
 import {Action, ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
-import {IEnumerator} from "./Enumeration/IEnumerator";
-import {IEnumerableOrArray} from "./IEnumerableOrArray";
+import IEnumerator from "./Enumeration/IEnumerator";
+import IEnumerableOrArray from "./IEnumerableOrArray";
 
 const VOID0:undefined = void 0;
 const MINIMUM_GROW:number = 4;
@@ -25,7 +25,7 @@ const GROW_FACTOR_HALF:number = 100;
 const DEFAULT_CAPACITY:number = MINIMUM_GROW;
 const emptyArray:any = Object.freeze([]);
 
-export class Queue<T>
+export default class Queue<T>
 extends CollectionBase<T>
 {
 
@@ -396,5 +396,3 @@ function assertIntegerZeroOrGreater(value:number, property:string):true|never
 	Integer.assert(value, property);
 	return assertZeroOrGreater(value, property);
 }
-
-export default Queue;

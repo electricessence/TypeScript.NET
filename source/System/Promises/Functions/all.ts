@@ -3,9 +3,9 @@
  * Licensing: MIT
  */
 
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
-import {Set} from "../../Collections/Set";
-import {ArrayPromise} from "../ArrayPromise";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import Set from "../../Collections/Set";
+import ArrayPromise from "../ArrayPromise";
 
 /**
  * Returns a promise that is fulfilled with an array containing the fulfillment value of each promise, or is rejected with the same rejection reason as the first promise to be rejected.

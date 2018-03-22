@@ -3,11 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Type} from "../Types";
-import {OrderedStringKeyDictionary} from "../Collections/Dictionaries/OrderedStringKeyDictionary";
+import Type from "../Types";
+import OrderedStringKeyDictionary from "../Collections/Dictionaries/OrderedStringKeyDictionary";
 import {isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
-import {UriComponent} from "./UriComponent";
-import {QueryParam} from "./QueryParam";
+import UriComponent from "./UriComponent";
+import QueryParam from "./QueryParam";
 import {encode, parse} from "./QueryParams";
 
 /**

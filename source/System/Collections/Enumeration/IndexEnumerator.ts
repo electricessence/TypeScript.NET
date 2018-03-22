@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {EnumeratorBase} from "./EnumeratorBase";
+import EnumeratorBase from "./EnumeratorBase";
 
 export interface IndexEnumeratorSource<T> {
 	source:{ [index:number]:T };
@@ -13,7 +13,7 @@ export interface IndexEnumeratorSource<T> {
 	pointer?:number;
 }
 
-export class IndexEnumerator<T> extends EnumeratorBase<T>
+export default class IndexEnumerator<T> extends EnumeratorBase<T>
 {
 
 	constructor(
@@ -77,5 +77,3 @@ export class IndexEnumerator<T> extends EnumeratorBase<T>
 		this._isEndless = false;
 	}
 }
-
-export default IndexEnumerator;

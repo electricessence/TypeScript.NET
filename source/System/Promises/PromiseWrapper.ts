@@ -3,9 +3,9 @@
  * Licensing: MIT
  */
 
-import {ArgumentException} from "../Exceptions/ArgumentException";
+import ArgumentException from "../Exceptions/ArgumentException";
 import TSDNPromise, {Resolvable} from "./Promise";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import isPromise from "./Functions/isPromise";
 import {PromiseStateValue} from "./PromiseState";
 import {Fulfill, Reject} from "./PromiseTypes";

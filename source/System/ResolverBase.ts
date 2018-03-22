@@ -3,10 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {DisposableBase} from "./Disposable/DisposableBase";
 import {Func} from "./FunctionTypes";
-import {ArgumentNullException} from "./Exceptions/ArgumentNullException";
-const NULL:any = null;
+import DisposableBase from "./Disposable/DisposableBase";
+import ArgumentNullException from "./Exceptions/ArgumentNullException";
 const NAME:string = "ResolverBase";
 
 /**
@@ -15,7 +14,7 @@ const NAME:string = "ResolverBase";
  * we have to prevent getValue from double triggering the value factory (optimistic concurrency)
  * or returning return a value that is intermediate between resolving and resolved.
  */
-export abstract class ResolverBase<T> extends DisposableBase
+abstract class ResolverBase<T> extends DisposableBase
 {
 
 	protected _isValueCreated:boolean|null; // null = 'creating'
@@ -61,7 +60,7 @@ export abstract class ResolverBase<T> extends DisposableBase
 				if(!_._isValueCreated && (c = _._valueFactory))
 				{
 					_._isValueCreated = null; // Mark this as 'resolving'.
-					if(!this._allowReset) this._valueFactory = NULL;
+					if(!this._allowReset) this._valueFactory = <any>null;
 					const v = c();
 					_._value = v;
 					_._error = void 0;
@@ -92,9 +91,9 @@ export abstract class ResolverBase<T> extends DisposableBase
 
 	protected _onDispose():void
 	{
-		this._valueFactory = NULL;
-		this._value = NULL;
-		this._isValueCreated = NULL;
+		this._valueFactory = <any>null;
+		this._value = <any>null;
+		this._isValueCreated = <any>null;
 	}
 
 	tryReset():boolean
@@ -106,7 +105,7 @@ export abstract class ResolverBase<T> extends DisposableBase
 		else
 		{
 			_._isValueCreated = false;
-			_._value = NULL;
+			_._value = <any>null;
 			_._error = void 0;
 			return true;
 		}

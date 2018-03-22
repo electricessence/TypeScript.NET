@@ -5,19 +5,14 @@
  */
 
 
-import {SystemException, Error} from "../Exceptions/SystemException";
-
-const NAME:string = 'KeyNotFoundException ';
-
+import SystemException, {Error} from "../Exceptions/SystemException";
 export {Error};
 
-export class KeyNotFoundException extends SystemException
+export default class KeyNotFoundException extends SystemException
 {
 	protected getName():string
 	{
-		return NAME;
+		return 'KeyNotFoundException';
 	}
 
 }
-
-export default KeyNotFoundException;

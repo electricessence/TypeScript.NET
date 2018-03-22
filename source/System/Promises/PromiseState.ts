@@ -3,9 +3,9 @@
  * Licensing: MIT
  */
 
-import {DisposableBase} from "../Disposable/DisposableBase";
+import DisposableBase from "../Disposable/DisposableBase";
 
-export class PromiseState<T>
+export default class PromiseState<T>
 	extends DisposableBase
 {
 
@@ -94,5 +94,3 @@ export enum PromiseStateValue
 }
 
 Object.freeze(PromiseStateValue);
-
-export default PromiseState

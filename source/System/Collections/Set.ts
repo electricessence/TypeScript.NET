@@ -3,18 +3,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Type} from "../Types";
-import {getIdentifier} from "./Dictionaries/getIdentifier";
+import getIdentifier from "./Dictionaries/getIdentifier";
 import {ISymbolizable} from "./Dictionaries/IDictionary";
 import {HashSet} from "./HashSet";
-import {Primitive} from "../Primitive";
-import {IEnumerableOrArray} from "./IEnumerableOrArray";
+import Primitive from "../Primitive";
+import IEnumerableOrArray from "./IEnumerableOrArray";
+import TypeOfValue from "../TypeOfValue";
 
 function getId(obj:any):string|number|symbol {
-	return getIdentifier(obj, typeof obj!=Type.BOOLEAN);
+	return getIdentifier(obj, typeof obj!=TypeOfValue.Boolean);
 }
 
-export class Set<T extends Primitive|ISymbolizable|symbol>
+export default class Set<T extends Primitive|ISymbolizable|symbol>
 extends HashSet<T>
 {
 	constructor(source?:IEnumerableOrArray<T>)
@@ -22,5 +22,3 @@ extends HashSet<T>
 		super(source, getId);
 	}
 }
-
-export default Set;

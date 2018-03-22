@@ -4,26 +4,31 @@
  */
 
 import * as Serialize from "../Serialization/Utility";
-import {UriComponent} from "./UriComponent";
-import {QueryParam} from "./QueryParam";
-import {Type} from "../Types";
-import {extractKeyValue} from "../KeyValueExtract";
+import UriComponent from "./UriComponent";
+import QueryParam from "./QueryParam";
+import Type from "../Types";
+import extractKeyValue from "../KeyValueExtract";
 import {forEach, isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
-import {IMap} from "../../IMap";
-import {Primitive} from "../Primitive";
+import IMap from "../../IMap";
+import Primitive from "../Primitive";
 import {IStringKeyValuePair} from "../KeyValuePair";
-import {IEnumerableOrArray} from "../Collections/IEnumerableOrArray";
+import IEnumerableOrArray from "../Collections/IEnumerableOrArray";
+import TypeOfValue from "../TypeOfValue";
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.
  * If more detailed operations are necessary, consider importing QueryBuilder.
  */
 
+
+export const enum Separator
+{
+	Query = "?",
+	Entry = "&",
+	KeyValue = "="
+}
 const
 	EMPTY               = "",
-	QUERY_SEPARATOR     = "?",
-	ENTRY_SEPARATOR     = "&",
-	KEY_VALUE_SEPARATOR = "=",
 	TO_URI_COMPONENT    = "toUriComponent";
 
 
@@ -54,8 +59,8 @@ export function encode(
 		);
 	}
 
-	return (entries.length && prefixIfNotEmpty ? QUERY_SEPARATOR : EMPTY)
-		+ entries.join(ENTRY_SEPARATOR);
+	return (entries.length && prefixIfNotEmpty ? Separator.Query : EMPTY)
+		+ entries.join(Separator.Entry);
 }
 
 function appendKeyValueSingle(
@@ -63,7 +68,7 @@ function appendKeyValueSingle(
 	key:string,
 	value:UriComponent.Value):void
 {
-	entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
+	entries.push(key + Separator.KeyValue + encodeValue(value));
 }
 
 // According to spec, if there is an array of values with the same key, then each value is replicated with that key.
@@ -92,7 +97,7 @@ export function encodeValue(value:UriComponent.Value):string
 	if(isUriComponentFormattable(value))
 	{
 		const v:string = value.toUriComponent();
-		if(v && v.indexOf(ENTRY_SEPARATOR)!=1)
+		if(v && v.indexOf(Separator.Entry)!=1)
 			throw '.toUriComponent() did not encode the value.';
 		return v;
 	}
@@ -109,7 +114,7 @@ export function encodeValue(value:UriComponent.Value):string
  */
 export function isUriComponentFormattable(instance:any):instance is UriComponent.Formattable
 {
-	return Type.hasMemberOfType<UriComponent.Formattable>(instance, TO_URI_COMPONENT, Type.FUNCTION);
+	return Type.hasMemberOfType<UriComponent.Formattable>(instance, TO_URI_COMPONENT, TypeOfValue.Function);
 }
 
 /**
@@ -127,14 +132,14 @@ export function parse(
 {
 	if(query && (query = query.replace(/^\s*\?+/, '')))
 	{
-		const entries = query.split(ENTRY_SEPARATOR);
+		const entries = query.split(Separator.Entry);
 		for(let entry of entries)
 		{
 			/*
 			 * Since it is technically possible to have multiple '=' we need to identify the first one.
 			 * And if there is no '=' then the entry is ignored.
 			 */
-			const si = entry.indexOf(KEY_VALUE_SEPARATOR);
+			const si = entry.indexOf(Separator.KeyValue);
 			if(si!= -1)
 			{
 				let key = entry.substring(0, si);
@@ -199,12 +204,4 @@ export function parseToArray(
 	return result;
 }
 
-
-export module Separator
-{
-	export const Query:string = QUERY_SEPARATOR;
-	export const Entry:string = ENTRY_SEPARATOR;
-	export const KeyValue:string = KEY_VALUE_SEPARATOR;
-}
-Object.freeze(Separator);
 

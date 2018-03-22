@@ -4,14 +4,11 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import {Error, InvalidOperationException} from "../Exceptions/InvalidOperationException";
-import {IDisposableAware} from "./IDisposableAware";
-
-const NAME:string = 'ObjectDisposedException';
-
+import InvalidOperationException, {Error} from "../Exceptions/InvalidOperationException";
+import IDisposableAware from "./IDisposableAware";
 export {Error};
 
-export class ObjectDisposedException extends InvalidOperationException
+export default class ObjectDisposedException extends InvalidOperationException
 {
 
 	// @ts-ignore TS2564: Since this does actually get initialized.
@@ -30,9 +27,10 @@ export class ObjectDisposedException extends InvalidOperationException
 	}
 
 
+	// noinspection JSMethodCanBeStatic
 	protected getName():string
 	{
-		return NAME;
+		return 'ObjectDisposedException';
 	}
 
 	toString():string
@@ -55,5 +53,3 @@ export class ObjectDisposedException extends InvalidOperationException
 	}
 
 }
-
-export default ObjectDisposedException;

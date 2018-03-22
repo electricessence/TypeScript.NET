@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {ArgumentException} from "./Exceptions/ArgumentException";
-import {ArgumentNullException} from "./Exceptions/ArgumentNullException";
+import ArgumentException from "./Exceptions/ArgumentException";
+import ArgumentNullException from "./Exceptions/ArgumentNullException";
 import {IKeyValuePair, KeyValuePair} from "./KeyValuePair";
-import {Type} from "./Types";
+import Type from "./Types";
 
 const
 	VOID0:undefined                  = void 0,
@@ -52,7 +52,7 @@ export function assertNotUndefined<T>(value:T, name:string):T|never
 }
 
 
-export function extractKeyValue<TKey, TValue, TResult>(
+export default function extractKeyValue<TKey, TValue, TResult>(
 	item:KeyValuePair<TKey, TValue>,
 	to:(key:TKey, value:TValue)=>TResult):TResult
 {
@@ -77,5 +77,3 @@ export function extractKeyValue<TKey, TValue, TResult>(
 
 	return to(key, value);
 }
-
-export default extractKeyValue;

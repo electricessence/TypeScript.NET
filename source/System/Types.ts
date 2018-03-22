@@ -3,238 +3,27 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Primitive} from "./Primitive";
-import {TypeValue} from "./TypeValue";
-import {ArrayLikeWritable} from "./Collections/Array/ArrayLikeWritable";
+import Primitive from "./Primitive";
+import TypeOfValue from "./TypeOfValue";
+import ArrayLikeWritable from "./Collections/Array/ArrayLikeWritable";
+import TypeInfo from "./TypeInfo";
 
-const
-	VOID0      = <undefined>void(0),
-	_BOOLEAN   = <TypeValue.Boolean>typeof true,
-	_NUMBER    = <TypeValue.Number>typeof 0,
-	_STRING    = <TypeValue.String>typeof "",
-	_SYMBOL    = <TypeValue.Symbol>"symbol",
-	_OBJECT    = <TypeValue.Object>typeof {},
-	_UNDEFINED = <TypeValue.Undefined>typeof VOID0,
-	_FUNCTION  = <TypeValue.Function>typeof function() {},
-	LENGTH     = <string>"length";
+const VOID0 = <undefined>void(0);
 
-// Only used for primitives.
-const typeInfoRegistry:{[key:string]:TypeInfo} = {};
-
-/**
- * Exposes easy access to type information including inquiring about members.
- */
-export class TypeInfo
-{
-	// Not retained for primitives. Since they have no members.
-	protected readonly target:any;
-
-	readonly type:string;
-
-	readonly isBoolean:boolean;
-	readonly isNumber:boolean;
-	readonly isFinite:boolean;
-	readonly isValidNumber:boolean;
-	readonly isString:boolean;
-	readonly isTrueNaN:boolean;
-	readonly isObject:boolean;
-	readonly isArray:boolean;
-	readonly isFunction:boolean;
-	readonly isUndefined:boolean;
-	readonly isNull:boolean;
-	readonly isNullOrUndefined:boolean;
-	readonly isPrimitive:boolean;
-	readonly isSymbol:boolean;
-
-	constructor(target:any, onBeforeFreeze?:(instance:any)=>void)
-	{
-		this.isBoolean = false;
-		this.isNumber = false;
-		this.isFinite = false;
-		this.isValidNumber = false;
-		this.isString = false;
-		this.isTrueNaN = false;
-		this.isObject = false;
-		this.isFunction = false;
-		this.isUndefined = false;
-		this.isNull = false;
-		this.isPrimitive = false;
-		this.isSymbol = false;
-		this.isArray = false;
-		this.isNullOrUndefined = false;
-
-		switch(this.type = typeof target)
-		{
-			case _BOOLEAN:
-				this.isBoolean = true;
-				this.isPrimitive = true;
-				break;
-			case _NUMBER:
-				this.isNumber = true;
-				this.isTrueNaN = isNaN(target);
-				this.isFinite = isFinite(target);
-				this.isValidNumber = !this.isTrueNaN;
-				this.isPrimitive = true;
-				break;
-			case _STRING:
-				this.isString = true;
-				this.isPrimitive = true;
-				break;
-			case _SYMBOL:
-				this.isSymbol = true;
-				break;
-			case _OBJECT:
-				this.target = target;
-				if(target===null)
-				{
-					this.isNull = true;
-					this.isNullOrUndefined = true;
-					this.isPrimitive = true;
-				}
-				else
-				{
-					this.isArray = (target) instanceof (Array);
-					this.isObject = true;
-				}
-				break;
-			case _FUNCTION:
-				this.target = target;
-				this.isFunction = true;
-				break;
-			case _UNDEFINED:
-				this.isUndefined = true;
-				this.isNullOrUndefined = true;
-				this.isPrimitive = true;
-				break;
-			default:
-				throw "Fatal type failure.  Unknown type: " + this.type;
-		}
-
-		if(onBeforeFreeze) onBeforeFreeze(this);
-		Object.freeze(this);
-
-	}
-
-	/**
-	 * Returns a TypeInfo for any member or non-member,
-	 * where non-members are of type undefined.
-	 * @param name
-	 * @returns {TypeInfo}
-	 */
-	member(name:string|number|symbol):TypeInfo
-	{
-		const t = this.target;
-		return TypeInfo.getFor(
-			t && (name) in (t)
-				? t[name]
-				: VOID0);
-	}
-
-	/**
-	 * Returns a TypeInfo for any target object.
-	 * If the target object is of a primitive type, it returns the TypeInfo instance assigned to that type.
-	 * @param target
-	 * @returns {TypeInfo}
-	 */
-	static getFor(target:any):TypeInfo
-	{
-		const type:string = typeof target;
-		switch(type)
-		{
-			case _OBJECT:
-			case _FUNCTION:
-				return new TypeInfo(target);
-		}
-		let info = typeInfoRegistry[type];
-		if(!info) typeInfoRegistry[type] = info = new TypeInfo(target);
-		return info;
-	}
-
-	/**
-	 * Returns true if the target matches the type (instanceof).
-	 * @param type
-	 * @returns {boolean}
-	 */
-	is<T>(type:{new (...params:any[]):T}):boolean
-	{
-		return this.target instanceof type;
-	}
-
-	/**
-	 * Returns null if the target does not match the type (instanceof).
-	 * Otherwise returns the target as the type.
-	 * @param type
-	 * @returns {T|null}
-	 */
-	as<T>(type:{new (...params:any[]):T}):T|null
-	{
-		return this.target instanceof type ? this.target : null
-	}
-
-}
-
-export function Type(target:any):TypeInfo
+function Type(target:any):TypeInfo
 {
 	return new TypeInfo(target);
 }
 
-
-
-
-export module Type
+module Type
 {
-
-
-	/**
-	 * typeof true
-	 * @type {string}
-	 */
-	export const BOOLEAN:TypeValue.Boolean = _BOOLEAN;
-
-	/**
-	 * typeof 0
-	 * @type {string}
-	 */
-	export const NUMBER:TypeValue.Number = _NUMBER;
-
-	/**
-	 * typeof ""
-	 * @type {string}
-	 */
-	export const STRING:TypeValue.String = _STRING;
-
-	/**
-	 * typeof {}
-	 * @type {string}
-	 */
-	export const OBJECT:TypeValue.Object = _OBJECT;
-
-
-	/**
-	 * typeof Symbol
-	 * @type {string}
-	 */
-	export const SYMBOL:TypeValue.Symbol = _SYMBOL;
-
-	/**
-	 * typeof undefined
-	 * @type {string}
-	 */
-	export const UNDEFINED:TypeValue.Undefined = _UNDEFINED;
-
-	/**
-	 * typeof function
-	 * @type {string}
-	 */
-	export const FUNCTION:TypeValue.Function = _FUNCTION;
-
 	/**
 	 * Returns true if the target matches the type (instanceof).
 	 * @param target
 	 * @param type
 	 * @returns {T|null}
 	 */
-	export function is<T>(target:Object, type:{new (...params:any[]):T}):target is T
+	export function is<T>(target:Object, type:{ new (...params:any[]):T }):target is T
 	{
 		return target instanceof type;
 	}
@@ -246,7 +35,7 @@ export module Type
 	 * @param type
 	 * @returns {T|null}
 	 */
-	export function as<T>(target:Object, type:{new (...params:any[]):T}):T|null
+	export function as<T>(target:Object, type:{ new (...params:any[]):T }):T | null
 	{
 		return target instanceof type ? target : null;
 	}
@@ -256,7 +45,7 @@ export module Type
 	 * @param value
 	 * @returns {boolean}
 	 */
-	export function isNullOrUndefined(value:any):value is null|undefined
+	export function isNullOrUndefined(value:any):value is null | undefined
 	{
 		return value==null;
 	}
@@ -268,7 +57,7 @@ export module Type
 	 */
 	export function isBoolean(value:any):value is boolean
 	{
-		return typeof value===_BOOLEAN;
+		return typeof value===TypeOfValue.Boolean;
 	}
 
 	/**
@@ -279,7 +68,7 @@ export module Type
 	 */
 	export function isNumber(value:any, ignoreNaN:boolean = false):value is number
 	{
-		return typeof value===_NUMBER && (!ignoreNaN || !isNaN(value));
+		return typeof value===TypeOfValue.Number && (!ignoreNaN || !isNaN(value));
 	}
 
 	/**
@@ -289,7 +78,7 @@ export module Type
 	 */
 	export function isTrueNaN(value:any):value is number
 	{
-		return typeof value===_NUMBER && isNaN(value);
+		return typeof value===TypeOfValue.Number && isNaN(value);
 	}
 
 	/**
@@ -299,7 +88,7 @@ export module Type
 	 */
 	export function isString(value:any):value is string
 	{
-		return typeof value===_STRING;
+		return typeof value===TypeOfValue.String;
 	}
 
 	/**
@@ -313,13 +102,13 @@ export module Type
 		const t = typeof value;
 		switch(t)
 		{
-			case _BOOLEAN:
-			case _STRING:
-			case _NUMBER:
+			case TypeOfValue.Boolean:
+			case TypeOfValue.String:
+			case TypeOfValue.Number:
 				return true;
-			case _UNDEFINED:
+			case TypeOfValue.Undefined:
 				return allowUndefined;
-			case _OBJECT:
+			case TypeOfValue.Object:
 				return value===null;
 
 		}
@@ -334,9 +123,9 @@ export module Type
 	 */
 	export function isPrimitiveOrSymbol(
 		value:any,
-		allowUndefined:boolean = false):value is Primitive|symbol
+		allowUndefined:boolean = false):value is Primitive | symbol
 	{
-		return typeof value===_SYMBOL ? true : isPrimitive(value, allowUndefined);
+		return typeof value===TypeOfValue.Symbol ? true : isPrimitive(value, allowUndefined);
 	}
 
 	/**
@@ -344,14 +133,14 @@ export module Type
 	 * @param value
 	 * @returns {boolean}
 	 */
-	export function isPropertyKey(value:any):value is string|number|symbol
+	export function isPropertyKey(value:any):value is string | number | symbol
 	{
 		const t = typeof value;
 		switch(t)
 		{
-			case _STRING:
-			case _NUMBER:
-			case _SYMBOL:
+			case TypeOfValue.String:
+			case TypeOfValue.Number:
+			case TypeOfValue.Symbol:
 				return true;
 		}
 		return false;
@@ -364,7 +153,7 @@ export module Type
 	 */
 	export function isFunction(value:any):value is Function
 	{
-		return typeof value===_FUNCTION;
+		return typeof value===TypeOfValue.Function;
 	}
 
 	/**
@@ -375,7 +164,7 @@ export module Type
 	 */
 	export function isObject(value:any, allowNull:boolean = false):boolean
 	{
-		return typeof value===_OBJECT && (allowNull || value!==null);
+		return typeof value===TypeOfValue.Object && (allowNull || value!==null);
 	}
 
 	/**
@@ -420,14 +209,14 @@ export module Type
 	 */
 	export function hasMemberOfType<T>(
 		instance:any, property:string,
-		type:TypeValue):instance is T
+		type:TypeOfValue):instance is T
 	{
 		return hasMember(instance, property) && typeof(instance[property])===type;
 	}
 
 	export function hasMethod<T>(instance:any, property:string):instance is T
 	{
-		return hasMemberOfType<T>(instance, property, _FUNCTION);
+		return hasMemberOfType<T>(instance, property, TypeOfValue.Function);
 	}
 
 	export function isArrayLike<T>(instance:any):instance is ArrayLikeWritable<T>
@@ -444,7 +233,7 @@ export module Type
 		 */
 		return instance instanceof Array
 			|| Type.isString(instance)
-			|| !Type.isFunction(instance) && hasMember(instance, LENGTH);
+			|| !Type.isFunction(instance) && hasMember(instance, "length");
 	}
 }
 

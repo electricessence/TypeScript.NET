@@ -3,10 +3,10 @@
  * Licensing: MIT
  */
 
-import {Integer} from "./Integer";
-import {initialize} from "./Collections/Array/initialize";
-import {shuffle as arrayShuffle} from "./Collections/Array/shuffle";
-import {ArrayLikeWritable} from "./Collections/Array/ArrayLikeWritable";
+import Integer from "./Integer";
+import arrayInit from "./Collections/Array/initialize";
+import arrayShuffle from "./Collections/Array/shuffle";
+import ArrayLikeWritable from "./Collections/Array/ArrayLikeWritable";
 import assert = Integer.assert;
 
 /**
@@ -14,7 +14,7 @@ import assert = Integer.assert;
  * If you need repeatable seeded random numbers then you'll need a separate utility.
  * Highly recommended: https://github.com/ckknight/random-js which has typings under @types/random-js.
  */
-export module Random
+module Random
 {
 
 	function r(maxExclusive:number = 1):number
@@ -35,7 +35,7 @@ export module Random
 	function arrayCopy<T>(source:ArrayLike<T>):T[]
 	{
 		const len = source.length;
-		const result = initialize<T>(len);
+		const result = arrayInit<T>(len);
 		for(let i = 0; i<len; i++)
 		{
 			result[i] = source[i];
@@ -61,9 +61,9 @@ export module Random
 	 * @param maxExclusive
 	 * @returns {()=>number}
 	 */
-	export function generate(maxExclusive:number = 1):()=>number
+	export function generate(maxExclusive:number = 1):() => number
 	{
-		return ()=> r(maxExclusive);
+		return () => r(maxExclusive);
 	}
 
 	export module generate
@@ -77,9 +77,9 @@ export module Random
 		 */
 		export function integers(
 			boundary:number,
-			inclusive?:boolean):()=>number
+			inclusive?:boolean):() => number
 		{
-			return ()=> nr(boundary,inclusive);
+			return () => nr(boundary, inclusive);
 		}
 	}
 
@@ -182,7 +182,8 @@ export module Random
 	export function select<T>(source:ArrayLike<T>, maxCount:number):T[]
 	{
 		if(maxCount!==Infinity) Integer.assertZeroOrGreater(maxCount);
-		switch (maxCount) {
+		switch(maxCount)
+		{
 			case 0:
 				return [];
 			case 1:
@@ -205,8 +206,8 @@ export module Random
 		 * @param throwIfEmpty
 		 */
 		export function one<T>(source:ArrayLike<T>, throwIfEmpty:true):T
-		export function one<T>(source:ArrayLike<T>, throwIfEmpty?:boolean):T|undefined
-		export function one<T>(source:ArrayLike<T>, throwIfEmpty?:boolean):T|undefined
+		export function one<T>(source:ArrayLike<T>, throwIfEmpty?:boolean):T | undefined
+		export function one<T>(source:ArrayLike<T>, throwIfEmpty?:boolean):T | undefined
 		{
 			if(source && source.length)
 				return source[r(source.length)];
@@ -215,6 +216,6 @@ export module Random
 				throw "Cannot select from an empty set.";
 		}
 	}
-
-
 }
+
+export default Random;

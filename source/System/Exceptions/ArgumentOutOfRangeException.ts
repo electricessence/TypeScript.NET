@@ -4,14 +4,11 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import {ArgumentException, Error} from "./ArgumentException";
-import {Primitive} from "../Primitive";
-
-const NAME:string = 'ArgumentOutOfRangeException';
-
+import ArgumentException, {Error} from "./ArgumentException";
+import Primitive from "../Primitive";
 export {Error};
 
-export class ArgumentOutOfRangeException extends ArgumentException
+export default class ArgumentOutOfRangeException extends ArgumentException
 {
 	actualValue:Primitive | null | undefined;
 
@@ -30,9 +27,7 @@ export class ArgumentOutOfRangeException extends ArgumentException
 
 	protected getName():string
 	{
-		return NAME;
+		return 'ArgumentOutOfRangeException';
 	}
 
 }
-
-export default ArgumentOutOfRangeException;

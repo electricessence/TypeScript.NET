@@ -6,7 +6,7 @@
 /**
  * Can be used statically or extended for varying different reusable function signatures.
  */
-export class Functions
+class Functions
 {
 
 	//noinspection JSMethodCanBeStatic
@@ -44,7 +44,7 @@ const rootFunctions:Functions = new Functions();
 
 // Expose static versions.
 
-export module Functions
+module Functions
 {
 	/**
 	 * A typed method for use with simple selection of the parameter.

@@ -4,22 +4,22 @@
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
 
-import {Type} from "../Types";
-import {UriComponent} from "./UriComponent";
-import {Scheme} from "./Scheme";
-import {SchemeValue} from "./SchemeValue";
-import {QueryParam} from "./QueryParam";
+import Type from "../Types";
+import UriComponent from "./UriComponent";
+import Scheme, {isValidScheme} from "./Scheme";
+import QueryParam from "./QueryParam";
 import {encode, parseToMap, Separator} from "./QueryParams";
 import {trim} from "../Text/Utility";
-import {Exception} from "../Exception";
-import {ArgumentException} from "../Exceptions/ArgumentException";
-import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
-import {IUri} from "./IUri";
-import {IMap} from "../../IMap";
-import {Primitive} from "../Primitive";
+import Exception from "../Exception";
+import ArgumentException from "../Exceptions/ArgumentException";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import IUri from "./IUri";
+import IMap from "../../IMap";
+import Primitive from "../Primitive";
 import {StringKeyValuePair} from "../KeyValuePair";
-import {IEquatable} from "../IEquatable";
+import IEquatable from "../IEquatable";
 import {Action} from "../FunctionTypes";
+export {IUri}
 
 const VOID0:undefined = void 0;
 
@@ -29,10 +29,11 @@ const VOID0:undefined = void 0;
  * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
  * ICloneable&lt;Uri&gt; is not used to prevent unnecessary copying of values that won't change.
  */
-export class Uri implements IUri, IEquatable<IUri>
+
+export default class Uri implements IUri, IEquatable<IUri>
 {
 
-	readonly scheme:SchemeValue.Any | null;
+	readonly scheme:Scheme | null;
 	readonly userInfo:string | null;
 	readonly host:string | null;
 	readonly port:number | null;
@@ -52,7 +53,7 @@ export class Uri implements IUri, IEquatable<IUri>
 	 * @param fragment The escaped URI fragment.
 	 */
 	constructor(
-		scheme:SchemeValue.Any|null,
+		scheme:Scheme|null,
 		userInfo:string|null,
 		host:string|null,
 		port:number|null,
@@ -309,7 +310,7 @@ function copyUri(from:IUri, to?:IUri)
 
 const SLASH = '/', SLASH2 = '//', QM = Separator.Query, HASH = '#', EMPTY = '', AT = '@';
 
-function getScheme(scheme:SchemeValue.Any|string|null|undefined):SchemeValue.Any|null
+function getScheme(scheme:Scheme|string|null|undefined):Scheme|null
 {
 	let s:any = scheme;
 	if(Type.isString(s))
@@ -319,7 +320,7 @@ function getScheme(scheme:SchemeValue.Any|string|null|undefined):SchemeValue.Any
 			.toLowerCase()
 			.replace(/[^a-z0-9+.-]+$/g, EMPTY);
 		if(!s) return null;
-		if(Scheme.isValid(s)) return s;
+		if(isValidScheme(s)) return s;
 	}
 	else
 	{
@@ -516,5 +517,3 @@ function tryParse(url:string, out:Action<IUri>):null|Exception
 	return null;
 
 }
-
-export default Uri;

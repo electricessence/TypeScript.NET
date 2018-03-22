@@ -4,8 +4,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 // NOTE: Avoid real (types/interfaces only = ok) dependencies so this class can be used cleanly.
-import {IMap} from "../../IMap";
-import {Primitive} from "../Primitive";
+import IMap from "../../IMap";
+import Primitive from "../Primitive";
 import {SelectorWithIndex} from "../FunctionTypes";
 
 const EMPTY:string = "";
@@ -67,7 +67,7 @@ export module RegexOptions
 }
 
 
-export class Regex
+export default class Regex
 {
 	private readonly _re:RegExp;
 	private readonly _keys:string[]|undefined;
@@ -322,6 +322,3 @@ export class Match extends Group
 }
 const EmptyMatch = new Match();
 EmptyMatch.freeze();
-
-
-export default Regex;

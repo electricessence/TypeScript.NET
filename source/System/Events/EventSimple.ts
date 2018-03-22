@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {IDisposable} from "../Disposable/IDisposable";
+import IDisposable from "../Disposable/IDisposable";
 
 /**
  * A simple event dispatcher provided as an alternative to built-in event.

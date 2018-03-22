@@ -2,12 +2,14 @@
   "compilerOptions": {
     "module": "esnext",
     "target": "es5",
+
+    "moduleResolution": "node",
+    "importHelpers": true,
     "declaration": true,
     "sourceMap": true,
     "strict": true,
+    "pretty": true,
     "removeComments": false,
-    "importHelpers": true,
-    "moduleResolution": "node",
     "outDir": "../../dist/esnext"
   },
   "include": [

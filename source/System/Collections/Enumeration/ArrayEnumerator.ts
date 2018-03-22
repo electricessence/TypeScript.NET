@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {IndexEnumerator} from "./IndexEnumerator";
-import {Type} from "../../Types";
+import IndexEnumerator from "./IndexEnumerator";
+import TypeOfValue from "../../TypeOfValue";
 
-export class ArrayEnumerator<T> extends IndexEnumerator<T>
+export default class ArrayEnumerator<T> extends IndexEnumerator<T>
 {
 	constructor(arrayFactory:() => ArrayLike<T>, start?:number, step?:number);
 	constructor(array:ArrayLike<T>, start?:number, step?:number);
@@ -15,7 +15,7 @@ export class ArrayEnumerator<T> extends IndexEnumerator<T>
 		super(
 			() =>
 			{
-				const array = Type.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
+				const array = typeof arrayOrFactory == TypeOfValue.Function ? arrayOrFactory() : arrayOrFactory;
 				return {
 					source: array,
 					pointer: start,
@@ -26,5 +26,3 @@ export class ArrayEnumerator<T> extends IndexEnumerator<T>
 		);
 	}
 }
-
-export default ArrayEnumerator;

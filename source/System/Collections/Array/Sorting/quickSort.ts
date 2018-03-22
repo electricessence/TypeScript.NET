@@ -4,9 +4,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Primitive} from "../../../Primitive";
-import {ArgumentNullException} from "../../../Exceptions/ArgumentNullException";
-import {ArrayLikeWritable} from "../ArrayLikeWritable";
+import Primitive from "../../../Primitive";
+import ArgumentNullException from "../../../Exceptions/ArgumentNullException";
+import ArrayLikeWritable from "../ArrayLikeWritable";
 
 /**
  * Quick internalSort O(n log (n))

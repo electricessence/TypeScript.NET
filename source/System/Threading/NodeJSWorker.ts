@@ -5,7 +5,7 @@
  */
 ///<reference types="node"/>
 import {WorkerLike} from "./WorkerType";
-import {ObservableBase} from "../Observable/ObservableBase";
+import ObservableBase from "../Observable/ObservableBase";
 import {Action} from "../FunctionTypes";
 
 const ps = require("child_process");
@@ -14,7 +14,7 @@ const ps = require("child_process");
 /**
  * This class takes the place of a WebWorker
  */
-export class NodeJSWorker extends ObservableBase<any> implements WorkerLike
+export default class NodeJSWorker extends ObservableBase<any> implements WorkerLike
 {
 	private _process:any;
 	onmessage:Action<{data:any}> | undefined;
@@ -63,5 +63,3 @@ export class NodeJSWorker extends ObservableBase<any> implements WorkerLike
 	}
 
 }
-
-export default NodeJSWorker;

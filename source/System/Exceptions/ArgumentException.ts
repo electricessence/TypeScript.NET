@@ -4,14 +4,11 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import {Error, SystemException} from "./SystemException";
+import SystemException, {Error} from "./SystemException";
 import {trim} from "../Text/Utility";
-
-const NAME:string = 'ArgumentException';
-
 export {Error};
 
-export class ArgumentException extends SystemException
+export default class ArgumentException extends SystemException
 {
 
 	// @ts-ignore TS2564: Since this does actually get initialized.
@@ -35,9 +32,7 @@ export class ArgumentException extends SystemException
 
 	protected getName():string
 	{
-		return NAME;
+		return 'ArgumentException';
 	}
 
 }
-
-export default ArgumentException;

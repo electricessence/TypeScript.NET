@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {initialize} from "./initialize";
-import {ArrayLikeWritable} from "./ArrayLikeWritable";
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
-import {ArgumentOutOfRangeException} from "../../Exceptions/ArgumentOutOfRangeException";
+import initialize from "./initialize";
+import ArrayLikeWritable from "./ArrayLikeWritable";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import ArgumentOutOfRangeException from "../../Exceptions/ArgumentOutOfRangeException";
 /**
  *
  * @param source

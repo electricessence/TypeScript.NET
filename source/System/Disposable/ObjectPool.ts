@@ -5,11 +5,11 @@
  * Uses .add(T) and .take():T
  */
 
-import {dispose} from "./dispose";
-import {DisposableBase} from "./DisposableBase";
-import {TaskHandler} from "../Threading/Tasks/TaskHandler";
-import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
-import {ArgumentException} from "../Exceptions/ArgumentException";
+import dispose from "./dispose";
+import DisposableBase from "./DisposableBase";
+import TaskHandler from "../Threading/Tasks/TaskHandler";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import ArgumentException from "../Exceptions/ArgumentException";
 
 const
 	OBJECT_POOL       = "ObjectPool",
@@ -18,7 +18,7 @@ const
 	MUST_BE_GT1       = "Must be at valid number least 1.",
 	MUST_BE_LTM       = `Must be less than or equal to ${ABSOLUTE_MAX_SIZE}.`;
 
-export class ObjectPool<T> extends DisposableBase
+export default class ObjectPool<T> extends DisposableBase
 {
 
 	private _pool:T[];
@@ -230,5 +230,3 @@ export class ObjectPool<T> extends DisposableBase
 
 
 }
-
-export default ObjectPool;

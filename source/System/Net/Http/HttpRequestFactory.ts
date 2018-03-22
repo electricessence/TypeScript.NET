@@ -3,13 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {QueryParam} from "../../Uri/QueryParam";
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
-import {DisposableBase} from "../../Disposable/DisposableBase";
-import {HttpMethodValue} from "./HttpMethodValue";
-import {HttpMethod} from "./HttpMethod";
-import {Uri} from "../../Uri/Uri";
-import {IUri} from "../../Uri/IUri";
+import QueryParam from "../../Uri/QueryParam";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import DisposableBase from "../../Disposable/DisposableBase";
+import HttpMethod from "./HttpMethod";
+import Uri, {IUri} from "../../Uri/Uri";
 import {IHttpRequestAdapter} from "./IHttpRequestAdapter";
 const NAME = 'HttpRequestFactory';
 /**
@@ -59,7 +57,7 @@ export class HttpRequestFactory extends DisposableBase
 		return _.uri(_._uriDefaults.updateQuery(params));
 	}
 
-	request<TResult>(method:HttpMethodValue.Any, data?:any):PromiseLike<TResult>
+	request<TResult>(method:HttpMethod, data?:any):PromiseLike<TResult>
 	{
 		const _ = this;
 		_.throwIfDisposed();

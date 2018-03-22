@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {IEquatable} from "../IEquatable";
-import {IValidationResult} from "./IValidationResult"; // For compatibility with (let, const, function, class);
+import IEquatable from "../IEquatable";
+import IValidationResult from "./IValidationResult"; // For compatibility with (let, const, function, class);
 
 let VALID:ValidationResult|null = null;
 

@@ -5,14 +5,14 @@
  */
 
 import {areEqual} from "../../Compare";
-import {Type} from "../../Types";
-import {EnumeratorBase} from "../Enumeration/EnumeratorBase";
-import {LinkedNodeList} from "../LinkedNodeList";
-import {ObjectPool} from "../../Disposable/ObjectPool";
+import Type from "../../Types";
+import EnumeratorBase from "../Enumeration/EnumeratorBase";
+import LinkedNodeList from "../LinkedNodeList";
+import ObjectPool from "../../Disposable/ObjectPool";
 import {IMap} from "./IDictionary";
 import {IKeyValuePair} from "../../KeyValuePair";
-import {getIdentifier} from "./getIdentifier";
-import {IEnumerator} from "../Enumeration/IEnumerator";
+import getIdentifier from "./getIdentifier";
+import IEnumerator from "../Enumeration/IEnumerator";
 import {ILinkedNode} from "../ILinkedListNode";
 import {HashSelector} from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
@@ -56,7 +56,7 @@ function linkedNodeList(recycle?:LinkedNodeList<any>):LinkedNodeList<any>|void
 
 
 
-export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
+export default class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 {
 	// Retains the order...
 	private readonly _entries:LinkedNodeList<IHashEntry<TKey, TValue>>;
@@ -269,5 +269,3 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	}
 
 }
-
-export default Dictionary;

@@ -5,13 +5,13 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 
-import {IDisposableAware} from "../Disposable/IDisposableAware";
-import {ISubscribable} from "./ISubscribable"; // For compatibility with (let, const, function, class);
+import IDisposableAware from "../Disposable/IDisposableAware";
+import ISubscribable from "./ISubscribable"; // For compatibility with (let, const, function, class);
 
 /**
  * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.
  */
-export class Subscription<T> implements IDisposableAware
+export default class Subscription<T> implements IDisposableAware
 {
 	constructor(
 		private _subscribable:ISubscribable<T>,
@@ -68,5 +68,3 @@ export class Subscription<T> implements IDisposableAware
 		}
 	}
 }
-
-export default Subscription;

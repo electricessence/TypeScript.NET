@@ -4,16 +4,16 @@
  * Licensing: MIT
  */
 
-import {IEnumerator} from "./Enumeration/IEnumerator";
-import {ReadOnlyCollectionBase} from "./ReadOnlyCollectionBase";
-import {IEnumerable} from "./Enumeration/IEnumerable";
+import IEnumerator from "./Enumeration/IEnumerator";
+import ReadOnlyCollectionBase from "./ReadOnlyCollectionBase";
+import IEnumerable from "./Enumeration/IEnumerable";
 import {Action} from "../FunctionTypes";
-import {IReadOnlyList} from "./IList";
-import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
-import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
-import {Integer} from "../Integer";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
+import Integer from "../Integer";
+import IReadOnlyList from "./IReadOnlyList";
 
-export class LazyList<T> extends ReadOnlyCollectionBase<T> implements IReadOnlyList<T>
+export default class LazyList<T> extends ReadOnlyCollectionBase<T> implements IReadOnlyList<T>
 {
 
 	private _enumerator:IEnumerator<T>|null;

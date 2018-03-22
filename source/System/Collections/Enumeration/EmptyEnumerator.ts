@@ -4,9 +4,9 @@
  */
 
 
-import {IEnumerator} from "./IEnumerator";
-import {IteratorResult} from "./IteratorResult";
-import {Functions} from "../../Functions";
+import IEnumerator from "./IEnumerator";
+import IteratorResult from "./IteratorResult";
+import Functions from "../../Functions";
 
 const VOID0:undefined = void 0;
 
@@ -16,13 +16,13 @@ const VOID0:undefined = void 0;
  * Frozen and exported as 'empty' to allow for reuse.
  */
 
-export const EmptyEnumerator:IEnumerator<any> = Object.freeze({
+const EmptyEnumerator:IEnumerator<any> = Object.freeze({
 	current: VOID0,
 	moveNext: Functions.False,
 	tryMoveNext: Functions.False,
 	nextValue: Functions.Blank,
-	next: IteratorResult.GetDone,
-	"return": IteratorResult.GetDone,
+	next: IteratorResult.getDone,
+	"return": IteratorResult.getDone,
 	end: Functions.Blank,
 	reset: Functions.Blank,
 	dispose: Functions.Blank,

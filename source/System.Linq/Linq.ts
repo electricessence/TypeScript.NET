@@ -14,23 +14,23 @@ import {
 	isIterator,
 	throwIfEndless
 } from "../System/Collections/Enumeration/Enumerator";
-import {EmptyEnumerator} from "../System/Collections/Enumeration/EmptyEnumerator";
-import {Type} from "../System/Types";
-import {Integer} from "../System/Integer";
-import {Functions as BaseFunctions} from "../System/Functions";
-import {ArrayEnumerator} from "../System/Collections/Enumeration/ArrayEnumerator";
-import {EnumeratorBase} from "../System/Collections/Enumeration/EnumeratorBase";
-import {Dictionary} from "../System/Collections/Dictionaries/Dictionary";
-import {Queue} from "../System/Collections/Queue";
-import {dispose, using} from "../System/Disposable/dispose";
-import {DisposableBase} from "../System/Disposable/DisposableBase";
-import {UnsupportedEnumerableException} from "../System/Collections/Enumeration/UnsupportedEnumerableException";
-import {ObjectDisposedException} from "../System/Disposable/ObjectDisposedException";
-import {KeySortedContext} from "../System/Collections/Sorting/KeySortedContext";
-import {ArgumentNullException} from "../System/Exceptions/ArgumentNullException";
-import {ArgumentOutOfRangeException} from "../System/Exceptions/ArgumentOutOfRangeException";
-import {IEnumerator} from "../System/Collections/Enumeration/IEnumerator";
-import {IEnumerable} from "../System/Collections/Enumeration/IEnumerable";
+import EmptyEnumerator from "../System/Collections/Enumeration/EmptyEnumerator";
+import Type from "../System/Types";
+import Integer from "../System/Integer";
+import BaseFunctions from "../System/Functions";
+import ArrayEnumerator from "../System/Collections/Enumeration/ArrayEnumerator";
+import EnumeratorBase from "../System/Collections/Enumeration/EnumeratorBase";
+import Dictionary from "../System/Collections/Dictionaries/Dictionary";
+import Queue from "../System/Collections/Queue";
+import dispose, {using} from "../System/Disposable/dispose";
+import DisposableBase from "../System/Disposable/DisposableBase";
+import UnsupportedEnumerableException from "../System/Collections/Enumeration/UnsupportedEnumerableException";
+import ObjectDisposedException from "../System/Disposable/ObjectDisposedException";
+import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
+import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
+import ArgumentOutOfRangeException from "../System/Exceptions/ArgumentOutOfRangeException";
+import IEnumerator from "../System/Collections/Enumeration/IEnumerator";
+import IEnumerable from "../System/Collections/Enumeration/IEnumerable";
 import {
 	Action,
 	ActionWithIndex,
@@ -42,24 +42,28 @@ import {
 	Selector,
 	SelectorWithIndex
 } from "../System/FunctionTypes";
-import {IDictionary, IMap} from "../System/Collections/Dictionaries/IDictionary";
+import IDictionary, {IMap} from "../System/Collections/Dictionaries/IDictionary";
 import {Comparable} from "../System/IComparable";
-import {IComparer} from "../System/IComparer";
+import IComparer from "../System/IComparer";
 import {IKeyValuePair} from "../System/KeyValuePair";
-import {Order} from "../System/Collections/Sorting/Order";
-import {EnumerableAction} from "./EnumerableAction";
-import {IndexEnumerator} from "../System/Collections/Enumeration/IndexEnumerator";
-import {Primitive} from "../System/Primitive";
-import {IteratorEnumerator} from "../System/Collections/Enumeration/IteratorEnumerator";
-import {ForEachEnumerable} from "../System/Collections/Enumeration/ForEachEnumerable";
-import {initialize} from "../System/Collections/Array/initialize";
-import {Random} from "../System/Random";
-import {
-	InfiniteEnumerator,
-	InfiniteValueFactory
-} from "../System/Collections/Enumeration/InfiniteEnumerator";
-import {LazyList} from "../System/Collections/LazyList";
+import Order from "../System/Collections/Sorting/Order";
+import IndexEnumerator from "../System/Collections/Enumeration/IndexEnumerator";
+import Primitive from "../System/Primitive";
+import IteratorEnumerator from "../System/Collections/Enumeration/IteratorEnumerator";
+import ForEachEnumerable from "../System/Collections/Enumeration/ForEachEnumerable";
+import initialize from "../System/Collections/Array/initialize";
+import Random from "../System/Random";
+import InfiniteEnumerator, {InfiniteValueFactory} from "../System/Collections/Enumeration/InfiniteEnumerator";
+import LazyList from "../System/Collections/LazyList";
 import disposeSingle = dispose.single;
+import TypeOfValue from "../System/TypeOfValue";
+
+export const enum EnumerableAction
+{
+	Break  = 0,
+	Return = 1,
+	Skip   = 2
+}
 
 // #region Local Constants.
 
@@ -791,16 +795,16 @@ export class InfiniteLinqEnumerable<T>
 		switch(<any>type)
 		{
 			case Number:
-				typeName = Type.NUMBER;
+				typeName = TypeOfValue.Number;
 				break;
 			case String:
-				typeName = Type.STRING;
+				typeName = TypeOfValue.String;
 				break;
 			case Boolean:
-				typeName = Type.BOOLEAN;
+				typeName = TypeOfValue.Boolean;
 				break;
 			case Function:
-				typeName = Type.FUNCTION;
+				typeName = TypeOfValue.Function;
 				break;
 			default:
 				return <any> this
@@ -3862,7 +3866,7 @@ export module Enumerable
 		if(input==null)
 			throw new ArgumentNullException("input");
 		const type = typeof input;
-		if(type!=Type.STRING)
+		if(type!=TypeOfValue.String)
 			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
 
 		if(pattern instanceof RegExp)

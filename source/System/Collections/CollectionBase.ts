@@ -5,15 +5,15 @@
 
 import {forEach} from "./Enumeration/Enumerator";
 import {areEqual} from "../Compare";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
-import {DisposableBase} from "../Disposable/DisposableBase";
-import {ICollection} from "./ICollection";
-import {IEnumerator} from "./Enumeration/IEnumerator";
-import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import DisposableBase from "../Disposable/DisposableBase";
+import ICollection from "./ICollection";
+import IEnumerator from "./Enumeration/IEnumerator";
+import IEnumerateEach from "./Enumeration/IEnumerateEach";
 import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
-import {IEnumerableOrArray} from "./IEnumerableOrArray";
-import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
+import IEnumerableOrArray from "./IEnumerableOrArray";
+import ArrayLikeWritable from "./Array/ArrayLikeWritable";
 import {LinqEnumerable} from "../../System.Linq/Linq";
 import {isRequireJS} from "../Environment";
 
@@ -27,7 +27,7 @@ const
 const
 	LINQ_PATH = /* webpackChunkName: "Linq" */ "../../System.Linq/Linq";
 
-export abstract class CollectionBase<T>
+abstract class CollectionBase<T>
 extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 {
 
@@ -50,6 +50,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		return this.getCount();
 	}
 
+	// noinspection JSMethodCanBeStatic
 	protected getIsReadOnly():boolean
 	{
 		return false;
@@ -499,3 +500,5 @@ You can also preload the Linq module as a dependency or use .linqAsync(callback)
 	// 	return e;
 	// }
 }
+
+export default CollectionBase;

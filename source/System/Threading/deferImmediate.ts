@@ -4,14 +4,14 @@
  * Based on code from: https://github.com/kriskowal/q
  */
 
-import {Type} from "../Types";
-import {LinkedNodeList} from "../Collections/LinkedNodeList";
-import {Queue} from "../Collections/Queue";
+import LinkedNodeList from "../Collections/LinkedNodeList";
+import Queue from "../Collections/Queue";
 import {Closure} from "../FunctionTypes";
 import {ILinkedNode} from "../Collections/ILinkedListNode";
-import {ICancellable} from "./ICancellable";
-import {ObjectPool} from "../Disposable/ObjectPool";
+import ICancellable from "./ICancellable";
+import ObjectPool from "../Disposable/ObjectPool";
 import {isNodeJS} from "../Environment";
+import TypeOfValue from "../TypeOfValue";
 
 declare module process
 {
@@ -192,10 +192,10 @@ if(isNodeJS)
 	};
 
 }
-else if(typeof setImmediate===Type.FUNCTION)
+else if(typeof setImmediate===TypeOfValue.Function)
 {
 	// In IE10, Node.js 0.9+, or https://github.com/NobleJS/setImmediate
-	if(typeof window!==Type.UNDEFINED)
+	if(typeof window!==TypeOfValue.Undefined)
 	{
 		requestTick = setImmediate.bind(window, flush);
 	}
@@ -208,7 +208,7 @@ else if(typeof setImmediate===Type.FUNCTION)
 	}
 
 }
-else if(typeof MessageChannel!==Type.UNDEFINED)
+else if(typeof MessageChannel!==TypeOfValue.Undefined)
 {
 	// modern browsers
 	// http://www.nonblocking.io/2011/06/windownexttick.html

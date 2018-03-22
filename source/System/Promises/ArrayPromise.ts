@@ -10,7 +10,7 @@ import PromiseBase from "./PromiseBase";
 /**
  * By providing an ArrayPromise we expose useful methods/shortcuts for dealing with array results.
  */
-export class ArrayPromise<T>
+export default class ArrayPromise<T>
 	extends TSDNPromise<T[]>
 {
 

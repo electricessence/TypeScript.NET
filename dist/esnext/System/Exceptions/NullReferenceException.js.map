@@ -1,0 +1,1 @@
+{"version":3,"file":"NullReferenceException.js","sourceRoot":"","sources":["../../../../source/System/Exceptions/NullReferenceException.ts"],"names":[],"mappings":"AAAA;;;;GAIG;;AAGH,OAAO,EAAC,eAAe,EAAQ,MAAM,mBAAmB,CAAC;AAEzD,IAAM,IAAI,GAAU,wBAAwB,CAAC;AAK7C;IACqC,kDAAe;IADpD;;IASA,CAAC;IALU,wCAAO,GAAjB;QAEC,OAAO,IAAI,CAAC;IACb,CAAC;IAEF,6BAAC;AAAD,CAAC,AATD,CACqC,eAAe,GAQnD"}

@@ -3,13 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {ArrayLikeWritable} from "./ArrayLikeWritable";
+import ArrayLikeWritable from "./ArrayLikeWritable";
 
 /**
  * Randomize array element order in-place.
  * Using Durstenfeld shuffle algorithm.
  */
-export function shuffle<T extends ArrayLikeWritable<any>>(target:T):T
+export default function shuffle<T extends ArrayLikeWritable<any>>(target:T):T
 {
 	let i = target.length;
 	while(--i)

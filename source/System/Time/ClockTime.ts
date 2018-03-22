@@ -4,11 +4,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {TimeQuantity} from "./TimeQuantity";
+import TimeQuantity from "./TimeQuantity";
 import {IClockTime} from "./ITimeStamp";
-import {Milliseconds, Minutes, Seconds, Ticks} from "./HowMany";
+import {Minutes, Seconds, Milliseconds, Ticks} from "./HowMany";
 
-export class ClockTime extends TimeQuantity implements IClockTime
+export default class ClockTime extends TimeQuantity implements IClockTime
 {
 
 	readonly days:number;
@@ -115,5 +115,3 @@ function pluralize(value:number, label:string):string
 
 	return label;
 }
-
-export default ClockTime;

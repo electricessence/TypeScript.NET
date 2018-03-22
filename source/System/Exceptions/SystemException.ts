@@ -4,13 +4,10 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/system.systemexception%28v=vs.110%29.aspx
  */
 
-import {Exception, Error} from "../Exception";
-
-const NAME:string = 'SystemException';
-
+import Exception, {Error} from "../Exception";
 export {Error};
 
-export class SystemException extends Exception
+export default class SystemException extends Exception
 {
 	/*
 		constructor(
@@ -24,8 +21,6 @@ export class SystemException extends Exception
 
 	protected getName():string
 	{
-		return NAME;
+		return 'SystemException';
 	}
 }
-
-export default SystemException;

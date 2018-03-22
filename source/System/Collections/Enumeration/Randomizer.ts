@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {SimpleEnumerableBase} from "./SimpleEnumerableBase";
-import {ForEachEnumerable} from "./ForEachEnumerable";
+import SimpleEnumerableBase from "./SimpleEnumerableBase";
+import ForEachEnumerable from "./ForEachEnumerable";
 import {toArray} from "./Enumerator";
 
 /**

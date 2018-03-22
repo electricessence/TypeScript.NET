@@ -3,15 +3,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Type} from "../../Types";
-import {DisposableBase} from "../../Disposable/DisposableBase";
-import {ObjectPool} from "../../Disposable/ObjectPool";
-import {IDisposable} from "../../Disposable/IDisposable";
-import {IEnumerator} from "./IEnumerator";
-import {IIteratorResult} from "./IIterator";
-import {IYield} from "./IYield";
-import {IteratorResult} from "./IteratorResult";
+import DisposableBase from "../../Disposable/DisposableBase";
+import ObjectPool from "../../Disposable/ObjectPool";
+import IDisposable from "../../Disposable/IDisposable";
+import IEnumerator from "./IEnumerator";
+import IYield from "./IYield";
+import IteratorResult, {CompletedIteratorResult} from "./IteratorResult";
 import {Action, Closure} from "../../FunctionTypes";
+import IIteratorResult from "./IIteratorResult";
 
 const VOID0:undefined = void 0;
 
@@ -63,11 +62,9 @@ class Yielder<T> implements IYield<T>, IDisposable
 // IEnumerator PromiseStateValue
 const enum EnumeratorState { Before, Active, Completed, Faulted, Interrupted, Disposed }
 
-const NAME = "EnumeratorBase";
-
 // "Enumerator" is conflict JScript's "Enumerator"
 // Naming this class EnumeratorBase to avoid collision with IE.
-export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
+export default class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 {
 
 	// @ts-ignore;
@@ -103,15 +100,15 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		disposer?:Closure|boolean|null,
 		isEndless?:boolean)
 	{
-		super(NAME);
+		super("EnumeratorBase");
 		this.reset();
 
-		if(Type.isBoolean(isEndless))
+		if("boolean"==typeof(isEndless))
 			this._isEndless = isEndless;
-		else if(Type.isBoolean(disposer))
+		else if("boolean"==typeof(disposer))
 			this._isEndless = disposer;
 
-		if(Type.isFunction(disposer))
+		if("function"==typeof(disposer))
 			this._disposer = disposer;
 	}
 
@@ -242,7 +239,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	{
 		return this.moveNext()
 			? new IteratorResult(this.current, this.index)
-			: IteratorResult.Done
+			: CompletedIteratorResult
 	}
 
 	end():void {
@@ -259,7 +256,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		try
 		{
 			return value===VOID0 || _._state===EnumeratorState.Completed || _._state===EnumeratorState.Interrupted
-				? IteratorResult.Done
+				? CompletedIteratorResult
 				: new IteratorResult(value, VOID0, true);
 		}
 		finally
@@ -297,5 +294,3 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	}
 
 }
-
-export default EnumeratorBase;

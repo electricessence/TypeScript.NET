@@ -5,10 +5,10 @@
 
 import * as Values from "../../Compare";
 import {Comparison} from "../../FunctionTypes";
-import {IComparer} from "../../IComparer";
-import {Order} from "./Order";
+import IComparer from "../../IComparer";
+import Order from "./Order";
 
-export class SortContext<T> implements IComparer<T>
+export default class SortContext<T> implements IComparer<T>
 {
 
 	/**
@@ -53,5 +53,3 @@ export class SortContext<T> implements IComparer<T>
 		return _._order*d;
 	}
 }
-
-export default SortContext;

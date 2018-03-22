@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {CollectionBase} from "./CollectionBase";
-import {IEnumerator} from "./Enumeration/IEnumerator";
+import CollectionBase from "./CollectionBase";
+import IEnumerator from "./Enumeration/IEnumerator";
 
-export abstract class ReadOnlyCollectionBase<T>
+abstract class ReadOnlyCollectionBase<T>
 extends CollectionBase<T>
 {
 

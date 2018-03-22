@@ -3,17 +3,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Type} from "../Types";
-import {DisposableBase} from "../Disposable/DisposableBase";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {ArgumentException} from "../Exceptions/ArgumentException";
+import Type from "../Types";
+import DisposableBase from "../Disposable/DisposableBase";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import ArgumentException from "../Exceptions/ArgumentException";
 import {areEquivalent} from "../Compare";
-import {IEventListener} from "./IEventListener";
-import {IEquatable} from "../IEquatable";
+import IEventListener from "./IEventListener";
+import IEquatable from "../IEquatable";
 import {Closure} from "../FunctionTypes";
+import TypeOfValue from "../TypeOfValue";
 
 const NAME = "EventDispatcherEntry";
-export class EventDispatcherEntry<TParams>
+export default class EventDispatcherEntry<TParams>
 extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 {
 
@@ -27,7 +28,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 
 		if(!listener)
 			throw new ArgumentNullException('listener');
-		if(Type.isObject(listener) && !Type.hasMemberOfType(listener, "handleEvent", Type.FUNCTION))
+		if(Type.isObject(listener) && !Type.hasMemberOfType(listener, "handleEvent", TypeOfValue.Function))
 			throw new ArgumentException('listener', "is invalid type.  Must be a function or an object with 'handleEvent'.");
 
 		const _ = this;
@@ -88,5 +89,3 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 			&& areEquivalent(_.params, other.params, false);
 	}
 }
-
-export default EventDispatcherEntry;

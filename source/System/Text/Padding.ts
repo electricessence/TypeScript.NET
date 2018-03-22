@@ -1,4 +1,4 @@
-import {Type} from "../Types";
+import Type from "../Types";
 import {repeat, EMPTY} from "./Utility";
 
 const SPACE = ' ';

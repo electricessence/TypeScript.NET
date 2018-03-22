@@ -3,13 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Type} from "../Types";
-import {SetBase} from "./SetBase";
-import {IMap} from "../../IMap";
+import Type from "../Types";
+import SetBase from "./SetBase";
+import IMap from "../../IMap";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
-import {IEnumerableOrArray} from "./IEnumerableOrArray";
+import IEnumerableOrArray from "./IEnumerableOrArray";
 import {Selector} from "../FunctionTypes";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
 
 const VOID0:undefined = void 0;
 

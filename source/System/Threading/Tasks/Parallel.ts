@@ -4,18 +4,19 @@
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
 
-import {Type} from "../../Types";
+import Type from "../../Types";
 import Worker from "../Worker";
 import {WorkerLike} from "../WorkerType";
 import {deferImmediate} from "../deferImmediate";
 import {isNodeJS} from "../../Environment";
-import {ObjectPool} from "../../Disposable/ObjectPool";
-import {IMap} from "../../../IMap";
+import ObjectPool from "../../Disposable/ObjectPool";
+import IMap from "../../../IMap";
 import map from "../../Promises/Functions/map";
 import TSDNPromise from "../../Promises/Promise";
-import {PromiseCollection} from "../../Promises/PromiseCollection";
-import {ArrayPromise} from "../../Promises/ArrayPromise";
+import PromiseCollection from "../../Promises/PromiseCollection";
+import ArrayPromise from "../../Promises/ArrayPromise";
 import PromiseBase from "../../Promises/PromiseBase";
+import TypeOfValue from "../../TypeOfValue";
 
 declare const navigator:any;
 declare const __dirname:string;
@@ -24,7 +25,7 @@ declare const __dirname:string;
 const
 	MAX_WORKERS:number = 16,
 	VOID0:undefined    = void 0,
-	URL                = typeof self!==Type.UNDEFINED
+	URL                = typeof self!==TypeOfValue.Undefined
 		? (self.URL ? self.URL : (<any>self).webkitURL)
 		: null,
 	_supports          = isNodeJS || !!(<any>self).Worker; // node always supports parallel
@@ -232,13 +233,13 @@ export class Parallel
 		{
 			switch(typeof a)
 			{
-				case Type.STRING:
+				case TypeOfValue.String:
 					this._requiredScripts.push(<string>a);
 					break;
-				case Type.FUNCTION:
+				case TypeOfValue.Function:
 					this._requiredFunctions.push({fn: <Function>a});
 					break;
-				case Type.OBJECT:
+				case TypeOfValue.Object:
 					this._requiredFunctions.push(<{name?:string,fn:Function}>a);
 					break;
 				default:

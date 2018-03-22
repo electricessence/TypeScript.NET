@@ -4,17 +4,17 @@
  */
 
 import {format} from "../Text/Utility";
-import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
-import {ArgumentException} from "../Exceptions/ArgumentException";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentException from "../Exceptions/ArgumentException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
 import {ILinkedNode, ILinkedNodeWithValue} from "./ILinkedListNode";
-import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
-import {IDisposable} from "../Disposable/IDisposable";
+import IEnumerateEach from "./Enumeration/IEnumerateEach";
+import IDisposable from "../Disposable/IDisposable";
 import {ILinkedNodeList} from "./ILinkedList";
-import {IEnumerator} from "./Enumeration/IEnumerator";
+import IEnumerator from "./Enumeration/IEnumerator";
 import {ActionWithIndex, PredicateWithIndex, Selector, SelectorWithIndex} from "../FunctionTypes";
-import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
+import ArrayLikeWritable from "./Array/ArrayLikeWritable";
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
@@ -34,7 +34,7 @@ import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
  *
  * The count (or length) of this LinkedNodeList is not tracked since it could be corrupted at any time.
  */
-export class LinkedNodeList<TNode extends ILinkedNode<TNode>>
+export default class LinkedNodeList<TNode extends ILinkedNode<TNode>>
 implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 {
 
@@ -508,5 +508,3 @@ function assertValidDetached<TNode extends ILinkedNode<TNode>>(
 		throw new InvalidOperationException("Cannot add a node to a LinkedNodeList that is already linked.");
 
 }
-
-export default LinkedNodeList;

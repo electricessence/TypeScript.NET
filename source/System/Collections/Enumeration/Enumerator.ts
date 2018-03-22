@@ -3,21 +3,25 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {using} from "../../Disposable/dispose";
-import {Type} from "../../Types";
-import {ArrayEnumerator} from "./ArrayEnumerator";
-import {IndexEnumerator} from "./IndexEnumerator";
-import {UnsupportedEnumerableException} from "./UnsupportedEnumerableException";
-import {ActionWithIndex, PredicateWithIndex, SelectorWithIndex} from "../../FunctionTypes";
-import {IEnumerator} from "./IEnumerator";
-import {IEnumerable} from "./IEnumerable";
-import {IEnumerableOrArray} from "../IEnumerableOrArray";
-import {InfiniteEnumerator, InfiniteValueFactory} from "./InfiniteEnumerator";
-import {EmptyEnumerator as Empty} from "./EmptyEnumerator";
-import {IIterator, IIteratorResult} from "./IIterator";
-import {IteratorEnumerator} from "./IteratorEnumerator";
-import {ForEachEnumerable} from "./ForEachEnumerable";
 
+
+
+import UnsupportedEnumerableException from "./UnsupportedEnumerableException";
+import ForEachEnumerable from "./ForEachEnumerable";
+import IEnumerator from "./IEnumerator";
+import ArrayEnumerator from "./ArrayEnumerator";
+import IndexEnumerator from "./IndexEnumerator";
+import Type from "../../Types";
+import IEnumerableOrArray from "../IEnumerableOrArray";
+import TypeOfValue from "../../TypeOfValue";
+import IIterator from "./IIterator";
+import IEnumerable from "./IEnumerable";
+import {ActionWithIndex, PredicateWithIndex, SelectorWithIndex} from "../../FunctionTypes";
+import {using} from "../../Disposable/dispose";
+import IIteratorResult from "./IIteratorResult";
+import IteratorEnumerator from "./IteratorEnumerator";
+import {default as InfiniteEnumerator, InfiniteValueFactory} from "./InfiniteEnumerator";
+import EmptyEnumerator from "./EmptyEnumerator";
 
 const
 	STRING_EMPTY:string       = "",
@@ -66,7 +70,7 @@ export function from<T>(source:ForEachEnumerable<T>|InfiniteValueFactory<T>):IEn
 {
 	// To simplify and prevent null reference exceptions:
 	if(!source)
-		return Empty;
+		return EmptyEnumerator;
 
 	if((source)instanceof(Array))
 		return new ArrayEnumerator<T>(<T[]>source);
@@ -107,7 +111,7 @@ export function from<T>(source:ForEachEnumerable<T>|InfiniteValueFactory<T>):IEn
 
 export function isEnumerable<T>(instance:any):instance is IEnumerable<T>
 {
-	return Type.hasMemberOfType<IEnumerable<T>>(instance, "getEnumerator", Type.FUNCTION);
+	return Type.hasMemberOfType<IEnumerable<T>>(instance, "getEnumerator", TypeOfValue.Function);
 }
 
 export function isEnumerableOrArrayLike<T>(instance:any):instance is IEnumerableOrArray<T>
@@ -117,12 +121,12 @@ export function isEnumerableOrArrayLike<T>(instance:any):instance is IEnumerable
 
 export function isEnumerator<T>(instance:any):instance is IEnumerator<T>
 {
-	return Type.hasMemberOfType<IEnumerator<T>>(instance, "moveNext", Type.FUNCTION);
+	return Type.hasMemberOfType<IEnumerator<T>>(instance, "moveNext", TypeOfValue.Function);
 }
 
 export function isIterator<T>(instance:any):instance is IIterator<T>
 {
-	return Type.hasMemberOfType<IIterator<T>>(instance, "next", Type.FUNCTION);
+	return Type.hasMemberOfType<IIterator<T>>(instance, "next", TypeOfValue.Function);
 }
 
 /**

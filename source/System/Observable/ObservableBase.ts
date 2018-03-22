@@ -6,14 +6,14 @@
  */
 
 import {SubscribableBase} from "./SubscribableBase";
-import {IObservable} from "./IObservable";
-import {IObserver} from "./IObserver";
-import {IDisposable} from "../Disposable/IDisposable";
+import IObservable from "./IObservable";
+import IObserver from "./IObserver";
+import IDisposable from "../Disposable/IDisposable";
 import {Action, Closure} from "../FunctionTypes";
 
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
 
-export abstract class ObservableBase<T>
+abstract class ObservableBase<T>
 extends SubscribableBase<IObserver<T>> implements IObservable<T>
 {
 

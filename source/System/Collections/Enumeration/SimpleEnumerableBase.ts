@@ -3,14 +3,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {IIteratorResult} from "./IIterator";
-import {IteratorResult} from "./IteratorResult";
-import {IEnumerator} from "./IEnumerator";
+import IIteratorResult from "./IIteratorResult";
+import IteratorResult, {CompletedIteratorResult} from "./IteratorResult";
+import IEnumerator from "./IEnumerator";
 import {Action} from "../../FunctionTypes";
 
 const VOID0:undefined = void 0;
 
-export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
+abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 {
 
 	protected _current:T|undefined;
@@ -61,7 +61,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 	{
 		return this.moveNext()
 			? new IteratorResult(this._current, this._index)
-			: IteratorResult.Done;
+			: CompletedIteratorResult;
 	}
 
 	end():void {
@@ -76,7 +76,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 		{
 			return value!==VOID0 && this._canMoveNext()
 				? new IteratorResult(value, VOID0, true)
-				: IteratorResult.Done;
+				: CompletedIteratorResult;
 		}
 		finally
 		{

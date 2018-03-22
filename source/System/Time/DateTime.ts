@@ -4,17 +4,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {ICalendarDate, ITimeStamp} from "./ITimeStamp";
-import {TimeSpan} from "./TimeSpan";
-import {ClockTime} from "./ClockTime";
+
+import ITimeQuantity from "./ITimeQuantity";
+import TimeSpan from "./TimeSpan";
+import ClockTime from "./ClockTime";
+import TimeStamp from "./TimeStamp";
+import IDateTime from "./IDateTime";
+import IEquatable from "../IEquatable";
+import IComparable from "../IComparable";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import ITimeStamp, {ICalendarDate} from "./ITimeStamp";
 import {Milliseconds} from "./HowMany";
-import {TimeStamp} from "./TimeStamp";
-import {IDateTime} from "./IDateTime";
 import {Gregorian} from "./Calendars";
-import {ITimeQuantity} from "./ITimeQuantity";
-import {IEquatable} from "../IEquatable";
-import {IComparable} from "../IComparable";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 
 const VOID0:undefined = void 0;
 

@@ -3,11 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {IIteratorResult} from "./IIterator";
+import IIteratorResult from "./IIteratorResult";
 
-const VOID0:undefined = void 0;
-
-export class IteratorResult<T> implements IIteratorResult<T>
+export default class IteratorResult<T> implements IIteratorResult<T>
 {
 	public readonly value:T;
 	public readonly index?:number;
@@ -35,15 +33,9 @@ export class IteratorResult<T> implements IIteratorResult<T>
 		}
 		Object.freeze(this);
 	}
+
+	static getDone():IteratorResult<any> { return CompletedIteratorResult; }
 }
 
-export module IteratorResult
-{
-	export const Done:IteratorResult<any> = new IteratorResult<any>(VOID0, VOID0, true);
-
-	export function GetDone():IteratorResult<any> { return Done; }
-}
-
-Object.freeze(IteratorResult);
-
-export default IteratorResult;
+const VOID0:undefined = void 0;
+export const CompletedIteratorResult:IteratorResult<any> = new IteratorResult<any>(VOID0, VOID0, true);

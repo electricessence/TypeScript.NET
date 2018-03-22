@@ -5,11 +5,7 @@
  */
 
 
-import {SystemException, Error} from "./SystemException";
-
-const NAME:string = 'NullReferenceException';
-
-
+import SystemException, {Error} from "./SystemException";
 export {Error};
 
 export default
@@ -18,7 +14,7 @@ class NullReferenceException extends SystemException
 
 	protected getName():string
 	{
-		return NAME;
+		return 'NullReferenceException';
 	}
 
 }

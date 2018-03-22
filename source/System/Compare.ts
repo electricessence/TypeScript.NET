@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Type} from "./Types";
-import {Primitive} from "./Primitive";
-import {IComparable} from "./IComparable";
-import {CompareResult} from "./CompareResult";
+import Type from "./Types";
+import Primitive from "./Primitive";
+import IComparable from "./IComparable";
+import CompareResult from "./CompareResult";
 import isTrueNaN = Type.isTrueNaN;
 
 const VOID0:undefined = void 0;

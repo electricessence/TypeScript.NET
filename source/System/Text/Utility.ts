@@ -3,7 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Type} from "../Types";
+import Type from "../Types";
+import TypeOfValue from "../TypeOfValue";
 
 export const EMPTY:string = '';
 
@@ -129,12 +130,12 @@ export function supplant(source:string, params:{[key:string]:any}|any[]):string
 			let r = (<any>params)[n];
 			switch(typeof r)
 			{
-				case Type.STRING:
-				case Type.NUMBER:
-				case Type.BOOLEAN:
+				case TypeOfValue.String:
+				case TypeOfValue.Number:
+				case TypeOfValue.Boolean:
 					return r;
 				default:
-					return (r && Type.hasMemberOfType(r, "toString", Type.FUNCTION))
+					return (r && Type.hasMemberOfType(r, "toString", TypeOfValue.Function))
 						? r.toString()
 						: a;
 			}

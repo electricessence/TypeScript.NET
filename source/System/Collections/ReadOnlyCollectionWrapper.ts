@@ -3,12 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {ReadOnlyCollectionBase} from "./ReadOnlyCollectionBase";
-import {ICollection} from "./ICollection";
-import {IEnumerator} from "./Enumeration/IEnumerator";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import ReadOnlyCollectionBase from "./ReadOnlyCollectionBase";
+import ICollection from "./ICollection";
+import IEnumerator from "./Enumeration/IEnumerator";
 import {from as enumeratorFrom} from "./Enumeration/Enumerator";
-import {Type} from "../Types";
+import Type from "../Types";
 
 export default class ReadOnlyCollectionWrapper<T> extends ReadOnlyCollectionBase<T>
 {

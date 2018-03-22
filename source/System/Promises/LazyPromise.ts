@@ -4,10 +4,10 @@
  */
 
 import {Closure} from "../FunctionTypes";
-import {ICancellable} from "../Threading/ICancellable";
+import ICancellable from "../Threading/ICancellable";
 import {Executor, Fulfill, Reject} from "./PromiseTypes";
 import {defer} from "../Threading/defer";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import PromiseBase from "./PromiseBase";
 import TSDNPromise from "./Promise";
 

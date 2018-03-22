@@ -3,11 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {TaskHandlerBase} from "./TaskHandlerBase";
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
+import TaskHandlerBase from "./TaskHandlerBase";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
 import {Closure} from "../../FunctionTypes";
 
-export class TaskHandler extends TaskHandlerBase
+export default class TaskHandler extends TaskHandlerBase
 {
 
 	constructor(private readonly _action:Closure)
@@ -27,5 +27,3 @@ export class TaskHandler extends TaskHandlerBase
 		(<any>this)._action = null;
 	}
 }
-
-export default TaskHandler;

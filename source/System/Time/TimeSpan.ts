@@ -4,19 +4,19 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Type} from "../Types";
-import {TimeUnit} from "./TimeUnit";
-import {ClockTime} from "./ClockTime";
-import {TimeQuantity} from "./TimeQuantity";
+import Type from "../Types";
+import TimeUnit from "./TimeUnit";
+import ClockTime from "./ClockTime";
+import TimeQuantity from "./TimeQuantity";
 import {Milliseconds, Ticks} from "./HowMany";
-import {ITimeMeasurement} from "./ITimeMeasurement";
-import {ITimeQuantity} from "./ITimeQuantity";
-import {Lazy} from "../Lazy";
+import ITimeMeasurement from "./ITimeMeasurement";
+import ITimeQuantity from "./ITimeQuantity";
+import Lazy from "../Lazy";
 
 /**
  * TimeSpan expands on TimeQuantity to provide an class that is similar to .NET's TimeSpan including many useful static methods.
  */
-export class TimeSpan extends TimeQuantity implements ITimeMeasurement
+export default class TimeSpan extends TimeQuantity implements ITimeMeasurement
 {
 	/**
 	 * The total number of ticks that represent this amount of time.
@@ -143,5 +143,3 @@ export class TimeSpan extends TimeQuantity implements ITimeMeasurement
 
 
 let timeSpanZero:TimeSpan;
-
-export default TimeSpan;

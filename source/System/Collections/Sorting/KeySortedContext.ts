@@ -4,14 +4,14 @@
  */
 
 import * as Values from "../../Compare";
-import {SortContext} from "./SortContext";
-import {Functions} from "../../Functions";
+import SortContext from "./SortContext";
+import Functions from "../../Functions";
 import {Comparison, Selector} from "../../FunctionTypes";
 import {Comparable} from "../../IComparable";
-import {IComparer} from "../../IComparer";
-import {Order} from "./Order";
+import IComparer from "../../IComparer";
+import Order from "./Order";
 
-export class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>
+export default class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>
 {
 	constructor(
 		next:IComparer<T>|null,
@@ -33,5 +33,3 @@ export class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>
 		return _._order*d;
 	}
 }
-
-export default KeySortedContext;

@@ -6,15 +6,15 @@
 import {areEqual} from "../Compare";
 import {contains, copyTo, indexOf, remove, removeIndex} from "./Array/Utility";
 import {forEach} from "./Enumeration/Enumerator";
-import {Type} from "../Types";
-import {CollectionBase} from "./CollectionBase";
+import Type from "../Types";
+import CollectionBase from "./CollectionBase";
 import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
-import {IEnumerator} from "./Enumeration/IEnumerator";
-import {IList} from "./IList";
-import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
-import {IEnumerableOrArray} from "./IEnumerableOrArray";
-import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
-import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
+import IEnumerator from "./Enumeration/IEnumerator";
+import IList from "./IList";
+import IEnumerateEach from "./Enumeration/IEnumerateEach";
+import IEnumerableOrArray from "./IEnumerableOrArray";
+import ArrayLikeWritable from "./Array/ArrayLikeWritable";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
 
 const VOID0:undefined = void 0;
 export class List<T>

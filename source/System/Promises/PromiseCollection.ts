@@ -5,8 +5,8 @@
 
 
 import {Fulfilled, handleSyncIfPossible} from "./Promise";
-import {DisposableBase} from "../Disposable/DisposableBase";
-import {ArrayPromise} from "./ArrayPromise";
+import DisposableBase from "../Disposable/DisposableBase";
+import ArrayPromise from "./ArrayPromise";
 import all from "./Functions/all";
 import race from "./Functions/race";
 import waitAll from "./Functions/waitAll";
@@ -17,7 +17,7 @@ import isPromise from "./Functions/isPromise";
 /**
  * A Promise collection exposes useful methods for handling a collection of promises and their results.
  */
-export class PromiseCollection<T>
+export default class PromiseCollection<T>
 	extends DisposableBase
 {
 	private _source:PromiseLike<T>[];

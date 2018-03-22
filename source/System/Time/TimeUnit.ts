@@ -5,9 +5,9 @@
  */
 
 import {Hours, Milliseconds, Minutes, Seconds, Ticks} from "./HowMany";
-import {ITimeQuantity} from "./ITimeQuantity";
+import ITimeQuantity from "./ITimeQuantity";
 
-export enum TimeUnit
+enum TimeUnit
 {
 	Ticks,
 	Milliseconds,
@@ -17,7 +17,7 @@ export enum TimeUnit
 	Days
 } // Earth Days
 
-export module TimeUnit
+module TimeUnit
 {
 
 	export function toMilliseconds(

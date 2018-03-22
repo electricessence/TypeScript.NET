@@ -5,22 +5,22 @@
 
 import {areEqual} from "../../Compare";
 import {forEach} from "../Enumeration/Enumerator";
-import {CollectionBase} from "../CollectionBase";
-import {EnumeratorBase} from "../Enumeration/EnumeratorBase";
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
-import {InvalidOperationException} from "../../Exceptions/InvalidOperationException";
-import {extractKeyValue} from "../../KeyValueExtract";
+import CollectionBase from "../CollectionBase";
+import EnumeratorBase from "../Enumeration/EnumeratorBase";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import InvalidOperationException from "../../Exceptions/InvalidOperationException";
+import extractKeyValue from "../../KeyValueExtract";
 import {IKeyValuePair, KeyValuePair} from "../../KeyValuePair";
-import {IDictionary} from "./IDictionary";
-import {IEnumerator} from "../Enumeration/IEnumerator";
-import {IEnumerableOrArray} from "../IEnumerableOrArray";
-import {KeyNotFoundException} from "../KeyNotFoundException";
+import IDictionary from "./IDictionary";
+import IEnumerator from "../Enumeration/IEnumerator";
+import IEnumerableOrArray from "../IEnumerableOrArray";
+import KeyNotFoundException from "../KeyNotFoundException";
 import {Action} from "../../FunctionTypes";
 
 const VOID0:undefined = void 0;
 
 // Design Note: Should DictionaryAbstractBase be IDisposable?
-export abstract class DictionaryBase<TKey, TValue>
+abstract class DictionaryBase<TKey, TValue>
 extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, TValue>
 {
 	constructor(source?:IEnumerableOrArray<IKeyValuePair<TKey,TValue>>)

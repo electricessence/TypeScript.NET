@@ -3,20 +3,20 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {ArgumentException} from "./Exceptions/ArgumentException";
-import {ArgumentOutOfRangeException} from "./Exceptions/ArgumentOutOfRangeException";
-import {TypeValue} from "./TypeValue";
+import ArgumentException from "./Exceptions/ArgumentException";
+import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeException";
+import TypeOfValue from "./TypeOfValue";
 
-export function Integer(n:number):number
+function Integer(n:number):number
 {
 	return Math.floor(n);
 }
 
-export module Integer
+module Integer
 {
 	export const MAX_32_BIT:number = 2147483647;
 	export const MAX_VALUE:number = 9007199254740991;
-	const NUMBER = TypeValue.Number;
+	const NUMBER = TypeOfValue.Number;
 
 	/**
 	 * Converts any number to its 32bit counterpart.

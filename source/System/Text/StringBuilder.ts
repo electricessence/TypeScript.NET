@@ -43,8 +43,8 @@ export class StringBuilder implements IDisposable
 			_._latest = null;
 			switch(typeof item)
 			{
-				case Type.OBJECT:
-				case Type.FUNCTION:
+				case TypeOfValue.Object:
+				case TypeOfValue.Function:
 					item = item.toString();
 					break;
 			}

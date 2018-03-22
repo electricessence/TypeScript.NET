@@ -5,10 +5,10 @@
  */
 
 import {deferImmediate} from "../Threading/deferImmediate";
-import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {ObjectPool} from "../Disposable/ObjectPool";
-import {ObjectDisposedException} from "../Disposable/ObjectDisposedException";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import ObjectPool from "../Disposable/ObjectPool";
+import ObjectDisposedException from "../Disposable/ObjectDisposedException";
 import {Executor, Fulfill, Reject, Resolution, Resolver} from "./PromiseTypes";
 import PromiseBase from "./PromiseBase";
 import isPromise from "./Functions/isPromise";
