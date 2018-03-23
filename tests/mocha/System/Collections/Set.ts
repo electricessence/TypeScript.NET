@@ -57,7 +57,7 @@ superset.push("NO");
 const otherWithIntersect = [1, "1", 4000, "goodbye"];
 
 
-it("should not repeat entries", ()=>
+it("should not repeatText entries", ()=>
 {
 	const s = new Set<Primitive>(sourcePrimitives);
 

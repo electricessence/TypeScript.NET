@@ -1,21 +1,24 @@
-﻿﻿/*!
+﻿/*!
  * @author: electricessence / https://github.com/electricessence/
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {areEqual} from "../Compare";
-import * as AU from "./Array/Utility";
-import Type from "../Types";
+import {Action, ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
+import IEnumerator from "./Enumeration/IEnumerator";
+import IEnumerableOrArray from "./IEnumerableOrArray";
 import Integer from "../Integer";
 import EnumeratorBase from "./Enumeration/EnumeratorBase";
 import NotImplementedException from "../Exceptions/NotImplementedException";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
 import CollectionBase from "./CollectionBase";
-import {Action, ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
-import IEnumerator from "./Enumeration/IEnumerator";
-import IEnumerableOrArray from "./IEnumerableOrArray";
+import areEqual from "../Comparison/areEqual";
+import initializeArray from "./Array/initializeArray";
+import clearElements from "./Array/clearElements";
+import isArrayLike from "../Reflection/isArrayLike";
+import isNumber from "../Reflection/isNumber";
+import copyArrayTo from "./Array/copyArrayTo";
 
 const VOID0:undefined = void 0;
 const MINIMUM_GROW:number = 4;
@@ -26,7 +29,7 @@ const DEFAULT_CAPACITY:number = MINIMUM_GROW;
 const emptyArray:any = Object.freeze([]);
 
 export default class Queue<T>
-extends CollectionBase<T>
+	extends CollectionBase<T>
 {
 
 	private _array:T[];
@@ -48,20 +51,20 @@ extends CollectionBase<T>
 			this._array = emptyArray;
 		else
 		{
-			if(Type.isNumber(source))
+			if(isNumber(source))
 			{
 				const capacity = <number>source;
 				assertIntegerZeroOrGreater(capacity, "capacity");
 
 				this._array = capacity
-					? AU.initialize<T>(capacity)
+					? initializeArray<T>(capacity)
 					: emptyArray;
 			}
 			else
 			{
 				const se = <IEnumerableOrArray<T>> source;
-				this._array = AU.initialize<T>(
-					Type.isArrayLike(se)
+				this._array = initializeArray<T>(
+					isArrayLike(se)
 						? se.length
 						: DEFAULT_CAPACITY
 				);
@@ -115,11 +118,11 @@ extends CollectionBase<T>
 		const _ = this;
 		const array = _._array, head = _._head, tail = _._tail, size = _._size;
 		if(head<tail)
-			AU.clear(array, head, tail);
+			clearElements(array, head, tail);
 		else
 		{
-			AU.clear(array, head);
-			AU.clear(array, 0, tail);
+			clearElements(array, head);
+			clearElements(array, 0, tail);
 		}
 
 		_._head = 0;
@@ -202,17 +205,17 @@ extends CollectionBase<T>
 		}
 
 		// We create a new array because modifying an existing one could be slow.
-		const newArray:T[] = AU.initialize<T>(capacity);
+		const newArray:T[] = initializeArray<T>(capacity);
 		if(size>0)
 		{
 			if(head<tail)
 			{
-				AU.copyTo(array, newArray, head, 0, size);
+				copyArrayTo(array, newArray, head, 0, size);
 			}
 			else
 			{
-				AU.copyTo(array, newArray, head, 0, len - head);
-				AU.copyTo(array, newArray, 0, len - head, tail);
+				copyArrayTo(array, newArray, head, 0, len - head);
+				copyArrayTo(array, newArray, 0, len - head, tail);
 			}
 		}
 

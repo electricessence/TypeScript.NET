@@ -10,7 +10,7 @@ import Integer from "../../Integer";
  * @param length
  * @returns {[]}
  */
-export default function initialize<T>(length:number):T[]
+export default function initializeArray<T>(length:number):T[]
 {
 	Integer.assert(length, 'length');
 	// This logic is based upon JS performance tests that show a significant difference at the level of 65536.

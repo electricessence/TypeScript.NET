@@ -49,7 +49,7 @@ var subset = sourcePrimitives.slice(4);
 var superset = sourcePrimitives.slice();
 superset.push("NO");
 var otherWithIntersect = [1, "1", 4000, "goodbye"];
-it("should not repeat entries", function () {
+it("should not repeatText entries", function () {
     var s = new Set_1.default(sourcePrimitives);
     assert.equal(s.count, 7);
 });

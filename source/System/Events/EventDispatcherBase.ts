@@ -3,13 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import * as AU from "../Collections/Array/Utility";
-import shallowCopy from "../Utility/shallowCopy";
-import DisposableBase from "../Disposable/DisposableBase";
-import dispose from "../Disposable/dispose";
 import IEventListener from "./IEventListener";
-import EventDispatcherEntry from "./EventDispatcherEntry";
 import IEventDispatcher from "./IEventDispatcher";
+import DisposableBase from "../Disposable/DisposableBase";
+import EventDispatcherEntry from "./EventDispatcherEntry";
+import shallowCopy from "../Utility/shallowCopy";
+import removeElement from "../Collections/Array/removeElement";
+import dispose from "../Disposable/dispose";
 
 const DISPOSING:string = 'disposing',
       DISPOSED:string  = 'disposed';
@@ -74,7 +74,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 
 	removeEntry(entry:EventDispatcherEntry<IEntryParams>):boolean
 	{
-		return !!this._entries && AU.remove(this._entries, entry)!=0;
+		return !!this._entries && removeElement(this._entries, entry)!=0;
 	}
 
 	// Allow for simple add once mechanism.

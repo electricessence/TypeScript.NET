@@ -4,21 +4,22 @@
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
 
-import Type from "../Types";
-import UriComponent from "./UriComponent";
-import Scheme, {isValidScheme} from "./Scheme";
-import QueryParam from "./QueryParam";
-import {encode, parseToMap, Separator} from "./QueryParams";
-import {trim} from "../Text/Utility";
-import Exception from "../Exception";
-import ArgumentException from "../Exceptions/ArgumentException";
-import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
 import IUri from "./IUri";
 import IMap from "../../IMap";
 import Primitive from "../Primitive";
-import {StringKeyValuePair} from "../KeyValuePair";
 import IEquatable from "../IEquatable";
+import {StringKeyValuePair} from "../KeyValuePair";
 import {Action} from "../FunctionTypes";
+import UriComponent from "./UriComponent";
+import QueryParam from "./QueryParam";
+import Scheme, {isValidScheme} from "./Scheme";
+import {encode, parseToMap, Separator} from "./QueryParams";
+import Exception from "../Exception";
+import ArgumentException from "../Exceptions/ArgumentException";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import isString from "../Reflection/isString";
+import isNumber from "../Reflection/isNumber";
+import trim from "../Text/trim";
 export {IUri}
 
 const VOID0:undefined = void 0;
@@ -73,7 +74,7 @@ export default class Uri implements IUri, IEquatable<IUri>
 		this.path = path || null;
 
 
-		if(!Type.isString(query))
+		if(!isString(query))
 			query = encode(<UriComponent.Map|StringKeyValuePair<Primitive>[]>query);
 
 		this.query = formatQuery(<string>query) || null;
@@ -114,7 +115,7 @@ export default class Uri implements IUri, IEquatable<IUri>
 	 */
 	static from(uri:string|IUri|null|undefined, defaults?:IUri):Uri
 	{
-		const u = Type.isString(uri)
+		const u = isString(uri)
 			? Uri.parse(<string>uri) // Parsing a string should throw errors.  Null or undefined simply means empty.
 			: <IUri>uri;
 
@@ -122,7 +123,7 @@ export default class Uri implements IUri, IEquatable<IUri>
 			u && u.scheme || defaults && <any>defaults.scheme,
 			u && u.userInfo || defaults && <any>defaults.userInfo,
 			u && u.host || defaults && <any>defaults.host,
-			u && Type.isNumber(u.port,true) ? u.port : defaults && <any>defaults.port,
+			u && isNumber(u.port,true) ? u.port : defaults && <any>defaults.port,
 			u && u.path || defaults && <any>defaults.path,
 			u && u.query || defaults && <any>defaults.query,
 			u && u.fragment || defaults && <any>defaults.fragment
@@ -313,7 +314,7 @@ const SLASH = '/', SLASH2 = '//', QM = Separator.Query, HASH = '#', EMPTY = '', 
 function getScheme(scheme:Scheme|string|null|undefined):Scheme|null
 {
 	let s:any = scheme;
-	if(Type.isString(s))
+	if(isString(s))
 	{
 		if(!s) return null;
 		s = trim(s)
@@ -335,13 +336,13 @@ function getPort(port:number|string|null|undefined):number|null
 	if(!port) return null;
 	let p:number;
 
-	if(Type.isNumber(port))
+	if(isNumber(port))
 	{
 		p = <number>port;
 		if(p>=0 && isFinite(p))
 			return p;
 	}
-	else if(Type.isString(port) && (p = parseInt(<string>port)) && !isNaN(p))
+	else if(isString(port) && (p = parseInt(<string>port)) && !isNaN(p))
 	{
 		return getPort(p);
 	}
@@ -357,7 +358,7 @@ function getAuthority(uri:IUri):string
 		if(uri.userInfo)
 			throw new ArgumentException('host', 'Cannot include user info when there is no host.');
 
-		if(Type.isNumber(uri.port, true))
+		if(isNumber(uri.port, true))
 			throw new ArgumentException('host', 'Cannot include a port when there is no host.');
 	}
 

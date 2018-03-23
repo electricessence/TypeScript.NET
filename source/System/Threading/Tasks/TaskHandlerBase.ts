@@ -3,14 +3,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import DisposableBase from "../../Disposable/DisposableBase";
 import ICancellable from "../ICancellable";
+import DisposableBase from "../../Disposable/DisposableBase";
 import TaskStatus from "./TaskStatus";
 
 /**
  * A simple class for handling potentially repeated executions either deferred or immediate.
  */
-export abstract class TaskHandlerBase extends DisposableBase implements ICancellable
+abstract class TaskHandlerBase extends DisposableBase implements ICancellable
 {
 	private _status:TaskStatus;
 

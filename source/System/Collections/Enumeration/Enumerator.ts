@@ -3,24 +3,23 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-
-
-
-import UnsupportedEnumerableException from "./UnsupportedEnumerableException";
 import ForEachEnumerable from "./ForEachEnumerable";
 import IEnumerator from "./IEnumerator";
-import ArrayEnumerator from "./ArrayEnumerator";
-import IndexEnumerator from "./IndexEnumerator";
-import Type from "../../Types";
 import IEnumerableOrArray from "../IEnumerableOrArray";
-import TypeOfValue from "../../TypeOfValue";
 import IIterator from "./IIterator";
 import IEnumerable from "./IEnumerable";
-import {ActionWithIndex, PredicateWithIndex, SelectorWithIndex} from "../../FunctionTypes";
-import {using} from "../../Disposable/dispose";
 import IIteratorResult from "./IIteratorResult";
+import {ActionWithIndex, PredicateWithIndex, SelectorWithIndex} from "../../FunctionTypes";
+import UnsupportedEnumerableException from "./UnsupportedEnumerableException";
+import ArrayEnumerator from "./ArrayEnumerator";
+import IndexEnumerator from "./IndexEnumerator";
+import TypeOfValue from "../../Reflection/TypeOfValue";
+import {using} from "../../Disposable/dispose";
 import IteratorEnumerator from "./IteratorEnumerator";
-import {default as InfiniteEnumerator, InfiniteValueFactory} from "./InfiniteEnumerator";
+import InfiniteEnumerator, {InfiniteValueFactory} from "./InfiniteEnumerator";
+import isArrayLike from "../../Reflection/isArrayLike";
+import isPrimitive from "../../Reflection/isPrimitive";
+import hasMemberOfType from "../../Reflection/hasMemberOfType";
 import EmptyEnumerator from "./EmptyEnumerator";
 
 const
@@ -43,7 +42,7 @@ function initArrayFrom(
 	source:ForEachEnumerable<any>,
 	max:number = Infinity):any[]
 {
-	if(Type.isArrayLike(source))
+	if(isArrayLike(source))
 	{
 		const len = Math.min(source.length, max);
 		if(isFinite(len))
@@ -75,7 +74,7 @@ export function from<T>(source:ForEachEnumerable<T>|InfiniteValueFactory<T>):IEn
 	if((source)instanceof(Array))
 		return new ArrayEnumerator<T>(<T[]>source);
 
-	if(Type.isArrayLike<T>(source))
+	if(isArrayLike<T>(source))
 	{
 		return new IndexEnumerator<T>(
 			() =>
@@ -90,12 +89,12 @@ export function from<T>(source:ForEachEnumerable<T>|InfiniteValueFactory<T>):IEn
 		);
 	}
 
-	if(!Type.isPrimitive(source))
+	if(!isPrimitive(source))
 	{
 		if(isEnumerable<T>(source))
 			return source.getEnumerator();
 
-		if(Type.isFunction(source))
+		if(typeof source=='function')
 			return new InfiniteEnumerator(source);
 
 		if(isEnumerator<T>(source))
@@ -111,22 +110,22 @@ export function from<T>(source:ForEachEnumerable<T>|InfiniteValueFactory<T>):IEn
 
 export function isEnumerable<T>(instance:any):instance is IEnumerable<T>
 {
-	return Type.hasMemberOfType<IEnumerable<T>>(instance, "getEnumerator", TypeOfValue.Function);
+	return hasMemberOfType<IEnumerable<T>>(instance, "getEnumerator", TypeOfValue.Function);
 }
 
 export function isEnumerableOrArrayLike<T>(instance:any):instance is IEnumerableOrArray<T>
 {
-	return Type.isArrayLike(instance) || isEnumerable(instance);
+	return isArrayLike(instance) || isEnumerable(instance);
 }
 
 export function isEnumerator<T>(instance:any):instance is IEnumerator<T>
 {
-	return Type.hasMemberOfType<IEnumerator<T>>(instance, "moveNext", TypeOfValue.Function);
+	return hasMemberOfType<IEnumerator<T>>(instance, "moveNext", TypeOfValue.Function);
 }
 
 export function isIterator<T>(instance:any):instance is IIterator<T>
 {
-	return Type.hasMemberOfType<IIterator<T>>(instance, "next", TypeOfValue.Function);
+	return hasMemberOfType<IIterator<T>>(instance, "next", TypeOfValue.Function);
 }
 
 /**
@@ -156,7 +155,7 @@ export function forEach<T>(
 
 	if(e && max>0)
 	{
-		if(Type.isArrayLike<T>(e))
+		if(isArrayLike<T>(e))
 		{
 			// Assume e.length is constant or at least doesn't deviate to infinite or NaN.
 			throwIfEndless(!isFinite(max) && !isFinite(e.length));

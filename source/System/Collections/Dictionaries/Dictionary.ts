@@ -4,21 +4,20 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {areEqual} from "../../Compare";
-import Type from "../../Types";
-import EnumeratorBase from "../Enumeration/EnumeratorBase";
-import LinkedNodeList from "../LinkedNodeList";
-import ObjectPool from "../../Disposable/ObjectPool";
 import {IMap} from "./IDictionary";
 import {IKeyValuePair} from "../../KeyValuePair";
-import getIdentifier from "./getIdentifier";
 import IEnumerator from "../Enumeration/IEnumerator";
 import {ILinkedNode} from "../ILinkedListNode";
 import {HashSelector} from "../../FunctionTypes";
+import areEqual from "../../Comparison/areEqual";
+import getIdentifier from "./getIdentifier";
+import isPrimitiveOrSymbol from "../../Reflection/isPrimitiveOrSymbol";
 import DictionaryBase from "./DictionaryBase";
+import EnumeratorBase from "../Enumeration/EnumeratorBase";
+import LinkedNodeList from "../LinkedNodeList";
+import ObjectPool from "../../Disposable/ObjectPool";
 
 const VOID0:undefined = void 0;
-
 
 export interface IHashEntry<TKey, TValue>
 extends ILinkedNode<IHashEntry<TKey, TValue>>, IKeyValuePair<TKey,TValue>
@@ -53,8 +52,6 @@ function linkedNodeList(recycle?:LinkedNodeList<any>):LinkedNodeList<any>|void
 	if(!recycle) return linkedListPool.take();
 	linkedListPool.add(recycle);
 }
-
-
 
 export default class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 {
@@ -91,7 +88,7 @@ export default class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValu
 		if(hash==null || !createIfMissing && !this.getCount())
 			return null;
 
-		if(!Type.isPrimitiveOrSymbol(hash))
+		if(!isPrimitiveOrSymbol(hash))
 			console.warn("Key type not indexable and could cause Dictionary to be extremely slow.");
 
 		const buckets = this._buckets;

@@ -44,11 +44,11 @@ function assertAdding<T>(c:ICollection<T>, a:T[])
 
 function assertCopyToClear<T>(c:ICollection<T>)
 {
-	it(".copyTo(other) & .clear()", ()=>
+	it(".copyArrayTo(other) & .clearElements()", ()=>
 	{
 		const count:number = c.count;
 		assertIsNumber(count);
-		if(count<2) throw "Can't assert '.copyTo()' or '.clear()' without at least (2) entries.";
+		if(count<2) throw "Can't assert '.copyArrayTo()' or '.clearElements()' without at least (2) entries.";
 
 		const a:T[] = [];
 
@@ -56,7 +56,7 @@ function assertCopyToClear<T>(c:ICollection<T>)
 		assertIsNumber(c.count, 'count');
 		assert.equal(a.length, count, "An empty array's length should match the count if copied to.");
 		c.clear();
-		assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
+		assert.equal(c.count, 0, "A collection's count should be zero after calling '.clearElements()'.");
 
 		// Restore contents.
 		for(let v of a) c.add(v);
@@ -69,7 +69,7 @@ function assertCopyToClear<T>(c:ICollection<T>)
 		c.copyTo(b, count + extraSize - 1);
 		assert.equal(b.length, 2*count + extraSize - 1, "An array's length should be equal to index+count if the count exceeds the length.");
 		c.clear();
-		assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
+		assert.equal(c.count, 0, "A collection's count should be zero after calling '.clearElements()'.");
 
 		// Restore contents.
 		for(let v of a) c.add(v);

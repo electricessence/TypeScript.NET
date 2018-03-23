@@ -3,10 +3,10 @@
  * Licensing: MIT
  */
 
-import Type from "../../Types";
-import TypeOfValue from "../../TypeOfValue";
+import TypeOfValue from "../../Reflection/TypeOfValue";
+import hasMemberOfType from "../../Reflection/hasMemberOfType";
 
 export default function isPromise<T>(value:any):value is PromiseLike<T>
 {
-	return Type.hasMemberOfType(value, "then", TypeOfValue.Function);
+	return hasMemberOfType(value, "then", TypeOfValue.Function);
 }

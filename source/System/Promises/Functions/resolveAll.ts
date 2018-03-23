@@ -3,8 +3,8 @@
  * Licensing: MIT
  */
 
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
-import {PromiseCollection} from "../PromiseCollection";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import PromiseCollection from "../PromiseCollection";
 import resolve from "./resolve";
 
 /**
@@ -12,11 +12,11 @@ import resolve from "./resolve";
  * Similar to 'group' but calls resolve on each entry.
  * @param resolutions
  */
-function resolveAll<T>(resolutions:Array<T | PromiseLike<T>>):PromiseCollection<T>;
-function resolveAll<T>(
+export default function resolveAll<T>(resolutions:Array<T | PromiseLike<T>>):PromiseCollection<T>;
+export default function resolveAll<T>(
 	promise:T | PromiseLike<T>,
 	...rest:Array<T | PromiseLike<T>>):PromiseCollection<T>
-function resolveAll(
+export default function resolveAll(
 	first:any | PromiseLike<any> | Array<any | PromiseLike<any>>,
 	...rest:Array<any | PromiseLike<any>>):PromiseCollection<any>
 {
@@ -26,5 +26,3 @@ function resolveAll(
 			.concat(rest)
 			.map((v:any) => resolve(v)));
 }
-
-export default resolveAll;

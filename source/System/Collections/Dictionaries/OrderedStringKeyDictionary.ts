@@ -6,8 +6,8 @@
 import StringKeyDictionary from "./StringKeyDictionary";
 import ArgumentOutOfRangeException from "../../Exceptions/ArgumentOutOfRangeException";
 import {IOrderedDictionary} from "./IDictionary";
-import {remove} from "../Array/Utility";
 import Integer from "../../Integer";
+import removeElement from "../Array/removeElement";
 
 const VOID0:undefined = void 0;
 
@@ -48,7 +48,7 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 		if(!exists && (value!==VOID0 || keepIndex))
 			_._order.push(key);
 		else if(exists && value===VOID0 && !keepIndex)
-			remove(_._order, key);
+			removeElement(_._order, key);
 
 		return super.setValue(key, value);
 	}
@@ -102,4 +102,3 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 	}
 
 }
-

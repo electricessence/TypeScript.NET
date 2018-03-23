@@ -3,19 +3,19 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import LinkedNodeList from "./LinkedNodeList";
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import {forEach} from "./Enumeration/Enumerator";
-import EmptyEnumerator from "./Enumeration/EmptyEnumerator";
-import {using} from "../Disposable/dispose";
-import {areEqual} from "../Compare";
-import CollectionBase from "./CollectionBase";
 import IDisposable from "../Disposable/IDisposable";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
 import {ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
 import IEnumerator from "./Enumeration/IEnumerator";
 import IEnumerableOrArray from "./IEnumerableOrArray";
 import ISet from "./ISet";
+import LinkedNodeList from "./LinkedNodeList";
+import CollectionBase from "./CollectionBase";
+import areEqual from "../Comparison/areEqual";
+import {forEach} from "./Enumeration/Enumerator";
+import {using} from "../Disposable/dispose";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import EmptyEnumerator from "./Enumeration/EmptyEnumerator";
 
 const VOID0:undefined = void 0;
 const OTHER = 'other';
@@ -23,7 +23,6 @@ const OTHER = 'other';
 abstract class SetBase<T>
 extends CollectionBase<T> implements ISet<T>, IDisposable
 {
-
 	constructor(source?:IEnumerableOrArray<T>)
 	{
 		super(VOID0, areEqual);

@@ -3,10 +3,10 @@
  * Licensing: MIT
  */
 
-import {ArgumentException} from "../../Exceptions/ArgumentException";
 import PromiseBase from "../PromiseBase";
 import wrap from "./wrap";
 import TSDNPromise from "../Promise";
+import ArgumentException from "../../Exceptions/ArgumentException";
 
 /**
  * Creates a Promise that is resolved or rejected when any of the provided Promises are resolved
@@ -20,7 +20,7 @@ function race(
 	first:PromiseLike<any> | PromiseLike<any>[],
 	...rest:PromiseLike<any>[]):PromiseBase<any>
 {
-	let promises = first && ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy?
+	let promises = first && ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copyArray?
 	if(!promises || !promises.length || !(promises = promises.filter(v => v!=null)).length)
 		throw new ArgumentException("Nothing to wait for.");
 

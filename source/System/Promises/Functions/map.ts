@@ -4,7 +4,7 @@
  */
 
 import TSDNPromise from "../Promise";
-import {PromiseCollection} from "../PromiseCollection";
+import PromiseCollection from "../PromiseCollection";
 
 /**
  * Creates a PromiseCollection containing promises that will resolve on the next tick using the transform function.
@@ -12,7 +12,7 @@ import {PromiseCollection} from "../PromiseCollection";
  * it only uses one promise per transform.
  * @param source
  * @param transform
- * @returns {PromiseCollection<T>}
+ * @returns {PromiseCollection}
  */
 export default function map<T, U>(source:T[], transform:(value:T) => U):PromiseCollection<U>
 {

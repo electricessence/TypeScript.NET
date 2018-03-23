@@ -4,9 +4,10 @@
  */
 
 import {IHashable, ISymbolizable} from "./IDictionary";
-import Type from "../../Types";
 import {Selector} from "../../FunctionTypes";
-import TypeOfValue from "../../TypeOfValue";
+import TypeOfValue from "../../Reflection/TypeOfValue";
+import isPropertyKey from "../../Reflection/isPropertyKey";
+import hasMethod from "../../Reflection/hasMethod";
 
 const VOID0:undefined = void 0;
 const NULL = "null", GET_SYMBOL = "getSymbol", GET_HASH_CODE = "getHashCode";
@@ -16,24 +17,24 @@ function getIdentifier(obj:any, throwIfUnknown:boolean):string|number|symbol|nev
 function getIdentifier(obj:any, unknownHandler:Selector<any,string|number|symbol>):string|number|symbol
 function getIdentifier(obj:any, throwIfUnknown:boolean|Selector<any,string|number|symbol> = false):string|number|symbol|never
 {
-	if(Type.isPropertyKey(obj)) return obj;
+	if(isPropertyKey(obj)) return obj;
 	if(obj===null) return NULL;
 	if(obj===VOID0) return TypeOfValue.Undefined;
 
 	// See ISymbolizable.
-	if(Type.hasMethod<ISymbolizable>(obj, GET_SYMBOL))
+	if(hasMethod<ISymbolizable>(obj, GET_SYMBOL))
 	{
 		return obj.getSymbol();
 	}
 
 	// See IHashable.
-	if(Type.hasMethod<IHashable>(obj, GET_HASH_CODE))
+	if(hasMethod<IHashable>(obj, GET_HASH_CODE))
 	{
 		return obj.getHashCode();
 	}
 
 	if(throwIfUnknown) {
-		if(Type.isFunction(throwIfUnknown))
+		if(typeof throwIfUnknown=='function')
 			return throwIfUnknown(obj);
 		else
 			throw "Cannot create known identity.";

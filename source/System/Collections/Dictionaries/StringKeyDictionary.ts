@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {areEqual} from "../../Compare";
 import {IMap, IStringKeyDictionary} from "./IDictionary";
 import {IKeyValuePair} from "../../KeyValuePair";
 import DictionaryBase from "./DictionaryBase";
+import areEqual from "../../Comparison/areEqual";
 
 const VOID0:undefined = void 0;
 

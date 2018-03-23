@@ -17,7 +17,7 @@ function all(
 	...rest:PromiseLike<any>[]):ArrayPromise<any>
 {
 	if(!first && !rest.length) throw new ArgumentNullException("promises");
-	let promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy!
+	let promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copyArray!
 	if(!promises.length || promises.every(v => !v)) return new ArrayPromise<any>(
 		r => r(promises), true); // it's a new empty, reuse it. :|
 

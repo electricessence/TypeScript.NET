@@ -4,7 +4,7 @@
  */
 
 import IndexEnumerator from "./IndexEnumerator";
-import TypeOfValue from "../../TypeOfValue";
+import TypeOfValue from "../../Reflection/TypeOfValue";
 
 export default class ArrayEnumerator<T> extends IndexEnumerator<T>
 {

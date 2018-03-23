@@ -14,9 +14,9 @@ export default interface IList<T> extends ICollection<T>, IReadOnlyList<T>
 	 isReadOnly: boolean;
 
 	 add(item: T): void;
-	 clear(): number;
+	 clearElements(): number;
 	 contains(item: T): boolean;
-	 copyTo(array: T[], index?: number): void;
+	 copyArrayTo(array: T[], index?: number): void;
 	 remove(item: T): number;
 	 */
 

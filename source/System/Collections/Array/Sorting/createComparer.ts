@@ -3,12 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Type} from "../../../Types";
-import {compare} from "../../../Compare";
-import {Primitive} from "../../../Primitive";
+import Primitive from "../../../Primitive";
 import {Comparison, Selector} from "../../../FunctionTypes";
-import {CompareResult} from "../../../CompareResult";
-import {Order} from "../../Sorting/Order";
+import CompareResult from "../../../CompareResult";
+import Order from "../../Sorting/Order";
+import isTrueNaN from "../../../Reflection/isTrueNaN";
+import compare from "../../../Comparison/compare";
 
 function ensureArray<T>(value:T|T[]):T[]
 {
@@ -40,12 +40,12 @@ function ensureArray<T>(value:T|T[]):T[]
  * @param equivalentToNaN
  * @returns {(a:TSource, b:TSource)=>CompareResult}
  */
-export function createComparer<TSource,TSelect extends Primitive>(
+export default function createComparer<TSource,TSelect extends Primitive>(
 	selector:Selector<TSource,TSelect|TSelect[]>,
 	order:Order | Order[] = Order.Ascending,
 	equivalentToNaN:any = NaN):Comparison<TSource>
 {
-	const nanHasEquivalent = !Type.isTrueNaN(equivalentToNaN);
+	const nanHasEquivalent = !isTrueNaN(equivalentToNaN);
 
 	return (a:TSource, b:TSource):CompareResult=>
 	{
@@ -65,9 +65,9 @@ export function createComparer<TSource,TSelect extends Primitive>(
 
 			if(nanHasEquivalent)
 			{
-				if(Type.isTrueNaN(vA))
+				if(isTrueNaN(vA))
 					vA = equivalentToNaN;
-				if(Type.isTrueNaN(vB))
+				if(isTrueNaN(vB))
 					vB = equivalentToNaN;
 
 			}

@@ -4,17 +4,17 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {areEqual} from "../Compare";
+import IDisposable from "../Disposable/IDisposable";
+import ILinkedList from "./ILinkedList";
+import IEnumerator from "./Enumeration/IEnumerator";
+import IEnumerableOrArray from "./IEnumerableOrArray";
+import {ILinkedListNode, ILinkedNode, INodeWithValue} from "./ILinkedListNode";
+import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
 import LinkedNodeList from "./LinkedNodeList";
+import CollectionBase from "./CollectionBase";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import CollectionBase from "./CollectionBase";
-import {ILinkedListNode, ILinkedNode, INodeWithValue} from "./ILinkedListNode";
-import IEnumerator from "./Enumeration/IEnumerator";
-import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
-import ILinkedList from "./ILinkedList";
-import IEnumerableOrArray from "./IEnumerableOrArray";
-import IDisposable from "../Disposable/IDisposable";
+import areEqual from "../Comparison/areEqual";
 
 const VOID0:undefined = void 0;
 

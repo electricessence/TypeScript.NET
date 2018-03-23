@@ -3,19 +3,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {areEqual} from "../../Compare";
-import {forEach} from "../Enumeration/Enumerator";
+import {Action} from "../../FunctionTypes";
+import {IKeyValuePair, KeyValuePair} from "../../KeyValuePair";
+import IDictionary from "./IDictionary";
+import IEnumerator from "../Enumeration/IEnumerator";
+import IEnumerableOrArray from "../IEnumerableOrArray";import {forEach} from "../Enumeration/Enumerator";
 import CollectionBase from "../CollectionBase";
 import EnumeratorBase from "../Enumeration/EnumeratorBase";
 import ArgumentNullException from "../../Exceptions/ArgumentNullException";
 import InvalidOperationException from "../../Exceptions/InvalidOperationException";
 import extractKeyValue from "../../KeyValueExtract";
-import {IKeyValuePair, KeyValuePair} from "../../KeyValuePair";
-import IDictionary from "./IDictionary";
-import IEnumerator from "../Enumeration/IEnumerator";
-import IEnumerableOrArray from "../IEnumerableOrArray";
 import KeyNotFoundException from "../KeyNotFoundException";
-import {Action} from "../../FunctionTypes";
+import areEqual from "../../Comparison/areEqual";
 
 const VOID0:undefined = void 0;
 

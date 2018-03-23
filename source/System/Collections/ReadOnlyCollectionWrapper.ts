@@ -8,7 +8,7 @@ import ReadOnlyCollectionBase from "./ReadOnlyCollectionBase";
 import ICollection from "./ICollection";
 import IEnumerator from "./Enumeration/IEnumerator";
 import {from as enumeratorFrom} from "./Enumeration/Enumerator";
-import Type from "../Types";
+import isArrayLike from "../Reflection/isArrayLike";
 
 export default class ReadOnlyCollectionWrapper<T> extends ReadOnlyCollectionBase<T>
 {
@@ -21,7 +21,7 @@ export default class ReadOnlyCollectionWrapper<T> extends ReadOnlyCollectionBase
 
 		const _ = this;
 		// Attempting to avoid contact with the original collection.
-		if(Type.isArrayLike(collection))
+		if(isArrayLike(collection))
 		{
 			this.__getCount = ()=>collection.length;
 			this.__getEnumerator = ()=> enumeratorFrom(collection);

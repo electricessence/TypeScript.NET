@@ -3,9 +3,9 @@
  * Licensing: MIT
  */
 
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
-import {Set} from "../../Collections/Set";
-import {ArrayPromise} from "../ArrayPromise";
+import Set from "../../Collections/Set";
+import ArrayPromise from "../ArrayPromise";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
 
 /**
  * Returns a promise that is fulfilled with array of provided promises when all provided promises have resolved (fulfill or reject).
@@ -20,7 +20,7 @@ function waitAll(
 	...rest:PromiseLike<any>[]):ArrayPromise<PromiseLike<any>>
 {
 	if(!first && !rest.length) throw new ArgumentNullException("promises");
-	const promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy!
+	const promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copyArray!
 	if(!promises.length || promises.every(v => !v)) return new ArrayPromise<any>(
 		r => r(promises), true); // it's a new empty, reuse it. :|
 

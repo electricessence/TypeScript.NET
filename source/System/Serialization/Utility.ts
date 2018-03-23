@@ -3,11 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Type from "../Types";
-import TypeOfValue from "../TypeOfValue";
+import TypeOfValue from "../Reflection/TypeOfValue";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ISerializable from "./ISerializable";
 import Primitive from "../Primitive";
+import hasMemberOfType from "../Reflection/hasMemberOfType";
 
 
 const EMPTY = '', TRUE = 'true', FALSE = 'false';
@@ -46,7 +46,7 @@ export function toString(
 
 export function isSerializable(instance:any):instance is ISerializable
 {
-	return Type.hasMemberOfType<ISerializable>(instance, 'serialize', TypeOfValue.Function);
+	return hasMemberOfType<ISerializable>(instance, 'serialize', TypeOfValue.Function);
 }
 
 export function toPrimitive(

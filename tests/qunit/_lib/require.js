@@ -1950,7 +1950,7 @@ var requirejs, require, define;
             //For some cache cases in IE 6-8, the script executes before the end
             //of the appendChild execution, so to tie an anonymous define
             //call to the module name (which is stored on the node), hold on
-            //to a reference to this node, but clear after the DOM insertion.
+            //to a reference to this node, but clearElements after the DOM insertion.
             currentlyAddingScript = node;
             if (baseElement) {
                 head.insertBefore(node, baseElement);

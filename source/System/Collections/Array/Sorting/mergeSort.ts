@@ -6,9 +6,9 @@
  */
 
 import Primitive from "../../../Primitive";
-import ArgumentNullException from "../../../Exceptions/ArgumentNullException";
-import {initialize} from "../Utility";
 import ArrayLikeWritable from "../ArrayLikeWritable";
+import initializeArray from "../initializeArray";
+import ArgumentNullException from "../../../Exceptions/ArgumentNullException";
 
 /**
  * Merge internalSort O(n log (n))
@@ -16,11 +16,11 @@ import ArrayLikeWritable from "../ArrayLikeWritable";
  * @param target
  * @returns {number[]}
  */
-export function mergeSort<T extends Primitive, TArray extends ArrayLikeWritable<T>>(target:TArray):TArray
+export default function mergeSort<T extends Primitive, TArray extends ArrayLikeWritable<T>>(target:TArray):TArray
 {
 	if(!target) throw new ArgumentNullException("target");
 	const len = target.length;
-	return len<2 ? target : sort(target, 0, len, initialize<T>(len));
+	return len<2 ? target : sort(target, 0, len, initializeArray<T>(len));
 }
 
 function sort<T extends Primitive, TArray extends ArrayLikeWritable<T>>(

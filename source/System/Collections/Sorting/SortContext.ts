@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import * as Values from "../../Compare";
 import {Comparison} from "../../FunctionTypes";
 import IComparer from "../../IComparer";
 import Order from "./Order";
+import compare from "../../Comparison/compare";
 
 export default class SortContext<T> implements IComparer<T>
 {
@@ -20,7 +20,7 @@ export default class SortContext<T> implements IComparer<T>
 
 	constructor(
 		protected _next:IComparer<T>|null,
-		protected _comparer:Comparison<T> = Values.compare,
+		protected _comparer:Comparison<T> = compare,
 		protected _order:Order = Order.Ascending)
 	{
 	}

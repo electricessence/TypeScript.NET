@@ -3,12 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {TaskHandlerBase} from "./TaskHandlerBase";
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
 import {Func} from "../../FunctionTypes";
-import {Lazy} from "../../Lazy";
-import {ITaskState} from "./ITaskState";
-import {TaskStatus} from "./TaskStatus";
+import ITaskState from "./ITaskState";
+import TaskHandlerBase from "./TaskHandlerBase";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import Lazy from "../../Lazy";
+import TaskStatus from "./TaskStatus";
 
 /**
  * A simplified synchronous (but deferrable) version of Task<T>

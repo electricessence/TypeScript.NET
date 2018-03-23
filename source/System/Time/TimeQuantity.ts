@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {areEqual, compare} from "../Compare";
 import TimeUnit from "./TimeUnit";
 import {Milliseconds, Ticks} from "./HowMany";
 import IEquatable from "../IEquatable";
@@ -11,6 +10,8 @@ import IComparable from "../IComparable";
 import ITimeQuantity from "./ITimeQuantity";
 import ITimeMeasurement from "./ITimeMeasurement";
 import Lazy from "../Lazy";
+import compare from "../Comparison/compare";
+import areEqual from "../Comparison/areEqual";
 
 /**
  * This class provides a simple means for storing and calculating time quantities.

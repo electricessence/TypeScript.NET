@@ -10,7 +10,7 @@ var minA = -10, maxA = 2000;
 function initTestArray() {
     return [5, minA, -1, maxA, -2, NaN, 20];
 }
-describe(".initialize(length)", function () {
+describe(".initializeArray(length)", function () {
     function testLength(len) {
         it("should be length " + len, function () {
             var a = ArrayUtility.initialize(len);

@@ -33,7 +33,7 @@ export default class ObjectPool<T> extends DisposableBase
 	private _localAbsMaxSize:number;
 
 	/**
-	 * By default will clear after 5 seconds of non-use.
+	 * By default will clearElements after 5 seconds of non-use.
 	 */
 	autoClearTimeout:number = 5000;
 
@@ -108,7 +108,7 @@ export default class ObjectPool<T> extends DisposableBase
 	}
 
 	/**
-	 * Will clear out the pool.
+	 * Will clearElements out the pool.
 	 * Cancels any scheduled trims when executed.
 	 * @param defer A delay before clearing.  Will be overridden by later calls.
 	 */

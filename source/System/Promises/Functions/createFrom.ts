@@ -3,10 +3,9 @@
  * Licensing: MIT
  */
 
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
 import {Then} from "../PromiseTypes";
-import PromiseBase from "../PromiseBase";
 import PromiseWrapper from "../PromiseWrapper";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
 
 /**
  * A function that acts like a 'then' method (aka then-able) can be extended by providing a function that takes an onFulfill and onReject.

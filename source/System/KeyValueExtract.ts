@@ -6,7 +6,7 @@
 import ArgumentException from "./Exceptions/ArgumentException";
 import ArgumentNullException from "./Exceptions/ArgumentNullException";
 import {IKeyValuePair, KeyValuePair} from "./KeyValuePair";
-import Type from "./Types";
+import isArrayLike from "./Reflection/isArrayLike";
 
 const
 	VOID0:undefined                  = void 0,
@@ -59,7 +59,7 @@ export default function extractKeyValue<TKey, TValue, TResult>(
 
 
 	let key:TKey, value:TValue;
-	if(Type.isArrayLike(item))
+	if(isArrayLike(item))
 	{
 		assertTuple(item);
 		key = item[0];

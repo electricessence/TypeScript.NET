@@ -3,9 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Type from "../../Types";
-import {copy} from "./copy";
 import {Selector} from "../../FunctionTypes";
+import copyArray from "./copyArray";
 
 const VOID0:undefined = void 0;
 
@@ -22,14 +21,14 @@ export interface DispatchErrorHandler
  * @param payload
  * @param trap
  */
-export function dispatch<T>(
+function dispatch<T>(
 	listeners:ArrayLike<Selector<T,any>>,
 	payload:T, trap?:boolean|DispatchErrorHandler):void
 {
-	dispatch.unsafe(copy(listeners), payload, trap);
+	dispatch.unsafe(copyArray(listeners), payload, trap);
 }
 
-export module dispatch {
+module dispatch {
 
 	/**
 	 * Simply takes a payload and passes it to all the listeners.
@@ -70,7 +69,7 @@ export module dispatch {
 				{
 					if(!trap)
 						throw ex;
-					else if(Type.isFunction(trap))
+					else if(typeof trap=='function')
 						trap(ex, i);
 				}
 			}
@@ -93,7 +92,7 @@ export module dispatch {
 
 		if(!listeners) return <any>listeners;
 		// Reuse the arrayCopy as the array result.
-		const result:any[] = copy(listeners);
+		const result:any[] = copyArray(listeners);
 		if(listeners.length)
 		{
 
@@ -111,7 +110,7 @@ export module dispatch {
 					result[i] = VOID0;
 					if(!trap)
 						throw ex;
-					else if(Type.isFunction(trap))
+					else if(typeof trap=='function')
 						trap(ex, i);
 				}
 			}

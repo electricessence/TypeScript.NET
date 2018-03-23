@@ -4,9 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {areEqual as areEqualValues, compare as compareValues} from "../System/Compare";
-import {copy} from "../System/Collections/Array/copy";
-import * as Arrays from "../System/Collections/Array/Compare";
 import * as enumUtil from "../System/Collections/Enumeration/Enumerator";
 import {
 	isEnumerable,
@@ -15,7 +12,6 @@ import {
 	throwIfEndless
 } from "../System/Collections/Enumeration/Enumerator";
 import EmptyEnumerator from "../System/Collections/Enumeration/EmptyEnumerator";
-import Type from "../System/Types";
 import Integer from "../System/Integer";
 import BaseFunctions from "../System/Functions";
 import ArrayEnumerator from "../System/Collections/Enumeration/ArrayEnumerator";
@@ -51,12 +47,20 @@ import IndexEnumerator from "../System/Collections/Enumeration/IndexEnumerator";
 import Primitive from "../System/Primitive";
 import IteratorEnumerator from "../System/Collections/Enumeration/IteratorEnumerator";
 import ForEachEnumerable from "../System/Collections/Enumeration/ForEachEnumerable";
-import initialize from "../System/Collections/Array/initialize";
+import initialize from "../System/Collections/Array/initializeArray";
 import Random from "../System/Random";
 import InfiniteEnumerator, {InfiniteValueFactory} from "../System/Collections/Enumeration/InfiniteEnumerator";
 import LazyList from "../System/Collections/LazyList";
 import disposeSingle = dispose.single;
-import TypeOfValue from "../System/TypeOfValue";
+import TypeOfValue from "../System/Reflection/TypeOfValue";
+import areArraysEqual from "../System/Collections/Array/areArraysEqual";
+import isArrayLike from "../System/Reflection/isArrayLike";
+import areEqual from "../System/Comparison/areEqual";
+import isString from "../System/Reflection/isString";
+import {numberOrNaN} from "../System/Reflection/numberOrNaN";
+import compare from "../System/Comparison/compare";
+import copyArray from "../System/Collections/Array/copyArray";
+import isObject from "../System/Reflection/isObject";
 
 export const enum EnumerableAction
 {
@@ -485,7 +489,7 @@ export class InfiniteLinqEnumerable<T>
 								let value = resultSelector(<TNode>enumerator.current, len);
 								enumeratorStack[len++] = enumerator;
 								let c = childrenSelector(<T | TNode>enumerator.current);
-								let e = !Type.isString(c) && Enumerable.fromAny(c);
+								let e = !isString(c) && Enumerable.fromAny(c);
 								enumerator = e ? e.getEnumerator() : EmptyEnumerator;
 								return yielder.yieldReturn(value);
 							}
@@ -533,7 +537,7 @@ export class InfiniteLinqEnumerable<T>
 	{
 		return this.selectMany(entry =>
 		{
-			let e = !Type.isString(entry) && Enumerable.fromAny(entry);
+			let e = !isString(entry) && Enumerable.fromAny(entry);
 			return e ? e.flatten() : [entry];
 		});
 	}
@@ -911,7 +915,7 @@ export class InfiniteLinqEnumerable<T>
 							{
 								initial = false;
 							}
-							else if(areEqualValues(compareKey, key))
+							else if(areEqual(compareKey, key))
 							{
 								continue;
 							}
@@ -2269,9 +2273,9 @@ export class LinqEnumerable<T>
 		if(compareSelector)
 		{
 			const s = compareSelector(value);
-			return this.any(v => areEqualValues(compareSelector(v), s));
+			return this.any(v => areEqual(compareSelector(v), s));
 		}
-		return this.any(v => areEqualValues(v, value));
+		return this.any(v => areEqual(v, value));
 	}
 
 	// Originally has an overload for a predicate,
@@ -2284,7 +2288,7 @@ export class LinqEnumerable<T>
 			compareSelector
 				? (element:T, i:number) =>
 			{
-				if(areEqualValues(compareSelector(element, i), compareSelector(value, i), true))
+				if(areEqual(compareSelector(element, i), compareSelector(value, i), true))
 				{
 					found = i;
 					return false;
@@ -2293,7 +2297,7 @@ export class LinqEnumerable<T>
 				: (element:T, i:number) =>
 			{
 				// Why?  Because NaN doesn't equal NaN. :P
-				if(areEqualValues(element, value, true))
+				if(areEqual(element, value, true))
 				{
 					found = i;
 					return false;
@@ -2311,13 +2315,13 @@ export class LinqEnumerable<T>
 			compareSelector
 				? (element:T, i:number) =>
 			{
-				if(areEqualValues(compareSelector(element, i), compareSelector(value, i), true)) result
+				if(areEqual(compareSelector(element, i), compareSelector(value, i), true)) result
 					= i;
 			}
 
 				: (element:T, i:number) =>
 			{
-				if(areEqualValues(element, value, true)) result = i;
+				if(areEqual(element, value, true)) result = i;
 			});
 
 		return result;
@@ -2394,7 +2398,7 @@ export class LinqEnumerable<T>
 
 	sequenceEqual(
 		second:ForEachEnumerable<T>,
-		equalityComparer:EqualityComparison<T> = areEqualValues):boolean
+		equalityComparer:EqualityComparison<T> = areEqual):boolean
 	{
 		this.throwIfDisposed();
 
@@ -2601,7 +2605,7 @@ export class LinqEnumerable<T>
 						while((hasNext = enumerator.moveNext()))
 						{
 							c = <T>enumerator.current;
-							if(areEqualValues(compareKey, compareSelector(keySelector(c))))
+							if(areEqual(compareKey, compareSelector(keySelector(c))))
 								group[len++] = elementSelector!(c);
 							else
 								break;
@@ -2709,7 +2713,7 @@ export class LinqEnumerable<T>
 		return this.aggregate(<any>reduction, initialValue);
 	}
 
-	average(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
+	average(selector:SelectorWithIndex<T, number> = numberOrNaN):number
 	{
 		let count = 0;
 		const sum = this.sum((e, i) =>
@@ -2745,7 +2749,7 @@ export class LinqEnumerable<T>
 	}
 
 	// Addition...  Only works with numerical enumerations.
-	sum(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
+	sum(selector:SelectorWithIndex<T, number> = numberOrNaN):number
 	{
 		let sum = 0;
 
@@ -2773,7 +2777,7 @@ export class LinqEnumerable<T>
 	}
 
 	// Multiplication...
-	product(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
+	product(selector:SelectorWithIndex<T, number> = numberOrNaN):number
 	{
 		let result = 1, exists:boolean = false;
 
@@ -2808,7 +2812,7 @@ export class LinqEnumerable<T>
 	 * @param selector
 	 * @returns {number}
 	 */
-	quotient(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
+	quotient(selector:SelectorWithIndex<T, number> = numberOrNaN):number
 	{
 		let count = 0;
 		let result:number = NaN;
@@ -3141,10 +3145,10 @@ export class ArrayEnumerable<T>
 
 	sequenceEqual(
 		second:ForEachEnumerable<T>,
-		equalityComparer:EqualityComparison<T> = areEqualValues):boolean
+		equalityComparer:EqualityComparison<T> = areEqual):boolean
 	{
-		if(Type.isArrayLike(second))
-			return Arrays.areEqual(this.source, second, true, equalityComparer);
+		if(isArrayLike(second))
+			return areArraysEqual(this.source, second, true, equalityComparer);
 
 		if(second instanceof ArrayEnumerable)
 			return second.sequenceEqual(this.source, equalityComparer);
@@ -3243,7 +3247,7 @@ export class OrderedEnumerable<T, TOrderBy extends Comparable>
 		public keySelector:Selector<T, TOrderBy> | null,
 		public order:Order,
 		public parent?:OrderedEnumerable<T, any> | null,
-		public comparer:Comparison<T> = compareValues)
+		public comparer:Comparison<T> = compare)
 	{
 		super(NULL);
 		throwIfEndless(source && source.isEndless);
@@ -3449,12 +3453,12 @@ export module Enumerable
 		source:any,
 		defaultEnumerable?:LinqEnumerable<T>):LinqEnumerable<T> | InfiniteLinqEnumerable<T> | undefined
 	{
-		if(Type.isObject(source) || Type.isString(source))
+		if(isObject(source) || isString(source))
 		{
 			if(source instanceof InfiniteLinqEnumerable)
 				return source;
 
-			if(Type.isArrayLike<T>(source))
+			if(isArrayLike<T>(source))
 				return new ArrayEnumerable<T>(source);
 
 			if(isEnumerable<T>(source))
@@ -3469,7 +3473,7 @@ export module Enumerable
 			if(isIterator<T>(source))
 				return fromAny(new IteratorEnumerator(source));
 		}
-		else if(Type.isFunction(source))
+		else if(typeof source=='function')
 		{
 			return new InfiniteLinqEnumerable<T>(
 				() => new InfiniteEnumerator<T>(source));
@@ -3539,7 +3543,7 @@ export module Enumerable
 		if(!len || !isFinite(len))
 			throw new ArgumentOutOfRangeException('length', length);
 
-		return _choice(copy(values));
+		return _choice(copyArray(values));
 	}
 
 	export function chooseFrom<T>(arg:T, ...args:T[]):InfiniteLinqEnumerable<T>
@@ -3590,7 +3594,7 @@ export module Enumerable
 			throw new ArgumentOutOfRangeException('length', length);
 
 		// Make a copy to avoid modifying the collection as we go.
-		return _cycle(copy(values));
+		return _cycle(copyArray(values));
 	}
 
 	export function cycleThrough<T>(arg:T, ...args:T[]):InfiniteLinqEnumerable<T>

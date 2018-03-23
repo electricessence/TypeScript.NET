@@ -46,13 +46,13 @@
         var count;
         assertIsNumber(assert, count = c.count, 'count');
         if (c.count < 2)
-            throw "Can't assert '.copyTo()' or '.clear()' without at least (2) entries.";
+            throw "Can't assert '.copyArrayTo()' or '.clearElements()' without at least (2) entries.";
         var a = [];
         c.copyTo(a);
         assertIsNumber(assert, c.count, 'count');
         assert.equal(a.length, count, "An empty array's length should match the count if copied to.");
         c.clear();
-        assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
+        assert.equal(c.count, 0, "A collection's count should be zero after calling '.clearElements()'.");
         // Restore contents.
         for (var _i = 0, a_2 = a; _i < a_2.length; _i++) {
             var v1 = a_2[_i];
@@ -65,7 +65,7 @@
         c.copyTo(b, count + extraSize - 1);
         assert.equal(b.length, 2 * count + extraSize - 1, "An array's length should be equal to index+count if the count exceeds the length.");
         c.clear();
-        assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
+        assert.equal(c.count, 0, "A collection's count should be zero after calling '.clearElements()'.");
         // Restore contents.
         for (var _a = 0, a_3 = a; _a < a_3.length; _a++) {
             var v2 = a_3[_a];

@@ -4,8 +4,8 @@
 */
 
 import TypeInfo from "./TypeInfo";
-import {areEqual} from "./Compare";
-import Type from "./Types";
+import areEqual from "../Comparison/areEqual";
+import isArrayLike from "./isArrayLike";
 
 /**
  * A descriptor is simply a JSON tree that either has an actual value or a type that identifies what the expect type should be at that leaf in the tree.
@@ -60,7 +60,7 @@ export class TypeInfoHelper extends TypeInfo
 			return false;
 
 		// Check array contents and confirm intersections.
-		if(this.isArray && Type.isArrayLike(descriptor))
+		if(this.isArray && isArrayLike(descriptor))
 		{
 			let max = Math.min(descriptor.length, value.length);
 

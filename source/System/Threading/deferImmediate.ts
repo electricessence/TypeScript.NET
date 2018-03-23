@@ -11,7 +11,7 @@ import {ILinkedNode} from "../Collections/ILinkedListNode";
 import ICancellable from "./ICancellable";
 import ObjectPool from "../Disposable/ObjectPool";
 import {isNodeJS} from "../Environment";
-import TypeOfValue from "../TypeOfValue";
+import TypeOfValue from "../Reflection/TypeOfValue";
 
 declare module process
 {

@@ -10,11 +10,11 @@ import ArrayLikeWritable from "../ArrayLikeWritable";
 /**
  * https://en.wikipedia.org/wiki/Insertion_sort
  * @param target
- * @returns {T[]}
+ * @returns {[]}
  */
-export function insertionSort<T extends Primitive, TArray extends ArrayLikeWritable<T>>(target:TArray):TArray
+export default function insertionSort<T extends Primitive, TArray extends ArrayLikeWritable<T>>(target:TArray):TArray
 {
-	if(!target) throw new ArgumentNullException("target");
+	if(!target) throw new ArgumentNullException('target');
 	const len = target.length;
 
 	for(let i = 1; i<len; i++)

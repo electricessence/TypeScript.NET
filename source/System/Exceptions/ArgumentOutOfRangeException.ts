@@ -10,7 +10,7 @@ export {Error};
 
 export default class ArgumentOutOfRangeException extends ArgumentException
 {
-	actualValue:Primitive | null | undefined;
+	readonly actualValue:Primitive | null | undefined;
 
 	constructor(
 		paramName:string,

@@ -3,11 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Type from "../Types";
 import SetBase from "./SetBase";
 import IMap from "../../IMap";
-import {ILinkedNodeWithValue} from "./ILinkedListNode";
 import IEnumerableOrArray from "./IEnumerableOrArray";
+import {ILinkedNodeWithValue} from "./ILinkedListNode";
 import {Selector} from "../FunctionTypes";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 
@@ -23,7 +22,7 @@ extends SetBase<T>
 	constructor(source:IEnumerableOrArray<T>|Selector<T,string|number|symbol>|undefined, keyGenerator?:Selector<T,string|number|symbol>)
 	{
 		super();
-		if(Type.isFunction(source)) {
+		if(typeof source === "function") {
 			this._keyGenerator = source;
 		} else {
 			if(!keyGenerator)

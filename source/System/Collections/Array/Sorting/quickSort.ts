@@ -12,9 +12,9 @@ import ArrayLikeWritable from "../ArrayLikeWritable";
  * Quick internalSort O(n log (n))
  * Warning: Uses recursion.
  * @param target
- * @returns {T[]}
+ * @returns {[]}
  */
-export function quickSort<T extends Primitive, TArray extends ArrayLikeWritable<T>>(target:TArray):TArray
+export default function quickSort<T extends Primitive, TArray extends ArrayLikeWritable<T>>(target:TArray):TArray
 {
 	if(!target) throw new ArgumentNullException("target");
 	const len = target.length;

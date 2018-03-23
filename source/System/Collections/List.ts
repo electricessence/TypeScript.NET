@@ -3,18 +3,22 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {areEqual} from "../Compare";
-import {contains, copyTo, indexOf, remove, removeIndex} from "./Array/Utility";
-import {forEach} from "./Enumeration/Enumerator";
-import Type from "../Types";
-import CollectionBase from "./CollectionBase";
-import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
 import IEnumerator from "./Enumeration/IEnumerator";
 import IList from "./IList";
 import IEnumerateEach from "./Enumeration/IEnumerateEach";
 import IEnumerableOrArray from "./IEnumerableOrArray";
 import ArrayLikeWritable from "./Array/ArrayLikeWritable";
+import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
+import {forEach} from "./Enumeration/Enumerator";
+import CollectionBase from "./CollectionBase";
 import EnumeratorBase from "./Enumeration/EnumeratorBase";
+import isArrayLike from "../Reflection/isArrayLike";
+import areEqual from "../Comparison/areEqual";
+import removeElement from "./Array/removeElement";
+import indexOfElement from "./Array/indexOfElement";
+import removeElementByIndex from "./Array/removeElementByIndex";
+import copyArrayTo from "./Array/copyArrayTo";
+import containsElement from "./Array/containsElement";
 
 const VOID0:undefined = void 0;
 export class List<T>
@@ -59,7 +63,7 @@ export class List<T>
 
 	protected _removeInternal(entry:T, max:number = Infinity):number
 	{
-		return remove(
+		return removeElement(
 			this._source, entry, max,
 			this._equalityComparer);
 	}
@@ -73,7 +77,7 @@ export class List<T>
 
 	protected _importEntries(entries:IEnumerableOrArray<T> | null | undefined):number
 	{
-		if(Type.isArrayLike(entries))
+		if(isArrayLike(entries))
 		{
 			let len = entries.length;
 			if(!len) return 0;
@@ -112,7 +116,7 @@ export class List<T>
 
 	indexOf(item:T):number
 	{
-		return indexOf(
+		return indexOfElement(
 			this._source, item,
 			this._equalityComparer);
 	}
@@ -134,7 +138,7 @@ export class List<T>
 
 	removeAt(index:number):boolean
 	{
-		if(removeIndex(this._source, index))
+		if(removeElementByIndex(this._source, index))
 		{
 			this._signalModification(true);
 			return true;
@@ -144,14 +148,14 @@ export class List<T>
 
 	contains(item:T):boolean
 	{
-		return contains(
+		return containsElement(
 			this._source, item,
 			this._equalityComparer);
 	}
 
 	copyTo<TTarget extends ArrayLikeWritable<any>>(target:TTarget, index?:number):TTarget
 	{
-		return copyTo(this._source, target, 0, index);
+		return copyArrayTo(this._source, target, 0, index);
 	}
 
 	getEnumerator():IEnumerator<T>

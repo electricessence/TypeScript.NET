@@ -3,18 +3,18 @@
  * Licensing: MIT
  */
 
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
-import {PromiseCollection} from "../PromiseCollection";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import PromiseCollection from "../PromiseCollection";
 
 /**
  * Takes a set of promises and returns a PromiseCollection.
  * @param promises
  */
-function group<T>(promises:PromiseLike<T>[]):PromiseCollection<T>
-function group<T>(
+export default function group<T>(promises:PromiseLike<T>[]):PromiseCollection<T>
+export default function group<T>(
 	promise:PromiseLike<T>,
 	...rest:PromiseLike<T>[]):PromiseCollection<T>
-function group(
+export default function group(
 	first:PromiseLike<any> | PromiseLike<any>[],
 	...rest:PromiseLike<any>[]):PromiseCollection<any>
 {
@@ -25,5 +25,3 @@ function group(
 			.concat(rest)
 	);
 }
-
-export default group;

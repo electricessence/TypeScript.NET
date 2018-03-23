@@ -4,7 +4,7 @@
  */
 
 import {forEach} from "./Enumeration/Enumerator";
-import {areEqual} from "../Compare";
+import areEqual from "../Comparison/areEqual";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import DisposableBase from "../Disposable/DisposableBase";

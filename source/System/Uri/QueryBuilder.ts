@@ -3,12 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Type from "../Types";
 import OrderedStringKeyDictionary from "../Collections/Dictionaries/OrderedStringKeyDictionary";
 import {isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
 import UriComponent from "./UriComponent";
 import QueryParam from "./QueryParam";
 import {encode, parse} from "./QueryParams";
+import isString from "../Reflection/isString";
 
 /**
  * Provides a means for parsing and building a set of parameters.
@@ -40,7 +40,7 @@ export class QueryBuilder extends OrderedStringKeyDictionary<UriComponent.Value|
 		decodeValues:boolean = true):QueryBuilder
 	{
 
-		if(Type.isString(query))
+		if(isString(query))
 		{
 			this.importFromString(<string>query, decodeValues);
 		}

@@ -1,8 +1,7 @@
-import {createComparer} from "./Sorting/createComparer";
-import {quickSort} from "./Sorting/quickSort";
-import Order from "../Sorting/Order";
 import {Selector} from "../../FunctionTypes";
-import Primitive from "../../Primitive";
+import Primitive from "../../Primitive";import createComparer from "./Sorting/createComparer";
+import quickSort from "./Sorting/quickSort";
+import Order from "../Sorting/Order";
 
 export {
 	quickSort,

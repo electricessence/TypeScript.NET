@@ -4,7 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Type from "../Types";
 import TimeUnit from "./TimeUnit";
 import ClockTime from "./ClockTime";
 import TimeQuantity from "./TimeQuantity";
@@ -12,6 +11,7 @@ import {Milliseconds, Ticks} from "./HowMany";
 import ITimeMeasurement from "./ITimeMeasurement";
 import ITimeQuantity from "./ITimeQuantity";
 import Lazy from "../Lazy";
+import isNumber from "../Reflection/isNumber";
 
 /**
  * TimeSpan expands on TimeQuantity to provide an class that is similar to .NET's TimeSpan including many useful static methods.
@@ -84,7 +84,7 @@ export default class TimeSpan extends TimeQuantity implements ITimeMeasurement
 
 	add(other:ITimeQuantity):TimeSpan
 	{
-		if(Type.isNumber(other))
+		if(isNumber(other))
 			throw new Error(
 				"Use .addUnit(value:number,units:TimeUnit) to add a numerical value amount.  Default units are milliseconds.\n" +
 				".add only supports quantifiable time values (ITimeTotal)."

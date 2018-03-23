@@ -4,19 +4,18 @@
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
 
-import Type from "../../Types";
-import Worker from "../Worker";
-import {WorkerLike} from "../WorkerType";
-import {deferImmediate} from "../deferImmediate";
-import {isNodeJS} from "../../Environment";
-import ObjectPool from "../../Disposable/ObjectPool";
 import IMap from "../../../IMap";
+import {WorkerLike} from "../WorkerType";
+import Worker from "../Worker";
+import {isNodeJS} from "../../Environment";
+import {deferImmediate} from "../deferImmediate";
+import ObjectPool from "../../Disposable/ObjectPool";
 import map from "../../Promises/Functions/map";
 import TSDNPromise from "../../Promises/Promise";
 import PromiseCollection from "../../Promises/PromiseCollection";
 import ArrayPromise from "../../Promises/ArrayPromise";
 import PromiseBase from "../../Promises/PromiseBase";
-import TypeOfValue from "../../TypeOfValue";
+import TypeOfValue from "../../Reflection/TypeOfValue";
 
 declare const navigator:any;
 declare const __dirname:string;

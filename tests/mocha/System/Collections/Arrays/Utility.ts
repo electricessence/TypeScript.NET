@@ -13,7 +13,7 @@ function initTestArray()
 	return [5, minA, -1, maxA, -2, NaN, 20]
 }
 
-describe(".initialize(length)", ()=>
+describe(".initializeArray(length)", ()=>
 {
 	function testLength(len:number):void
 	{

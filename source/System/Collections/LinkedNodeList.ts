@@ -3,18 +3,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {format} from "../Text/Utility";
+import ArrayLikeWritable from "./Array/ArrayLikeWritable";
+import IDisposable from "../Disposable/IDisposable";
+import IEnumerateEach from "./Enumeration/IEnumerateEach";
+import IEnumerator from "./Enumeration/IEnumerator";
+import {ILinkedNodeList} from "./ILinkedList";
+import {ILinkedNode, ILinkedNodeWithValue} from "./ILinkedListNode";
+import {ActionWithIndex, PredicateWithIndex, Selector, SelectorWithIndex} from "../FunctionTypes";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentException from "../Exceptions/ArgumentException";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import EnumeratorBase from "./Enumeration/EnumeratorBase";
-import {ILinkedNode, ILinkedNodeWithValue} from "./ILinkedListNode";
-import IEnumerateEach from "./Enumeration/IEnumerateEach";
-import IDisposable from "../Disposable/IDisposable";
-import {ILinkedNodeList} from "./ILinkedList";
-import IEnumerator from "./Enumeration/IEnumerator";
-import {ActionWithIndex, PredicateWithIndex, Selector, SelectorWithIndex} from "../FunctionTypes";
-import ArrayLikeWritable from "./Array/ArrayLikeWritable";
+import {format} from "../Text/supplant";
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
@@ -305,7 +305,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 			throw new ArgumentException(
 				'node', format(
 					"Provided node is has no {0} reference but is not the {1} node!",
-					a ? "previous" : "next", a ? "first" : "last"
+					a ? "previous" : "next",
+					a ? "first" : "last"
 				)
 			);
 		}

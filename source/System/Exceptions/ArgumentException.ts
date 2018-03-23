@@ -5,7 +5,7 @@
  */
 
 import SystemException, {Error} from "./SystemException";
-import {trim} from "../Text/Utility";
+import trim from "../Text/trim";
 export {Error};
 
 export default class ArgumentException extends SystemException

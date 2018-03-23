@@ -4,7 +4,7 @@
  */
 
 import Integer from "./Integer";
-import arrayInit from "./Collections/Array/initialize";
+import arrayInit from "./Collections/Array/initializeArray";
 import arrayShuffle from "./Collections/Array/shuffle";
 import ArrayLikeWritable from "./Collections/Array/ArrayLikeWritable";
 import assert = Integer.assert;
@@ -164,7 +164,7 @@ module Random
 	}
 
 	/**
-	 * Creates a copy of an array-like  and returns it shuffled.
+	 * Creates a copyArray of an array-like  and returns it shuffled.
 	 * @param source
 	 * @returns {T[]}
 	 */

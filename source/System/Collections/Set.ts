@@ -8,7 +8,7 @@ import {ISymbolizable} from "./Dictionaries/IDictionary";
 import {HashSet} from "./HashSet";
 import Primitive from "../Primitive";
 import IEnumerableOrArray from "./IEnumerableOrArray";
-import TypeOfValue from "../TypeOfValue";
+import TypeOfValue from "../Reflection/TypeOfValue";
 
 function getId(obj:any):string|number|symbol {
 	return getIdentifier(obj, typeof obj!=TypeOfValue.Boolean);

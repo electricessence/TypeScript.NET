@@ -3,11 +3,11 @@
  * Licensing: MIT
  */
 
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
 import isPromise from "./isPromise";
 import PromiseBase from "../PromiseBase";
 import PromiseWrapper from "../PromiseWrapper";
 import {Fulfilled} from "../Promise";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
 
 /**
  * Takes any Promise-Like object and ensures an extended version of it from this module.

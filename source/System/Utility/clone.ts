@@ -3,19 +3,20 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Type from "../Types";
 import {JsonEntry} from "../../JSON";
-import {copy} from "../Collections/Array/copy";
+import isObject from "../Reflection/isObject";
+import copyArray from "../Collections/Array/copyArray";
+import isArrayLike from "../Reflection/isArrayLike";
 
 export default function clone(source:JsonEntry, depth:number = 0):any
 {
-	if(depth<0 || !source || !Type.isObject(source))
+	if(depth<0 || !source || !isObject(source))
 		return source;
 
-	if(Type.isArrayLike(source))
+	if(isArrayLike(source))
 	{
-		// Make a copy first just in case there's some weird references.
-		const result = copy(source);
+		// Make a copyArray first just in case there's some weird references.
+		const result = copyArray(source);
 		if(depth>0)
 		{
 			const len = source.length;

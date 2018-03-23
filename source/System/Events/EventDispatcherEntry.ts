@@ -3,15 +3,16 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Type from "../Types";
 import DisposableBase from "../Disposable/DisposableBase";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import ArgumentException from "../Exceptions/ArgumentException";
-import {areEquivalent} from "../Compare";
 import IEventListener from "./IEventListener";
 import IEquatable from "../IEquatable";
 import {Closure} from "../FunctionTypes";
-import TypeOfValue from "../TypeOfValue";
+import TypeOfValue from "../Reflection/TypeOfValue";
+import hasMemberOfType from "../Reflection/hasMemberOfType";
+import {areEquivalent} from "../Comparison/areEquivalent";
+import isObject from "../Reflection/isObject";
 
 const NAME = "EventDispatcherEntry";
 export default class EventDispatcherEntry<TParams>
@@ -28,7 +29,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 
 		if(!listener)
 			throw new ArgumentNullException('listener');
-		if(Type.isObject(listener) && !Type.hasMemberOfType(listener, "handleEvent", TypeOfValue.Function))
+		if(isObject(listener) && !hasMemberOfType(listener, "handleEvent", TypeOfValue.Function))
 			throw new ArgumentException('listener', "is invalid type.  Must be a function or an object with 'handleEvent'.");
 
 		const _ = this;
@@ -56,7 +57,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 		const l = _.listener, d = l && e.type==_.type;
 		if(d)
 		{
-			if(Type.isFunction(l))
+			if(typeof l=='function')
 				(<any>_).listener(e); // Use 'this' to ensure call reference.
 			else
 				(<EventListenerObject>l).handleEvent(e);

@@ -3,11 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Type} from "../Types";
-import {ITimeStamp} from "./ITimeStamp";
 import {Ticks} from "./HowMany";
-import {IDateTime} from "./IDateTime";
 import {Gregorian} from "./Calendars";
+import ITimeStamp from "./ITimeStamp";
+import IDateTime from "./IDateTime";
+import hasMember from "../Reflection/hasMember";
 
 /**
  * An alternative to Date or DateTime.  Is a model representing the exact date and time.
@@ -39,7 +39,7 @@ export class TimeStamp implements ITimeStamp, IDateTime
 
 	static from(d:Date|IDateTime):TimeStamp
 	{
-		if(!(d instanceof Date) && Type.hasMember(d, 'toJsDate'))
+		if(!(d instanceof Date) && hasMember(d, 'toJsDate'))
 			d = (<IDateTime>d).toJsDate();
 		if(d instanceof Date)
 		{

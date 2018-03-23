@@ -4,8 +4,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Type} from "../Types";
-import {IDisposable} from "../Disposable/IDisposable";
+import IDisposable from "../Disposable/IDisposable";
+import TypeOfValue from "../Reflection/TypeOfValue";
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
@@ -20,7 +20,7 @@ import {IDisposable} from "../Disposable/IDisposable";
 const EMPTY = "";
 const NEWLINE = "\r\n";
 
-export class StringBuilder implements IDisposable
+export default class StringBuilder implements IDisposable
 	// Adding IDisposable allows for use with System.using();
 	// ... and since this may end up being a large array container, might be a good idea to allow for flexible cleanup.
 {
@@ -132,4 +132,3 @@ export class StringBuilder implements IDisposable
 
 }
 
-export default StringBuilder;

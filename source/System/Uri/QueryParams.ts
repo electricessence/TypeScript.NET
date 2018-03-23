@@ -6,14 +6,14 @@
 import * as Serialize from "../Serialization/Utility";
 import UriComponent from "./UriComponent";
 import QueryParam from "./QueryParam";
-import Type from "../Types";
 import extractKeyValue from "../KeyValueExtract";
 import {forEach, isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
 import IMap from "../../IMap";
 import Primitive from "../Primitive";
 import {IStringKeyValuePair} from "../KeyValuePair";
 import IEnumerableOrArray from "../Collections/IEnumerableOrArray";
-import TypeOfValue from "../TypeOfValue";
+import TypeOfValue from "../Reflection/TypeOfValue";
+import hasMemberOfType from "../Reflection/hasMemberOfType";
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.
@@ -114,7 +114,7 @@ export function encodeValue(value:UriComponent.Value):string
  */
 export function isUriComponentFormattable(instance:any):instance is UriComponent.Formattable
 {
-	return Type.hasMemberOfType<UriComponent.Formattable>(instance, TO_URI_COMPONENT, TypeOfValue.Function);
+	return hasMemberOfType<UriComponent.Formattable>(instance, TO_URI_COMPONENT, TypeOfValue.Function);
 }
 
 /**

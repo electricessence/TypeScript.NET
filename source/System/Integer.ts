@@ -3,9 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
+import TypeOfValue from "./Reflection/TypeOfValue";
 import ArgumentException from "./Exceptions/ArgumentException";
-import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeException";
-import TypeOfValue from "./TypeOfValue";
+import ArgumentLessThanMinimumException from "./Exceptions/ArgumentLessThanMinimumException";
 
 function Integer(n:number):number
 {
@@ -80,7 +80,7 @@ module Integer
 	{
 		let i = assert(n, argumentName) && n>=0;
 		if(!i)
-			throw new ArgumentOutOfRangeException(argumentName || 'n', n, "Must be a valid integer greater than or equal to zero.");
+			throw new ArgumentLessThanMinimumException(argumentName || 'n', n, 0);
 		return i;
 	}
 
@@ -94,7 +94,7 @@ module Integer
 	{
 		let i = assert(n, argumentName) && n>0;
 		if(!i)
-			throw new ArgumentOutOfRangeException(argumentName || 'n', n, "Must be greater than zero.");
+			throw new ArgumentLessThanMinimumException(argumentName || 'n', n, 1);
 		return i;
 	}
 

@@ -4,7 +4,7 @@
  */
 
 import IDisposable from "./IDisposable";
-import TypeOfValue from "../TypeOfValue";
+import TypeOfValue from "../Reflection/TypeOfValue";
 
 // Allows for more flexible parameters.
 export type DisposableItem = IDisposable|null|undefined;
