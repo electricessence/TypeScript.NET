@@ -4,13 +4,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var assert = require("assert");
 require("mocha");
 var ClockTime_1 = require("../../../../dist/commonjs/System/Time/ClockTime");
+var HowMany_1 = require("../../../../dist/commonjs/System/Time/HowMany");
 var Random_1 = require("../../../../dist/commonjs/System/Random");
 var days = Random_1.Random.integer(364) + 1, hour = Random_1.Random.integer(24), minute = Random_1.Random.integer(60), second = Random_1.Random.integer(60), millisecond = Random_1.Random.integer(1000);
 var c1 = new ClockTime_1.default(hour, minute, second, millisecond);
-var c2 = new ClockTime_1.default(days * 86400000 /* Day */
-    + hour * 3600000 /* Hour */
-    + minute * 60000 /* Minute */
-    + second * 1000 /* Second */
+var c2 = new ClockTime_1.default(days * HowMany_1.Milliseconds.Per.Day
+    + hour * HowMany_1.Milliseconds.Per.Hour
+    + minute * HowMany_1.Milliseconds.Per.Minute
+    + second * HowMany_1.Milliseconds.Per.Second
     + millisecond);
 describe(".", function () {
     it('should match constructor values', function () {

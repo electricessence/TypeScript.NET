@@ -1,0 +1,1 @@
+{"version":3,"file":"trimEntries.js","sourceRoot":"","sources":["../../../../source/Collections/Map/trimEntries.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAKH;;;;GAIG;AACH,MAAM,sBAAiD,MAAgB,EAAE,MAAc;IAEtF,KAAI,IAAM,GAAG,IAAI,MAAM,EACvB;QACC,IAAG,CAAC,MAAM,CAAC,cAAc,CAAC,GAAG,CAAC,EAC9B;YACC,OAAO,MAAM,CAAC,GAAG,CAAC,CAAC;SACnB;KACD;IACD,qBAAqB;AACtB,CAAC"}

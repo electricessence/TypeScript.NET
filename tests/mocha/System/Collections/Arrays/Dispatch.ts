@@ -3,7 +3,7 @@ import * as assert from "assert";
 import {dispatch} from "../../../../../dist/commonjs/System/Collections/Array/Dispatch";
 import {Action} from "../../../../../dist/commonjs/System/FunctionTypes";
 
-it("should apply closures in order", ()=>
+it("should applyEntries closures in order", ()=>
 {
 	let result = 0;
 	const a:Action<number>[] = [

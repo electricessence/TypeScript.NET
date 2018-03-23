@@ -5,17 +5,17 @@ var assert = require("assert");
 var TextUtility = require("../../../../dist/commonjs/System/Text/Utility");
 var s1 = "	 HI  ";
 var s2 = ".-.-xHIX//\\";
-describe('.trim()', function () {
+describe('.trimEntries()', function () {
     it("should leave a string without leading or trailing whitespace", function () {
         assert.equal(TextUtility.trim(s1), "HI");
     });
-    it("should leave a string without leading or trailing trim characters (string)", function () {
+    it("should leave a string without leading or trailing trimEntries characters (string)", function () {
         assert.equal(TextUtility.trim(s2, ".-/\\x", true), "HI");
     });
-    it("should leave a string without leading or trailing trim characters (array)", function () {
+    it("should leave a string without leading or trailing trimEntries characters (array)", function () {
         assert.equal(TextUtility.trim(s2, [".", "-", "/", "\\", "x", "X"]), "HI");
     });
-    it("should leave a string untouched if no trim characters", function () {
+    it("should leave a string untouched if no trimEntries characters", function () {
         assert.equal(TextUtility.trim(s2, ""), s2);
     });
 });

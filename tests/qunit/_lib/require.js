@@ -262,7 +262,7 @@ var requirejs, require, define;
          * @param {String} name the relative name
          * @param {String} baseName a real name that the name arg is relative
          * to.
-         * @param {Boolean} applyMap apply the map config to the value. Should
+         * @param {Boolean} applyMap applyEntries the map config to the value. Should
          * only be done if this normalization is for a dependency ID.
          * @returns {String} normalized name
          */
@@ -408,7 +408,7 @@ var requirejs, require, define;
          * for the module name, used to resolve relative names.
          * @param {Boolean} isNormalized: is the ID already normalized.
          * This is true if this call is done for a define() module ID.
-         * @param {Boolean} applyMap: apply the map config to the ID.
+         * @param {Boolean} applyMap: applyEntries the map config to the ID.
          * Should only be true if this map is for a dependency.
          *
          * @returns {Object}

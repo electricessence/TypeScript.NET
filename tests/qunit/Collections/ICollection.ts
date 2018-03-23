@@ -7,7 +7,7 @@ import {ICollection} from "../../../dist/amd/System/Collections/ICollection";
 import {CollectionBase} from "../../../dist/amd/System/Collections/CollectionBase";
 
 /*
- * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.
+ * This is a reusable set of unit test for use with any ICollection to ensureEntries all features of that ICollection function properly.
  */
 
 // export function General<T>(

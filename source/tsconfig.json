@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "noEmit": true
+    "strict": true,
+    "noEmit": true,
+    "watch": true
   }
 }

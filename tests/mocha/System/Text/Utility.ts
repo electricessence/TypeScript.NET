@@ -4,19 +4,19 @@ import * as TextUtility from "../../../../dist/commonjs/System/Text/Utility";
 
 const s1 = "	 HI  ";
 const s2 = ".-.-xHIX//\\";
-describe('.trim()', () => {
+describe('.trimEntries()', () => {
 	it("should leave a string without leading or trailing whitespace", () => {
 		assert.equal(TextUtility.trim(s1), "HI");
 	});
-	it("should leave a string without leading or trailing trim characters (string)", () => {
+	it("should leave a string without leading or trailing trimEntries characters (string)", () => {
 		assert.equal(TextUtility.trim(s2, ".-/\\x", true), "HI");
 	});
 
-	it("should leave a string without leading or trailing trim characters (array)", () => {
+	it("should leave a string without leading or trailing trimEntries characters (array)", () => {
 		assert.equal(TextUtility.trim(s2, [".", "-", "/", "\\", "x", "X"]), "HI");
 	});
 
-	it("should leave a string untouched if no trim characters", () => {
+	it("should leave a string untouched if no trimEntries characters", () => {
 		assert.equal(TextUtility.trim(s2, ""), s2);
 	});
 });

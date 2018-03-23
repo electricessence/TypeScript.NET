@@ -1,0 +1,1 @@
+{"version":3,"file":"isPrimitiveOrSymbol.js","sourceRoot":"","sources":["../../../source/Reflection/isPrimitiveOrSymbol.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAKH,OAAO,WAAW,MAAM,eAAe,CAAC;AAkBxC,MAAM,CAAC,OAAO,8BACb,KAAS,EACT,cAA8B;IAA9B,+BAAA,EAAA,sBAA8B;IAC9B,OAAO,OAAO,KAAK,0BAAqB,CAAC,CAAC,CAAC,IAAI,CAAC,CAAC,CAAC,WAAW,CAAC,KAAK,EAAE,cAAc,CAAC,CAAC;AACtF,CAAC"}

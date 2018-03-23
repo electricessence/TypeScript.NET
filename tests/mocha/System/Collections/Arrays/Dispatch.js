@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 var Dispatch_1 = require("../../../../../dist/commonjs/System/Collections/Array/Dispatch");
-it("should apply closures in order", function () {
+it("should applyEntries closures in order", function () {
     var result = 0;
     var a = [
         function (p) {

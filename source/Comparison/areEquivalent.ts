@@ -19,7 +19,7 @@ export function areEquivalent(
 	extraDepth:number = 0):boolean
 {
 
-	// Take a step by step approach to ensure efficiency.
+	// Take a step by step approach to ensureEntries efficiency.
 	if(areEqual(a, b, true)) return true;
 
 	if(a==null || b==null)

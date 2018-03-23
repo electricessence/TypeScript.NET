@@ -27,7 +27,7 @@ export default class ObjectPool<T> extends DisposableBase
 	private _autoFlusher:TaskHandler;
 
 	/**
-	 * A transient amount of object to exist over _maxSize until trim() is called.
+	 * A transient amount of object to exist over _maxSize until trimEntries() is called.
 	 * But any added objects over _localAbsMaxSize will be disposed immediately.
 	 */
 	private _localAbsMaxSize:number;
@@ -87,7 +87,7 @@ export default class ObjectPool<T> extends DisposableBase
 	}
 
 	/**
-	 * Will trim ensure the pool is less than the maxSize.
+	 * Will trimEntries ensure the pool is less than the maxSize.
 	 * @param defer A delay before trimming.  Will be overridden by later calls.
 	 */
 	trim(defer?:number):void

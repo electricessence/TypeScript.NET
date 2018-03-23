@@ -1809,7 +1809,7 @@ QUnit.equiv = ( function() {
 			parents.push( a );
 			parentsB.push( b );
 
-			// Be strict: don't ensure hasOwnProperty and go deep
+			// Be strict: don't ensureEntries hasOwnProperty and go deep
 			for ( i in a ) {
 				loop = false;
 				for ( j = 0; j < parents.length; j++ ) {
@@ -2584,7 +2584,7 @@ function toolbarChanged() {
 	params[ field.name ] = value;
 	updatedUrl = setUrl( params );
 
-	// Check if we can apply the change without a page refresh
+	// Check if we can applyEntries the change without a page refresh
 	if ( "hidepassed" === field.name && "replaceState" in window.history ) {
 		QUnit.urlParams[ field.name ] = value;
 		config[ field.name ] = value || false;
@@ -4097,7 +4097,7 @@ QUnit.diff = ( function() {
 					if ( overlapLength1 >= deletion.length / 2 ||
 							overlapLength1 >= insertion.length / 2 ) {
 
-						// Overlap found.  Insert an equality and trim the surrounding edits.
+						// Overlap found.  Insert an equality and trimEntries the surrounding edits.
 						diffs.splice(
 							pointer,
 							0,
@@ -4113,7 +4113,7 @@ QUnit.diff = ( function() {
 							overlapLength2 >= insertion.length / 2 ) {
 
 						// Reverse overlap found.
-						// Insert an equality and swap and trim the surrounding edits.
+						// Insert an equality and swap and trimEntries the surrounding edits.
 						diffs.splice(
 							pointer,
 							0,
@@ -4278,7 +4278,7 @@ QUnit.diff = ( function() {
 	};
 
 	/**
-	 * Reorder and merge like edit sections.  Merge equalities.
+	 * Reorder and mergeEntries like edit sections.  Merge equalities.
 	 * Any edit section can move as long as it doesn't cross an equality.
 	 * @param {!Array.<!DiffMatchPatch.Diff>} diffs Array of diff tuples.
 	 */

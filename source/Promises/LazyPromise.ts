@@ -78,7 +78,7 @@ export class LazyPromise<T> extends TSDNPromise<T>
 		/*
 		 * If not triggered yet, then we create a special promise
 		 * that only requests the resolution from the parent promise
-		 * if a 'then' is called to ensure the lazy pattern.
+		 * if a 'then' is called to ensureEntries the lazy pattern.
 		 */
 		let pass:Closure;
 		let timedOut:boolean = false;
@@ -132,7 +132,7 @@ export class LazyPromise<T> extends TSDNPromise<T>
 		/*
 		 * If not triggered yet, then we create a special promise
 		 * that only requests the resolution from the parent promise
-		 * if a 'then' is called to ensure the lazy pattern.
+		 * if a 'then' is called to ensureEntries the lazy pattern.
 		 */
 		let pass:Closure;
 

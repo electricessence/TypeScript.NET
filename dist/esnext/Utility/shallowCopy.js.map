@@ -1,0 +1,1 @@
+{"version":3,"file":"shallowCopy.js","sourceRoot":"","sources":["../../../source/Utility/shallowCopy.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,MAAM,CAAC,OAAO,sBAAsB,MAAU,EAAE,MAAe;IAAf,uBAAA,EAAA,WAAe;IAE9D,IAAG,MAAM,EACT;QACC,KAAI,IAAI,CAAC,IAAI,MAAM,EACnB;YACC,oCAAoC;YACpC,MAAM,CAAC,CAAC,CAAC,GAAG,MAAM,CAAC,CAAC,CAAC,CAAC;SACtB;KACD;IAED,OAAO,MAAM,CAAC;AACf,CAAC"}

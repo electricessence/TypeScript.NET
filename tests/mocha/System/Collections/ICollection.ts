@@ -6,7 +6,7 @@ import NotImplementedException from "../../../../dist/commonjs/System/Exceptions
 import {ICollection} from "../../../../dist/commonjs/System/Collections/ICollection";
 
 /*
- * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.
+ * This is a reusable set of unit test for use with any ICollection to ensureEntries all features of that ICollection function properly.
  */
 
 //noinspection JSUnusedGlobalSymbols

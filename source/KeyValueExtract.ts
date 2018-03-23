@@ -9,22 +9,24 @@ import {IKeyValuePair, KeyValuePair} from "./KeyValuePair";
 import isArrayLike from "./Reflection/isArrayLike";
 
 const
-	VOID0:undefined                  = void 0,
-	DOT:string                 = '.',
-	KEY:string                 = 'key',
-	VALUE:string               = 'value',
-	ITEM:string                = 'item',
-	ITEM_1:string              = ITEM + '[1]',
-	ITEM_VALUE:string          = ITEM + DOT + VALUE,
+	VOID0:undefined   = void 0,
+	DOT:string        = '.',
+	KEY:string        = 'key',
+	VALUE:string      = 'value',
+	ITEM:string       = 'item',
+	ITEM_1:string     = ITEM + '[1]',
+	ITEM_VALUE:string = ITEM + DOT + VALUE;
+
+const
 	INVALID_KVP_MESSAGE:string = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.',
 	CANNOT_BE_UNDEFINED:string = 'Cannot equal undefined.';
 
-export function isKeyValuePair<TKey,TValue>(kvp:any):kvp is IKeyValuePair<TKey,TValue>
+export function isKeyValuePair<TKey, TValue>(kvp:any):kvp is IKeyValuePair<TKey, TValue>
 {
 	return kvp && kvp.hasOwnProperty(KEY) && kvp.hasOwnProperty(VALUE);
 }
 
-export function assertKey<TKey>(key:TKey, name:string = ITEM):TKey|never
+export function assertKey<TKey>(key:TKey, name:string = ITEM):TKey | never
 {
 	assertNotUndefined(key, name + DOT + KEY);
 	if(key===null)
@@ -34,7 +36,7 @@ export function assertKey<TKey>(key:TKey, name:string = ITEM):TKey|never
 }
 
 
-export function assertTuple(tuple:ArrayLike<any>, name:string = ITEM):void|never
+export function assertTuple(tuple:ArrayLike<any>, name:string = ITEM):void | never
 {
 	if(tuple.length!=2)
 		throw new ArgumentException(name, 'KeyValuePair tuples must be of length 2.');
@@ -43,7 +45,7 @@ export function assertTuple(tuple:ArrayLike<any>, name:string = ITEM):void|never
 }
 
 
-export function assertNotUndefined<T>(value:T, name:string):T|never
+export function assertNotUndefined<T>(value:T, name:string):T | never
 {
 	if(value===VOID0)
 		throw new ArgumentException(name, CANNOT_BE_UNDEFINED);
@@ -54,8 +56,7 @@ export function assertNotUndefined<T>(value:T, name:string):T|never
 
 export default function extractKeyValue<TKey, TValue, TResult>(
 	item:KeyValuePair<TKey, TValue>,
-	to:(key:TKey, value:TValue)=>TResult):TResult
-{
+	to:(key:TKey, value:TValue) => TResult):TResult {
 
 
 	let key:TKey, value:TValue;
@@ -65,7 +66,7 @@ export default function extractKeyValue<TKey, TValue, TResult>(
 		key = item[0];
 		value = assertNotUndefined(item[1], ITEM_1);
 	}
-	else if(isKeyValuePair<TKey,TValue>(item))
+	else if(isKeyValuePair<TKey, TValue>(item))
 	{
 		key = assertKey(item.key);
 		value = assertNotUndefined(item.value, ITEM_VALUE);

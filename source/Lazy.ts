@@ -8,7 +8,7 @@ import ILazy from "./ILazy";
 import ResolverBase from "./ResolverBase";
 
 
-// We need a non-resettable lazy to ensure it can be passed safely around.
+// We need a non-resettable lazy to ensureEntries it can be passed safely around.
 export default class Lazy<T> extends ResolverBase<T> implements ILazy<T>
 {
 

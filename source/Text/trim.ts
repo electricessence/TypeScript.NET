@@ -7,7 +7,7 @@ import escapeRegExp from "./escapeRegExp";
 const EMPTY:string = '';
 
 /**
- * Can trim any character or set of characters from the ends of a string.
+ * Can trimEntries any character or set of characters from the ends of a string.
  * Uses a Regex escapement to replace them with empty.
  * @param source
  * @param chars A string or array of characters desired to be trimmed.

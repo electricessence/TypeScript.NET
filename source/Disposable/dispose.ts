@@ -97,7 +97,7 @@ module dispose
 }
 
 /**
- * Just like in C# this 'using' function will ensure the passed disposable is disposed when the closure has finished.
+ * Just like in C# this 'using' function will ensureEntries the passed disposable is disposed when the closure has finished.
  *
  * Usage:
  * ```typescript
@@ -196,7 +196,7 @@ function disposeTheseInternal(
 				if(!success && index + 1<len)
 				{
 					/* If code is 'continued' by the debugger,
-					 * need to ensure the rest of the disposables are cared for. */
+					 * need to ensureEntries the rest of the disposables are cared for. */
 					disposeTheseInternal(disposables, false, index + 1);
 				}
 			}

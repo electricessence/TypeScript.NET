@@ -15,7 +15,7 @@
     var AU = require("../../../dist/amd/System/Collections/Array/Utility");
     var NotImplementedException_1 = require("../../../dist/amd/System/Exceptions/NotImplementedException");
     /*
-     * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.
+     * This is a reusable set of unit test for use with any ICollection to ensureEntries all features of that ICollection function properly.
      */
     // export function General<T>(
     // 	name:string,
