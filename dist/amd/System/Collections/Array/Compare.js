@@ -1,6 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-define(["require","exports","../../Compare","../../Types"],function(r,e,n,t){"use strict";function o(r,e){if(r&&e&&r===e||!r&&!e)return!0;if(!r||!e)return!1;var n=r.length;return n===e.length&&(0===n||n)}function a(r,e,o){if(void 0===e&&(e=!0),void 0===o&&(o=n.areEqual),!r)throw new Error("ArgumentNullException: 'arrays' cannot be null.");if(r.length<2)throw new Error("Cannot compare a set of arrays less than 2.");t.Type.isFunction(e)&&(o=e,e=!0);for(var a=r[0],u=1,f=r.length;u<f;u++)if(!i(a,r[u],e,o))return!1;return!0}function i(r,e,a,i){void 0===a&&(a=!0),void 0===i&&(i=n.areEqual);var u=o(r,e);if(t.Type.isBoolean(u))return u;t.Type.isFunction(a)&&(i=a,a=!0);for(var f=0;f<u;f++)if(!i(r[f],e[f],a))return!1;return!0}function u(r,e){if(!r||r.length<2)return r;var n,t=r.length;t>65536?n=new Array(t):(n=[],n.length=t);for(var o=0;o<t;o++)n[o]=r[o];return n.sort(e),n}function f(r,e,a){void 0===a&&(a=n.compare);var i=o(r,e);if(t.Type.isBoolean(i))return i;r=u(r,a),e=u(e,a);for(var f=0;f<i;f++)if(0!==a(r[f],e[f]))return!1;return!0}Object.defineProperty(e,"__esModule",{value:!0}),e.areAllEqual=a,e.areEqual=i,e.areEquivalent=f});
-//# sourceMappingURL=Compare.js.map

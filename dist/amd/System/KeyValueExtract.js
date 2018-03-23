@@ -1,6 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-define(["require","exports","./Exceptions/ArgumentException","./Exceptions/ArgumentNullException","./Types"],function(e,t,n,r,u){"use strict";function i(e){return e&&e.hasOwnProperty(c)&&e.hasOwnProperty(y)}function o(e,t){if(void 0===t&&(t=d),l(e,t+p+c),null===e)throw new r.ArgumentNullException(t+p+c);return e}function a(e,t){if(void 0===t&&(t=d),2!=e.length)throw new n.ArgumentException(t,"KeyValuePair tuples must be of length 2.");o(e[0],t)}function l(e,t){if(e===f)throw new n.ArgumentException(t,h);return e}function s(e,t){var r,s;if(u.Type.isArrayLike(e))a(e),r=e[0],s=l(e[1],w);else{if(!i(e))throw new n.ArgumentException(d,g);r=o(e.key),s=l(e.value,x)}return t(r,s)}Object.defineProperty(t,"__esModule",{value:!0});var f=void 0,p=".",c="key",y="value",d="item",w=d+"[1]",x=d+p+y,g="Invalid type.  Must be a KeyValuePair or Tuple of length 2.",h="Cannot equal undefined.";t.isKeyValuePair=i,t.assertKey=o,t.assertTuple=a,t.assertNotUndefined=l,t.extractKeyValue=s,t["default"]=s});
-//# sourceMappingURL=KeyValueExtract.js.map

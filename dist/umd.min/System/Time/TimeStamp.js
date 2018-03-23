@@ -1,6 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-!function(e){if("object"==typeof module&&"object"==typeof module.exports){var t=e(require,exports);void 0!==t&&(module.exports=t)}else"function"==typeof define&&define.amd&&define(["require","exports","../Types"],e)}(function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var o=e("../Types"),i=function(){function e(e,t,o,i,n,s,r,d){void 0===o&&(o=1),void 0===i&&(i=0),void 0===n&&(n=0),void 0===s&&(s=0),void 0===r&&(r=0),void 0===d&&(d=0),this.year=e,this.month=t,this.day=o,this.hour=i,this.minute=n,this.second=s,this.millisecond=r,this.tick=d,Object.freeze(this)}return e.prototype.toJsDate=function(){var e=this;return new Date(e.year,e.month,e.day,e.hour,e.minute,e.second,e.millisecond+e.tick/1e4)},e.from=function(t){if(t instanceof Date||!o.Type.hasMember(t,"toJsDate")||(t=t.toJsDate()),t instanceof Date)return new e(t.getFullYear(),t.getMonth(),t.getDate(),t.getHours(),t.getMinutes(),t.getSeconds(),t.getMilliseconds());throw Error("Invalid date type.")},e}();t.TimeStamp=i,t["default"]=i});
-//# sourceMappingURL=TimeStamp.js.map

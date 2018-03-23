@@ -1,6 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-define(["require","exports","./Types"],function(e,r,t){"use strict";function n(e,r,t){return void 0===t&&(t=!0),e===r||!t&&e==r||o(e)&&o(r)}function i(e,r,i){return void 0===i&&(i=!0),n(e,r,i)?0:e&&t.Type.hasMember(e,a)?e.compareTo(r):r&&t.Type.hasMember(r,a)?-r.compareTo(e):e>r||i&&(0===e&&0==r||null===e&&r===l)?1:r>e||i&&(0===r&&0==e||null===r&&e===l)?-1:NaN}function u(e,r,i,o){if(void 0===i&&(i=!0),void 0===o&&(o=0),n(e,r,!0))return!0;if(null==e||null==r)return!!i&&(t.Type.isObject(e)?!Object.keys(e).length:t.Type.isObject(r)?!Object.keys(r).length:null==e&&null==r);if(t.Type.isObject(e)&&t.Type.isObject(r)){var l=Object.keys(e),a=Object.keys(r),c=l.length;if(c!=a.length)return!1;l.sort(),a.sort();for(var s=0;s<c;s++){var f=l[s];if(f!==a[s]||!n(e[f],r[f],!0))return!1}if(o>0)for(var p=0,v=l;p<v.length;p++){var f=v[p];if(!u(e[f],r[f],i,o-1))return!1}return!0}return!1}Object.defineProperty(r,"__esModule",{value:!0});var o=t.Type.isTrueNaN,l=void 0;r.areEqual=n;var a="compareTo";r.compare=i,r.areEquivalent=u});
-//# sourceMappingURL=Compare.js.map

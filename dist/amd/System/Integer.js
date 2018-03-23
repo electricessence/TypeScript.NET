@@ -1,6 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-define(["require","exports","./Exceptions/ArgumentException","./Exceptions/ArgumentOutOfRangeException"],function(e,t,n,r){"use strict";function i(e){return Math.floor(e)}Object.defineProperty(t,"__esModule",{value:!0}),t.Integer=i,function(e){function t(e){var t=0|e;if(isNaN(e))throw"'n' is not a number.";if(e!==-1&&t===-1)throw"'n' is too large to be a 32 bit integer.";return t}function i(e){return typeof e===s&&isFinite(e)&&e===Math.floor(e)}function o(e){return e===(0|e)}function u(e,t){var r=i(e);if(!r)throw new n.ArgumentException(t||"n","Must be a integer.");return r}function a(e,t){var n=u(e,t)&&e>=0;if(!n)throw new r.ArgumentOutOfRangeException(t||"n",e,"Must be a valid integer greater than or equal to zero.");return n}function f(e,t){var n=u(e,t)&&e>0;if(!n)throw new r.ArgumentOutOfRangeException(t||"n",e,"Must be greater than zero.");return n}e.MAX_32_BIT=2147483647,e.MAX_VALUE=9007199254740991;var s="number";e.as32Bit=t,e.is=i,e.is32Bit=o,e.assert=u,e.assertZeroOrGreater=a,e.assertPositive=f}(i=t.Integer||(t.Integer={})),t["default"]=i});
-//# sourceMappingURL=Integer.js.map

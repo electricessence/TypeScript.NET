@@ -1,6 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-define(["require","exports","../Types","../Collections/Dictionaries/OrderedStringKeyDictionary","../Collections/Enumeration/Enumerator","./QueryParams","../../extends"],function(t,e,r,i,n,o,u){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var s=u["default"],a=function(t){function e(e,r){void 0===r&&(r=!0);var i=t.call(this)||this;return i.importQuery(e,r),i}return s(e,t),e.init=function(t,r){return void 0===r&&(r=!0),new e(t,r)},e.prototype.importQuery=function(t,e){return void 0===e&&(e=!0),r.Type.isString(t)?this.importFromString(t,e):n.isEnumerableOrArrayLike(t)?this.importEntries(t):this.importMap(t),this},e.prototype.importFromString=function(t,e,r){void 0===e&&(e=!0),void 0===r&&(r=!0);var i=this;return o.parse(t,function(t,e){if(i.containsKey(t)){var r=i.getValue(t);r instanceof Array?r.push(e):i.setValue(t,[r,e])}else i.setValue(t,e)},e,r),this},e.prototype.encode=function(t){return o.encode(this,t)},e.prototype.toString=function(){return this.encode()},e}(i.OrderedStringKeyDictionary);e.QueryBuilder=a,e["default"]=a});
-//# sourceMappingURL=QueryBuilder.js.map

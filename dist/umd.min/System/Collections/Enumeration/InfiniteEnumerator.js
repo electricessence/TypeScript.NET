@@ -1,6 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-!function(e){if("object"==typeof module&&"object"==typeof module.exports){var t=e(require,exports);void 0!==t&&(module.exports=t)}else"function"==typeof define&&define.amd&&define(["require","exports","./SimpleEnumerableBase","../../../extends"],e)}(function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=e("./SimpleEnumerableBase"),n=e("../../../extends"),o=n["default"],i=function(e){function t(t){var r=e.call(this)||this;return r._factory=t,r}return o(t,e),t.prototype._canMoveNext=function(){return null!=this._factory},t.prototype.moveNext=function(){var e=this,t=e._factory;return!!t&&(e._current=t(e._current,e.incrementIndex()),!0)},t.prototype.dispose=function(){e.prototype.dispose.call(this),this._factory=null},t}(r.SimpleEnumerableBase);t.InfiniteEnumerator=i,t["default"]=i});
-//# sourceMappingURL=InfiniteEnumerator.js.map

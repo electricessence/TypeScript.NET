@@ -1,6 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-define(["require","exports"],function(e,r){"use strict";function t(e,r){function t(e){return function(r){return n([e,r])}}function n(t){if(o)throw new TypeError("Generator is already executing.");for(;u;)try{if(o=1,l&&(a=l[2&t[0]?"return":t[0]?"throw":"next"])&&!(a=a.call(l,t[1])).done)return a;switch(l=0,a&&(t=[0,a.value]),t[0]){case 0:case 1:a=t;break;case 4:return u.label++,{value:t[1],done:!1};case 5:u.label++,l=t[1],t=[0];continue;case 7:t=u.ops.pop(),u.trys.pop();continue;default:if(a=u.trys,!(a=a.length>0&&a[a.length-1])&&(6===t[0]||2===t[0])){u=0;continue}if(3===t[0]&&(!a||t[1]>a[0]&&t[1]<a[3])){u.label=t[1];break}if(6===t[0]&&u.label<a[1]){u.label=a[1],a=t;break}if(a&&u.label<a[2]){u.label=a[2],u.ops.push(t);break}a[2]&&u.ops.pop(),u.trys.pop();continue}t=r.call(e,u)}catch(n){t=[6,n],l=0}finally{o=a=0}if(5&t[0])throw t[1];return{value:t[0]?t[1]:void 0,done:!0}}var o,l,a,u={label:0,trys:[],ops:[],sent:function(){if(1&a[0])throw a[1];return a[1]}};return{next:t(0),"throw":t(1),"return":t(2)}}Object.defineProperty(r,"__esModule",{value:!0}),r["default"]=t});
-//# sourceMappingURL=generator.js.map

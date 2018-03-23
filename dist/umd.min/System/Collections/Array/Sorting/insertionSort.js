@@ -1,6 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-!function(e){if("object"==typeof module&&"object"==typeof module.exports){var t=e(require,exports);void 0!==t&&(module.exports=t)}else"function"==typeof define&&define.amd&&define(["require","exports","../../../Exceptions/ArgumentNullException"],e)}(function(e,t){"use strict";function o(e){if(!e)throw new r.ArgumentNullException("target");for(var t=e.length,o=1;o<t;o++)for(var n=o,i=void 0;n>0&&e[i=n-1]>e[n];){var u=e[n];e[n]=e[i],e[i]=u,n--}return e}Object.defineProperty(t,"__esModule",{value:!0});var r=e("../../../Exceptions/ArgumentNullException");t.insertionSort=o});
-//# sourceMappingURL=insertionSort.js.map

@@ -1,6 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-define(["require","exports","../Exceptions/ArgumentNullException","./ReadOnlyCollectionBase","./Enumeration/Enumerator","../Types","../../extends"],function(t,e,n,o,r,u,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var s=i["default"],l=function(t){function e(e){var o=t.call(this)||this;if(!e)throw new n.ArgumentNullException("collection");return u.Type.isArrayLike(e)?(o.__getCount=function(){return e.length},o.__getEnumerator=function(){return r.from(e)}):(o.__getCount=function(){return e.count},o.__getEnumerator=function(){return e.getEnumerator()}),o}return s(e,t),e.prototype._getCount=function(){return this.throwIfDisposed(),this.__getCount()},e.prototype._getEnumerator=function(){return this.throwIfDisposed(),this.__getEnumerator()},e.prototype._onDispose=function(){t.prototype._onDispose.call(this);var e=this;e.__getCount=null,e.__getEnumerator=null},e}(o.ReadOnlyCollectionBase);e["default"]=l});
-//# sourceMappingURL=ReadOnlyCollectionWrapper.js.map

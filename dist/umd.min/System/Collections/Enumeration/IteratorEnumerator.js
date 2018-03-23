@@ -1,6 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-!function(e){if("object"==typeof module&&"object"==typeof module.exports){var t=e(require,exports);void 0!==t&&(module.exports=t)}else"function"==typeof define&&define.amd&&define(["require","exports","./SimpleEnumerableBase","../../../extends"],e)}(function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=e("./SimpleEnumerableBase"),o=e("../../../extends"),n=o["default"],i=function(e){function t(t,r){var o=e.call(this)||this;return o._iterator=t,o._isEndless=r,o}return n(t,e),t.prototype._canMoveNext=function(){return null!=this._iterator},t.prototype.moveNext=function(e){var t=this,r=t._iterator;if(r){var o=arguments.length?r.next(e):r.next();if(t._current=o.value,!o.done)return!0;t.dispose()}return!1},t.prototype.dispose=function(){e.prototype.dispose.call(this),this._iterator=null},t.prototype.getIsEndless=function(){return Boolean(this._isEndless)&&e.prototype.getIsEndless.call(this)},t}(r.SimpleEnumerableBase);t.IteratorEnumerator=i,t["default"]=i});
-//# sourceMappingURL=IteratorEnumerator.js.map

@@ -1,6 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-define(["require","exports","./TimeUnit","./TimeQuantity","../../extends"],function(t,e,i,n,r){"use strict";function o(t,e){return i.TimeUnit.fromMilliseconds(t.getTotalMilliseconds(),e)}Object.defineProperty(e,"__esModule",{value:!0});var u=r["default"],s=function(t){function e(e,n){var r=t.call(this,"number"==typeof e?e:o(e,n))||this;return r._units=n,i.TimeUnit.assertValid(n),r}return u(e,t),Object.defineProperty(e.prototype,"value",{get:function(){return this._quantity},set:function(t){this._quantity=t,this._resetTotal()},enumerable:!0,configurable:!0}),e.prototype.getTotalMilliseconds=function(){return i.TimeUnit.toMilliseconds(this._quantity,this._units)},Object.defineProperty(e.prototype,"units",{get:function(){return this._units},enumerable:!0,configurable:!0}),e.prototype.to=function(t){return void 0===t&&(t=this.units),e.from(this,t)},e.from=function(t,n){return void 0===n&&(n=i.TimeUnit.Milliseconds),new e(t,n)},e}(n.TimeQuantity);e["default"]=s});
-//# sourceMappingURL=TimeUnitValue.js.map
