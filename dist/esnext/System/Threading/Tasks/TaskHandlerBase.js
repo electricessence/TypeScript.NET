@@ -78,6 +78,5 @@ var TaskHandlerBase = /** @class */ (function (_super) {
     };
     return TaskHandlerBase;
 }(DisposableBase));
-export { TaskHandlerBase };
 export default TaskHandlerBase;
 //# sourceMappingURL=TaskHandlerBase.js.map

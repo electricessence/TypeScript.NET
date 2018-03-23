@@ -64,7 +64,7 @@ declare module Random {
      */
     function shuffle<T extends ArrayLikeWritable<any>>(target: T): T;
     /**
-     * Creates a copy of an array-like  and returns it shuffled.
+     * Creates a copyArray of an array-like  and returns it shuffled.
      * @param source
      * @returns {T[]}
      */

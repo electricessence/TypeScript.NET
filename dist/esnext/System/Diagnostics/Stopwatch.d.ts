@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { TimeSpan } from "../Time/TimeSpan";
-import { ITimer } from "../Timers/ITimer";
+import TimeSpan from "../Time/TimeSpan";
+import ITimer from "../Timers/ITimer";
 export default class Stopwatch implements ITimer {
     static getTimestampMilliseconds(): number;
     private _elapsed;

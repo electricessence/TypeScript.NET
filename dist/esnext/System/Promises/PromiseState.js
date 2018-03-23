@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 import * as tslib_1 from "tslib";
-import { DisposableBase } from "../Disposable/DisposableBase";
+import DisposableBase from "../Disposable/DisposableBase";
 var PromiseState = /** @class */ (function (_super) {
     tslib_1.__extends(PromiseState, _super);
     function PromiseState(_state, _result, _error) {
@@ -83,7 +83,7 @@ var PromiseState = /** @class */ (function (_super) {
     });
     return PromiseState;
 }(DisposableBase));
-export { PromiseState };
+export default PromiseState;
 /**
  * The state of a promise.
  * https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
@@ -96,5 +96,4 @@ export var PromiseStateValue;
     PromiseStateValue[PromiseStateValue["Rejected"] = -1] = "Rejected";
 })(PromiseStateValue || (PromiseStateValue = {}));
 Object.freeze(PromiseStateValue);
-export default PromiseState;
 //# sourceMappingURL=PromiseState.js.map

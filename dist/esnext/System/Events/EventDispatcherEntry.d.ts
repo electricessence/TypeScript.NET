@@ -2,11 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { DisposableBase } from "../Disposable/DisposableBase";
-import { IEventListener } from "./IEventListener";
-import { IEquatable } from "../IEquatable";
+import DisposableBase from "../Disposable/DisposableBase";
+import IEventListener from "./IEventListener";
+import IEquatable from "../IEquatable";
 import { Closure } from "../FunctionTypes";
-export declare class EventDispatcherEntry<TParams> extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>> {
+export default class EventDispatcherEntry<TParams> extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>> {
     type: string;
     listener: IEventListener;
     params: TParams | undefined;
@@ -32,4 +32,3 @@ export declare class EventDispatcherEntry<TParams> extends DisposableBase implem
      */
     equals(other: EventDispatcherEntry<TParams>): boolean;
 }
-export default EventDispatcherEntry;

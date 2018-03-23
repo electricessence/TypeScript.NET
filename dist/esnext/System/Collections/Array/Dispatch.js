@@ -2,8 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { Type } from "../../Types";
-import { copy } from "./copy";
+import copyArray from "./copyArray";
 var VOID0 = void 0;
 /**
  * Simply takes a payload and passes it to all the listeners.
@@ -13,8 +12,8 @@ var VOID0 = void 0;
  * @param payload
  * @param trap
  */
-export function dispatch(listeners, payload, trap) {
-    dispatch.unsafe(copy(listeners), payload, trap);
+function dispatch(listeners, payload, trap) {
+    dispatch.unsafe(copyArray(listeners), payload, trap);
 }
 (function (dispatch) {
     /**
@@ -50,7 +49,7 @@ export function dispatch(listeners, payload, trap) {
                 catch (ex) {
                     if (!trap)
                         throw ex;
-                    else if (Type.isFunction(trap))
+                    else if (typeof trap == 'function')
                         trap(ex, i);
                 }
             }
@@ -70,7 +69,7 @@ export function dispatch(listeners, payload, trap) {
         if (!listeners)
             return listeners;
         // Reuse the arrayCopy as the array result.
-        var result = copy(listeners);
+        var result = copyArray(listeners);
         if (listeners.length) {
             for (var i = 0, len = result.length; i < len; i++) {
                 var fn = result[i];
@@ -83,7 +82,7 @@ export function dispatch(listeners, payload, trap) {
                     result[i] = VOID0;
                     if (!trap)
                         throw ex;
-                    else if (Type.isFunction(trap))
+                    else if (typeof trap == 'function')
                         trap(ex, i);
                 }
             }

@@ -2,11 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { format } from "../Text/Utility";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentException from "../Exceptions/ArgumentException";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import EnumeratorBase from "./Enumeration/EnumeratorBase";
+import { format } from "../Text/supplant";
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
  * http://jsperf.com/simulating-a-queue

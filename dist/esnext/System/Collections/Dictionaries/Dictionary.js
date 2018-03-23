@@ -4,13 +4,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { areEqual } from "../../Compare";
-import { Type } from "../../Types";
-import { EnumeratorBase } from "../Enumeration/EnumeratorBase";
-import { LinkedNodeList } from "../LinkedNodeList";
-import { ObjectPool } from "../../Disposable/ObjectPool";
-import { getIdentifier } from "./getIdentifier";
+import areEqual from "../../Comparison/areEqual";
+import getIdentifier from "./getIdentifier";
+import isPrimitiveOrSymbol from "../../Reflection/isPrimitiveOrSymbol";
 import DictionaryBase from "./DictionaryBase";
+import EnumeratorBase from "../Enumeration/EnumeratorBase";
+import LinkedNodeList from "../LinkedNodeList";
+import ObjectPool from "../../Disposable/ObjectPool";
 var VOID0 = void 0;
 // LinkedList for Dictionary
 var HashEntry = /** @class */ (function () {
@@ -54,7 +54,7 @@ var Dictionary = /** @class */ (function (_super) {
     Dictionary.prototype._getBucket = function (hash, createIfMissing) {
         if (hash == null || !createIfMissing && !this.getCount())
             return null;
-        if (!Type.isPrimitiveOrSymbol(hash))
+        if (!isPrimitiveOrSymbol(hash))
             console.warn("Key type not indexable and could cause Dictionary to be extremely slow.");
         var buckets = this._buckets;
         var bucket = buckets[hash];
@@ -180,6 +180,5 @@ var Dictionary = /** @class */ (function (_super) {
     };
     return Dictionary;
 }(DictionaryBase));
-export { Dictionary };
 export default Dictionary;
 //# sourceMappingURL=Dictionary.js.map

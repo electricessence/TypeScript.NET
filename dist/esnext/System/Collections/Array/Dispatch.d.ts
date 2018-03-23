@@ -14,8 +14,8 @@ export interface DispatchErrorHandler {
  * @param payload
  * @param trap
  */
-export declare function dispatch<T>(listeners: ArrayLike<Selector<T, any>>, payload: T, trap?: boolean | DispatchErrorHandler): void;
-export declare module dispatch {
+declare function dispatch<T>(listeners: ArrayLike<Selector<T, any>>, payload: T, trap?: boolean | DispatchErrorHandler): void;
+declare module dispatch {
     /**
      * Simply takes a payload and passes it to all the listeners.
      *

@@ -2,10 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { Type } from "../../../Types";
-import { compare } from "../../../Compare";
-import { CompareResult } from "../../../CompareResult";
-import { Order } from "../../Sorting/Order";
+import isTrueNaN from "../../../Reflection/isTrueNaN";
+import compare from "../../../Comparison/compare";
 function ensureArray(value) {
     return (value) instanceof (Array)
         ? value
@@ -34,10 +32,10 @@ function ensureArray(value) {
  * @param equivalentToNaN
  * @returns {(a:TSource, b:TSource)=>CompareResult}
  */
-export function createComparer(selector, order, equivalentToNaN) {
-    if (order === void 0) { order = Order.Ascending; }
+export default function createComparer(selector, order, equivalentToNaN) {
+    if (order === void 0) { order = 1 /* Ascending */; }
     if (equivalentToNaN === void 0) { equivalentToNaN = NaN; }
-    var nanHasEquivalent = !Type.isTrueNaN(equivalentToNaN);
+    var nanHasEquivalent = !isTrueNaN(equivalentToNaN);
     return function (a, b) {
         // Use an array always to ensure a single code path.
         var aValue = ensureArray(selector(a));
@@ -47,16 +45,16 @@ export function createComparer(selector, order, equivalentToNaN) {
         for (var i = 0; i < len; i++) {
             var vA = aValue[i], vB = bValue[i];
             var o = oArray
-                ? (i < oArray.length ? oArray[i] : Order.Ascending)
+                ? (i < oArray.length ? oArray[i] : 1 /* Ascending */)
                 : order;
             if (nanHasEquivalent) {
-                if (Type.isTrueNaN(vA))
+                if (isTrueNaN(vA))
                     vA = equivalentToNaN;
-                if (Type.isTrueNaN(vB))
+                if (isTrueNaN(vB))
                     vB = equivalentToNaN;
             }
             var r = compare(vA, vB);
-            if (r !== CompareResult.Equal)
+            if (r !== 0 /* Equal */)
                 return o * r;
         }
         return 0;

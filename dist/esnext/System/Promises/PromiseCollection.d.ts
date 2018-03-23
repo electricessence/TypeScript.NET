@@ -2,13 +2,13 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-import { DisposableBase } from "../Disposable/DisposableBase";
-import { ArrayPromise } from "./ArrayPromise";
+import DisposableBase from "../Disposable/DisposableBase";
+import ArrayPromise from "./ArrayPromise";
 import PromiseBase from "./PromiseBase";
 /**
  * A Promise collection exposes useful methods for handling a collection of promises and their results.
  */
-export declare class PromiseCollection<T> extends DisposableBase {
+export default class PromiseCollection<T> extends DisposableBase {
     private _source;
     constructor(source: PromiseLike<T>[] | null | undefined);
     protected _onDispose(): void;

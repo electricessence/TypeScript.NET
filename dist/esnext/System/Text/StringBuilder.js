@@ -3,7 +3,6 @@
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { Type } from "../Types";
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
  * http://jsperf.com/string-concatenation-looped
@@ -30,8 +29,8 @@ var StringBuilder = /** @class */ (function () {
             var _ = this;
             _._latest = null;
             switch (typeof item) {
-                case Type.OBJECT:
-                case TypeOfValue.Function:
+                case "object" /* Object */:
+                case "function" /* Function */:
                     item = item.toString();
                     break;
             }
@@ -105,6 +104,5 @@ var StringBuilder = /** @class */ (function () {
     };
     return StringBuilder;
 }());
-export { StringBuilder };
 export default StringBuilder;
 //# sourceMappingURL=StringBuilder.js.map

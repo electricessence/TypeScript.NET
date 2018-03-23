@@ -3,10 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
-import { DisposableBase } from "../../Disposable/DisposableBase";
-import { HttpMethod } from "./HttpMethod";
-import { Uri } from "../../Uri/Uri";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import DisposableBase from "../../Disposable/DisposableBase";
+import Uri from "../../Uri/Uri";
 var NAME = 'HttpRequestFactory';
 /**
  * This class exposes a factory for making requests to prepared uri and params.
@@ -49,16 +48,16 @@ var HttpRequestFactory = /** @class */ (function (_super) {
         });
     };
     HttpRequestFactory.prototype.get = function () {
-        return this.request(HttpMethod.GET);
+        return this.request("GET" /* GET */);
     };
     HttpRequestFactory.prototype.put = function () {
-        return this.request(HttpMethod.PUT);
+        return this.request("PUT" /* PUT */);
     };
     HttpRequestFactory.prototype.post = function (data) {
-        return this.request(HttpMethod.POST, data);
+        return this.request("POST" /* POST */, data);
     };
     HttpRequestFactory.prototype['delete'] = function () {
-        return this.request(HttpMethod.DELETE);
+        return this.request("DELETE" /* DELETE */);
     };
     return HttpRequestFactory;
 }(DisposableBase));

@@ -5,10 +5,12 @@
 import UnsupportedEnumerableException from "./UnsupportedEnumerableException";
 import ArrayEnumerator from "./ArrayEnumerator";
 import IndexEnumerator from "./IndexEnumerator";
-import Type from "../../Types";
 import { using } from "../../Disposable/dispose";
 import IteratorEnumerator from "./IteratorEnumerator";
-import { default as InfiniteEnumerator } from "./InfiniteEnumerator";
+import InfiniteEnumerator from "./InfiniteEnumerator";
+import isArrayLike from "../../Reflection/isArrayLike";
+import isPrimitive from "../../Reflection/isPrimitive";
+import hasMemberOfType from "../../Reflection/hasMemberOfType";
 import EmptyEnumerator from "./EmptyEnumerator";
 var STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
     'Would result in an infinite loop that could hang the current process.';
@@ -19,7 +21,7 @@ export function throwIfEndless(isEndless) {
 }
 function initArrayFrom(source, max) {
     if (max === void 0) { max = Infinity; }
-    if (Type.isArrayLike(source)) {
+    if (isArrayLike(source)) {
         var len = Math.min(source.length, max);
         if (isFinite(len)) {
             if (len > 65535)
@@ -44,7 +46,7 @@ export function from(source) {
         return EmptyEnumerator;
     if ((source) instanceof (Array))
         return new ArrayEnumerator(source);
-    if (Type.isArrayLike(source)) {
+    if (isArrayLike(source)) {
         return new IndexEnumerator(function () {
             return {
                 source: source,
@@ -54,10 +56,10 @@ export function from(source) {
             };
         });
     }
-    if (!Type.isPrimitive(source)) {
+    if (!isPrimitive(source)) {
         if (isEnumerable(source))
             return source.getEnumerator();
-        if (Type.isFunction(source))
+        if (typeof source == 'function')
             return new InfiniteEnumerator(source);
         if (isEnumerator(source))
             return source;
@@ -67,23 +69,23 @@ export function from(source) {
     throw new UnsupportedEnumerableException();
 }
 export function isEnumerable(instance) {
-    return Type.hasMemberOfType(instance, "getEnumerator", "function" /* Function */);
+    return hasMemberOfType(instance, "getEnumerator", "function" /* Function */);
 }
 export function isEnumerableOrArrayLike(instance) {
-    return Type.isArrayLike(instance) || isEnumerable(instance);
+    return isArrayLike(instance) || isEnumerable(instance);
 }
 export function isEnumerator(instance) {
-    return Type.hasMemberOfType(instance, "moveNext", "function" /* Function */);
+    return hasMemberOfType(instance, "moveNext", "function" /* Function */);
 }
 export function isIterator(instance) {
-    return Type.hasMemberOfType(instance, "next", "function" /* Function */);
+    return hasMemberOfType(instance, "next", "function" /* Function */);
 }
 export function forEach(e, action, max) {
     if (max === void 0) { max = Infinity; }
     if (e === STRING_EMPTY)
         return 0;
     if (e && max > 0) {
-        if (Type.isArrayLike(e)) {
+        if (isArrayLike(e)) {
             // Assume e.length is constant or at least doesn't deviate to infinite or NaN.
             throwIfEndless(!isFinite(max) && !isFinite(e.length));
             var i = 0;

@@ -2,16 +2,16 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-import { ArgumentException } from "../../Exceptions/ArgumentException";
 import PromiseBase from "../PromiseBase";
 import wrap from "./wrap";
 import TSDNPromise from "../Promise";
+import ArgumentException from "../../Exceptions/ArgumentException";
 function race(first) {
     var rest = [];
     for (var _i = 1; _i < arguments.length; _i++) {
         rest[_i - 1] = arguments[_i];
     }
-    var promises = first && ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy?
+    var promises = first && ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copyArray?
     if (!promises || !promises.length || !(promises = promises.filter(function (v) { return v != null; })).length)
         throw new ArgumentException("Nothing to wait for.");
     var len = promises.length;

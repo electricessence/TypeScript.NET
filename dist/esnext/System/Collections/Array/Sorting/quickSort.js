@@ -3,14 +3,14 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { ArgumentNullException } from "../../../Exceptions/ArgumentNullException";
+import ArgumentNullException from "../../../Exceptions/ArgumentNullException";
 /**
  * Quick internalSort O(n log (n))
  * Warning: Uses recursion.
  * @param target
- * @returns {T[]}
+ * @returns {[]}
  */
-export function quickSort(target) {
+export default function quickSort(target) {
     if (!target)
         throw new ArgumentNullException("target");
     var len = target.length;

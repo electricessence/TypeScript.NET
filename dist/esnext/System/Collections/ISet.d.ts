@@ -2,9 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { ICollection } from "./ICollection";
-import { IEnumerableOrArray } from "./IEnumerableOrArray";
-export interface ISet<T> extends ICollection<T> {
+import ICollection from "./ICollection";
+import IEnumerableOrArray from "./IEnumerableOrArray";
+export default interface ISet<T> extends ICollection<T> {
     /**
      * Removes all elements in the specified collection from the current set.
      */
@@ -51,4 +51,3 @@ export interface ISet<T> extends ICollection<T> {
      */
     unionWith(other: IEnumerableOrArray<T>): void;
 }
-export default ISet;

@@ -2,9 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { ITimeStamp } from "./ITimeStamp";
-import { IDateTime } from "./IDateTime";
 import { Gregorian } from "./Calendars";
+import ITimeStamp from "./ITimeStamp";
+import IDateTime from "./IDateTime";
 /**
  * An alternative to Date or DateTime.  Is a model representing the exact date and time.
  */

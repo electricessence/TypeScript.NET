@@ -5,7 +5,7 @@
 import UriComponent from "./UriComponent";
 import { StringKeyValuePair } from "../KeyValuePair";
 import IEnumerable from "../Collections/Enumeration/IEnumerable";
-import { IEnumerableOrArray } from "../Collections/IEnumerableOrArray";
+import IEnumerableOrArray from "../Collections/IEnumerableOrArray";
 declare module QueryParam {
     type Array = ArrayLike<StringKeyValuePair<UriComponent.Value | UriComponent.Value[]>>;
     type Enumerable = IEnumerable<StringKeyValuePair<UriComponent.Value | UriComponent.Value[]>>;

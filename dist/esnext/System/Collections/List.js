@@ -3,12 +3,16 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { areEqual } from "../Compare";
-import { contains, copyTo, indexOf, remove, removeIndex } from "./Array/Utility";
 import { forEach } from "./Enumeration/Enumerator";
-import { Type } from "../Types";
-import { CollectionBase } from "./CollectionBase";
-import { EnumeratorBase } from "./Enumeration/EnumeratorBase";
+import CollectionBase from "./CollectionBase";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
+import isArrayLike from "../Reflection/isArrayLike";
+import areEqual from "../Comparison/areEqual";
+import removeElement from "./Array/removeElement";
+import indexOfElement from "./Array/indexOfElement";
+import removeElementByIndex from "./Array/removeElementByIndex";
+import copyArrayTo from "./Array/copyArrayTo";
+import containsElement from "./Array/containsElement";
 var VOID0 = void 0;
 var List = /** @class */ (function (_super) {
     tslib_1.__extends(List, _super);
@@ -37,7 +41,7 @@ var List = /** @class */ (function (_super) {
     };
     List.prototype._removeInternal = function (entry, max) {
         if (max === void 0) { max = Infinity; }
-        return remove(this._source, entry, max, this._equalityComparer);
+        return removeElement(this._source, entry, max, this._equalityComparer);
     };
     List.prototype._clearInternal = function () {
         var len = this._source.length;
@@ -45,7 +49,7 @@ var List = /** @class */ (function (_super) {
         return len;
     };
     List.prototype._importEntries = function (entries) {
-        if (Type.isArrayLike(entries)) {
+        if (isArrayLike(entries)) {
             var len = entries.length;
             if (!len)
                 return 0;
@@ -73,7 +77,7 @@ var List = /** @class */ (function (_super) {
         return true;
     };
     List.prototype.indexOf = function (item) {
-        return indexOf(this._source, item, this._equalityComparer);
+        return indexOfElement(this._source, item, this._equalityComparer);
     };
     List.prototype.insert = function (index, value) {
         var _ = this;
@@ -87,17 +91,17 @@ var List = /** @class */ (function (_super) {
         _._signalModification(true);
     };
     List.prototype.removeAt = function (index) {
-        if (removeIndex(this._source, index)) {
+        if (removeElementByIndex(this._source, index)) {
             this._signalModification(true);
             return true;
         }
         return false;
     };
     List.prototype.contains = function (item) {
-        return contains(this._source, item, this._equalityComparer);
+        return containsElement(this._source, item, this._equalityComparer);
     };
     List.prototype.copyTo = function (target, index) {
-        return copyTo(this._source, target, 0, index);
+        return copyArrayTo(this._source, target, 0, index);
     };
     List.prototype.getEnumerator = function () {
         var _ = this;

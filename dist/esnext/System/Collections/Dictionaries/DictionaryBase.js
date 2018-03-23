@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { areEqual } from "../../Compare";
 import { forEach } from "../Enumeration/Enumerator";
 import CollectionBase from "../CollectionBase";
 import EnumeratorBase from "../Enumeration/EnumeratorBase";
@@ -11,6 +10,7 @@ import ArgumentNullException from "../../Exceptions/ArgumentNullException";
 import InvalidOperationException from "../../Exceptions/InvalidOperationException";
 import extractKeyValue from "../../KeyValueExtract";
 import KeyNotFoundException from "../KeyNotFoundException";
+import areEqual from "../../Comparison/areEqual";
 var VOID0 = void 0;
 // Design Note: Should DictionaryAbstractBase be IDisposable?
 var DictionaryBase = /** @class */ (function (_super) {

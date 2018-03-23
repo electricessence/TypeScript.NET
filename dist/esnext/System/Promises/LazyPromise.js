@@ -4,7 +4,7 @@
  */
 import * as tslib_1 from "tslib";
 import { defer } from "../Threading/defer";
-import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import TSDNPromise from "./Promise";
 var VOID0 = void 0;
 /**

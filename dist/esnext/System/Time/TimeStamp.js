@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { Type } from "../Types";
+import hasMember from "../Reflection/hasMember";
 /**
  * An alternative to Date or DateTime.  Is a model representing the exact date and time.
  */
@@ -30,7 +30,7 @@ var TimeStamp = /** @class */ (function () {
         return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick / 10000 /* Millisecond */);
     };
     TimeStamp.from = function (d) {
-        if (!(d instanceof Date) && Type.hasMember(d, 'toJsDate'))
+        if (!(d instanceof Date) && hasMember(d, 'toJsDate'))
             d = d.toJsDate();
         if (d instanceof Date) {
             return new TimeStamp(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());

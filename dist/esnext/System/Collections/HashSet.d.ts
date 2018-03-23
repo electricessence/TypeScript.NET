@@ -2,9 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { SetBase } from "./SetBase";
+import SetBase from "./SetBase";
+import IEnumerableOrArray from "./IEnumerableOrArray";
 import { ILinkedNodeWithValue } from "./ILinkedListNode";
-import { IEnumerableOrArray } from "./IEnumerableOrArray";
 import { Selector } from "../FunctionTypes";
 export declare class HashSet<T> extends SetBase<T> {
     private readonly _keyGenerator;

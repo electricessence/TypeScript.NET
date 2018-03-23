@@ -39,5 +39,5 @@ var ArrayPromise = /** @class */ (function (_super) {
     };
     return ArrayPromise;
 }(TSDNPromise));
-export { ArrayPromise };
+export default ArrayPromise;
 //# sourceMappingURL=ArrayPromise.js.map

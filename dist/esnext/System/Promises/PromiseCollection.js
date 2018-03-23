@@ -4,8 +4,8 @@
  */
 import * as tslib_1 from "tslib";
 import { Fulfilled, handleSyncIfPossible } from "./Promise";
-import { DisposableBase } from "../Disposable/DisposableBase";
-import { ArrayPromise } from "./ArrayPromise";
+import DisposableBase from "../Disposable/DisposableBase";
+import ArrayPromise from "./ArrayPromise";
 import all from "./Functions/all";
 import race from "./Functions/race";
 import waitAll from "./Functions/waitAll";
@@ -105,5 +105,5 @@ var PromiseCollection = /** @class */ (function (_super) {
     };
     return PromiseCollection;
 }(DisposableBase));
-export { PromiseCollection };
+export default PromiseCollection;
 //# sourceMappingURL=PromiseCollection.js.map

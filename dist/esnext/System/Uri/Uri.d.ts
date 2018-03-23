@@ -3,20 +3,21 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-import { SchemeValue } from "./SchemeValue";
-import { QueryParam } from "./QueryParam";
-import { IUri } from "./IUri";
-import { IMap } from "../../IMap";
-import { Primitive } from "../Primitive";
-import { IEquatable } from "../IEquatable";
+import IUri from "./IUri";
+import IMap from "../../IMap";
+import Primitive from "../Primitive";
+import IEquatable from "../IEquatable";
+import QueryParam from "./QueryParam";
+import Scheme from "./Scheme";
+export { IUri };
 /**
  * Provides an read-only model representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
  *
  * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
  * ICloneable&lt;Uri&gt; is not used to prevent unnecessary copying of values that won't change.
  */
-export declare class Uri implements IUri, IEquatable<IUri> {
-    readonly scheme: SchemeValue.Any | null;
+export default class Uri implements IUri, IEquatable<IUri> {
+    readonly scheme: Scheme | null;
     readonly userInfo: string | null;
     readonly host: string | null;
     readonly port: number | null;
@@ -33,7 +34,7 @@ export declare class Uri implements IUri, IEquatable<IUri> {
      * @param query Any query information included in the specified URI.
      * @param fragment The escaped URI fragment.
      */
-    constructor(scheme: SchemeValue.Any | null, userInfo: string | null, host: string | null, port: number | null, path: string | null, query?: QueryParam.Convertible, fragment?: string);
+    constructor(scheme: Scheme | null, userInfo: string | null, host: string | null, port: number | null, path: string | null, query?: QueryParam.Convertible, fragment?: string);
     /**
      *  Compares the values of another IUri via toString comparison.
      * @param other
@@ -140,4 +141,3 @@ export declare enum Fields {
     query = 5,
     fragment = 6,
 }
-export default Uri;

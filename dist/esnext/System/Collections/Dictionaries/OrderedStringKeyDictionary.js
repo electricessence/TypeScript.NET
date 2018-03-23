@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { StringKeyDictionary } from "./StringKeyDictionary";
-import { ArgumentOutOfRangeException } from "../../Exceptions/ArgumentOutOfRangeException";
-import { remove } from "../Array/Utility";
-import { Integer } from "../../Integer";
+import StringKeyDictionary from "./StringKeyDictionary";
+import ArgumentOutOfRangeException from "../../Exceptions/ArgumentOutOfRangeException";
+import Integer from "../../Integer";
+import removeElement from "../Array/removeElement";
 var VOID0 = void 0;
 var OrderedStringKeyDictionary = /** @class */ (function (_super) {
     tslib_1.__extends(OrderedStringKeyDictionary, _super);
@@ -35,7 +35,7 @@ var OrderedStringKeyDictionary = /** @class */ (function (_super) {
         if (!exists && (value !== VOID0 || keepIndex))
             _._order.push(key);
         else if (exists && value === VOID0 && !keepIndex)
-            remove(_._order, key);
+            removeElement(_._order, key);
         return _super.prototype.setValue.call(this, key, value);
     };
     OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {
@@ -77,6 +77,5 @@ var OrderedStringKeyDictionary = /** @class */ (function (_super) {
     };
     return OrderedStringKeyDictionary;
 }(StringKeyDictionary));
-export { OrderedStringKeyDictionary };
 export default OrderedStringKeyDictionary;
 //# sourceMappingURL=OrderedStringKeyDictionary.js.map

@@ -4,13 +4,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { IKeyValuePair } from "../../KeyValuePair";
-import { IEnumerator } from "../Enumeration/IEnumerator";
+import IEnumerator from "../Enumeration/IEnumerator";
 import { ILinkedNode } from "../ILinkedListNode";
 import { HashSelector } from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
 export interface IHashEntry<TKey, TValue> extends ILinkedNode<IHashEntry<TKey, TValue>>, IKeyValuePair<TKey, TValue> {
 }
-export declare class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue> {
+export default class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue> {
     private readonly _keyGenerator;
     private readonly _entries;
     private readonly _buckets;
@@ -27,4 +27,3 @@ export declare class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValu
     protected getKeys(): TKey[];
     protected getValues(): TValue[];
 }
-export default Dictionary;

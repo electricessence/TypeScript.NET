@@ -3,11 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import * as AU from "../Collections/Array/Utility";
-import { shallowCopy } from "../Utility/shallowCopy";
-import { DisposableBase } from "../Disposable/DisposableBase";
-import { dispose } from "../Disposable/dispose";
-import { EventDispatcherEntry } from "./EventDispatcherEntry";
+import DisposableBase from "../Disposable/DisposableBase";
+import EventDispatcherEntry from "./EventDispatcherEntry";
+import shallowCopy from "../Utility/shallowCopy";
+import removeElement from "../Collections/Array/removeElement";
+import dispose from "../Disposable/dispose";
 var DISPOSING = 'disposing', DISPOSED = 'disposed';
 function entryFinalizer() {
     // @ts-ignore
@@ -38,7 +38,7 @@ var EventDispatcherBase = /** @class */ (function (_super) {
         }, entryFinalizer));
     };
     EventDispatcherBase.prototype.removeEntry = function (entry) {
-        return !!this._entries && AU.remove(this._entries, entry) != 0;
+        return !!this._entries && removeElement(this._entries, entry) != 0;
     };
     // Allow for simple add once mechanism.
     EventDispatcherBase.prototype.registerEventListener = function (type, listener, priority) {

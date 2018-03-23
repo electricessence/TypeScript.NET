@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { getIdentifier } from "./Dictionaries/getIdentifier";
+import getIdentifier from "./Dictionaries/getIdentifier";
 import { HashSet } from "./HashSet";
 function getId(obj) {
-    return getIdentifier(obj, typeof obj != TypeOfValue.Boolean);
+    return getIdentifier(obj, typeof obj != "boolean" /* Boolean */);
 }
 var Set = /** @class */ (function (_super) {
     tslib_1.__extends(Set, _super);
@@ -15,6 +15,5 @@ var Set = /** @class */ (function (_super) {
     }
     return Set;
 }(HashSet));
-export { Set };
 export default Set;
 //# sourceMappingURL=Set.js.map

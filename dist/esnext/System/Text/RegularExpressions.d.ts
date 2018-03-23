@@ -3,8 +3,8 @@
  * Named groups based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { IMap } from "../../IMap";
-import { Primitive } from "../Primitive";
+import IMap from "../../IMap";
+import Primitive from "../Primitive";
 import { SelectorWithIndex } from "../FunctionTypes";
 /**
  * https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regexoptions%28v=vs.110%29.aspx
@@ -48,7 +48,7 @@ export declare module RegexOptions {
     const IGNORE_PATTERN_WHITESPACE: IgnorePatternWhitespace;
     const W: IgnorePatternWhitespace;
 }
-export declare class Regex {
+export default class Regex {
     private readonly _re;
     private readonly _keys;
     constructor(pattern: string | RegExp, options?: RegexOptions.Literal | RegexOptions.Literal[], ...extra: RegexOptions.Literal[]);
@@ -80,4 +80,3 @@ export declare class Match extends Group {
     freeze(): void;
     static readonly Empty: Match;
 }
-export default Regex;

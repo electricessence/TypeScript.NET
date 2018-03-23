@@ -2,15 +2,15 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { ArgumentNullException } from "../../../Exceptions/ArgumentNullException";
+import ArgumentNullException from "../../../Exceptions/ArgumentNullException";
 /**
  * https://en.wikipedia.org/wiki/Insertion_sort
  * @param target
- * @returns {T[]}
+ * @returns {[]}
  */
-export function insertionSort(target) {
+export default function insertionSort(target) {
     if (!target)
-        throw new ArgumentNullException("target");
+        throw new ArgumentNullException('target');
     var len = target.length;
     for (var i = 1; i < len; i++) {
         var j = i, j1 = void 0;

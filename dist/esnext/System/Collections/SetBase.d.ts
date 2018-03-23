@@ -2,15 +2,15 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { LinkedNodeList } from "./LinkedNodeList";
-import { CollectionBase } from "./CollectionBase";
-import { IDisposable } from "../Disposable/IDisposable";
+import IDisposable from "../Disposable/IDisposable";
 import { ILinkedNodeWithValue } from "./ILinkedListNode";
 import { ActionWithIndex, PredicateWithIndex } from "../FunctionTypes";
-import { IEnumerator } from "./Enumeration/IEnumerator";
-import { IEnumerableOrArray } from "./IEnumerableOrArray";
-import { ISet } from "./ISet";
-export declare abstract class SetBase<T> extends CollectionBase<T> implements ISet<T>, IDisposable {
+import IEnumerator from "./Enumeration/IEnumerator";
+import IEnumerableOrArray from "./IEnumerableOrArray";
+import ISet from "./ISet";
+import LinkedNodeList from "./LinkedNodeList";
+import CollectionBase from "./CollectionBase";
+declare abstract class SetBase<T> extends CollectionBase<T> implements ISet<T>, IDisposable {
     constructor(source?: IEnumerableOrArray<T>);
     protected abstract newUsing(source?: IEnumerableOrArray<T>): SetBase<T>;
     protected _set: LinkedNodeList<ILinkedNodeWithValue<T>> | undefined;

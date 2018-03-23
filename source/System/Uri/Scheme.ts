@@ -20,13 +20,13 @@ enum Scheme
 	UUID   = 'uuid',
 }
 
-export function isValidScheme(scheme:string)
+export function isValidScheme(scheme:string):scheme is Scheme
 {
+	if(!scheme) return false;
 	scheme = scheme.toLowerCase();
-	for(let key of Object.keys(Scheme))
-	{
-		if(Scheme[key]==scheme) return true;
-	}
+	const s:any = Scheme;
+	for(let key of Object.keys(s))
+		if(s[key]==scheme) return true;
 	return false;
 }
 

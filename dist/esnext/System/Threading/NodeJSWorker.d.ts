@@ -4,12 +4,12 @@
  * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
  */
 import { WorkerLike } from "./WorkerType";
-import { ObservableBase } from "../Observable/ObservableBase";
+import ObservableBase from "../Observable/ObservableBase";
 import { Action } from "../FunctionTypes";
 /**
  * This class takes the place of a WebWorker
  */
-export declare class NodeJSWorker extends ObservableBase<any> implements WorkerLike {
+export default class NodeJSWorker extends ObservableBase<any> implements WorkerLike {
     private _process;
     onmessage: Action<{
         data: any;
@@ -22,4 +22,3 @@ export declare class NodeJSWorker extends ObservableBase<any> implements WorkerL
     postMessage(obj: any): void;
     terminate(): void;
 }
-export default NodeJSWorker;

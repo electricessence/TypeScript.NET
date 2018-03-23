@@ -5,10 +5,10 @@
  */
 import * as tslib_1 from "tslib";
 import { deferImmediate } from "../Threading/deferImmediate";
-import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
-import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
-import { ObjectPool } from "../Disposable/ObjectPool";
-import { ObjectDisposedException } from "../Disposable/ObjectDisposedException";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import ObjectPool from "../Disposable/ObjectPool";
+import ObjectDisposedException from "../Disposable/ObjectDisposedException";
 import PromiseBase from "./PromiseBase";
 import isPromise from "./Functions/isPromise";
 import wrap from "./Functions/wrap";

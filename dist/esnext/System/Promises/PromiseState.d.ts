@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-import { DisposableBase } from "../Disposable/DisposableBase";
-export declare class PromiseState<T> extends DisposableBase {
+import DisposableBase from "../Disposable/DisposableBase";
+export default class PromiseState<T> extends DisposableBase {
     protected _state: PromiseStateValue;
     protected _result: T | undefined;
     protected _error: any;
@@ -30,4 +30,3 @@ export declare enum PromiseStateValue {
     Fulfilled = 1,
     Rejected = -1,
 }
-export default PromiseState;

@@ -3,15 +3,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { Type } from "../Types";
-import { SetBase } from "./SetBase";
-import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
+import SetBase from "./SetBase";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
 var VOID0 = void 0;
 var HashSet = /** @class */ (function (_super) {
     tslib_1.__extends(HashSet, _super);
     function HashSet(source, keyGenerator) {
         var _this = _super.call(this) || this;
-        if (Type.isFunction(source)) {
+        if (typeof source === "function") {
             _this._keyGenerator = source;
         }
         else {

@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { SimpleEnumerableBase } from "./SimpleEnumerableBase";
+import SimpleEnumerableBase from "./SimpleEnumerableBase";
 import { toArray } from "./Enumerator";
 /**
  * Creates a randomized version of the source.

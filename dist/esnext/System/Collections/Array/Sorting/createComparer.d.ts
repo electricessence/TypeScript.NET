@@ -2,9 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { Primitive } from "../../../Primitive";
+import Primitive from "../../../Primitive";
 import { Comparison, Selector } from "../../../FunctionTypes";
-import { Order } from "../../Sorting/Order";
+import Order from "../../Sorting/Order";
 /**
  * A factory function that creates a comparer to be used in multi-dimensional sorting.
  *
@@ -28,4 +28,4 @@ import { Order } from "../../Sorting/Order";
  * @param equivalentToNaN
  * @returns {(a:TSource, b:TSource)=>CompareResult}
  */
-export declare function createComparer<TSource, TSelect extends Primitive>(selector: Selector<TSource, TSelect | TSelect[]>, order?: Order | Order[], equivalentToNaN?: any): Comparison<TSource>;
+export default function createComparer<TSource, TSelect extends Primitive>(selector: Selector<TSource, TSelect | TSelect[]>, order?: Order | Order[], equivalentToNaN?: any): Comparison<TSource>;

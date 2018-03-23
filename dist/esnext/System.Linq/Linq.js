@@ -4,13 +4,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { areEqual as areEqualValues, compare as compareValues } from "../System/Compare";
-import { copy } from "../System/Collections/Array/copy";
-import * as Arrays from "../System/Collections/Array/Compare";
 import * as enumUtil from "../System/Collections/Enumeration/Enumerator";
 import { isEnumerable, isEnumerator, isIterator, throwIfEndless } from "../System/Collections/Enumeration/Enumerator";
 import EmptyEnumerator from "../System/Collections/Enumeration/EmptyEnumerator";
-import Type from "../System/Types";
 import Integer from "../System/Integer";
 import BaseFunctions from "../System/Functions";
 import ArrayEnumerator from "../System/Collections/Enumeration/ArrayEnumerator";
@@ -26,11 +22,19 @@ import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
 import ArgumentOutOfRangeException from "../System/Exceptions/ArgumentOutOfRangeException";
 import IndexEnumerator from "../System/Collections/Enumeration/IndexEnumerator";
 import IteratorEnumerator from "../System/Collections/Enumeration/IteratorEnumerator";
-import initialize from "../System/Collections/Array/initialize";
+import initialize from "../System/Collections/Array/initializeArray";
 import Random from "../System/Random";
 import InfiniteEnumerator from "../System/Collections/Enumeration/InfiniteEnumerator";
 import LazyList from "../System/Collections/LazyList";
 var disposeSingle = dispose.single;
+import areArraysEqual from "../System/Collections/Array/areArraysEqual";
+import isArrayLike from "../System/Reflection/isArrayLike";
+import areEqual from "../System/Comparison/areEqual";
+import isString from "../System/Reflection/isString";
+import { numberOrNaN } from "../System/Reflection/numberOrNaN";
+import compare from "../System/Comparison/compare";
+import copyArray from "../System/Collections/Array/copyArray";
+import isObject from "../System/Reflection/isObject";
 // #region Local Constants.
 var INVALID_DEFAULT = {}; // create a private unique instance for referencing.
 var VOID0 = void 0;
@@ -272,7 +276,7 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
                         var value = resultSelector(enumerator.current, len);
                         enumeratorStack[len++] = enumerator;
                         var c = childrenSelector(enumerator.current);
-                        var e = !Type.isString(c) && Enumerable.fromAny(c);
+                        var e = !isString(c) && Enumerable.fromAny(c);
                         enumerator = e ? e.getEnumerator() : EmptyEnumerator;
                         return yielder.yieldReturn(value);
                     }
@@ -301,7 +305,7 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
     };
     InfiniteLinqEnumerable.prototype.flatten = function () {
         return this.selectMany(function (entry) {
-            var e = !Type.isString(entry) && Enumerable.fromAny(entry);
+            var e = !isString(entry) && Enumerable.fromAny(entry);
             return e ? e.flatten() : [entry];
         });
     };
@@ -512,7 +516,7 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
                     if (initial) {
                         initial = false;
                     }
-                    else if (areEqualValues(compareKey, key)) {
+                    else if (areEqual(compareKey, key)) {
                         continue;
                     }
                     compareKey = key;
@@ -1328,9 +1332,9 @@ var LinqEnumerable = /** @class */ (function (_super) {
     LinqEnumerable.prototype.contains = function (value, compareSelector) {
         if (compareSelector) {
             var s_1 = compareSelector(value);
-            return this.any(function (v) { return areEqualValues(compareSelector(v), s_1); });
+            return this.any(function (v) { return areEqual(compareSelector(v), s_1); });
         }
-        return this.any(function (v) { return areEqualValues(v, value); });
+        return this.any(function (v) { return areEqual(v, value); });
     };
     // Originally has an overload for a predicate,
     // but that's a bad idea since this could be an enumeration of functions and therefore fail the intent.
@@ -1339,14 +1343,14 @@ var LinqEnumerable = /** @class */ (function (_super) {
         var found = -1;
         this.forEach(compareSelector
             ? function (element, i) {
-                if (areEqualValues(compareSelector(element, i), compareSelector(value, i), true)) {
+                if (areEqual(compareSelector(element, i), compareSelector(value, i), true)) {
                     found = i;
                     return false;
                 }
             }
             : function (element, i) {
                 // Why?  Because NaN doesn't equal NaN. :P
-                if (areEqualValues(element, value, true)) {
+                if (areEqual(element, value, true)) {
                     found = i;
                     return false;
                 }
@@ -1357,12 +1361,12 @@ var LinqEnumerable = /** @class */ (function (_super) {
         var result = -1;
         this.forEach(compareSelector
             ? function (element, i) {
-                if (areEqualValues(compareSelector(element, i), compareSelector(value, i), true))
+                if (areEqual(compareSelector(element, i), compareSelector(value, i), true))
                     result
                         = i;
             }
             : function (element, i) {
-                if (areEqualValues(element, value, true))
+                if (areEqual(element, value, true))
                     result = i;
             });
         return result;
@@ -1410,7 +1414,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
         }, isEndless);
     };
     LinqEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
-        if (equalityComparer === void 0) { equalityComparer = areEqualValues; }
+        if (equalityComparer === void 0) { equalityComparer = areEqual; }
         this.throwIfDisposed();
         return using(this.getEnumerator(), function (e1) { return using(enumUtil.from(second), function (e2) {
             // if both are endless, this will never evaluate.
@@ -1534,7 +1538,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
                 var hasNext, c;
                 while ((hasNext = enumerator.moveNext())) {
                     c = enumerator.current;
-                    if (areEqualValues(compareKey, compareSelector(keySelector(c))))
+                    if (areEqual(compareKey, compareSelector(keySelector(c))))
                         group[len++] = elementSelector(c);
                     else
                         break;
@@ -1591,7 +1595,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
         return this.aggregate(reduction, initialValue);
     };
     LinqEnumerable.prototype.average = function (selector) {
-        if (selector === void 0) { selector = Type.numberOrNaN; }
+        if (selector === void 0) { selector = numberOrNaN; }
         var count = 0;
         var sum = this.sum(function (e, i) {
             count++;
@@ -1618,7 +1622,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
     };
     // Addition...  Only works with numerical enumerations.
     LinqEnumerable.prototype.sum = function (selector) {
-        if (selector === void 0) { selector = Type.numberOrNaN; }
+        if (selector === void 0) { selector = numberOrNaN; }
         var sum = 0;
         // This allows for infinity math that doesn't destroy the other values.
         var sumInfinite = 0; // Needs more investigation since we are really trying to retain signs.
@@ -1638,7 +1642,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
     };
     // Multiplication...
     LinqEnumerable.prototype.product = function (selector) {
-        if (selector === void 0) { selector = Type.numberOrNaN; }
+        if (selector === void 0) { selector = numberOrNaN; }
         var result = 1, exists = false;
         this.forEach(function (x, i) {
             exists = true;
@@ -1663,7 +1667,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
      * @returns {number}
      */
     LinqEnumerable.prototype.quotient = function (selector) {
-        if (selector === void 0) { selector = Type.numberOrNaN; }
+        if (selector === void 0) { selector = numberOrNaN; }
         var count = 0;
         var result = NaN;
         this.forEach(function (x, i) {
@@ -1869,9 +1873,9 @@ var ArrayEnumerable = /** @class */ (function (_super) {
         return this.asEnumerable();
     };
     ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
-        if (equalityComparer === void 0) { equalityComparer = areEqualValues; }
-        if (Type.isArrayLike(second))
-            return Arrays.areEqual(this.source, second, true, equalityComparer);
+        if (equalityComparer === void 0) { equalityComparer = areEqual; }
+        if (isArrayLike(second))
+            return areArraysEqual(this.source, second, true, equalityComparer);
         if (second instanceof ArrayEnumerable)
             return second.sequenceEqual(this.source, equalityComparer);
         return _super.prototype.sequenceEqual.call(this, second, equalityComparer);
@@ -1945,7 +1949,7 @@ export { Lookup };
 var OrderedEnumerable = /** @class */ (function (_super) {
     tslib_1.__extends(OrderedEnumerable, _super);
     function OrderedEnumerable(source, keySelector, order, parent, comparer) {
-        if (comparer === void 0) { comparer = compareValues; }
+        if (comparer === void 0) { comparer = compare; }
         var _this = _super.call(this, NULL) || this;
         _this.source = source;
         _this.keySelector = keySelector;
@@ -2068,10 +2072,10 @@ function enumerableFrom(source, additional) {
     }
     Enumerable.from = from;
     function fromAny(source, defaultEnumerable) {
-        if (Type.isObject(source) || Type.isString(source)) {
+        if (isObject(source) || isString(source)) {
             if (source instanceof InfiniteLinqEnumerable)
                 return source;
-            if (Type.isArrayLike(source))
+            if (isArrayLike(source))
                 return new ArrayEnumerable(source);
             if (isEnumerable(source))
                 return new LinqEnumerable(function () { return source.getEnumerator(); }, null, source.isEndless);
@@ -2080,7 +2084,7 @@ function enumerableFrom(source, additional) {
             if (isIterator(source))
                 return fromAny(new IteratorEnumerator(source));
         }
-        else if (Type.isFunction(source)) {
+        else if (typeof source == 'function') {
             return new InfiniteLinqEnumerable(function () { return new InfiniteEnumerator(source); });
         }
         return defaultEnumerable;
@@ -2130,7 +2134,7 @@ function enumerableFrom(source, additional) {
         // Enforcing that there must be at least 1 choice is key.
         if (!len || !isFinite(len))
             throw new ArgumentOutOfRangeException('length', length);
-        return _choice(copy(values));
+        return _choice(copyArray(values));
     }
     Enumerable.choice = choice;
     function chooseFrom() {
@@ -2170,7 +2174,7 @@ function enumerableFrom(source, additional) {
         if (!len || !isFinite(len))
             throw new ArgumentOutOfRangeException('length', length);
         // Make a copy to avoid modifying the collection as we go.
-        return _cycle(copy(values));
+        return _cycle(copyArray(values));
     }
     Enumerable.cycle = cycle;
     function cycleThrough() {

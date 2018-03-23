@@ -2,32 +2,33 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { Type } from "../../Types";
+import isPropertyKey from "../../Reflection/isPropertyKey";
+import hasMethod from "../../Reflection/hasMethod";
 var VOID0 = void 0;
 var NULL = "null", GET_SYMBOL = "getSymbol", GET_HASH_CODE = "getHashCode";
-export function getIdentifier(obj, throwIfUnknown) {
+function getIdentifier(obj, throwIfUnknown) {
     if (throwIfUnknown === void 0) { throwIfUnknown = false; }
-    if (Type.isPropertyKey(obj))
+    if (isPropertyKey(obj))
         return obj;
     if (obj === null)
         return NULL;
     if (obj === VOID0)
-        return Type.UNDEFINED;
+        return "undefined" /* Undefined */;
     // See ISymbolizable.
-    if (Type.hasMethod(obj, GET_SYMBOL)) {
+    if (hasMethod(obj, GET_SYMBOL)) {
         return obj.getSymbol();
     }
     // See IHashable.
-    if (Type.hasMethod(obj, GET_HASH_CODE)) {
+    if (hasMethod(obj, GET_HASH_CODE)) {
         return obj.getHashCode();
     }
     if (throwIfUnknown) {
-        if (Type.isFunction(throwIfUnknown))
+        if (typeof throwIfUnknown == 'function')
             return throwIfUnknown(obj);
         else
             throw "Cannot create known identity.";
     }
-    return (typeof obj.toString == TypeOfValue.Function)
+    return (typeof obj.toString == "function" /* Function */)
         ? obj.toString()
         : Object.prototype.toString.call(obj);
 }

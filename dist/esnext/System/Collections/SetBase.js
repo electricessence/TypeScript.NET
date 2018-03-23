@@ -3,13 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { LinkedNodeList } from "./LinkedNodeList";
-import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
+import LinkedNodeList from "./LinkedNodeList";
+import CollectionBase from "./CollectionBase";
+import areEqual from "../Comparison/areEqual";
 import { forEach } from "./Enumeration/Enumerator";
-import { EmptyEnumerator } from "./Enumeration/EmptyEnumerator";
 import { using } from "../Disposable/dispose";
-import { areEqual } from "../Compare";
-import { CollectionBase } from "./CollectionBase";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import EmptyEnumerator from "./Enumeration/EmptyEnumerator";
 var VOID0 = void 0;
 var OTHER = 'other';
 var SetBase = /** @class */ (function (_super) {
@@ -183,6 +183,5 @@ var SetBase = /** @class */ (function (_super) {
     };
     return SetBase;
 }(CollectionBase));
-export { SetBase };
 export default SetBase;
 //# sourceMappingURL=SetBase.js.map

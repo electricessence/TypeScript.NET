@@ -3,10 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on code from: https://github.com/kriskowal/q
  */
-import { Type } from "../Types";
-import { LinkedNodeList } from "../Collections/LinkedNodeList";
-import { Queue } from "../Collections/Queue";
-import { ObjectPool } from "../Disposable/ObjectPool";
+import LinkedNodeList from "../Collections/LinkedNodeList";
+import Queue from "../Collections/Queue";
+import ObjectPool from "../Disposable/ObjectPool";
 import { isNodeJS } from "../Environment";
 var requestTick;
 var flushing = false;
@@ -118,9 +117,9 @@ if (isNodeJS) {
         process.nextTick(flush);
     };
 }
-else if (typeof setImmediate === TypeOfValue.Function) {
+else if (typeof setImmediate === "function" /* Function */) {
     // In IE10, Node.js 0.9+, or https://github.com/NobleJS/setImmediate
-    if (typeof window !== Type.UNDEFINED) {
+    if (typeof window !== "undefined" /* Undefined */) {
         requestTick = setImmediate.bind(window, flush);
     }
     else {
@@ -129,7 +128,7 @@ else if (typeof setImmediate === TypeOfValue.Function) {
         };
     }
 }
-else if (typeof MessageChannel !== Type.UNDEFINED) {
+else if (typeof MessageChannel !== "undefined" /* Undefined */) {
     // modern browsers
     // http://www.nonblocking.io/2011/06/windownexttick.html
     var channel_1 = new MessageChannel();

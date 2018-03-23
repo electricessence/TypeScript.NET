@@ -2,10 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import * as Values from "../../Compare";
+import compare from "../../Comparison/compare";
 var SortContext = /** @class */ (function () {
     function SortContext(_next, _comparer, _order) {
-        if (_comparer === void 0) { _comparer = Values.compare; }
+        if (_comparer === void 0) { _comparer = compare; }
         if (_order === void 0) { _order = 1 /* Ascending */; }
         this._next = _next;
         this._comparer = _comparer;

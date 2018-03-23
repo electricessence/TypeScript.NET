@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import ArgumentException from "./Exceptions/ArgumentException";
-import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeException";
+import ArgumentLessThanMinimumException from "./Exceptions/ArgumentLessThanMinimumException";
 function Integer(n) {
     return Math.floor(n);
 }
@@ -66,7 +66,7 @@ function Integer(n) {
     function assertZeroOrGreater(n, argumentName) {
         var i = assert(n, argumentName) && n >= 0;
         if (!i)
-            throw new ArgumentOutOfRangeException(argumentName || 'n', n, "Must be a valid integer greater than or equal to zero.");
+            throw new ArgumentLessThanMinimumException(argumentName || 'n', n, 0);
         return i;
     }
     Integer.assertZeroOrGreater = assertZeroOrGreater;
@@ -79,7 +79,7 @@ function Integer(n) {
     function assertPositive(n, argumentName) {
         var i = assert(n, argumentName) && n > 0;
         if (!i)
-            throw new ArgumentOutOfRangeException(argumentName || 'n', n, "Must be greater than zero.");
+            throw new ArgumentLessThanMinimumException(argumentName || 'n', n, 1);
         return i;
     }
     Integer.assertPositive = assertPositive;

@@ -4,17 +4,16 @@
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
 import * as tslib_1 from "tslib";
-import { Type } from "../../Types";
 import Worker from "../Worker";
-import { deferImmediate } from "../deferImmediate";
 import { isNodeJS } from "../../Environment";
-import { ObjectPool } from "../../Disposable/ObjectPool";
+import { deferImmediate } from "../deferImmediate";
+import ObjectPool from "../../Disposable/ObjectPool";
 import map from "../../Promises/Functions/map";
 import TSDNPromise from "../../Promises/Promise";
-import { PromiseCollection } from "../../Promises/PromiseCollection";
-import { ArrayPromise } from "../../Promises/ArrayPromise";
+import PromiseCollection from "../../Promises/PromiseCollection";
+import ArrayPromise from "../../Promises/ArrayPromise";
 //noinspection JSUnusedAssignment
-var MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Type.UNDEFINED
+var MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== "undefined" /* Undefined */
     ? (self.URL ? self.URL : self.webkitURL)
     : null, _supports = isNodeJS || !!self.Worker; // node always supports parallel
 //noinspection JSUnusedAssignment
@@ -148,13 +147,13 @@ var Parallel = /** @class */ (function () {
         for (var _i = 0, required_1 = required; _i < required_1.length; _i++) {
             var a = required_1[_i];
             switch (typeof a) {
-                case TypeOfValue.String:
+                case "string" /* String */:
                     this._requiredScripts.push(a);
                     break;
-                case TypeOfValue.Function:
+                case "function" /* Function */:
                     this._requiredFunctions.push({ fn: a });
                     break;
-                case Type.OBJECT:
+                case "object" /* Object */:
                     this._requiredFunctions.push(a);
                     break;
                 default:

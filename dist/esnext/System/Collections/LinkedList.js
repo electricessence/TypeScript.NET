@@ -4,11 +4,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { areEqual } from "../Compare";
-import { LinkedNodeList } from "./LinkedNodeList";
-import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
-import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
-import { CollectionBase } from "./CollectionBase";
+import LinkedNodeList from "./LinkedNodeList";
+import CollectionBase from "./CollectionBase";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import areEqual from "../Comparison/areEqual";
 var VOID0 = void 0;
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
@@ -254,7 +254,7 @@ var LinkedList = /** @class */ (function (_super) {
     };
     return LinkedList;
 }(CollectionBase));
-export { LinkedList };
+export default LinkedList;
 // Use an internal node class to prevent mucking up the LinkedList.
 var LinkedListNode = /** @class */ (function () {
     function LinkedListNode(_list, _nodeInternal) {
@@ -323,5 +323,4 @@ var LinkedListNode = /** @class */ (function () {
     };
     return LinkedListNode;
 }());
-export default LinkedList;
 //# sourceMappingURL=LinkedList.js.map

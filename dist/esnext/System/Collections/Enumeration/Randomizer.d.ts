@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { SimpleEnumerableBase } from "./SimpleEnumerableBase";
-import { ForEachEnumerable } from "./ForEachEnumerable";
+import SimpleEnumerableBase from "./SimpleEnumerableBase";
+import ForEachEnumerable from "./ForEachEnumerable";
 /**
  * Creates a randomized version of the source.
  * Note: An iterator will always require a arrayCopy (buffer) to pull random results one by one.

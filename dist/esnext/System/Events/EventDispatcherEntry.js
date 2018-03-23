@@ -3,11 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { Type } from "../Types";
-import { DisposableBase } from "../Disposable/DisposableBase";
-import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
-import { ArgumentException } from "../Exceptions/ArgumentException";
-import { areEquivalent } from "../Compare";
+import DisposableBase from "../Disposable/DisposableBase";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import ArgumentException from "../Exceptions/ArgumentException";
+import hasMemberOfType from "../Reflection/hasMemberOfType";
+import { areEquivalent } from "../Comparison/areEquivalent";
+import isObject from "../Reflection/isObject";
 var NAME = "EventDispatcherEntry";
 var EventDispatcherEntry = /** @class */ (function (_super) {
     tslib_1.__extends(EventDispatcherEntry, _super);
@@ -18,7 +19,7 @@ var EventDispatcherEntry = /** @class */ (function (_super) {
         _this.params = params;
         if (!listener)
             throw new ArgumentNullException('listener');
-        if (Type.isObject(listener) && !Type.hasMemberOfType(listener, "handleEvent", TypeOfValue.Function))
+        if (isObject(listener) && !hasMemberOfType(listener, "handleEvent", "function" /* Function */))
             throw new ArgumentException('listener', "is invalid type.  Must be a function or an object with 'handleEvent'.");
         var _ = _this;
         _.type = type;
@@ -41,7 +42,7 @@ var EventDispatcherEntry = /** @class */ (function (_super) {
             return false;
         var l = _.listener, d = l && e.type == _.type;
         if (d) {
-            if (Type.isFunction(l))
+            if (typeof l == 'function')
                 _.listener(e); // Use 'this' to ensure call reference.
             else
                 l.handleEvent(e);
@@ -71,6 +72,5 @@ var EventDispatcherEntry = /** @class */ (function (_super) {
     };
     return EventDispatcherEntry;
 }(DisposableBase));
-export { EventDispatcherEntry };
 export default EventDispatcherEntry;
 //# sourceMappingURL=EventDispatcherEntry.js.map

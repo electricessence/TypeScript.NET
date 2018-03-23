@@ -19,7 +19,7 @@ var ObjectPool = /** @class */ (function (_super) {
         _this._generator = _generator;
         _this._recycler = _recycler;
         /**
-         * By default will clear after 5 seconds of non-use.
+         * By default will clearElements after 5 seconds of non-use.
          */
         _this.autoClearTimeout = 5000;
         if (isNaN(_maxSize) || _maxSize < 1)
@@ -82,7 +82,7 @@ var ObjectPool = /** @class */ (function (_super) {
         p.length = 0;
     };
     /**
-     * Will clear out the pool.
+     * Will clearElements out the pool.
      * Cancels any scheduled trims when executed.
      * @param defer A delay before clearing.  Will be overridden by later calls.
      */

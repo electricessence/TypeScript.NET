@@ -1,5 +1,5 @@
 import * as tslib_1 from "tslib";
-import { ObservableBase } from "../Observable/ObservableBase";
+import ObservableBase from "../Observable/ObservableBase";
 var ps = require("child_process");
 //import {ChildProcess} from "child_process";
 /**
@@ -39,6 +39,5 @@ var NodeJSWorker = /** @class */ (function (_super) {
     };
     return NodeJSWorker;
 }(ObservableBase));
-export { NodeJSWorker };
 export default NodeJSWorker;
 //# sourceMappingURL=NodeJSWorker.js.map

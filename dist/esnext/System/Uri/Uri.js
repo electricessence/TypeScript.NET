@@ -3,12 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-import { Type } from "../Types";
-import { Scheme } from "./Scheme";
+import { isValidScheme } from "./Scheme";
 import { encode, parseToMap } from "./QueryParams";
-import { trim } from "../Text/Utility";
-import { ArgumentException } from "../Exceptions/ArgumentException";
-import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
+import ArgumentException from "../Exceptions/ArgumentException";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import isString from "../Reflection/isString";
+import isNumber from "../Reflection/isNumber";
+import trim from "../Text/trim";
 var VOID0 = void 0;
 /**
  * Provides an read-only model representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
@@ -34,7 +35,7 @@ var Uri = /** @class */ (function () {
         this.port = getPort(port);
         this.authority = _.getAuthority() || null;
         this.path = path || null;
-        if (!Type.isString(query))
+        if (!isString(query))
             query = encode(query);
         this.query = formatQuery(query) || null;
         Object.freeze(this.queryParams
@@ -64,10 +65,10 @@ var Uri = /** @class */ (function () {
      * @returns {Uri}
      */
     Uri.from = function (uri, defaults) {
-        var u = Type.isString(uri)
+        var u = isString(uri)
             ? Uri.parse(uri) // Parsing a string should throw errors.  Null or undefined simply means empty.
             : uri;
-        return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Type.isNumber(u.port, true) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
+        return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && isNumber(u.port, true) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
     };
     Uri.parse = function (url, throwIfInvalid) {
         if (throwIfInvalid === void 0) { throwIfInvalid = true; }
@@ -166,7 +167,7 @@ var Uri = /** @class */ (function () {
     };
     return Uri;
 }());
-export { Uri };
+export default Uri;
 export var Fields;
 (function (Fields) {
     Fields[Fields["scheme"] = 0] = "scheme";
@@ -192,7 +193,7 @@ function copyUri(from, to) {
 var SLASH = '/', SLASH2 = '//', QM = "?" /* Query */, HASH = '#', EMPTY = '', AT = '@';
 function getScheme(scheme) {
     var s = scheme;
-    if (Type.isString(s)) {
+    if (isString(s)) {
         if (!s)
             return null;
         s = trim(s)
@@ -200,7 +201,7 @@ function getScheme(scheme) {
             .replace(/[^a-z0-9+.-]+$/g, EMPTY);
         if (!s)
             return null;
-        if (Scheme.isValid(s))
+        if (isValidScheme(s))
             return s;
     }
     else {
@@ -215,12 +216,12 @@ function getPort(port) {
     if (!port)
         return null;
     var p;
-    if (Type.isNumber(port)) {
+    if (isNumber(port)) {
         p = port;
         if (p >= 0 && isFinite(p))
             return p;
     }
-    else if (Type.isString(port) && (p = parseInt(port)) && !isNaN(p)) {
+    else if (isString(port) && (p = parseInt(port)) && !isNaN(p)) {
         return getPort(p);
     }
     throw new ArgumentException("port", "invalid value");
@@ -229,7 +230,7 @@ function getAuthority(uri) {
     if (!uri.host) {
         if (uri.userInfo)
             throw new ArgumentException('host', 'Cannot include user info when there is no host.');
-        if (Type.isNumber(uri.port, true))
+        if (isNumber(uri.port, true))
             throw new ArgumentException('host', 'Cannot include a port when there is no host.');
     }
     /*
@@ -339,5 +340,4 @@ function tryParse(url, out) {
     // null is good! (here)
     return null;
 }
-export default Uri;
 //# sourceMappingURL=Uri.js.map

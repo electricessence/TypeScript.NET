@@ -2,13 +2,13 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { CollectionBase } from "./CollectionBase";
+import IEnumerator from "./Enumeration/IEnumerator";
+import IList from "./IList";
+import IEnumerateEach from "./Enumeration/IEnumerateEach";
+import IEnumerableOrArray from "./IEnumerableOrArray";
+import ArrayLikeWritable from "./Array/ArrayLikeWritable";
 import { ActionWithIndex, EqualityComparison, PredicateWithIndex } from "../FunctionTypes";
-import { IEnumerator } from "./Enumeration/IEnumerator";
-import { IList } from "./IList";
-import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
-import { IEnumerableOrArray } from "./IEnumerableOrArray";
-import { ArrayLikeWritable } from "./Array/ArrayLikeWritable";
+import CollectionBase from "./CollectionBase";
 export declare class List<T> extends CollectionBase<T> implements IList<T>, IEnumerateEach<T> {
     protected readonly _source: T[];
     constructor(source?: IEnumerableOrArray<T>, equalityComparer?: EqualityComparison<T>);

@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { TimeUnit } from "./TimeUnit";
-import { TimeQuantity } from "./TimeQuantity";
+import TimeQuantity from "./TimeQuantity";
+import TimeUnit from "./TimeUnit";
 /**
  * TimeUnitValue allows for passing around a reference to a changeable measure of time coerced by its unit type.
  */

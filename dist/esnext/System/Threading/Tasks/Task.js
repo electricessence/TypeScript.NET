@@ -3,10 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { TaskHandlerBase } from "./TaskHandlerBase";
-import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
-import { Lazy } from "../../Lazy";
-import { TaskStatus } from "./TaskStatus";
+import TaskHandlerBase from "./TaskHandlerBase";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import Lazy from "../../Lazy";
 /**
  * A simplified synchronous (but deferrable) version of Task<T>
  * Asynchronous operations should use Promise<T>.
@@ -35,12 +34,12 @@ var Task = /** @class */ (function (_super) {
         };
     };
     Task.prototype.start = function (defer) {
-        if (this.getStatus() == TaskStatus.Created) {
+        if (this.getStatus() == 0 /* Created */) {
             _super.prototype.start.call(this, defer);
         }
     };
     Task.prototype.runSynchronously = function () {
-        if (this.getStatus() == TaskStatus.Created) {
+        if (this.getStatus() == 0 /* Created */) {
             _super.prototype.runSynchronously.call(this);
         }
     };

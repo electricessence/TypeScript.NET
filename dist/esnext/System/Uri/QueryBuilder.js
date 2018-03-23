@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import Type from "../Types";
 import OrderedStringKeyDictionary from "../Collections/Dictionaries/OrderedStringKeyDictionary";
 import { isEnumerableOrArrayLike } from "../Collections/Enumeration/Enumerator";
 import { encode, parse } from "./QueryParams";
+import isString from "../Reflection/isString";
 /**
  * Provides a means for parsing and building a set of parameters.
  *
@@ -26,7 +26,7 @@ var QueryBuilder = /** @class */ (function (_super) {
     };
     QueryBuilder.prototype.importQuery = function (query, decodeValues) {
         if (decodeValues === void 0) { decodeValues = true; }
-        if (Type.isString(query)) {
+        if (isString(query)) {
             this.importFromString(query, decodeValues);
         }
         else if (isEnumerableOrArrayLike(query)) {

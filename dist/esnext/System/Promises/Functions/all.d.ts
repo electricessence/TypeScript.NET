@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-import { ArrayPromise } from "../ArrayPromise";
+import ArrayPromise from "../ArrayPromise";
 /**
  * Returns a promise that is fulfilled with an array containing the fulfillment value of each promise, or is rejected with the same rejection reason as the first promise to be rejected.
  */

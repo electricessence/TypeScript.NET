@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
-import { ReadOnlyCollectionBase } from "./ReadOnlyCollectionBase";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import ReadOnlyCollectionBase from "./ReadOnlyCollectionBase";
 import { from as enumeratorFrom } from "./Enumeration/Enumerator";
-import { Type } from "../Types";
+import isArrayLike from "../Reflection/isArrayLike";
 var ReadOnlyCollectionWrapper = /** @class */ (function (_super) {
     tslib_1.__extends(ReadOnlyCollectionWrapper, _super);
     function ReadOnlyCollectionWrapper(collection) {
@@ -15,7 +15,7 @@ var ReadOnlyCollectionWrapper = /** @class */ (function (_super) {
             throw new ArgumentNullException('collection');
         var _ = _this;
         // Attempting to avoid contact with the original collection.
-        if (Type.isArrayLike(collection)) {
+        if (isArrayLike(collection)) {
             _this.__getCount = function () { return collection.length; };
             _this.__getEnumerator = function () { return enumeratorFrom(collection); };
         }

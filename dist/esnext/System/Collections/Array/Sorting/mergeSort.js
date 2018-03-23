@@ -4,19 +4,19 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * https://en.wikipedia.org/wiki/Merge_sort
  */
-import { ArgumentNullException } from "../../../Exceptions/ArgumentNullException";
-import { initialize } from "../Utility";
+import initializeArray from "../initializeArray";
+import ArgumentNullException from "../../../Exceptions/ArgumentNullException";
 /**
  * Merge internalSort O(n log (n))
  * Warning: Uses recursion.
  * @param target
  * @returns {number[]}
  */
-export function mergeSort(target) {
+export default function mergeSort(target) {
     if (!target)
         throw new ArgumentNullException("target");
     var len = target.length;
-    return len < 2 ? target : sort(target, 0, len, initialize(len));
+    return len < 2 ? target : sort(target, 0, len, initializeArray(len));
 }
 function sort(target, start, end, temp) {
     if (end - start > 1) {

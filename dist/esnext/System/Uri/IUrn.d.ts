@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-import SchemeValue from "./SchemeValue";
+import Scheme from "./Scheme";
 /**
  * https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  *
@@ -17,7 +17,7 @@ export default interface IUrn {
     /**
      * The scheme name for this URI.
      */
-    scheme?: SchemeValue | null;
+    scheme?: Scheme | null;
     /**
      * The absolute path of the URI.
      */

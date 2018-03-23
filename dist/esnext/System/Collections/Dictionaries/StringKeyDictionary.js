@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as tslib_1 from "tslib";
-import { areEqual } from "../../Compare";
 import DictionaryBase from "./DictionaryBase";
+import areEqual from "../../Comparison/areEqual";
 var VOID0 = void 0;
 var StringKeyDictionary = /** @class */ (function (_super) {
     tslib_1.__extends(StringKeyDictionary, _super);

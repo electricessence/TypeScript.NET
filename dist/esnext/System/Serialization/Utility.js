@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import Type from "../Types";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import hasMemberOfType from "../Reflection/hasMemberOfType";
 var EMPTY = '', TRUE = 'true', FALSE = 'false';
 export function toString(value, defaultForUnknown) {
     var v = value;
@@ -27,7 +27,7 @@ export function toString(value, defaultForUnknown) {
     }
 }
 export function isSerializable(instance) {
-    return Type.hasMemberOfType(instance, 'serialize', "function" /* Function */);
+    return hasMemberOfType(instance, 'serialize', "function" /* Function */);
 }
 export function toPrimitive(value, caseInsensitive, unknownHandler) {
     if (value) {

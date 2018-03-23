@@ -154,7 +154,7 @@ var Regex = /** @class */ (function () {
     };
     return Regex;
 }());
-export { Regex };
+export default Regex;
 var Capture = /** @class */ (function () {
     function Capture(value, index) {
         if (value === void 0) { value = EMPTY; }
@@ -235,5 +235,4 @@ var Match = /** @class */ (function (_super) {
 export { Match };
 var EmptyMatch = new Match();
 EmptyMatch.freeze();
-export default Regex;
 //# sourceMappingURL=RegularExpressions.js.map

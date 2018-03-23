@@ -2,9 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { areEqual, compare } from "../Compare";
 import TimeUnit from "./TimeUnit";
 import Lazy from "../Lazy";
+import compare from "../Comparison/compare";
+import areEqual from "../Comparison/areEqual";
 /**
  * This class provides a simple means for storing and calculating time quantities.
  */

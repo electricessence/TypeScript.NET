@@ -2,12 +2,12 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import CollectionBase from "../CollectionBase";
+import { Action } from "../../FunctionTypes";
 import { IKeyValuePair, KeyValuePair } from "../../KeyValuePair";
 import IDictionary from "./IDictionary";
 import IEnumerator from "../Enumeration/IEnumerator";
 import IEnumerableOrArray from "../IEnumerableOrArray";
-import { Action } from "../../FunctionTypes";
+import CollectionBase from "../CollectionBase";
 declare abstract class DictionaryBase<TKey, TValue> extends CollectionBase<IKeyValuePair<TKey, TValue>> implements IDictionary<TKey, TValue> {
     constructor(source?: IEnumerableOrArray<IKeyValuePair<TKey, TValue>>);
     protected _onValueModified(key: TKey, value: TValue | undefined, old: TValue | undefined): void;

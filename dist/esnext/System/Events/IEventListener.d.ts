@@ -3,5 +3,5 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { Func } from "../FunctionTypes";
-export declare type IEventListener = EventListenerOrEventListenerObject | Func<void>;
+declare type IEventListener = EventListenerOrEventListenerObject | Func<void>;
 export default IEventListener;

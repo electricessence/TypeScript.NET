@@ -3,7 +3,7 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { ITimeQuantity } from "./ITimeQuantity";
+import ITimeQuantity from "./ITimeQuantity";
 declare enum TimeUnit {
     Ticks = 0,
     Milliseconds = 1,

@@ -3,8 +3,8 @@
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { IDisposable } from "../Disposable/IDisposable";
-export declare class StringBuilder implements IDisposable {
+import IDisposable from "../Disposable/IDisposable";
+export default class StringBuilder implements IDisposable {
     private readonly _partArray;
     private _latest;
     constructor(...initial: any[]);
@@ -30,4 +30,3 @@ export declare class StringBuilder implements IDisposable {
     clear(): void;
     dispose(): void;
 }
-export default StringBuilder;

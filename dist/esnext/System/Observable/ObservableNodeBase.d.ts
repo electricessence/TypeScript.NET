@@ -5,7 +5,7 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 import ObservableBase from "./ObservableBase";
-import { IObserver } from "./IObserver";
+import IObserver from "./IObserver";
 export declare class ObservableNodeBase<T> extends ObservableBase<T> implements IObserver<T> {
     onNext(value: T): void;
     onError(error: any): void;

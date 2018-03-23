@@ -2,15 +2,16 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import Type from "../Types";
-import { copy } from "../Collections/Array/copy";
+import isObject from "../Reflection/isObject";
+import copyArray from "../Collections/Array/copyArray";
+import isArrayLike from "../Reflection/isArrayLike";
 export default function clone(source, depth) {
     if (depth === void 0) { depth = 0; }
-    if (depth < 0 || !source || !Type.isObject(source))
+    if (depth < 0 || !source || !isObject(source))
         return source;
-    if (Type.isArrayLike(source)) {
-        // Make a copy first just in case there's some weird references.
-        var result = copy(source);
+    if (isArrayLike(source)) {
+        // Make a copyArray first just in case there's some weird references.
+        var result = copyArray(source);
         if (depth > 0) {
             var len = source.length;
             for (var i = 0; i < len; i++) {

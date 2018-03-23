@@ -5,7 +5,7 @@
  */
 import * as tslib_1 from "tslib";
 import SystemException from "./SystemException";
-import { trim } from "../Text/Utility";
+import trim from "../Text/trim";
 var ArgumentException = /** @class */ (function (_super) {
     tslib_1.__extends(ArgumentException, _super);
     // For simplicity and consistency, lets stick with 1 signature.

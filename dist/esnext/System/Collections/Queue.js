@@ -1,18 +1,21 @@
 /*!
-* @author: electricessence / https://github.com/electricessence/
-* Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
-* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-*/
+ * @author: electricessence / https://github.com/electricessence/
+ * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import * as tslib_1 from "tslib";
-import { areEqual } from "../Compare";
-import * as AU from "./Array/Utility";
-import Type from "../Types";
 import Integer from "../Integer";
 import EnumeratorBase from "./Enumeration/EnumeratorBase";
 import NotImplementedException from "../Exceptions/NotImplementedException";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
 import CollectionBase from "./CollectionBase";
+import areEqual from "../Comparison/areEqual";
+import initializeArray from "./Array/initializeArray";
+import clearElements from "./Array/clearElements";
+import isArrayLike from "../Reflection/isArrayLike";
+import isNumber from "../Reflection/isNumber";
+import copyArrayTo from "./Array/copyArrayTo";
 var VOID0 = void 0;
 var MINIMUM_GROW = 4;
 var SHRINK_THRESHOLD = 32; // Unused?
@@ -31,16 +34,16 @@ var Queue = /** @class */ (function (_super) {
         if (!source)
             _this._array = emptyArray;
         else {
-            if (Type.isNumber(source)) {
+            if (isNumber(source)) {
                 var capacity = source;
                 assertIntegerZeroOrGreater(capacity, "capacity");
                 _this._array = capacity
-                    ? AU.initialize(capacity)
+                    ? initializeArray(capacity)
                     : emptyArray;
             }
             else {
                 var se = source;
-                _this._array = AU.initialize(Type.isArrayLike(se)
+                _this._array = initializeArray(isArrayLike(se)
                     ? se.length
                     : DEFAULT_CAPACITY);
                 _this._importEntries(se);
@@ -79,10 +82,10 @@ var Queue = /** @class */ (function (_super) {
         var _ = this;
         var array = _._array, head = _._head, tail = _._tail, size = _._size;
         if (head < tail)
-            AU.clear(array, head, tail);
+            clearElements(array, head, tail);
         else {
-            AU.clear(array, head);
-            AU.clear(array, 0, tail);
+            clearElements(array, head);
+            clearElements(array, 0, tail);
         }
         _._head = 0;
         _._tail = 0;
@@ -141,14 +144,14 @@ var Queue = /** @class */ (function (_super) {
             return this;
         }
         // We create a new array because modifying an existing one could be slow.
-        var newArray = AU.initialize(capacity);
+        var newArray = initializeArray(capacity);
         if (size > 0) {
             if (head < tail) {
-                AU.copyTo(array, newArray, head, 0, size);
+                copyArrayTo(array, newArray, head, 0, size);
             }
             else {
-                AU.copyTo(array, newArray, head, 0, len - head);
-                AU.copyTo(array, newArray, 0, len - head, tail);
+                copyArrayTo(array, newArray, head, 0, len - head);
+                copyArrayTo(array, newArray, 0, len - head, tail);
             }
         }
         _._array = newArray;
@@ -241,7 +244,7 @@ var Queue = /** @class */ (function (_super) {
     };
     return Queue;
 }(CollectionBase));
-export { Queue };
+export default Queue;
 function assertZeroOrGreater(value, property) {
     if (value < 0)
         throw new ArgumentOutOfRangeException(property, value, "Must be greater than zero");
@@ -251,5 +254,4 @@ function assertIntegerZeroOrGreater(value, property) {
     Integer.assert(value, property);
     return assertZeroOrGreater(value, property);
 }
-export default Queue;
 //# sourceMappingURL=Queue.js.map

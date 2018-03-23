@@ -6,7 +6,7 @@
 import IEnumerator from "./Enumeration/IEnumerator";
 import ReadOnlyCollectionBase from "./ReadOnlyCollectionBase";
 import IEnumerable from "./Enumeration/IEnumerable";
-import { IReadOnlyList } from "./IList";
+import IReadOnlyList from "./IReadOnlyList";
 export default class LazyList<T> extends ReadOnlyCollectionBase<T> implements IReadOnlyList<T> {
     private _enumerator;
     private _cached;

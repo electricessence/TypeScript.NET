@@ -5,8 +5,8 @@
  */
 import { WorkerLike } from "../WorkerType";
 import TSDNPromise from "../../Promises/Promise";
-import { PromiseCollection } from "../../Promises/PromiseCollection";
-import { ArrayPromise } from "../../Promises/ArrayPromise";
+import PromiseCollection from "../../Promises/PromiseCollection";
+import ArrayPromise from "../../Promises/ArrayPromise";
 import PromiseBase from "../../Promises/PromiseBase";
 export interface ParallelOptions {
     /**

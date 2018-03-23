@@ -4,8 +4,7 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 import * as tslib_1 from "tslib";
-import { ArgumentException } from "./ArgumentException";
-var NAME = 'ArgumentOutOfRangeException';
+import ArgumentException from "./ArgumentException";
 var ArgumentOutOfRangeException = /** @class */ (function (_super) {
     tslib_1.__extends(ArgumentOutOfRangeException, _super);
     function ArgumentOutOfRangeException(paramName, actualValue, message, innerException) {
@@ -15,7 +14,7 @@ var ArgumentOutOfRangeException = /** @class */ (function (_super) {
         }) || this;
     }
     ArgumentOutOfRangeException.prototype.getName = function () {
-        return NAME;
+        return 'ArgumentOutOfRangeException';
     };
     return ArgumentOutOfRangeException;
 }(ArgumentException));

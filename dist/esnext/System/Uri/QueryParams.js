@@ -3,9 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as Serialize from "../Serialization/Utility";
-import Type from "../Types";
 import extractKeyValue from "../KeyValueExtract";
 import { forEach, isEnumerableOrArrayLike } from "../Collections/Enumeration/Enumerator";
+import hasMemberOfType from "../Reflection/hasMemberOfType";
 var EMPTY = "", TO_URI_COMPONENT = "toUriComponent";
 /**
  * Returns the encoded URI string
@@ -62,7 +62,7 @@ export function encodeValue(value) {
  * @returns {boolean}
  */
 export function isUriComponentFormattable(instance) {
-    return Type.hasMemberOfType(instance, TO_URI_COMPONENT, TypeOfValue.Function);
+    return hasMemberOfType(instance, TO_URI_COMPONENT, "function" /* Function */);
 }
 /**
  * Parses a string for valid query param entries and pipes them through a handler.

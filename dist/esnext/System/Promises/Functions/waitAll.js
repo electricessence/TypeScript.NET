@@ -2,9 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
-import { Set } from "../../Collections/Set";
-import { ArrayPromise } from "../ArrayPromise";
+import Set from "../../Collections/Set";
+import ArrayPromise from "../ArrayPromise";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
 function waitAll(first) {
     var rest = [];
     for (var _i = 1; _i < arguments.length; _i++) {
@@ -12,7 +12,7 @@ function waitAll(first) {
     }
     if (!first && !rest.length)
         throw new ArgumentNullException("promises");
-    var promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy!
+    var promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copyArray!
     if (!promises.length || promises.every(function (v) { return !v; }))
         return new ArrayPromise(function (r) { return r(promises); }, true); // it's a new empty, reuse it. :|
     // Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.

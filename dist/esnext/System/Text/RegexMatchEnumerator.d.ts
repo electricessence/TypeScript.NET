@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { Match, Regex } from "./RegularExpressions";
-import { IEnumerator } from "../Collections/Enumeration/IEnumerator";
+import Regex, { Match } from "./RegularExpressions";
+import IEnumerator from "../Collections/Enumeration/IEnumerator";
 export declare class RegexMatchEnumerator {
     private readonly _pattern;
     constructor(pattern: string | RegExp | Regex);

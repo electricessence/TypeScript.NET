@@ -2,13 +2,13 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { ILinkedNode, ILinkedNodeWithValue } from "./ILinkedListNode";
-import IEnumerateEach from "./Enumeration/IEnumerateEach";
-import IDisposable from "../Disposable/IDisposable";
-import { ILinkedNodeList } from "./ILinkedList";
-import IEnumerator from "./Enumeration/IEnumerator";
-import { ActionWithIndex, PredicateWithIndex, Selector, SelectorWithIndex } from "../FunctionTypes";
 import ArrayLikeWritable from "./Array/ArrayLikeWritable";
+import IDisposable from "../Disposable/IDisposable";
+import IEnumerateEach from "./Enumeration/IEnumerateEach";
+import IEnumerator from "./Enumeration/IEnumerator";
+import { ILinkedNodeList } from "./ILinkedList";
+import { ILinkedNode, ILinkedNodeWithValue } from "./ILinkedListNode";
+import { ActionWithIndex, PredicateWithIndex, Selector, SelectorWithIndex } from "../FunctionTypes";
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
  * http://jsperf.com/simulating-a-queue
