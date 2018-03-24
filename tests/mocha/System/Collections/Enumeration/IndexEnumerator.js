@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
-var IndexEnumerator_1 = require("../../../../../dist/commonjs/System/Collections/Enumeration/IndexEnumerator");
+var IndexEnumerator_1 = require("../../../../../dist/umd/Collections/Enumeration/IndexEnumerator");
 var a = { 0: 0, 1: 1, 2: 2, 3: 3, 4: 4 };
 describe("new & .moveNext()", function () {
     it("should ignore null sources", function () {

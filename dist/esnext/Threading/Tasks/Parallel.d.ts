@@ -46,7 +46,7 @@ export declare class Parallel {
      * @param data
      * @param task
      * @param env
-     * @returns {TSDNPromise<U>|TSDNPromise}
+     * @returns {Promise<U>|Promise}
      */
     startNew<T, U>(data: T, task: (data: T) => U, env?: any): TSDNPromise<U>;
     /**
@@ -54,7 +54,7 @@ export declare class Parallel {
      * Is good for use with testing.
      * @param data
      * @param task
-     * @returns {TSDNPromise<U>|TSDNPromise}
+     * @returns {Promise<U>|Promise}
      */
     startLocal<T, U>(data: T, task: (data: T) => U): TSDNPromise<U>;
     /**

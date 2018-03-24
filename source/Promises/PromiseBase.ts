@@ -94,7 +94,7 @@ export default abstract class PromiseBase<T>
 	 * Standard .then method that defers execution until resolved.
 	 * @param onFulfilled
 	 * @param onRejected
-	 * @returns {TSDNPromise}
+	 * @returns {Promise}
 	 */
 
 	then<TFulfilled = T, TRejected = never>(
@@ -119,7 +119,7 @@ export default abstract class PromiseBase<T>
 	 * Same as .then but doesn't trap errors.  Exceptions may end up being fatal.
 	 * @param onFulfilled
 	 * @param onRejected
-	 * @returns {TSDNPromise}
+	 * @returns {Promise}
 	 */
 	thenAllowFatal<TFulfilled = T, TRejected = never>(
 		onFulfilled:Fulfill<T, TFulfilled>,

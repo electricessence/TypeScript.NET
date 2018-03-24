@@ -5,7 +5,7 @@
 
 import IMap from "../../IMap";
 
-export function wipeEntries(map:IMap<any>, depth:number = 1):void
+export default function wipeEntries(map:IMap<any>, depth:number = 1):void
 {
 	if(map && depth)
 	{

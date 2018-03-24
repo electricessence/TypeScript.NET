@@ -5,12 +5,12 @@ import {
 	PromiseBase,
 	PromiseCollection,
 	TSDNPromise
-} from "../../../../dist/commonjs/System/Promises/Promise";
-import * as AU from "../../../../dist/commonjs/System/Collections/Array/Utility";
-import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
-import {defer} from "../../../../dist/commonjs/System/Threading/defer";
-import {LazyPromise} from "../../../../dist/commonjs/System/Promises/LazyPromise";
-import {ObjectDisposedException} from "../../../../dist/commonjs/System/Disposable/ObjectDisposedException";
+} from "../../../../dist/umd/Promises/Promise";
+import * as AU from "../../../../dist/umd/Collections/Array/Utility";
+import Stopwatch from "../../../../dist/umd/Diagnostics/Stopwatch";
+import {defer} from "../../../../dist/umd/Threading/defer";
+import {LazyPromise} from "../../../../dist/umd/Promises/LazyPromise";
+import {ObjectDisposedException} from "../../../../dist/umd/Disposable/ObjectDisposedException";
 
 
 const REASON = "this is not an error, but it might show up in the console";

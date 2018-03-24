@@ -1,9 +1,9 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import * as AU from "../../../../dist/commonjs/System/Collections/Array/Utility";
-import NotImplementedException from "../../../../dist/commonjs/System/Exceptions/NotImplementedException";
-import {ICollection} from "../../../../dist/commonjs/System/Collections/ICollection";
+import ICollection from "../../../../dist/umd/Collections/ICollection";
+import initializeArray from "../../../../source/Collections/Array/initializeArray";
+import NotImplementedException from "../../../../dist/umd/Exceptions/NotImplementedException";
 
 /*
  * This is a reusable set of unit test for use with any ICollection to ensureEntries all features of that ICollection function properly.
@@ -62,7 +62,7 @@ function assertCopyToClear<T>(c:ICollection<T>)
 		for(let v of a) c.add(v);
 
 		const extraSize = 10;
-		const b = AU.initialize<T>(count + extraSize);
+		const b = initializeArray<T>(count + extraSize);
 
 		c.copyTo(b, 1);
 		assert.equal(b.length, count + extraSize, "An array's length should be equal to it's original length if the count added does not exceed the length.");

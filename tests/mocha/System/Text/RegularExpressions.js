@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
-var RegexMatchEnumerator_1 = require("../../../../dist/commonjs/System/Text/RegexMatchEnumerator");
-var RegularExpressions_1 = require("../../../../dist/commonjs/System/Text/RegularExpressions");
+var RegexMatchEnumerator_1 = require("../../../../dist/umd/Text/RegexMatchEnumerator");
+var RegularExpressions_1 = require("../../../../dist/umd/Text/RegularExpressions");
 var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 var regex = new RegularExpressions_1.default("(?<" + "first>[A-E]+)", ["i"]);
 //noinspection JSUnusedLocalSymbols

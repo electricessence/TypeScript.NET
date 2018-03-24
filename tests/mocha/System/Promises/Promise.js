@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
-var Promise_1 = require("../../../../dist/commonjs/System/Promises/Promise");
-var AU = require("../../../../dist/commonjs/System/Collections/Array/Utility");
-var Stopwatch_1 = require("../../../../dist/commonjs/System/Diagnostics/Stopwatch");
-var defer_1 = require("../../../../dist/commonjs/System/Threading/defer");
-var LazyPromise_1 = require("../../../../dist/commonjs/System/Promises/LazyPromise");
-var ObjectDisposedException_1 = require("../../../../dist/commonjs/System/Disposable/ObjectDisposedException");
+var Promise_1 = require("../../../../dist/umd/Promises/Promise");
+var AU = require("../../../../dist/umd/Collections/Array/Utility");
+var Stopwatch_1 = require("../../../../dist/umd/Diagnostics/Stopwatch");
+var defer_1 = require("../../../../dist/umd/Threading/defer");
+var LazyPromise_1 = require("../../../../dist/umd/Promises/LazyPromise");
+var ObjectDisposedException_1 = require("../../../../dist/umd/Disposable/ObjectDisposedException");
 var REASON = "this is not an error, but it might show up in the console";
 // In browsers that support strict mode, it'll be `undefined`; otherwise, the global.
 // let calledAsFunctionThis = (function() { return this; }());

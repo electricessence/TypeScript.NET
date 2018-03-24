@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
-var TypeValidator_1 = require("../../../dist/commonjs/System/TypeValidator");
+var TypeValidator_1 = require("../../../dist/umd/Reflection/TypeValidator");
 var example = new TypeValidator_1.TypeInfoHelper({
     a: {},
     b: "hello",
@@ -140,7 +140,7 @@ describe('.contains(descriptor)', function () {
 describe("Example", function () {
     return it("should work", function () {
         // Step 2: Copy the interface as an actual object and <type> the validator
-        var MyTypeValidator = new TypeValidator_1.TypeValidator({
+        var MyTypeValidator = new TypeValidator_1.default({
             a: Object,
             b: String,
             c: Number,
@@ -190,7 +190,7 @@ describe("Example", function () {
 });
 describe("Complex test", function () {
     return it("should work", function () {
-        var ISystemTypeValidator = new TypeValidator_1.TypeValidator({
+        var ISystemTypeValidator = new TypeValidator_1.default({
             volume_str: String,
             buy: Boolean,
             issued: String,

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
-var DateTime_1 = require("../../../../dist/commonjs/System/Time/DateTime");
+var DateTime_1 = require("../../../../dist/umd/Time/DateTime");
 describe(".daysInMonth(year,month) & .isLeapYear(year)", function () {
     var startYear = 2000;
     var daysPerMonth = [

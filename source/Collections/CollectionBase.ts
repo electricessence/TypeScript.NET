@@ -14,7 +14,7 @@ import IEnumerateEach from "./Enumeration/IEnumerateEach";
 import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
 import IEnumerableOrArray from "./IEnumerableOrArray";
 import ArrayLikeWritable from "./Array/ArrayLikeWritable";
-import {LinqEnumerable} from "../Linq";
+import {LinqEnumerable} from "../Exceptions/Linq";
 import {isRequireJS} from "../Environment";
 
 //noinspection SpellCheckingInspection

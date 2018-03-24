@@ -39,7 +39,7 @@ function resolveInternal<T>(
 }
 
 function handleResolution(
-	p:TSDNPromise<any> | null | undefined,
+	p:Promise<any> | null | undefined,
 	value:Resolution<any>,
 	resolver?:Resolver):any
 {
@@ -75,7 +75,7 @@ export function handleSyncIfPossible<T, TFulfilled = T, TRejected = never>(
 
 function newODE()
 {
-	return new ObjectDisposedException("TSDNPromise", "An underlying promise-result was disposed.");
+	return new ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
 }
 
 
@@ -132,7 +132,7 @@ export abstract class Resolvable<T>
 		resolver?:Executor<TResult>,
 		forceSynchronous:boolean=false):PromiseBase<TResult>
 	{
-		return new TSDNPromise(resolver,forceSynchronous);
+		return new Promise(resolver,forceSynchronous);
 	}
 }
 
@@ -180,7 +180,7 @@ export class Rejected<T>
 /**
  * This promise class that facilitates pending resolution.
  */
-export class TSDNPromise<T>
+export default class Promise<T>
 	extends Resolvable<T>
 {
 
@@ -213,7 +213,7 @@ export class TSDNPromise<T>
 		// Already fulfilled?
 		if(this._state) return super.thenSynchronous(onFulfilled, onRejected);
 
-		const p = new TSDNPromise<TFulfilled | TRejected>();
+		const p = new Promise<TFulfilled | TRejected>();
 		(this._waiting || (this._waiting = []))
 			.push(Pool.init(onFulfilled, onRejected, p));
 		return p;
@@ -468,7 +468,7 @@ module Pool
 	export function init<T>(
 		onFulfilled:Fulfill<T, any>,
 		onRejected?:Reject<any>,
-		promise?:TSDNPromise<any>):IPromiseCallbacks<T>
+		promise?:Promise<any>):IPromiseCallbacks<T>
 	{
 
 		const c = getPool().take();
@@ -489,11 +489,8 @@ interface IPromiseCallbacks<T>
 {
 	onFulfilled?:Fulfill<T, any>;
 	onRejected?:Reject<any>;
-	promise?:TSDNPromise<any>;
+	promise?:Promise<any>;
 }
 
-export {TSDNPromise as Promise};
-
-export default TSDNPromise;
 
 

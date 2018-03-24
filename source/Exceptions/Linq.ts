@@ -4,29 +4,29 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import * as enumUtil from "./Collections/Enumeration/Enumerator";
+import * as enumUtil from "../Collections/Enumeration/Enumerator";
 import {
 	isEnumerable,
 	isEnumerator,
 	isIterator,
 	throwIfEndless
-} from "./Collections/Enumeration/Enumerator";
-import EmptyEnumerator from "./Collections/Enumeration/EmptyEnumerator";
-import Integer from "./Integer";
-import BaseFunctions from "./Functions";
-import ArrayEnumerator from "./Collections/Enumeration/ArrayEnumerator";
-import EnumeratorBase from "./Collections/Enumeration/EnumeratorBase";
-import Dictionary from "./Collections/Dictionaries/Dictionary";
-import Queue from "./Collections/Queue";
-import dispose, {using} from "./Disposable/dispose";
-import DisposableBase from "./Disposable/DisposableBase";
-import UnsupportedEnumerableException from "./Collections/Enumeration/UnsupportedEnumerableException";
-import ObjectDisposedException from "./Disposable/ObjectDisposedException";
-import KeySortedContext from "./Collections/Sorting/KeySortedContext";
-import ArgumentNullException from "./Exceptions/ArgumentNullException";
-import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeException";
-import IEnumerator from "./Collections/Enumeration/IEnumerator";
-import IEnumerable from "./Collections/Enumeration/IEnumerable";
+} from "../Collections/Enumeration/Enumerator";
+import EmptyEnumerator from "../Collections/Enumeration/EmptyEnumerator";
+import Integer from "../Integer";
+import BaseFunctions from "../Functions";
+import ArrayEnumerator from "../Collections/Enumeration/ArrayEnumerator";
+import EnumeratorBase from "../Collections/Enumeration/EnumeratorBase";
+import Dictionary from "../Collections/Dictionaries/Dictionary";
+import Queue from "../Collections/Queue";
+import dispose, {using} from "../Disposable/dispose";
+import DisposableBase from "../Disposable/DisposableBase";
+import UnsupportedEnumerableException from "../Collections/Enumeration/UnsupportedEnumerableException";
+import ObjectDisposedException from "../Disposable/ObjectDisposedException";
+import KeySortedContext from "../Collections/Sorting/KeySortedContext";
+import ArgumentNullException from "./ArgumentNullException";
+import ArgumentOutOfRangeException from "./ArgumentOutOfRangeException";
+import IEnumerator from "../Collections/Enumeration/IEnumerator";
+import IEnumerable from "../Collections/Enumeration/IEnumerable";
 import {
 	Action,
 	ActionWithIndex,
@@ -37,30 +37,30 @@ import {
 	PredicateWithIndex,
 	Selector,
 	SelectorWithIndex
-} from "./FunctionTypes";
-import IDictionary, {IMap} from "./Collections/Dictionaries/IDictionary";
-import {Comparable} from "./IComparable";
-import IComparer from "./IComparer";
-import {IKeyValuePair} from "./KeyValuePair";
-import Order from "./Collections/Sorting/Order";
-import IndexEnumerator from "./Collections/Enumeration/IndexEnumerator";
-import Primitive from "./Primitive";
-import IteratorEnumerator from "./Collections/Enumeration/IteratorEnumerator";
-import ForEachEnumerable from "./Collections/Enumeration/ForEachEnumerable";
-import initialize from "./Collections/Array/initializeArray";
-import Random from "./Random";
-import InfiniteEnumerator, {InfiniteValueFactory} from "./Collections/Enumeration/InfiniteEnumerator";
-import LazyList from "./Collections/LazyList";
+} from "../FunctionTypes";
+import IDictionary, {IMap} from "../Collections/Dictionaries/IDictionary";
+import {Comparable} from "../Comparison/IComparable";
+import IComparer from "../Comparison/IComparer";
+import {IKeyValuePair} from "../KeyValuePair";
+import Order from "../Collections/Sorting/Order";
+import IndexEnumerator from "../Collections/Enumeration/IndexEnumerator";
+import Primitive from "../Primitive";
+import IteratorEnumerator from "../Collections/Enumeration/IteratorEnumerator";
+import ForEachEnumerable from "../Collections/Enumeration/ForEachEnumerable";
+import initialize from "../Collections/Array/initializeArray";
+import Random from "../Random";
+import InfiniteEnumerator, {InfiniteValueFactory} from "../Collections/Enumeration/InfiniteEnumerator";
+import LazyList from "../Collections/LazyList";
 import disposeSingle = dispose.single;
-import TypeOfValue from "./Reflection/TypeOfValue";
-import areArraysEqual from "./Collections/Array/areArraysEqual";
-import isArrayLike from "./Reflection/isArrayLike";
-import areEqual from "./Comparison/areEqual";
-import isString from "./Reflection/isString";
-import {numberOrNaN} from "./Reflection/numberOrNaN";
-import compare from "./Comparison/compare";
-import copyArray from "./Collections/Array/copyArray";
-import isObject from "./Reflection/isObject";
+import TypeOfValue from "../Reflection/TypeOfValue";
+import areArraysEqual from "../Collections/Array/areArraysEqual";
+import isArrayLike from "../Reflection/isArrayLike";
+import areEqual from "../Comparison/areEqual";
+import isString from "../Reflection/isString";
+import {numberOrNaN} from "../Reflection/numberOrNaN";
+import compare from "../Comparison/compare";
+import copyArray from "../Collections/Array/copyArray";
+import isObject from "../Reflection/isObject";
 
 export const enum EnumerableAction
 {

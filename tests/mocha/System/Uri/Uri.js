@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
-var Uri_1 = require("../../../../dist/commonjs/System/Uri/Uri");
-var Scheme_1 = require("../../../../dist/commonjs/System/Uri/Scheme");
-var Functions_1 = require("../../../../dist/commonjs/System/Functions");
+var Uri_1 = require("../../../../dist/umd/Uri/Uri");
+var Scheme_1 = require("../../../../dist/umd/Uri/Scheme");
+var Functions_1 = require("../../../../dist/umd/Functions");
 var pathAfterRoot = 'one/two/three.html';
 var path = '/' + pathAfterRoot;
 var params = [['four', 'five'], ['six', 'seven']];
@@ -201,7 +201,7 @@ describe('KVP versus Tuple', function () {
 // Disabled for code coverage report
 // describe('es6 > babel > commonjs', ()=>
 // {
-// 	const Uri2 = require('../../../../dist/commonjs/System/Uri/Uri').default;
+// 	const Uri2 = require('../../../../dist/umd/Uri/Uri').default;
 //
 // 	var u2 = Uri2.from(path + query);
 //

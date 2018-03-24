@@ -4,7 +4,7 @@
  */
 
 import Primitive from "../../Primitive";
-import IComparable from "../../IComparable";
+import IComparable from "../../Comparison/IComparable";
 import {Comparison} from "../../FunctionTypes";
 import compare from "../../Comparison/compare";
 import validateSize from "./validateSize";

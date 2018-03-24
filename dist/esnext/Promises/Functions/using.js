@@ -7,7 +7,7 @@ import TSDNPromise from "../Promise";
  * Syntactic shortcut for avoiding 'new'.
  * @param resolver
  * @param forceSynchronous
- * @returns {TSDNPromise}
+ * @returns {Promise}
  */
 export default function using(resolver, forceSynchronous) {
     if (forceSynchronous === void 0) { forceSynchronous = false; }

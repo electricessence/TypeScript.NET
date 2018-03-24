@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ICollectionTests = require("./ICollection");
-var OrderedStringKeyDictionary_1 = require("../../../../dist/commonjs/System/Collections/Dictionaries/OrderedStringKeyDictionary");
+var OrderedStringKeyDictionary_1 = require("../../../../dist/umd/Collections/Dictionaries/OrderedStringKeyDictionary");
 ICollectionTests.Collection('OrderedStringKeyDictionary<' + 'number>', new OrderedStringKeyDictionary_1.default(), [
     { key: 'A', value: 1 },
     { key: 'B', value: 2 },

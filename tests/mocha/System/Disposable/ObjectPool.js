@@ -1,6 +1,6 @@
 /*
-import ObjectPool from "../../../../dist/commonjs/System/Disposable/ObjectPool";
-import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
+import ObjectPool from "../../../../dist/umd/Disposable/ObjectPool";
+import Stopwatch from "../../../../dist/umd/Diagnostics/Stopwatch";
 
 const pool = new ObjectPool(40, ()=>new Array<any>(100));
 

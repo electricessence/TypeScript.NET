@@ -8,6 +8,6 @@ import PromiseBase from "../PromiseBase";
  * Syntactic shortcut for avoiding 'new'.
  * @param resolver
  * @param forceSynchronous
- * @returns {TSDNPromise}
+ * @returns {Promise}
  */
 export default function using<T>(resolver: Executor<T>, forceSynchronous?: boolean): PromiseBase<T>;

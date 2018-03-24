@@ -4,7 +4,7 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/system.systemexception%28v=vs.110%29.aspx
  */
 
-import Exception, {Error} from "../Exception";
+import Exception, {Error} from "./Exception";
 export {Error};
 
 export default class SystemException extends Exception

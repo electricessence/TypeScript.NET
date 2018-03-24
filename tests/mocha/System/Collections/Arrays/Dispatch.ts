@@ -1,7 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import {dispatch} from "../../../../../dist/commonjs/System/Collections/Array/Dispatch";
-import {Action} from "../../../../../dist/commonjs/System/FunctionTypes";
+import {dispatch} from "../../../../../dist/umd/Collections/Array/Dispatch";
+import {Action} from "../../../../../dist/umd/FunctionTypes";
 
 it("should applyEntries closures in order", ()=>
 {

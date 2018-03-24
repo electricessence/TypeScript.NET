@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
-var TaskHandler_1 = require("../../../../dist/commonjs/System/Threading/Tasks/TaskHandler");
-var Functions_1 = require("../../../../dist/commonjs/System/Functions");
+var TaskHandler_1 = require("../../../../dist/umd/Threading/Tasks/TaskHandler");
+var Functions_1 = require("../../../../dist/umd/Functions");
 describe('new', function () {
     it("should throw", function () {
         assert.throws(function () {

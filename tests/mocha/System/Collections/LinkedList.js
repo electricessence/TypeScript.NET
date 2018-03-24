@@ -4,8 +4,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var assert = require("assert");
 require("mocha");
 var ICollectionTests = require("./ICollection");
-var LinkedList_1 = require("../../../../dist/commonjs/System/Collections/LinkedList");
-var Compare_1 = require("../../../../dist/commonjs/System/Collections/Array/Compare");
+var LinkedList_1 = require("../../../../dist/umd/Collections/LinkedList");
+var areArraysEqual_1 = require("../../../../source/Collections/Array/areArraysEqual");
 var CLASS_NAME = 'LinkedList';
 ICollectionTests.StringCollection(CLASS_NAME, new LinkedList_1.default());
 ICollectionTests.NumberCollection(CLASS_NAME, new LinkedList_1.default());
@@ -26,15 +26,15 @@ describe('.addAfter & .addBefore', function () {
     var list3 = list.toArray();
     it('should match expected initial count', function () {
         assert.equal(len1, count1);
-        assert.ok(Compare_1.areEqual(parts, list1));
+        assert.ok(areArraysEqual_1.default(parts, list1));
     });
     it('should match expected count after inserting before', function () {
         assert.equal(len2, count2);
-        assert.ok(Compare_1.areEqual(partsSpliced, list2), partsSpliced.join(',') + " != " + list2.join(','));
+        assert.ok(areArraysEqual_1.default(partsSpliced, list2), partsSpliced.join(',') + " != " + list2.join(','));
     });
     it('should match expected count after inserting after', function () {
         assert.equal(len2 + 1, count3);
-        assert.ok(Compare_1.areEqual(partsSpliced, list2), list3.join(','));
+        assert.ok(areArraysEqual_1.default(partsSpliced, list2), list3.join(','));
     });
 });
 describe("Validate external node detachment", function () {

@@ -33,7 +33,7 @@ export declare class Rejected<T> extends Resolved<T> {
 /**
  * This promise class that facilitates pending resolution.
  */
-export declare class TSDNPromise<T> extends Resolvable<T> {
+export declare class Promise<T> extends Resolvable<T> {
     private _waiting;
     constructor(resolver?: Executor<T>, forceSynchronous?: boolean);
     thenSynchronous<TFulfilled = T, TRejected = never>(onFulfilled: Fulfill<T, TFulfilled>, onRejected?: Reject<TRejected>): PromiseBase<TFulfilled | TRejected>;
@@ -47,5 +47,4 @@ export declare class TSDNPromise<T> extends Resolvable<T> {
     resolve(result?: T | PromiseLike<T>, throwIfSettled?: boolean): void;
     reject(error: any, throwIfSettled?: boolean): void;
 }
-export { TSDNPromise as Promise };
-export default TSDNPromise;
+export default Promise;

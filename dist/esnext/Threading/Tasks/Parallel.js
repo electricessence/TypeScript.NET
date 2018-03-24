@@ -195,7 +195,7 @@ var Parallel = /** @class */ (function () {
      * @param data
      * @param task
      * @param env
-     * @returns {TSDNPromise<U>|TSDNPromise}
+     * @returns {Promise<U>|Promise}
      */
     Parallel.prototype.startNew = function (data, task, env) {
         var _ = this;
@@ -216,7 +216,7 @@ var Parallel = /** @class */ (function () {
      * Is good for use with testing.
      * @param data
      * @param task
-     * @returns {TSDNPromise<U>|TSDNPromise}
+     * @returns {Promise<U>|Promise}
      */
     Parallel.prototype.startLocal = function (data, task) {
         return new TSDNPromise(function (resolve, reject) {

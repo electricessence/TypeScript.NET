@@ -1,24 +1,19 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import {Type} from "../../../dist/commonjs/System/Types";
-import __extendsImport from "../../../dist/commonjs/extends";
-//noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
-
-
+import hasMember from "../../../dist/umd/Reflection/hasMember";
 
 describe('.hasMember()', ()=>
 {
 	it('should detect a positive match for prototype functions', ()=>
 	{
 		class A extends Array {}
-		assert.ok(Type.hasMember(new A(),'push'));
+		assert.ok(hasMember(new A(),'push'));
 	});
 
 	it('should detect a positive match', ()=>
 	{
-		assert.ok(Type.hasMember({
+		assert.ok(hasMember({
 			a:'hello',
 			b:undefined
 		},'b'));

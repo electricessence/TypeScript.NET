@@ -4,7 +4,7 @@
  */
 
 import {Comparison} from "../../FunctionTypes";
-import IComparer from "../../IComparer";
+import IComparer from "../../Comparison/IComparer";
 import Order from "./Order";
 import compare from "../../Comparison/compare";
 

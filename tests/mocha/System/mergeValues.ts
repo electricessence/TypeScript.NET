@@ -1,3 +1,3 @@
-import {merge} from "../../../dist/commonjs/System/Collections/MapUtility";
+import merge from "../../../dist/umd/Collections/Map/mergeEntries";
 // Compile test.
 let {a, b} = merge({a: "hello"}, {b: "goodbye"});

@@ -45,7 +45,7 @@ export function handleSyncIfPossible(p, onFulfilled, onRejected) {
         return p.then(onFulfilled, onRejected);
 }
 function newODE() {
-    return new ObjectDisposedException("TSDNPromise", "An underlying promise-result was disposed.");
+    return new ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
 }
 var Resolvable = /** @class */ (function (_super) {
     tslib_1.__extends(Resolvable, _super);
@@ -86,7 +86,7 @@ var Resolvable = /** @class */ (function (_super) {
     };
     Resolvable.prototype.create = function (resolver, forceSynchronous) {
         if (forceSynchronous === void 0) { forceSynchronous = false; }
-        return new TSDNPromise(resolver, forceSynchronous);
+        return new Promise(resolver, forceSynchronous);
     };
     return Resolvable;
 }(PromiseBase));
@@ -131,8 +131,8 @@ export { Rejected };
 /**
  * This promise class that facilitates pending resolution.
  */
-var TSDNPromise = /** @class */ (function (_super) {
-    tslib_1.__extends(TSDNPromise, _super);
+var Promise = /** @class */ (function (_super) {
+    tslib_1.__extends(Promise, _super);
     /*
      * A note about deferring:
      * The caller can set resolveImmediate to true if they intend to initialize code that will end up being deferred itself.
@@ -142,24 +142,24 @@ var TSDNPromise = /** @class */ (function (_super) {
      * resolveUsing allows for the same ability but does not defer by default: allowing the caller to take on the work load.
      * If calling resolve or reject and a deferred response is desired, then use deferImmediate with a closure to do so.
      */
-    function TSDNPromise(resolver, forceSynchronous) {
+    function Promise(resolver, forceSynchronous) {
         if (forceSynchronous === void 0) { forceSynchronous = false; }
         var _this = _super.call(this) || this;
         if (resolver)
             _this.resolveUsing(resolver, forceSynchronous);
         return _this;
     }
-    TSDNPromise.prototype.thenSynchronous = function (onFulfilled, onRejected) {
+    Promise.prototype.thenSynchronous = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
         // Already fulfilled?
         if (this._state)
             return _super.prototype.thenSynchronous.call(this, onFulfilled, onRejected);
-        var p = new TSDNPromise();
+        var p = new Promise();
         (this._waiting || (this._waiting = []))
             .push(Pool.init(onFulfilled, onRejected, p));
         return p;
     };
-    TSDNPromise.prototype.doneNow = function (onFulfilled, onRejected) {
+    Promise.prototype.doneNow = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
         // Already fulfilled?
         if (this._state)
@@ -167,11 +167,11 @@ var TSDNPromise = /** @class */ (function (_super) {
         (this._waiting || (this._waiting = []))
             .push(Pool.init(onFulfilled, onRejected));
     };
-    TSDNPromise.prototype._onDispose = function () {
+    Promise.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
         this._resolvedCalled = VOID0;
     };
-    TSDNPromise.prototype.resolveUsing = function (resolver, forceSynchronous) {
+    Promise.prototype.resolveUsing = function (resolver, forceSynchronous) {
         var _this = this;
         if (forceSynchronous === void 0) { forceSynchronous = false; }
         if (!resolver)
@@ -214,13 +214,13 @@ var TSDNPromise = /** @class */ (function (_super) {
         else
             deferImmediate(function () { return resolver(fulfillHandler, rejectHandler); });
     };
-    TSDNPromise.prototype._emitDisposalRejection = function (p) {
+    Promise.prototype._emitDisposalRejection = function (p) {
         var d = p.wasDisposed;
         if (d)
             this._rejectInternal(newODE());
         return d;
     };
-    TSDNPromise.prototype._resolveInternal = function (result) {
+    Promise.prototype._resolveInternal = function (result) {
         var _this = this;
         if (this.wasDisposed)
             return;
@@ -263,7 +263,7 @@ var TSDNPromise = /** @class */ (function (_super) {
             }
         }
     };
-    TSDNPromise.prototype._rejectInternal = function (error) {
+    Promise.prototype._rejectInternal = function (error) {
         if (this.wasDisposed)
             return;
         this._state = PromiseStateValue.Rejected;
@@ -287,7 +287,7 @@ var TSDNPromise = /** @class */ (function (_super) {
             o.length = 0;
         }
     };
-    TSDNPromise.prototype.resolve = function (result, throwIfSettled) {
+    Promise.prototype.resolve = function (result, throwIfSettled) {
         if (throwIfSettled === void 0) { throwIfSettled = false; }
         this.throwIfDisposed();
         if (result == this)
@@ -305,7 +305,7 @@ var TSDNPromise = /** @class */ (function (_super) {
         }
         this._resolveInternal(result);
     };
-    TSDNPromise.prototype.reject = function (error, throwIfSettled) {
+    Promise.prototype.reject = function (error, throwIfSettled) {
         if (throwIfSettled === void 0) { throwIfSettled = false; }
         this.throwIfDisposed();
         if (this._state) {
@@ -321,9 +321,9 @@ var TSDNPromise = /** @class */ (function (_super) {
         }
         this._rejectInternal(error);
     };
-    return TSDNPromise;
+    return Promise;
 }(Resolvable));
-export { TSDNPromise };
+export { Promise };
 var Pool;
 (function (Pool) {
     var pool;
@@ -356,6 +356,5 @@ var Pool;
     }
     Pool.recycle = recycle;
 })(Pool || (Pool = {}));
-export { TSDNPromise as Promise };
-export default TSDNPromise;
+export default Promise;
 //# sourceMappingURL=Promise.js.map

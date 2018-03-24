@@ -15,7 +15,7 @@ import copyEntries from "./copyEntries";
  * @param a
  * @param b
  */
-export function mergeEntries<A extends IMap<any>, B extends IMap<any>>(
+export default function mergeEntries<A extends IMap<any>, B extends IMap<any>>(
 	a:A,
 	b:B):A & B
 {

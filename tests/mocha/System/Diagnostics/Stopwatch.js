@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
-var Stopwatch_1 = require("../../../../dist/commonjs/System/Diagnostics/Stopwatch");
+var Stopwatch_1 = require("../../../../dist/umd/Diagnostics/Stopwatch");
 it("should measure a closure", function () {
     assert.ok(Stopwatch_1.default.measure(function () {
         for (var i = 0; i < 100000; i++) {

@@ -4,8 +4,8 @@
  */
 
 import {Comparison, Selector} from "../../FunctionTypes";
-import {Comparable} from "../../IComparable";
-import IComparer from "../../IComparer";
+import {Comparable} from "../../Comparison/IComparable";
+import IComparer from "../../Comparison/IComparer";
 import Functions from "../../Functions";
 import SortContext from "./SortContext";
 import Order from "./Order";

@@ -1,16 +1,16 @@
 ﻿///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import {contains, repeat} from "../../../dist/commonjs/System/Collections/Array/Utility";
-import * as Procedure from "../../../dist/commonjs/System/Collections/Array/Procedure";
+import {contains, repeat} from "../../../dist/umd/Collections/Array/Utility";
+import * as Procedure from "../../../dist/umd/Collections/Array/Procedure";
 import {
 	Enumerable,
 	InfiniteLinqEnumerable,
 	LinqEnumerable
-} from "../../../dist/commonjs/System.Linq/Linq";
-import Functions from "../../../dist/commonjs/System/Functions";
-import {EmptyEnumerator} from "../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator";
-import {List} from "../../../dist/commonjs/System/Collections/List";
+} from "../../../dist/umd/Linq";
+import Functions from "../../../dist/umd/Functions";
+import {EmptyEnumerator} from "../../../dist/umd/Collections/Enumeration/EmptyEnumerator";
+import {List} from "../../../dist/umd/Collections/List";
 
 
 interface TestItem

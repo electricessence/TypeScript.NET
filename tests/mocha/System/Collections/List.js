@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var assert = require("assert");
 require("mocha");
 var ICollectionTests = require("./ICollection");
-var List_1 = require("../../../../dist/commonjs/System/Collections/List");
+var List_1 = require("../../../../dist/umd/Collections/List");
 var CLASS_NAME = 'List';
 ICollectionTests.StringCollection(CLASS_NAME, new List_1.default());
 ICollectionTests.NumberCollection(CLASS_NAME, new List_1.default());

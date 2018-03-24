@@ -7,14 +7,14 @@ import {EqualityComparison} from "../../FunctionTypes";
 import areEqual from "../../Comparison/areEqual";
 import areArraysEqual from "./areArraysEqual";
 
-export function areAllEqual(
+export default function areArraysAllEqual(
 	arrays:ArrayLike<ArrayLike<any>>,
 	equalityComparer?:EqualityComparison<any>):boolean
-export function areAllEqual(
+export default function areArraysAllEqual(
 	arrays:ArrayLike<ArrayLike<any>>,
 	strict:boolean,
 	equalityComparer?:EqualityComparison<any>):boolean
-export function areAllEqual(
+export default function areArraysAllEqual(
 	arrays:ArrayLike<ArrayLike<any>>,
 	strict:boolean|EqualityComparison<any> = true,
 	equalityComparer:EqualityComparison<any> = areEqual):boolean

@@ -7,11 +7,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
-var LazyList_1 = require("../../../../dist/commonjs/System/Collections/LazyList");
-var Linq_1 = require("../../../../dist/commonjs/System.Linq/Linq");
+var Linq_1 = require("../../../../dist/umd/Exceptions/Linq");
+var LazyList_1 = require("../../../../dist/umd/Collections/LazyList");
 var LENGTH = 10;
 describe('.get(i)', function () {
-    var source = new LazyList_1.LazyList(Linq_1.Enumerable.range(0, LENGTH));
+    var source = new LazyList_1.default(Linq_1.default.range(0, LENGTH));
     it("should reject negative indexes", function () {
         assert.throws(function () { return source.get(0.5); });
     });
@@ -29,16 +29,16 @@ describe('.get(i)', function () {
 });
 describe('.count', function () {
     it("should match enumerable count", function () {
-        var source1 = new LazyList_1.LazyList(Linq_1.Enumerable.range(0, LENGTH));
-        var source2 = new LazyList_1.LazyList(Linq_1.Enumerable.range(0, LENGTH));
+        var source1 = new LazyList_1.default(Linq_1.default.range(0, LENGTH));
+        var source2 = new LazyList_1.default(Linq_1.default.range(0, LENGTH));
         assert.equal(source1.count, source2.linq.count());
     });
     it("should match enumerable count with same (1)", function () {
-        var source = new LazyList_1.LazyList(Linq_1.Enumerable.range(0, LENGTH));
+        var source = new LazyList_1.default(Linq_1.default.range(0, LENGTH));
         assert.equal(source.count, source.linq.count());
     });
     it("should match enumerable count with same (2)", function () {
-        var source = new LazyList_1.LazyList(Linq_1.Enumerable.range(0, LENGTH));
+        var source = new LazyList_1.default(Linq_1.default.range(0, LENGTH));
         assert.equal(source.linq.count(), source.count);
     });
 });

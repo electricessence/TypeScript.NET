@@ -5,7 +5,7 @@
  */
 
 
-import Primitive from "./Primitive";
+import Primitive from "../Primitive";
 
 export default interface IComparable<T>
 {

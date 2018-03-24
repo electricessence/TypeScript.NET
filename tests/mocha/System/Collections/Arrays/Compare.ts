@@ -1,6 +1,6 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import * as ArrayCompare from "../../../../../dist/commonjs/System/Collections/Array/Compare";
+import areArraysEqual from "../../../../../source/Collections/Array/areArraysEqual";
 
 const a1 = [1,2,3];
 const a2 = [1,2,3];
@@ -13,16 +13,16 @@ d.length = e.length = 200000;
 describe(".areEqual()",()=>{
 
 	it("should be equal",()=>{
-		assert.ok(ArrayCompare.areEqual([],[]));
-		assert.ok(ArrayCompare.areEqual(a1,a1));
-		assert.ok(ArrayCompare.areEqual(a1,a2));
+		assert.ok(areArraysEqual([],[]));
+		assert.ok(areArraysEqual(a1,a1));
+		assert.ok(areArraysEqual(a1,a2));
 	});
 
 	it("should not be equal",()=>{
-		assert.ok(!ArrayCompare.areEqual(<any>null,a1));
-		assert.ok(!ArrayCompare.areEqual(a1,<any>null));
-		assert.ok(!ArrayCompare.areEqual(a1,b));
-		assert.ok(!ArrayCompare.areEqual(b,c));
+		assert.ok(!areArraysEqual(<any>null,a1));
+		assert.ok(!areArraysEqual(a1,<any>null));
+		assert.ok(!areArraysEqual(a1,b));
+		assert.ok(!areArraysEqual(b,c));
 	});
 
 });
@@ -30,20 +30,20 @@ describe(".areEqual()",()=>{
 describe(".areAllEqual()",()=>{
 
 	it("should be equal",()=>{
-		assert.ok(ArrayCompare.areAllEqual([[],[],[]]));
-		assert.ok(ArrayCompare.areAllEqual([a1,a1,a2]));
+		assert.ok(areArraysAllEqual([[],[],[]]));
+		assert.ok(areArraysAllEqual([a1,a1,a2]));
 	});
 
 	it("should not be equal",()=>{
-		assert.ok(!ArrayCompare.areAllEqual([a1,<any>null]));
-		assert.ok(!ArrayCompare.areAllEqual([a1,b,c]));
-		assert.ok(!ArrayCompare.areAllEqual([a1,b],true,()=>false));
+		assert.ok(!areArraysAllEqual([a1,<any>null]));
+		assert.ok(!areArraysAllEqual([a1,b,c]));
+		assert.ok(!areArraysAllEqual([a1,b],true,()=>false));
 	});
 
 	it("should error for invalid",()=>{
-		assert.throws(()=>ArrayCompare.areAllEqual(<any>null));
-		assert.throws(()=>ArrayCompare.areAllEqual([]));
-		assert.throws(()=>ArrayCompare.areAllEqual([a1]));
+		assert.throws(()=>areArraysAllEqual(<any>null));
+		assert.throws(()=>areArraysAllEqual([]));
+		assert.throws(()=>areArraysAllEqual([a1]));
 	});
 
 });

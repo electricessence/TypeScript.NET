@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
-var Integer_1 = require("../../../dist/commonjs/System/Integer");
+var Integer_1 = require("../../../dist/umd/Integer");
 var TEST_FLOAT = 10.915, TEST_INT = 10, MAX = 9007199254740991;
 describe('(value)', function () {
     it('should convert float number to integer without rounding', function () {

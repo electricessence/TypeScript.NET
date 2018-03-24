@@ -47,7 +47,7 @@ var PromiseBase = /** @class */ (function (_super) {
      * Standard .then method that defers execution until resolved.
      * @param onFulfilled
      * @param onRejected
-     * @returns {TSDNPromise}
+     * @returns {Promise}
      */
     PromiseBase.prototype.then = function (onFulfilled, onRejected) {
         var _this = this;
@@ -66,7 +66,7 @@ var PromiseBase = /** @class */ (function (_super) {
      * Same as .then but doesn't trap errors.  Exceptions may end up being fatal.
      * @param onFulfilled
      * @param onRejected
-     * @returns {TSDNPromise}
+     * @returns {Promise}
      */
     PromiseBase.prototype.thenAllowFatal = function (onFulfilled, onRejected) {
         var _this = this;

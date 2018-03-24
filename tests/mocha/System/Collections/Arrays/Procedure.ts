@@ -1,6 +1,6 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import * as ArrayProcedure from "../../../../../dist/commonjs/System/Collections/Array/Procedure";
+import * as ArrayProcedure from "../../../../../dist/umd/Collections/Array/Procedure";
 
 
 const

@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
-var Arrays = require("../../../../../dist/commonjs/System/Collections/Array/Compare");
-var ArrayUtility = require("../../../../../dist/commonjs/System/Collections/Array/Utility");
-var Stopwatch_1 = require("../../../../../dist/commonjs/System/Diagnostics/Stopwatch");
+var Arrays = require("../../../../../dist/umd/Collections/Array/Compare");
+var ArrayUtility = require("../../../../../dist/umd/Collections/Array/Utility");
+var Stopwatch_1 = require("../../../../../dist/umd/Diagnostics/Stopwatch");
 // Min/Max tests...
 var minA = -10, maxA = 2000;
 function initTestArray() {

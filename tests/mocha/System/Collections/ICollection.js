@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
-var AU = require("../../../../dist/commonjs/System/Collections/Array/Utility");
-var NotImplementedException_1 = require("../../../../dist/commonjs/System/Exceptions/NotImplementedException");
+var initializeArray_1 = require("../../../../source/Collections/Array/initializeArray");
+var NotImplementedException_1 = require("../../../../dist/umd/Exceptions/NotImplementedException");
 /*
  * This is a reusable set of unit test for use with any ICollection to ensureEntries all features of that ICollection function properly.
  */
@@ -51,7 +51,7 @@ function assertCopyToClear(c) {
             c.add(v);
         }
         var extraSize = 10;
-        var b = AU.initialize(count + extraSize);
+        var b = initializeArray_1.default(count + extraSize);
         c.copyTo(b, 1);
         assert.equal(b.length, count + extraSize, "An array's length should be equal to it's original length if the count added does not exceed the length.");
         c.copyTo(b, count + extraSize - 1);

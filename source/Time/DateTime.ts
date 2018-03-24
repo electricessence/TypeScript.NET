@@ -11,7 +11,7 @@ import ClockTime from "./ClockTime";
 import TimeStamp from "./TimeStamp";
 import IDateTime from "./IDateTime";
 import IEquatable from "../IEquatable";
-import IComparable from "../IComparable";
+import IComparable from "../Comparison/IComparable";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import ITimeStamp, {ICalendarDate} from "./ITimeStamp";
 import {Milliseconds} from "./HowMany";

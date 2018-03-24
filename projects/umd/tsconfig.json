@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "umd",
+    "target": "es5",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "declaration": true,
+    "sourceMap": true,
+    "strict": true,
+    "pretty": true,
+    "removeComments": false,
+    "outDir": "../../dist/umd"
+  },
+  "include": [
+    "../../source"
+  ]
+}

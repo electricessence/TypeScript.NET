@@ -1,10 +1,10 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import {TypeInfo} from "../../../../../dist/commonjs/System/Types";
-import Queue from "../../../../../dist/commonjs/System/Collections/Queue";
-import * as Enumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/Enumerator";
-import {IEnumerator} from "../../../../../dist/commonjs/System/Collections/Enumeration/IEnumerator";
+import {TypeInfo} from "../../../../../dist/umd/Types";
+import Queue from "../../../../../dist/umd/Collections/Queue";
+import * as Enumerator from "../../../../../dist/umd/Collections/Enumeration/Enumerator";
+import {IEnumerator} from "../../../../../dist/umd/Collections/Enumeration/IEnumerator";
 
 const VOID0:undefined = void 0;
 

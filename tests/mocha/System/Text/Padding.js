@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
-var Padding_1 = require("../../../../dist/commonjs/System/Text/Padding");
+var Padding_1 = require("../../../../dist/umd/Text/Padding");
 describe('.padLeft()', function () {
     it("should pad to the left", function () {
         assert.equal(Padding_1.padLeft("X", 3, "Y"), "YYX");

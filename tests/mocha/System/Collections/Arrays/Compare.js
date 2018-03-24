@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
-var ArrayCompare = require("../../../../../dist/commonjs/System/Collections/Array/Compare");
+var areArraysEqual_1 = require("../../../../../source/Collections/Array/areArraysEqual");
 var a1 = [1, 2, 3];
 var a2 = [1, 2, 3];
 var b = [4, 5, 6];
@@ -12,31 +12,31 @@ var e = c.slice();
 d.length = e.length = 200000;
 describe(".areEqual()", function () {
     it("should be equal", function () {
-        assert.ok(ArrayCompare.areEqual([], []));
-        assert.ok(ArrayCompare.areEqual(a1, a1));
-        assert.ok(ArrayCompare.areEqual(a1, a2));
+        assert.ok(areArraysEqual_1.default([], []));
+        assert.ok(areArraysEqual_1.default(a1, a1));
+        assert.ok(areArraysEqual_1.default(a1, a2));
     });
     it("should not be equal", function () {
-        assert.ok(!ArrayCompare.areEqual(null, a1));
-        assert.ok(!ArrayCompare.areEqual(a1, null));
-        assert.ok(!ArrayCompare.areEqual(a1, b));
-        assert.ok(!ArrayCompare.areEqual(b, c));
+        assert.ok(!areArraysEqual_1.default(null, a1));
+        assert.ok(!areArraysEqual_1.default(a1, null));
+        assert.ok(!areArraysEqual_1.default(a1, b));
+        assert.ok(!areArraysEqual_1.default(b, c));
     });
 });
 describe(".areAllEqual()", function () {
     it("should be equal", function () {
-        assert.ok(ArrayCompare.areAllEqual([[], [], []]));
-        assert.ok(ArrayCompare.areAllEqual([a1, a1, a2]));
+        assert.ok(areArraysAllEqual([[], [], []]));
+        assert.ok(areArraysAllEqual([a1, a1, a2]));
     });
     it("should not be equal", function () {
-        assert.ok(!ArrayCompare.areAllEqual([a1, null]));
-        assert.ok(!ArrayCompare.areAllEqual([a1, b, c]));
-        assert.ok(!ArrayCompare.areAllEqual([a1, b], true, function () { return false; }));
+        assert.ok(!areArraysAllEqual([a1, null]));
+        assert.ok(!areArraysAllEqual([a1, b, c]));
+        assert.ok(!areArraysAllEqual([a1, b], true, function () { return false; }));
     });
     it("should error for invalid", function () {
-        assert.throws(function () { return ArrayCompare.areAllEqual(null); });
-        assert.throws(function () { return ArrayCompare.areAllEqual([]); });
-        assert.throws(function () { return ArrayCompare.areAllEqual([a1]); });
+        assert.throws(function () { return areArraysAllEqual(null); });
+        assert.throws(function () { return areArraysAllEqual([]); });
+        assert.throws(function () { return areArraysAllEqual([a1]); });
     });
 });
 describe(".areEquivalent()", function () {

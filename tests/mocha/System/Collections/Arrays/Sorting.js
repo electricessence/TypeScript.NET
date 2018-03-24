@@ -2,13 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
-var Compare_1 = require("../../../../../dist/commonjs/System/Collections/Array/Compare");
-var Compare_2 = require("../../../../../dist/commonjs/System/Compare");
-var quickSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/quickSort");
-var mergeSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/mergeSort");
-var insertionSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/insertionSort");
-var Random_1 = require("../../../../../dist/commonjs/System/Random");
-var Sort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sort");
+var Compare_1 = require("../../../../../dist/umd/Collections/Array/Compare");
+var Compare_2 = require("../../../../../dist/umd/Compare");
+var quickSort_1 = require("../../../../../dist/umd/Collections/Array/Sorting/quickSort");
+var mergeSort_1 = require("../../../../../dist/umd/Collections/Array/Sorting/mergeSort");
+var insertionSort_1 = require("../../../../../dist/umd/Collections/Array/Sorting/insertionSort");
+var Random_1 = require("../../../../../dist/umd/Random");
+var Sort_1 = require("../../../../../dist/umd/Collections/Array/Sort");
 var performanceCheck = false; // Change to true to performance test/log
 function comparerSort(a) {
     return Sort_1.ArraySort.using(a, function (v) { return v; });

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
-var TextUtility = require("../../../../dist/commonjs/System/Text/Utility");
+var TextUtility = require("../../../../dist/umd/Text/Utility");
 var s1 = "	 HI  ";
 var s2 = ".-.-xHIX//\\";
 describe('.trimEntries()', function () {

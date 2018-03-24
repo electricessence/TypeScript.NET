@@ -4,8 +4,8 @@
  */
 
 import Primitive from "../Primitive";
-import IComparable from "../IComparable";
-import CompareResult from "../CompareResult";
+import IComparable from "./IComparable";
+import CompareResult from "./CompareResult";
 import hasMember from "../Reflection/hasMember";
 import areEqual from "./areEqual";
 

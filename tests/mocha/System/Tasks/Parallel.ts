@@ -1,7 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
-import {Parallel} from "../../../../dist/commonjs/System/Threading/Tasks/Parallel";
+import Stopwatch from "../../../../dist/umd/Diagnostics/Stopwatch";
+import {Parallel} from "../../../../dist/umd/Threading/Tasks/Parallel";
 
 it("should return the expected concatenation", () =>
 {

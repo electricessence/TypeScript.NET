@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
-var Types_1 = require("../../../../../dist/commonjs/System/Types");
-var Queue_1 = require("../../../../../dist/commonjs/System/Collections/Queue");
-var Enumerator = require("../../../../../dist/commonjs/System/Collections/Enumeration/Enumerator");
+var Types_1 = require("../../../../../dist/umd/Types");
+var Queue_1 = require("../../../../../dist/umd/Collections/Queue");
+var Enumerator = require("../../../../../dist/umd/Collections/Enumeration/Enumerator");
 var VOID0 = void 0;
 describe(".from(source)", function () {
     it("null should use an empty enumerator", function () {

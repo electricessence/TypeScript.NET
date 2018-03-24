@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 ///<reference types="node"/>
 var assert = require("assert");
-var StringBuilder_1 = require("../../../../dist/commonjs/System/Text/StringBuilder");
+var StringBuilder_1 = require("../../../../dist/umd/Text/StringBuilder");
 it("should match expected value", function () {
     var sb = new StringBuilder_1.default();
     sb.append("a", "b", "c");

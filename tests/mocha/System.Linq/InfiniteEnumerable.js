@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
-var Linq_1 = require("../../../dist/commonjs/System.Linq/Linq");
+var Linq_1 = require("../../../dist/umd/Linq");
 var source = Linq_1.default.toInfinity().asEnumerable();
 describe(".doAction(...)", function () {
     it("should throw when disposed", function () {

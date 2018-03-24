@@ -1,12 +1,9 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import {InfiniteLinqEnumerable, LinqEnumerable} from "../../../dist/commonjs/System.Linq/Linq";
-import {List} from "../../../dist/commonjs/System/Collections/List";
-import {CollectionBase} from "../../../dist/commonjs/System/Collections/CollectionBase";
-import __extendsImport from "../../../dist/commonjs/extends";
-// noinspection JSUnusedLocalSymbols
-const __extends = __extendsImport;
+import {InfiniteLinqEnumerable, LinqEnumerable} from "../../../dist/umd/Exceptions/Linq";
+import List from "../../../dist/umd/Collections/List";
+import CollectionBase from "../../../dist/umd/Collections/CollectionBase";
 
 class A {
 	constructor() {

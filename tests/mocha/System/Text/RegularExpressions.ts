@@ -1,7 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import RegexMatchEnumerator from "../../../../dist/commonjs/System/Text/RegexMatchEnumerator";
-import Regex, {Match} from "../../../../dist/commonjs/System/Text/RegularExpressions";
+import RegexMatchEnumerator from "../../../../dist/umd/Text/RegexMatchEnumerator";
+import Regex, {Match} from "../../../../dist/umd/Text/RegularExpressions";
 
 const str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const regex = new Regex("(?<"+"first>[A-E]+)", ["i"]);

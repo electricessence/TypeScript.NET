@@ -1,6 +1,6 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import * as TextUtility from "../../../../dist/commonjs/System/Text/Utility";
+import * as TextUtility from "../../../../dist/umd/Text/Utility";
 
 const s1 = "	 HI  ";
 const s2 = ".-.-xHIX//\\";

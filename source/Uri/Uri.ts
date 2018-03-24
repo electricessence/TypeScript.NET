@@ -14,7 +14,7 @@ import UriComponent from "./UriComponent";
 import QueryParam from "./QueryParam";
 import Scheme, {isValidScheme} from "./Scheme";
 import {encode, parseToMap, Separator} from "./QueryParams";
-import Exception from "../Exception";
+import Exception from "../Exceptions/Exception";
 import ArgumentException from "../Exceptions/ArgumentException";
 import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
 import isString from "../Reflection/isString";

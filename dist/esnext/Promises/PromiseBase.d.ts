@@ -35,14 +35,14 @@ export default abstract class PromiseBase<T> extends PromiseState<T> implements 
      * Standard .then method that defers execution until resolved.
      * @param onFulfilled
      * @param onRejected
-     * @returns {TSDNPromise}
+     * @returns {Promise}
      */
     then<TFulfilled = T, TRejected = never>(onFulfilled: Fulfill<T, TFulfilled>, onRejected?: Reject<TRejected>): PromiseBase<TFulfilled | TRejected>;
     /**
      * Same as .then but doesn't trap errors.  Exceptions may end up being fatal.
      * @param onFulfilled
      * @param onRejected
-     * @returns {TSDNPromise}
+     * @returns {Promise}
      */
     thenAllowFatal<TFulfilled = T, TRejected = never>(onFulfilled: Fulfill<T, TFulfilled>, onRejected?: Reject<TRejected>): PromiseBase<TFulfilled | TRejected>;
     /**

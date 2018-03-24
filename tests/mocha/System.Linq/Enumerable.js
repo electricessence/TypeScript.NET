@@ -3,12 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
-var Utility_1 = require("../../../dist/commonjs/System/Collections/Array/Utility");
-var Procedure = require("../../../dist/commonjs/System/Collections/Array/Procedure");
-var Linq_1 = require("../../../dist/commonjs/System.Linq/Linq");
-var Functions_1 = require("../../../dist/commonjs/System/Functions");
-var EmptyEnumerator_1 = require("../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator");
-var List_1 = require("../../../dist/commonjs/System/Collections/List");
+var Utility_1 = require("../../../dist/umd/Collections/Array/Utility");
+var Procedure = require("../../../dist/umd/Collections/Array/Procedure");
+var Linq_1 = require("../../../dist/umd/Linq");
+var Functions_1 = require("../../../dist/umd/Functions");
+var EmptyEnumerator_1 = require("../../../dist/umd/Collections/Enumeration/EmptyEnumerator");
+var List_1 = require("../../../dist/umd/Collections/List");
 var source = [
     {
         a: 1,

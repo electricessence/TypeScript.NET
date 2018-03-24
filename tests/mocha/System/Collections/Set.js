@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
 var ICollectionTests = require("./ICollection");
-var Set_1 = require("../../../../dist/commonjs/System/Collections/Set");
+var Set_1 = require("../../../../dist/umd/Collections/Set");
 //noinspection SpellCheckingInspection
 ICollectionTests.Collection('Set<' + 'string>', new Set_1.default(), [
     "",

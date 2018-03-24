@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 ///<reference types="node"/>
 var assert = require("assert");
-var Stopwatch_1 = require("../../../../dist/commonjs/System/Diagnostics/Stopwatch");
-var Parallel_1 = require("../../../../dist/commonjs/System/Threading/Tasks/Parallel");
+var Stopwatch_1 = require("../../../../dist/umd/Diagnostics/Stopwatch");
+var Parallel_1 = require("../../../../dist/umd/Threading/Tasks/Parallel");
 it("should return the expected concatenation", function () {
     return Parallel_1.Parallel
         .startNew("there", function (x) { return "hello: " + x; })

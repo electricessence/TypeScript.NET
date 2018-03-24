@@ -5,7 +5,7 @@
 
 import Primitive from "../../../Primitive";
 import {Comparison, Selector} from "../../../FunctionTypes";
-import CompareResult from "../../../CompareResult";
+import CompareResult from "../../../Comparison/CompareResult";
 import Order from "../../Sorting/Order";
 import isTrueNaN from "../../../Reflection/isTrueNaN";
 import compare from "../../../Comparison/compare";
