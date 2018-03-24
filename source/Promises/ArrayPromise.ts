@@ -4,14 +4,14 @@
  */
 
 
-import TSDNPromise from "./Promise";
+import Promise from "./Promise";
 import PromiseBase from "./PromiseBase";
 
 /**
  * By providing an ArrayPromise we expose useful methods/shortcuts for dealing with array results.
  */
 export default class ArrayPromise<T>
-	extends TSDNPromise<T[]>
+	extends Promise<T[]>
 {
 
 	/**

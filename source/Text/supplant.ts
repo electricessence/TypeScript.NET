@@ -21,7 +21,7 @@ export function supplant(
 {
 	return source.replace(/{([^{}]*)}/g,
 		(a:string, b:string):string => {
-			if(b in params) return (<any>params)[b];
+			if(b in params) return (<any>params)[b]+'';
 			throw `Param {${b}} value not provided.`;
 		}
 	);

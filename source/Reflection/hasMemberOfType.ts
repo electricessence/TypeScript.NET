@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 
-import TypeOfValue from "./TypeOfValue";
+import {TypeOfValue} from "./TypeOf";
 import hasMember from "./hasMember";
 
 /**

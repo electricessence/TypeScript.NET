@@ -5,7 +5,7 @@
 import * as tslib_1 from "tslib";
 import { defer } from "../Threading/defer";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import TSDNPromise from "./Promise";
+import Promise from "./Promise";
 var VOID0 = void 0;
 /**
  * A promise that waits for the first then to trigger the resolver.
@@ -142,7 +142,6 @@ var LazyPromise = /** @class */ (function (_super) {
         });
     };
     return LazyPromise;
-}(TSDNPromise));
-export { LazyPromise };
+}(Promise));
 export default LazyPromise;
 //# sourceMappingURL=LazyPromise.js.map

@@ -4,7 +4,7 @@
  */
 import * as tslib_1 from "tslib";
 import ArgumentException from "../Exceptions/ArgumentException";
-import TSDNPromise, { Resolvable } from "./Promise";
+import Promise, { Resolvable } from "./Promise";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import isPromise from "./Functions/isPromise";
 import { PromiseStateValue } from "./PromiseState";
@@ -39,7 +39,7 @@ var PromiseWrapper = /** @class */ (function (_super) {
         var t = this._target;
         if (!t)
             return _super.prototype.thenSynchronous.call(this, onFulfilled, onRejected);
-        return new TSDNPromise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             handleDispatch(t, function (result) { return handleResolutionMethods(resolve, reject, result, onFulfilled); }, function (error) { return onRejected
                 ? handleResolutionMethods(resolve, null, error, onRejected)
                 : reject(error); });

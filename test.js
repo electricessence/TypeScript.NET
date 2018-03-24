@@ -1,1 +1,2 @@
-var tests = require('./tests/mocha/import-tests');
+require('ts-node');
+require('./tests/mocha/import-tests.ts');

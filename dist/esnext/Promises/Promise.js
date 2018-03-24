@@ -323,7 +323,7 @@ var Promise = /** @class */ (function (_super) {
     };
     return Promise;
 }(Resolvable));
-export { Promise };
+export default Promise;
 var Pool;
 (function (Pool) {
     var pool;
@@ -356,5 +356,4 @@ var Pool;
     }
     Pool.recycle = recycle;
 })(Pool || (Pool = {}));
-export default Promise;
 //# sourceMappingURL=Promise.js.map

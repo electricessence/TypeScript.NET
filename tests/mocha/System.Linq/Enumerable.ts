@@ -1,17 +1,19 @@
 ﻿///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import {contains, repeat} from "../../../dist/umd/Collections/Array/Utility";
-import * as Procedure from "../../../dist/umd/Collections/Array/Procedure";
+import Functions from "../../../source/Functions";
+import containsElement from "../../../source/Collections/Array/containsElement";
 import {
-	Enumerable,
-	InfiniteLinqEnumerable,
+	default as Enumerable, InfiniteLinqEnumerable,
 	LinqEnumerable
-} from "../../../dist/umd/Linq";
-import Functions from "../../../dist/umd/Functions";
-import {EmptyEnumerator} from "../../../dist/umd/Collections/Enumeration/EmptyEnumerator";
-import {List} from "../../../dist/umd/Collections/List";
-
+} from "../../../source/Exceptions/Linq";
+import EmptyEnumerator from "../../../source/Collections/Enumeration/EmptyEnumerator";
+import {repeatElement} from "../../../source/Collections/Array/repeatElement";
+import {product} from "../../../source/Collections/Array/Procedure/product";
+import {quotient} from "../../../source/Collections/Array/Procedure/quotient";
+import {average} from "../../../source/Collections/Array/Procedure/average";
+import List from "../../../source/Collections/List";
+import {sum} from "../../../source/Collections/Array/Procedure/sum";
 
 interface TestItem
 {
@@ -109,6 +111,7 @@ const sourceMany = Enumerable<string>(Object.freeze([
 	"p,q,r,s,t",
 	"u,v,w,x,y",
 ]));
+// noinspection SpellCheckingInspection
 const sourceManyFlat = "abcdefghijklmnopqrstuvwxy";
 
 const sourceArrayEnumerable = Enumerable(source),
@@ -438,8 +441,8 @@ describe(".groupBy(selector)", () =>
 		const companies = groups.select(x => x.key).toArray();
 
 		assert.equal(companies.length, 2, "2 groups expected.");
-		assert.ok(contains(companies, COMPANY_A), "Expect " + COMPANY_A);
-		assert.ok(contains(companies, COMPANY_B), "Expect " + COMPANY_B);
+		assert.ok(containsElement(companies, COMPANY_A), "Expect " + COMPANY_A);
+		assert.ok(containsElement(companies, COMPANY_B), "Expect " + COMPANY_B);
 		const group_A = groups.where(g => g.key==COMPANY_A).single();
 		const group_B = groups.where(g => g.key==COMPANY_B).single();
 		assert.equal(group_A.count(), 3, "Expected count of 3.");
@@ -951,7 +954,7 @@ describe(".selectMany(...)", () =>
 
 		assert.equal(Enumerable(<string[]>[]).selectMany(split).count(), 0);
 
-		const iSource = Enumerable.toInfinity().selectMany(s => repeat("" + s, s));
+		const iSource = Enumerable.toInfinity().selectMany(s => repeatElement("" + s, s));
 		assert.equal(iSource.take(10).toJoinedString(), "1223334444");
 
 		let s = sourceMany.select(s => s.length);
@@ -1098,7 +1101,7 @@ describe(".sum()", () =>
 {
 	it("should render the sum value", () =>
 	{
-		const v = Procedure.sum(mathTreeArray);
+		const v = sum(mathTreeArray);
 
 		assert.equal(Enumerable.empty().sum(), 0);
 		assert.equal(mathTree.select(e => e.b).sum(), v);
@@ -1125,7 +1128,7 @@ describe(".product()", () =>
 {
 	it("should render the product value", () =>
 	{
-		const v = Procedure.product(mathTreeArray);
+		const v = product(mathTreeArray);
 
 		assert.equal(mathTree.select(e => e.b).product(), v);
 		assert.ok(isNaN(mathTree.select(e => e.b).concat([NaN]).product()));
@@ -1140,7 +1143,7 @@ describe(".quotient()", () =>
 {
 	it("should render the quotient value", () =>
 	{
-		const v = Procedure.quotient(mathTreeArray);
+		const v = quotient(mathTreeArray);
 
 		assert.equal(mathTree.select(e => e.b).quotient(), v);
 		assert.ok(isNaN(mathTree.select(e => e.b).concat([NaN]).quotient()));
@@ -1158,7 +1161,7 @@ describe(".average()", () =>
 		//noinspection JSUnusedLocalSymbols
 		let tree = sourceEnumerable
 			.traverseDepthFirst(e => e.children);
-		const v = Procedure.average(mathTreeArray);
+		const v = average(mathTreeArray);
 
 		assert.equal(mathTree.select(e => e.b).average(), v);
 		assert.ok(isNaN(mathTree.select(e => e.b).concat([NaN]).average()));

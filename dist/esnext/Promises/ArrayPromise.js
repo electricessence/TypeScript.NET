@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 import * as tslib_1 from "tslib";
-import TSDNPromise from "./Promise";
+import Promise from "./Promise";
 /**
  * By providing an ArrayPromise we expose useful methods/shortcuts for dealing with array results.
  */
@@ -38,6 +38,6 @@ var ArrayPromise = /** @class */ (function (_super) {
         return new ArrayPromise(function (resolve) { return value; }, true);
     };
     return ArrayPromise;
-}(TSDNPromise));
+}(Promise));
 export default ArrayPromise;
 //# sourceMappingURL=ArrayPromise.js.map

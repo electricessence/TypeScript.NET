@@ -4,15 +4,11 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "QUnit", "../../../dist/amd/System/Collections/Array/Compare", "../../../dist/amd/System/Collections/Array/Utility"], factory);
+        define(["require", "exports", "QUnit"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    ///<reference types="qunit"/>
-    ///<amd-dependency path="QUnit"/>
-    var Arrays = require("../../../dist/amd/System/Collections/Array/Compare");
-    var ArrayUtility = require("../../../dist/amd/System/Collections/Array/Utility");
     function run() {
         // Min/Max tests...
         var minA = -10, maxA = 2000;
@@ -20,32 +16,32 @@
         QUnit.test("Array/Utility.initialize", function (assert) {
             var len;
             len = 100;
-            var a = ArrayUtility.initialize(len);
+            var a = initArray(len);
             assert.equal(a.length, len, ".length should be " + len);
             len = 100000;
-            var b = ArrayUtility.initialize(len);
+            var b = initArray(len);
             assert.equal(b.length, len, ".length should be " + len);
         });
         QUnit.test("Array/Utility.arrayCopy/equals", function (assert) {
             var s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
-            var s2 = ArrayUtility.copy(s1);
-            assert.ok(Arrays.areEqual(s1, s2));
+            var s2 = copyArray(s1);
+            assert.ok(areArraysEqual(s1, s2));
         });
         QUnit.test("Array/Utility.contains", function (assert) {
-            assert.ok(ArrayUtility.contains(a, -1));
-            assert.ok(!ArrayUtility.contains(a, -9876));
+            assert.ok(containsElement(a, -1));
+            assert.ok(!containsElement(a, -9876));
         });
         QUnit.test("Array/Utility.findIndex", function (assert) {
-            assert.equal(ArrayUtility.findIndex(a, function (v) { return v == -1; }), 2);
-            assert.equal(ArrayUtility.findIndex(a, function (v) { return v == -9876; }), -1);
+            assert.equal(findElementIndex(a, function (v) { return v == -1; }), 2);
+            assert.equal(findElementIndex(a, function (v) { return v == -9876; }), -1);
         });
         QUnit.test("Array/Utility.register", function (assert) {
-            var s = ArrayUtility.copy(a);
+            var s = copyArray(a);
             var len = s.length;
-            assert.ok(ArrayUtility.register(s, -9876));
+            assert.ok(registerElement(s, -9876));
             assert.equal(s.length, len + 1);
             len = s.length;
-            assert.ok(!ArrayUtility.register(s, -1));
+            assert.ok(!registerElement(s, -1));
             assert.equal(s.length, len);
         });
         /*	Utility.applyTo skipped.
@@ -53,27 +49,27 @@
         QUnit.test("Array/Utility.remove", function (assert) {
             var s = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
             var len = s.length;
-            assert.equal(ArrayUtility.remove(s, 9), 1, "Only 9 removed once");
+            assert.equal(removeElement(s, 9), 1, "Only 9 removed once");
             assert.equal(s.length, len - 1, ".length should be less by one");
             assert.equal(s[1], 8, "Index [1] is now 8");
             len = s.length;
-            assert.equal(ArrayUtility.remove(s, 2), 2, "2 removed twice");
+            assert.equal(removeElement(s, 2), 2, "2 removed twice");
             assert.equal(s.length, len - 2, ".length should be less by two");
             assert.equal(s[7], 1, "Index [7] is now 1");
             assert.equal(s[10], 3, "Index [10] is now 3");
             len = s.length;
-            assert.equal(ArrayUtility.remove(s, 15), 0, "15 does not exist");
+            assert.equal(removeElement(s, 15), 0, "15 does not exist");
             assert.equal(s.length, len, ".length should be the same");
             len = s.length;
-            assert.ok(ArrayUtility.removeIndex(s, 5), "Index [5] removed");
+            assert.ok(removeElementByIndex(s, 5), "Index [5] removed");
             assert.equal(s.length, len - 1, ".length should be less by one");
             len = s.length;
-            assert.ok(!ArrayUtility.removeIndex(s, 15), "Index [15] doesn't exist");
+            assert.ok(!removeElementByIndex(s, 15), "Index [15] doesn't exist");
             assert.equal(s.length, len, ".length should be the same");
         });
         QUnit.test("Array/Utility.repeat", function (assert) {
             var value = 10, count = 3;
-            var r = ArrayUtility.repeat(value, count);
+            var r = repeatElement(value, count);
             assert.ok(r.length == count, ".length should be 3");
             for (var i = 0; i < count; i++) {
                 assert.equal(r[i], value);

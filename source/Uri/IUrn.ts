@@ -5,7 +5,7 @@
  */
 
 // noinspection SpellCheckingInspection
-import Scheme from "./Scheme";
+import Scheme, {SchemeValue} from "./Scheme";
 
 // noinspection SpellCheckingInspection
 /**
@@ -23,7 +23,7 @@ export default interface IUrn
 	/**
 	 * The scheme name for this URI.
 	 */
-	scheme?:Scheme|null;
+	scheme?:SchemeValue|null;
 
 	/**
 	 * The absolute path of the URI.

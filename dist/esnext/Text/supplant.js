@@ -14,7 +14,7 @@
 export function supplant(source, params) {
     return source.replace(/{([^{}]*)}/g, function (a, b) {
         if (b in params)
-            return params[b];
+            return params[b] + '';
         throw "Param {" + b + "} value not provided.";
     });
 }

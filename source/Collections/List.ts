@@ -21,7 +21,7 @@ import copyArrayTo from "./Array/copyArrayTo";
 import containsElement from "./Array/containsElement";
 
 const VOID0:undefined = void 0;
-export class List<T>
+export default class List<T>
 	extends CollectionBase<T>
 	implements IList<T>, IEnumerateEach<T>
 {
@@ -209,5 +209,3 @@ export class List<T>
 	}
 
 }
-
-export default List;

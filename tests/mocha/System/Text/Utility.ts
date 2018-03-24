@@ -1,29 +1,31 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import * as TextUtility from "../../../../dist/umd/Text/Utility";
+import trim from "../../../../source/Text/trim";
+import {format, supplant} from "../../../../source/Text/supplant";
+import {endsWith, startsWith} from "../../../../source/Text/Text";
 
 const s1 = "	 HI  ";
 const s2 = ".-.-xHIX//\\";
 describe('.trimEntries()', () => {
 	it("should leave a string without leading or trailing whitespace", () => {
-		assert.equal(TextUtility.trim(s1), "HI");
+		assert.equal(trim(s1), "HI");
 	});
 	it("should leave a string without leading or trailing trimEntries characters (string)", () => {
-		assert.equal(TextUtility.trim(s2, ".-/\\x", true), "HI");
+		assert.equal(trim(s2, ".-/\\x", true), "HI");
 	});
 
 	it("should leave a string without leading or trailing trimEntries characters (array)", () => {
-		assert.equal(TextUtility.trim(s2, [".", "-", "/", "\\", "x", "X"]), "HI");
+		assert.equal(trim(s2, [".", "-", "/", "\\", "x", "X"]), "HI");
 	});
 
 	it("should leave a string untouched if no trimEntries characters", () => {
-		assert.equal(TextUtility.trim(s2, ""), s2);
+		assert.equal(trim(s2, ""), s2);
 	});
 });
 
 describe(".format(source,..args)", () => {
 	it("should replace contents of a string", () => {
-		assert.equal(TextUtility.format(
+		assert.equal(format(
 			"Hello, my name is {0} and I'm number {length}.", "George", 2),
 			"Hello, my name is George and I'm number 2.");
 	});
@@ -31,11 +33,11 @@ describe(".format(source,..args)", () => {
 
 describe(".supplant(source,..args)", () => {
 	it("should replace contents of a string", () => {
-		assert.equal(TextUtility.supplant(
+		assert.equal(supplant(
 			"Hello, my name is {name} and I like {like}. {x} {y}", {
 				name: "George",
 				like: "cheese",
-				x: {}
+				x: <any>{}
 			}),
 			"Hello, my name is George and I like cheese. [object Object] {y}");
 	});
@@ -43,12 +45,12 @@ describe(".supplant(source,..args)", () => {
 
 describe(".startsWith(source,pattern)", () => {
 	it("should detect pattern at beginning", () =>
-		assert.ok(TextUtility.startsWith(
+		assert.ok(startsWith(
 			"Hello, my name is",
 			"Hello"))
 	);
 	it("should not detect pattern at beginning", () =>
-		assert.ok(!TextUtility.startsWith(
+		assert.ok(!startsWith(
 			"Hello, my name is",
 			"is"))
 	);
@@ -56,16 +58,16 @@ describe(".startsWith(source,pattern)", () => {
 
 describe(".endsWith(source,pattern)", () => {
 	it("should detect pattern at beginning", () =>
-		assert.ok(TextUtility.endsWith(
+		assert.ok(endsWith(
 			"Hello, my name is",
 			"is"))
 	);
 	it("should not detect pattern at beginning", () => {
-		assert.ok(!TextUtility.endsWith(
+		assert.ok(!endsWith(
 			"Hello, my name is",
 			"Hello"));
 
-		assert.ok(!TextUtility.endsWith(
+		assert.ok(!endsWith(
 			"Hello, my name is",
 			"is "))
 		}

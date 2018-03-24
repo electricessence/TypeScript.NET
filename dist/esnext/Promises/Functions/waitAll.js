@@ -5,7 +5,7 @@
 import Set from "../../Collections/Set";
 import ArrayPromise from "../ArrayPromise";
 import ArgumentNullException from "../../Exceptions/ArgumentNullException";
-function waitAll(first) {
+export default function waitAll(first) {
     var rest = [];
     for (var _i = 1; _i < arguments.length; _i++) {
         rest[_i - 1] = arguments[_i];
@@ -51,5 +51,4 @@ function waitAll(first) {
         }
     });
 }
-export default waitAll;
 //# sourceMappingURL=waitAll.js.map

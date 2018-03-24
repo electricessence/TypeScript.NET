@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 
-import TypeOfValue from "./TypeOfValue";
+import TypeOf from "./TypeOf";
 
 /**
  * Returns true if the value parameter is a function.
@@ -12,5 +12,5 @@ import TypeOfValue from "./TypeOfValue";
  */
 export default function isFunction(value:any):value is Function
 {
-	return typeof value===TypeOfValue.Function;
+	return typeof value===TypeOf.Function;
 }

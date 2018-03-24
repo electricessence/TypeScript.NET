@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 
-import TypeOfValue from "./TypeOfValue";
+import TypeOf from "./TypeOf";
 import Primitive from "../Primitive";
 
 /**
@@ -24,13 +24,13 @@ export default function isPrimitive(
 	const t = typeof value;
 	switch(t)
 	{
-		case TypeOfValue.Boolean:
-		case TypeOfValue.String:
-		case TypeOfValue.Number:
+		case TypeOf.Boolean:
+		case TypeOf.String:
+		case TypeOf.Number:
 			return true;
-		case TypeOfValue.Undefined:
+		case TypeOf.Undefined:
 			return allowUndefined;
-		case TypeOfValue.Object:
+		case TypeOf.Object:
 			return value===null;
 
 	}

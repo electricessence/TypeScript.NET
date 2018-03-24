@@ -11,7 +11,7 @@ import {Rejected} from "../Promise";
  * @param reason The reason the promise was rejected.
  * @returns A new rejected Promise.
  */
-export function reject<T>(reason:T):PromiseBase<T>
+export default function reject<T>(reason:T):PromiseBase<T>
 {
 	return new Rejected<T>(reason);
 }

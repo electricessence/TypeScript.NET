@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 
-import TypeOfValue from "./TypeOfValue";
+import TypeOf from "./TypeOf";
 
 /**
  * Returns true if the value parameter is a string.
@@ -12,5 +12,5 @@ import TypeOfValue from "./TypeOfValue";
  */
 export default function isString(value:any):value is string
 {
-	return typeof value===TypeOfValue.String;
+	return typeof value===TypeOf.String;
 }

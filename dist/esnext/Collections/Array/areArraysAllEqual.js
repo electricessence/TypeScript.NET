@@ -4,7 +4,7 @@
  */
 import areEqual from "../../Comparison/areEqual";
 import areArraysEqual from "./areArraysEqual";
-export function areAllEqual(arrays, strict, equalityComparer) {
+export default function areArraysAllEqual(arrays, strict, equalityComparer) {
     if (strict === void 0) { strict = true; }
     if (equalityComparer === void 0) { equalityComparer = areEqual; }
     if (!arrays)

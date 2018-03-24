@@ -12,7 +12,7 @@ import IMap from "../IMap";
 import Primitive from "../Primitive";
 import {IStringKeyValuePair} from "../KeyValuePair";
 import IEnumerableOrArray from "../Collections/IEnumerableOrArray";
-import TypeOfValue from "../Reflection/TypeOfValue";
+import TypeOf from "../Reflection/TypeOf";
 import hasMemberOfType from "../Reflection/hasMemberOfType";
 
 /*
@@ -114,7 +114,7 @@ export function encodeValue(value:UriComponent.Value):string
  */
 export function isUriComponentFormattable(instance:any):instance is UriComponent.Formattable
 {
-	return hasMemberOfType<UriComponent.Formattable>(instance, TO_URI_COMPONENT, TypeOfValue.Function);
+	return hasMemberOfType<UriComponent.Formattable>(instance, TO_URI_COMPONENT, TypeOf.Function);
 }
 
 /**

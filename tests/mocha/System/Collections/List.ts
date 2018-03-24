@@ -2,7 +2,7 @@
 import * as assert from "assert";
 import "mocha";
 import * as ICollectionTests from "./ICollection";
-import List from "../../../../dist/umd/Collections/List";
+import List from "../../../../source/Collections/List";
 
 
 const CLASS_NAME = 'List';

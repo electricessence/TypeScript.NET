@@ -4,7 +4,7 @@
  */
 
 import ArrayLikeWritable from "../Collections/Array/ArrayLikeWritable";
-import TypeOfValue from "./TypeOfValue";
+import TypeOf from "./TypeOf";
 import hasMember from "./hasMember";
 
 const LENGTH = "length";
@@ -23,6 +23,6 @@ export default function isArrayLike<T>(instance:any):instance is ArrayLikeWritab
 	 * Behave like arrays but don't have the same exact methods.
 	 */
 	return instance instanceof Array
-		|| type==TypeOfValue.String
-		|| type==TypeOfValue.Function && hasMember(instance, LENGTH);
+		|| type==TypeOf.String
+		|| type==TypeOf.Function && hasMember(instance, LENGTH);
 }

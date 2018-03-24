@@ -9,7 +9,7 @@ import { isNodeJS } from "../../Environment";
 import { deferImmediate } from "../deferImmediate";
 import ObjectPool from "../../Disposable/ObjectPool";
 import map from "../../Promises/Functions/map";
-import TSDNPromise from "../../Promises/Promise";
+import Promise from "../../Promises/Promise";
 import PromiseCollection from "../../Promises/PromiseCollection";
 import ArrayPromise from "../../Promises/ArrayPromise";
 //noinspection JSUnusedAssignment
@@ -56,7 +56,7 @@ var WorkerPromise = /** @class */ (function (_super) {
         }, true) || this;
     }
     return WorkerPromise;
-}(TSDNPromise));
+}(Promise));
 var workers;
 (function (workers) {
     /*
@@ -219,7 +219,7 @@ var Parallel = /** @class */ (function () {
      * @returns {Promise<U>|Promise}
      */
     Parallel.prototype.startLocal = function (data, task) {
-        return new TSDNPromise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             try {
                 resolve(task(data));
             }
@@ -257,7 +257,7 @@ var Parallel = /** @class */ (function () {
                 if (!result) {
                     // There is a small risk that the consumer could call .resolve() which would result in a double resolution.
                     // But it's important to minimize the number of objects created.
-                    result = data.map(function (d) { return new TSDNPromise(); });
+                    result = data.map(function (d) { return new Promise(); });
                 }
                 var next = function () {
                     if (error_1) {

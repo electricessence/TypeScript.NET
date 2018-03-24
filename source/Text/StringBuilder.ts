@@ -5,7 +5,7 @@
  */
 
 import IDisposable from "../Disposable/IDisposable";
-import TypeOfValue from "../Reflection/TypeOfValue";
+import TypeOf from "../Reflection/TypeOf";
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
@@ -43,8 +43,8 @@ export default class StringBuilder implements IDisposable
 			_._latest = null;
 			switch(typeof item)
 			{
-				case TypeOfValue.Object:
-				case TypeOfValue.Function:
+				case TypeOf.Object:
+				case TypeOf.Function:
 					item = item.toString();
 					break;
 			}

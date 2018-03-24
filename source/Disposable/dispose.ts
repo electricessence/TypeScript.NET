@@ -4,7 +4,7 @@
  */
 
 import IDisposable from "./IDisposable";
-import TypeOfValue from "../Reflection/TypeOfValue";
+import TypeOf from "../Reflection/TypeOf";
 
 // Allows for more flexible parameters.
 export type DisposableItem = IDisposable|null|undefined;
@@ -136,7 +136,7 @@ function disposeSingle(
 {
 	if(
 		disposable
-		&& typeof disposable==TypeOfValue.Object
+		&& typeof disposable==TypeOf.Object
 		&& typeof disposable['dispose'] == "function"
 	)
 	{

@@ -11,11 +11,11 @@ import {isNodeJS} from "../../Environment";
 import {deferImmediate} from "../deferImmediate";
 import ObjectPool from "../../Disposable/ObjectPool";
 import map from "../../Promises/Functions/map";
-import TSDNPromise from "../../Promises/Promise";
+import Promise from "../../Promises/Promise";
 import PromiseCollection from "../../Promises/PromiseCollection";
 import ArrayPromise from "../../Promises/ArrayPromise";
 import PromiseBase from "../../Promises/PromiseBase";
-import TypeOfValue from "../../Reflection/TypeOfValue";
+import TypeOf from "../../Reflection/TypeOf";
 
 declare const navigator:any;
 declare const __dirname:string;
@@ -24,7 +24,7 @@ declare const __dirname:string;
 const
 	MAX_WORKERS:number = 16,
 	VOID0:undefined    = void 0,
-	URL                = typeof self!==TypeOfValue.Undefined
+	URL                = typeof self!==TypeOf.Undefined
 		? (self.URL ? self.URL : (<any>self).webkitURL)
 		: null,
 	_supports          = isNodeJS || !!(<any>self).Worker; // node always supports parallel
@@ -82,7 +82,7 @@ function interact(
 	if(message!==VOID0) w.postMessage(message);
 }
 
-class WorkerPromise<T> extends TSDNPromise<T>
+class WorkerPromise<T> extends Promise<T>
 {
 	constructor(worker:WorkerLike, data:any)
 	{
@@ -232,13 +232,13 @@ export class Parallel
 		{
 			switch(typeof a)
 			{
-				case TypeOfValue.String:
+				case TypeOf.String:
 					this._requiredScripts.push(<string>a);
 					break;
-				case TypeOfValue.Function:
+				case TypeOf.Function:
 					this._requiredFunctions.push({fn: <Function>a});
 					break;
-				case TypeOfValue.Object:
+				case TypeOf.Object:
 					this._requiredFunctions.push(<{name?:string,fn:Function}>a);
 					break;
 				default:
@@ -294,7 +294,7 @@ export class Parallel
 	 * @param env
 	 * @returns {Promise<U>|Promise}
 	 */
-	startNew<T,U>(data:T, task:(data:T) => U, env?:any):TSDNPromise<U>
+	startNew<T,U>(data:T, task:(data:T) => U, env?:any):Promise<U>
 	{
 		const _ = this;
 		const maxConcurrency = this.ensureClampedMaxConcurrency();
@@ -321,9 +321,9 @@ export class Parallel
 	 * @param task
 	 * @returns {Promise<U>|Promise}
 	 */
-	startLocal<T,U>(data:T, task:(data:T) => U):TSDNPromise<U>
+	startLocal<T,U>(data:T, task:(data:T) => U):Promise<U>
 	{
-		return new TSDNPromise<U>(
+		return new Promise<U>(
 			(resolve, reject) =>
 			{
 				try
@@ -349,7 +349,7 @@ export class Parallel
 	{
 
 		// The resultant promise collection will make an internal copy...
-		let result:TSDNPromise<U>[]|undefined;
+		let result:Promise<U>[]|undefined;
 
 		if(data && data.length)
 		{
@@ -377,7 +377,7 @@ export class Parallel
 				{
 					// There is a small risk that the consumer could call .resolve() which would result in a double resolution.
 					// But it's important to minimize the number of objects created.
-					result = data.map(d => new TSDNPromise<U>());
+					result = data.map(d => new Promise<U>());
 				}
 
 				let next = () =>

@@ -12,7 +12,7 @@ import ArgumentNullException from "../../Exceptions/ArgumentNullException";
  * @param predicate
  * @returns {number}
  */
-export function findIndex(array, predicate) {
+export default function findElementIndex(array, predicate) {
     if (!array)
         throw new ArgumentNullException('array');
     if (typeof predicate != 'function')

@@ -1,6 +1,6 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import Stopwatch from "../../../../dist/umd/Diagnostics/Stopwatch";
+import Stopwatch from "../../../../source/Diagnostics/Stopwatch";
 
 
 it("should measure a closure",()=>{

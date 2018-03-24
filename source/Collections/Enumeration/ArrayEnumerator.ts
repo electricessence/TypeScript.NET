@@ -4,7 +4,7 @@
  */
 
 import IndexEnumerator from "./IndexEnumerator";
-import TypeOfValue from "../../Reflection/TypeOfValue";
+import TypeOf from "../../Reflection/TypeOf";
 
 export default class ArrayEnumerator<T> extends IndexEnumerator<T>
 {
@@ -15,7 +15,7 @@ export default class ArrayEnumerator<T> extends IndexEnumerator<T>
 		super(
 			() =>
 			{
-				const array = typeof arrayOrFactory == TypeOfValue.Function ? arrayOrFactory() : arrayOrFactory;
+				const array = typeof arrayOrFactory == TypeOf.Function ? arrayOrFactory() : arrayOrFactory;
 				return {
 					source: array,
 					pointer: start,

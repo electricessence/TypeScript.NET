@@ -1,7 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import {dispatch} from "../../../../../dist/umd/Collections/Array/Dispatch";
-import {Action} from "../../../../../dist/umd/FunctionTypes";
+import dispatch from "../../../../../source/Collections/Array/dispatch";
+import {Action} from "../../../../../source/FunctionTypes";
 
 it("should applyEntries closures in order", ()=>
 {

@@ -92,4 +92,4 @@ function dispatch(listeners, payload, trap) {
     dispatch.mapped = mapped;
 })(dispatch || (dispatch = {}));
 export default dispatch;
-//# sourceMappingURL=Dispatch.js.map
+//# sourceMappingURL=dispatch.js.map

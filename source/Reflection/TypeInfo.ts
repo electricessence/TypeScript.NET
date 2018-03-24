@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import TypeOfValue from "./TypeOfValue";
+import TypeOf from "./TypeOf";
 
 const VOID0 = <undefined>void(0);
 
@@ -54,25 +54,25 @@ export default class TypeInfo
 
 		switch(this.type = typeof target)
 		{
-			case TypeOfValue.Boolean:
+			case TypeOf.Boolean:
 				this.isBoolean = true;
 				this.isPrimitive = true;
 				break;
-			case TypeOfValue.Number:
+			case TypeOf.Number:
 				this.isNumber = true;
 				this.isTrueNaN = isNaN(target);
 				this.isFinite = isFinite(target);
 				this.isValidNumber = !this.isTrueNaN;
 				this.isPrimitive = true;
 				break;
-			case TypeOfValue.String:
+			case TypeOf.String:
 				this.isString = true;
 				this.isPrimitive = true;
 				break;
-			case TypeOfValue.Symbol:
+			case TypeOf.Symbol:
 				this.isSymbol = true;
 				break;
-			case TypeOfValue.Object:
+			case TypeOf.Object:
 				this.target = target;
 				if(target===null)
 				{
@@ -86,11 +86,11 @@ export default class TypeInfo
 					this.isObject = true;
 				}
 				break;
-			case TypeOfValue.Function:
+			case TypeOf.Function:
 				this.target = target;
 				this.isFunction = true;
 				break;
-			case TypeOfValue.Undefined:
+			case TypeOf.Undefined:
 				this.isUndefined = true;
 				this.isNullOrUndefined = true;
 				this.isPrimitive = true;
@@ -130,8 +130,8 @@ export default class TypeInfo
 		const type:string = typeof target;
 		switch(type)
 		{
-			case TypeOfValue.Object:
-			case TypeOfValue.Function:
+			case TypeOf.Object:
+			case TypeOf.Function:
 				return new TypeInfo(target);
 		}
 		let info = typeInfoRegistry[type];

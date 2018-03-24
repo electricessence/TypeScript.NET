@@ -1,7 +1,7 @@
 import {BuildHelper, Module, Target} from "gulp-typescript-helper";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
-import {TSDNPromise} from "../source/System/Promises/Promise";
+import {Promise} from "../source/System/Promises/Promise";
 import create from "../source/System/Promises/Functions/create";
 
 const renderer = BuildHelper

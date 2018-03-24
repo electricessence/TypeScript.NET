@@ -12,7 +12,7 @@ import {StringKeyValuePair} from "../KeyValuePair";
 import {Action} from "../FunctionTypes";
 import UriComponent from "./UriComponent";
 import QueryParam from "./QueryParam";
-import Scheme, {isValidScheme} from "./Scheme";
+import Scheme, {isValidScheme, SchemeValue} from "./Scheme";
 import {encode, parseToMap, Separator} from "./QueryParams";
 import Exception from "../Exceptions/Exception";
 import ArgumentException from "../Exceptions/ArgumentException";
@@ -34,7 +34,7 @@ const VOID0:undefined = void 0;
 export default class Uri implements IUri, IEquatable<IUri>
 {
 
-	readonly scheme:Scheme | null;
+	readonly scheme:SchemeValue | null;
 	readonly userInfo:string | null;
 	readonly host:string | null;
 	readonly port:number | null;
@@ -54,7 +54,7 @@ export default class Uri implements IUri, IEquatable<IUri>
 	 * @param fragment The escaped URI fragment.
 	 */
 	constructor(
-		scheme:Scheme|null,
+		scheme:SchemeValue|null,
 		userInfo:string|null,
 		host:string|null,
 		port:number|null,
@@ -311,7 +311,7 @@ function copyUri(from:IUri, to?:IUri)
 
 const SLASH = '/', SLASH2 = '//', QM = Separator.Query, HASH = '#', EMPTY = '', AT = '@';
 
-function getScheme(scheme:Scheme|string|null|undefined):Scheme|null
+function getScheme(scheme:SchemeValue|string|null|undefined):Scheme|null
 {
 	let s:any = scheme;
 	if(isString(s))

@@ -52,7 +52,7 @@ import Random from "../Random";
 import InfiniteEnumerator, {InfiniteValueFactory} from "../Collections/Enumeration/InfiniteEnumerator";
 import LazyList from "../Collections/LazyList";
 import disposeSingle = dispose.single;
-import TypeOfValue from "../Reflection/TypeOfValue";
+import TypeOf from "../Reflection/TypeOf";
 import areArraysEqual from "../Collections/Array/areArraysEqual";
 import isArrayLike from "../Reflection/isArrayLike";
 import areEqual from "../Comparison/areEqual";
@@ -799,16 +799,16 @@ export class InfiniteLinqEnumerable<T>
 		switch(<any>type)
 		{
 			case Number:
-				typeName = TypeOfValue.Number;
+				typeName = TypeOf.Number;
 				break;
 			case String:
-				typeName = TypeOfValue.String;
+				typeName = TypeOf.String;
 				break;
 			case Boolean:
-				typeName = TypeOfValue.Boolean;
+				typeName = TypeOf.Boolean;
 				break;
 			case Function:
-				typeName = TypeOfValue.Function;
+				typeName = TypeOf.Function;
 				break;
 			default:
 				return <any> this
@@ -3870,7 +3870,7 @@ export module Enumerable
 		if(input==null)
 			throw new ArgumentNullException("input");
 		const type = typeof input;
-		if(type!=TypeOfValue.String)
+		if(type!=TypeOf.String)
 			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
 
 		if(pattern instanceof RegExp)

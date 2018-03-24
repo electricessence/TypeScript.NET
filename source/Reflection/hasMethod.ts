@@ -3,10 +3,10 @@
  * Licensing: MIT
  */
 
-import TypeOfValue from "./TypeOfValue";
+import TypeOf from "./TypeOf";
 import hasMemberOfType from "./hasMemberOfType";
 
 export default function hasMethod<T>(instance:any, property:string):instance is T
 {
-	return hasMemberOfType<T>(instance, property, TypeOfValue.Function);
+	return hasMemberOfType<T>(instance, property, TypeOf.Function);
 }

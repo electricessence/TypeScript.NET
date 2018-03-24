@@ -16,7 +16,7 @@ import ArgumentNullException from "../../Exceptions/ArgumentNullException";
  * @param predicate
  * @returns {number}
  */
-export function findIndex<T>(array:ArrayLike<T>, predicate:PredicateWithIndex<T>):number
+export default function findElementIndex<T>(array:ArrayLike<T>, predicate:PredicateWithIndex<T>):number
 {
 	if(!array)
 		throw new ArgumentNullException('array');

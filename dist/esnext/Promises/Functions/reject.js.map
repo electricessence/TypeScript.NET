@@ -1,1 +1,1 @@
-{"version":3,"file":"reject.js","sourceRoot":"","sources":["../../../../source/Promises/Functions/reject.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAGH,OAAO,EAAC,QAAQ,EAAC,MAAM,YAAY,CAAC;AAEpC;;;;GAIG;AACH,MAAM,iBAAoB,MAAQ;IAEjC,OAAO,IAAI,QAAQ,CAAI,MAAM,CAAC,CAAC;AAChC,CAAC"}
+{"version":3,"file":"reject.js","sourceRoot":"","sources":["../../../../source/Promises/Functions/reject.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAGH,OAAO,EAAC,QAAQ,EAAC,MAAM,YAAY,CAAC;AAEpC;;;;GAIG;AACH,MAAM,CAAC,OAAO,iBAAoB,MAAQ;IAEzC,OAAO,IAAI,QAAQ,CAAI,MAAM,CAAC,CAAC;AAChC,CAAC"}

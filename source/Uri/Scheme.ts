@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://msdn.microsoft.com/en-us/library/system.uri.scheme%28v=vs.110%29.aspx
  */
+
 enum Scheme
 {
 	File   = 'file',
@@ -19,6 +20,21 @@ enum Scheme
 	Telnet = 'telnet',
 	UUID   = 'uuid',
 }
+
+export type SchemeValue = Scheme
+	| 'file'
+	| 'gopher'
+	| 'ftp'
+	| 'http'
+	| 'https'
+	| 'ldap'
+	| 'mailto'
+	| 'net.pipe'
+	| 'net.tcp'
+	| 'nntp'
+	| 'news'
+	| 'telnet'
+	| 'uuid';
 
 export function isValidScheme(scheme:string):scheme is Scheme
 {

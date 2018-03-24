@@ -3,10 +3,10 @@
  * Licensing: MIT
  */
 
-import TSDNPromise from "../Promise";
+import Promise from "../Promise";
 import {Executor} from "../PromiseTypes";
 
-export default function create<T>(e:Executor<T>):TSDNPromise<T>
+export default function create<T>(e:Executor<T>):Promise<T>
 {
-	return new TSDNPromise(e);
+	return new Promise(e);
 }

@@ -1,6 +1,8 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import areArraysEqual from "../../../../../source/Collections/Array/areArraysEqual";
+import areArraysAllEqual from "../../../../../source/Collections/Array/areArraysAllEqual";
+import areArraysEquivalent from "../../../../../source/Collections/Array/areArraysEquivalent";
 
 const a1 = [1,2,3];
 const a2 = [1,2,3];
@@ -51,17 +53,17 @@ describe(".areAllEqual()",()=>{
 describe(".areEquivalent()",()=>{
 
 	it("should be equivalent",()=>{
-		assert.ok(ArrayCompare.areEquivalent([1],[1]));
-		assert.ok(ArrayCompare.areEquivalent(a1,a1));
-		assert.ok(ArrayCompare.areEquivalent(a1,a2));
-		assert.ok(ArrayCompare.areEquivalent(a1,a1.slice().reverse()));
+		assert.ok(areArraysEquivalent([1],[1]));
+		assert.ok(areArraysEquivalent(a1,a1));
+		assert.ok(areArraysEquivalent(a1,a2));
+		assert.ok(areArraysEquivalent(a1,a1.slice().reverse()));
 	});
 
 	it("should not be equivalent",()=>{
-		assert.ok(!ArrayCompare.areEquivalent([1],[2]));
-		assert.ok(!ArrayCompare.areEquivalent(a1,b,()=>1));
-		assert.ok(!ArrayCompare.areEquivalent(a1,b));
-		assert.ok(!ArrayCompare.areEquivalent(d,e));
+		assert.ok(!areArraysEquivalent([1],[2]));
+		assert.ok(!areArraysEquivalent(a1,b,()=>1));
+		assert.ok(!areArraysEquivalent(a1,b));
+		assert.ok(!areArraysEquivalent(d,e));
 	});
 
 });

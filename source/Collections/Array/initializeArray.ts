@@ -24,5 +24,3 @@ export default function initializeArray<T>(length:number):T[]
 	}
 	return array;
 }
-
-export {initializeArray as initArray}

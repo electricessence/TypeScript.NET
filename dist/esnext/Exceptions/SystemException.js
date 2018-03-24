@@ -4,7 +4,7 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/system.systemexception%28v=vs.110%29.aspx
  */
 import * as tslib_1 from "tslib";
-import Exception from "../Exception";
+import Exception from "./Exception";
 var SystemException = /** @class */ (function (_super) {
     tslib_1.__extends(SystemException, _super);
     function SystemException() {

@@ -3,15 +3,15 @@
  * Licensing: MIT
  */
 
-import TypeOfValue from "./TypeOfValue";
+import TypeOf from "./TypeOf";
 import IMap from "../IMap";
 
 export module PropertyKey
 {
-	export const typeOfValues:ReadonlyArray<TypeOfValue> = Object.freeze([
-		TypeOfValue.String,
-		TypeOfValue.Number,
-		TypeOfValue.Symbol,
+	export const typeOfValues:ReadonlyArray<TypeOf> = Object.freeze([
+		TypeOf.String,
+		TypeOf.Number,
+		TypeOf.Symbol,
 	]);
 }
 

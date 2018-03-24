@@ -4,9 +4,9 @@
  */
 import PromiseBase from "../PromiseBase";
 import wrap from "./wrap";
-import TSDNPromise from "../Promise";
+import Promise from "../Promise";
 import ArgumentException from "../../Exceptions/ArgumentException";
-function race(first) {
+export default function race(first) {
     var rest = [];
     for (var _i = 1; _i < arguments.length; _i++) {
         rest[_i - 1] = arguments[_i];
@@ -24,7 +24,7 @@ function race(first) {
         if (p instanceof PromiseBase && p.isSettled)
             return p;
     }
-    return new TSDNPromise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var cleanup = function () {
             reject = null;
             resolve = null;
@@ -47,5 +47,4 @@ function race(first) {
         }
     });
 }
-export default race;
 //# sourceMappingURL=race.js.map

@@ -8,7 +8,7 @@ import { Rejected } from "../Promise";
  * @param reason The reason the promise was rejected.
  * @returns A new rejected Promise.
  */
-export function reject(reason) {
+export default function reject(reason) {
     return new Rejected(reason);
 }
 //# sourceMappingURL=reject.js.map

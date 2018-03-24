@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 
-import TypeOfValue from "./TypeOfValue";
+import TypeOf from "./TypeOf";
 
 /**
  * Returns true if the value parameter is a number.
@@ -13,5 +13,5 @@ import TypeOfValue from "./TypeOfValue";
  */
 export default function isNumber(value:any, ignoreNaN:boolean = false):value is number
 {
-	return typeof value===TypeOfValue.Number && (!ignoreNaN || !isNaN(value));
+	return typeof value===TypeOf.Number && (!ignoreNaN || !isNaN(value));
 }

@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 
-import TSDNPromise from "../Promise";
+import Promise from "../Promise";
 import PromiseCollection from "../PromiseCollection";
 
 /**
@@ -17,7 +17,7 @@ import PromiseCollection from "../PromiseCollection";
 export default function map<T, U>(source:T[], transform:(value:T) => U):PromiseCollection<U>
 {
 	return new PromiseCollection<U>(
-		source.map(d => new TSDNPromise<U>((r, j) => {
+		source.map(d => new Promise<U>((r, j) => {
 			try
 			{
 				r(transform(d));

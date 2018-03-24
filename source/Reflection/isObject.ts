@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 
-import TypeOfValue from "./TypeOfValue";
+import TypeOf from "./TypeOf";
 
 /**
  * Returns true if the value parameter is an object.
@@ -13,5 +13,5 @@ import TypeOfValue from "./TypeOfValue";
  */
 export default function isObject(value:any, allowNull:boolean = false):boolean
 {
-	return typeof value===TypeOfValue.Object && (allowNull || value!==null);
+	return typeof value===TypeOf.Object && (allowNull || value!==null);
 }

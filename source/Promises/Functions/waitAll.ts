@@ -11,11 +11,11 @@ import ArgumentNullException from "../../Exceptions/ArgumentNullException";
  * Returns a promise that is fulfilled with array of provided promises when all provided promises have resolved (fulfill or reject).
  * Unlike .all this method waits for all rejections as well as fulfillment.
  */
-function waitAll<T>(promises:PromiseLike<T>[]):ArrayPromise<PromiseLike<T>>
-function waitAll<T>(
+export default function waitAll<T>(promises:PromiseLike<T>[]):ArrayPromise<PromiseLike<T>>
+export default function waitAll<T>(
 	promise:PromiseLike<T>,
 	...rest:PromiseLike<T>[]):ArrayPromise<PromiseLike<T>>
-function waitAll(
+export default function waitAll(
 	first:PromiseLike<any> | PromiseLike<any>[],
 	...rest:PromiseLike<any>[]):ArrayPromise<PromiseLike<any>>
 {
@@ -65,5 +65,3 @@ function waitAll(
 	});
 
 }
-
-export default waitAll;

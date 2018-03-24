@@ -3,7 +3,7 @@ import * as semver from "semver";
 import * as file from "../_utility/file-promise";
 import {streamToPromise as stream} from "../_utility/stream-to-promise";
 import {JsonMap} from "../source/JSON";
-import {TSDNPromise as NPromise} from "../source/System/Promises/Promise";
+import {Promise as NPromise} from "../source/System/Promises/Promise";
 
 // No tsd yet.
 const bump = require('gulp-bump');

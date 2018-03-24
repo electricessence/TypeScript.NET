@@ -8,10 +8,10 @@ import {ISymbolizable} from "./Dictionaries/IDictionary";
 import {HashSet} from "./HashSet";
 import Primitive from "../Primitive";
 import IEnumerableOrArray from "./IEnumerableOrArray";
-import TypeOfValue from "../Reflection/TypeOfValue";
+import TypeOf from "../Reflection/TypeOf";
 
 function getId(obj:any):string|number|symbol {
-	return getIdentifier(obj, typeof obj!=TypeOfValue.Boolean);
+	return getIdentifier(obj, typeof obj!=TypeOf.Boolean);
 }
 
 export default class Set<T extends Primitive|ISymbolizable|symbol>

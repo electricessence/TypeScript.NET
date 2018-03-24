@@ -4,7 +4,7 @@
  */
 
 import {Executor} from "../PromiseTypes";
-import TSDNPromise from "../Promise";
+import Promise from "../Promise";
 import PromiseBase from "../PromiseBase";
 
 /**
@@ -17,5 +17,5 @@ export default function using<T>(
 	resolver:Executor<T>,
 	forceSynchronous:boolean = false):PromiseBase<T>
 {
-	return new TSDNPromise<T>(resolver, forceSynchronous);
+	return new Promise<T>(resolver, forceSynchronous);
 }

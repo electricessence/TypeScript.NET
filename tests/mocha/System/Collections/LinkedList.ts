@@ -2,7 +2,7 @@
 import * as assert from "assert";
 import "mocha";
 import * as ICollectionTests from "./ICollection";
-import LinkedList from "../../../../dist/umd/Collections/LinkedList";
+import LinkedList from "../../../../source/Collections/LinkedList";
 import areArraysEqual from "../../../../source/Collections/Array/areArraysEqual";
 
 const CLASS_NAME = 'LinkedList';

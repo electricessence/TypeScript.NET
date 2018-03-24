@@ -138,6 +138,5 @@ var List = /** @class */ (function (_super) {
     };
     return List;
 }(CollectionBase));
-export { List };
 export default List;
 //# sourceMappingURL=List.js.map

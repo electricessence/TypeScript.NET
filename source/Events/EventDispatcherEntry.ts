@@ -9,7 +9,7 @@ import ArgumentException from "../Exceptions/ArgumentException";
 import IEventListener from "./IEventListener";
 import IEquatable from "../IEquatable";
 import {Closure} from "../FunctionTypes";
-import TypeOfValue from "../Reflection/TypeOfValue";
+import TypeOf from "../Reflection/TypeOf";
 import hasMemberOfType from "../Reflection/hasMemberOfType";
 import {areEquivalent} from "../Comparison/areEquivalent";
 import isObject from "../Reflection/isObject";
@@ -29,7 +29,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 
 		if(!listener)
 			throw new ArgumentNullException('listener');
-		if(isObject(listener) && !hasMemberOfType(listener, "handleEvent", TypeOfValue.Function))
+		if(isObject(listener) && !hasMemberOfType(listener, "handleEvent", TypeOf.Function))
 			throw new ArgumentException('listener', "is invalid type.  Must be a function or an object with 'handleEvent'.");
 
 		const _ = this;

@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-import TSDNPromise from "../Promise";
+import Promise from "../Promise";
 import PromiseCollection from "../PromiseCollection";
 /**
  * Creates a PromiseCollection containing promises that will resolve on the next tick using the transform function.
@@ -13,7 +13,7 @@ import PromiseCollection from "../PromiseCollection";
  * @returns {PromiseCollection}
  */
 export default function map(source, transform) {
-    return new PromiseCollection(source.map(function (d) { return new TSDNPromise(function (r, j) {
+    return new PromiseCollection(source.map(function (d) { return new Promise(function (r, j) {
         try {
             r(transform(d));
         }

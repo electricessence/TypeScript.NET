@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 
-import TypeOfValue from "./TypeOfValue";
+import TypeOf from "./TypeOf";
 
 /**
  * Returns true if is a number and is NaN.
@@ -12,5 +12,5 @@ import TypeOfValue from "./TypeOfValue";
  */
 export default function isTrueNaN(value:any):value is number
 {
-	return typeof value===TypeOfValue.Number && isNaN(value);
+	return typeof value===TypeOf.Number && isNaN(value);
 }

@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import TypeOfValue from "../Reflection/TypeOfValue";
+import TypeOf from "../Reflection/TypeOf";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ISerializable from "./ISerializable";
 import Primitive from "../Primitive";
@@ -20,11 +20,11 @@ export function toString(
 	let v = <any>value;
 	switch(typeof v)
 	{
-		case TypeOfValue.String:
+		case TypeOf.String:
 			return v;
-		case TypeOfValue.Boolean:
+		case TypeOf.Boolean:
 			return v ? TRUE : FALSE;
-		case TypeOfValue.Number:
+		case TypeOf.Number:
 			return EMPTY + v;
 		default:
 
@@ -46,7 +46,7 @@ export function toString(
 
 export function isSerializable(instance:any):instance is ISerializable
 {
-	return hasMemberOfType<ISerializable>(instance, 'serialize', TypeOfValue.Function);
+	return hasMemberOfType<ISerializable>(instance, 'serialize', TypeOf.Function);
 }
 
 export function toPrimitive(
@@ -64,7 +64,7 @@ export function toPrimitive(
 		{
 			case 'null':
 				return null;
-			case TypeOfValue.Undefined:
+			case TypeOf.Undefined:
 				return void(0);
 			case TRUE:
 				return true;

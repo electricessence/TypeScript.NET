@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import TypeOfValue from "./Reflection/TypeOfValue";
+import TypeOf from "./Reflection/TypeOf";
 import ArgumentException from "./Exceptions/ArgumentException";
 import ArgumentLessThanMinimumException from "./Exceptions/ArgumentLessThanMinimumException";
 
@@ -16,7 +16,7 @@ module Integer
 {
 	export const MAX_32_BIT:number = 2147483647;
 	export const MAX_VALUE:number = 9007199254740991;
-	const NUMBER = TypeOfValue.Number;
+	const NUMBER = TypeOf.Number;
 
 	/**
 	 * Converts any number to its 32bit counterpart.

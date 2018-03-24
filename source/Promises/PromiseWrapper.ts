@@ -4,7 +4,7 @@
  */
 
 import ArgumentException from "../Exceptions/ArgumentException";
-import TSDNPromise, {Resolvable} from "./Promise";
+import Promise, {Resolvable} from "./Promise";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import isPromise from "./Functions/isPromise";
 import {PromiseStateValue} from "./PromiseState";
@@ -51,7 +51,7 @@ export default class PromiseWrapper<T>
 		let t = this._target;
 		if(!t) return super.thenSynchronous(onFulfilled, onRejected);
 
-		return new TSDNPromise<TFulfilled | TRejected>((resolve, reject) => {
+		return new Promise<TFulfilled | TRejected>((resolve, reject) => {
 			handleDispatch(t,
 				result => handleResolutionMethods(resolve, reject, result, onFulfilled),
 				error => onRejected

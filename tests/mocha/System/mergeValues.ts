@@ -1,3 +1,3 @@
-import merge from "../../../dist/umd/Collections/Map/mergeEntries";
+import merge from "../../../source/Collections/Map/mergeEntries";
 // Compile test.
 let {a, b} = merge({a: "hello"}, {b: "goodbye"});

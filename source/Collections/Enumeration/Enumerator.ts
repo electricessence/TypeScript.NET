@@ -13,7 +13,7 @@ import {ActionWithIndex, PredicateWithIndex, SelectorWithIndex} from "../../Func
 import UnsupportedEnumerableException from "./UnsupportedEnumerableException";
 import ArrayEnumerator from "./ArrayEnumerator";
 import IndexEnumerator from "./IndexEnumerator";
-import TypeOfValue from "../../Reflection/TypeOfValue";
+import TypeOf from "../../Reflection/TypeOf";
 import {using} from "../../Disposable/dispose";
 import IteratorEnumerator from "./IteratorEnumerator";
 import InfiniteEnumerator, {InfiniteValueFactory} from "./InfiniteEnumerator";
@@ -110,7 +110,7 @@ export function from<T>(source:ForEachEnumerable<T>|InfiniteValueFactory<T>):IEn
 
 export function isEnumerable<T>(instance:any):instance is IEnumerable<T>
 {
-	return hasMemberOfType<IEnumerable<T>>(instance, "getEnumerator", TypeOfValue.Function);
+	return hasMemberOfType<IEnumerable<T>>(instance, "getEnumerator", TypeOf.Function);
 }
 
 export function isEnumerableOrArrayLike<T>(instance:any):instance is IEnumerableOrArray<T>
@@ -120,12 +120,12 @@ export function isEnumerableOrArrayLike<T>(instance:any):instance is IEnumerable
 
 export function isEnumerator<T>(instance:any):instance is IEnumerator<T>
 {
-	return hasMemberOfType<IEnumerator<T>>(instance, "moveNext", TypeOfValue.Function);
+	return hasMemberOfType<IEnumerator<T>>(instance, "moveNext", TypeOf.Function);
 }
 
 export function isIterator<T>(instance:any):instance is IIterator<T>
 {
-	return hasMemberOfType<IIterator<T>>(instance, "next", TypeOfValue.Function);
+	return hasMemberOfType<IIterator<T>>(instance, "next", TypeOf.Function);
 }
 
 /**

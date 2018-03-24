@@ -11,7 +11,7 @@ import {ILinkedNode} from "../Collections/ILinkedListNode";
 import ICancellable from "./ICancellable";
 import ObjectPool from "../Disposable/ObjectPool";
 import {isNodeJS} from "../Environment";
-import TypeOfValue from "../Reflection/TypeOfValue";
+import TypeOf from "../Reflection/TypeOf";
 
 declare module process
 {
@@ -192,10 +192,10 @@ if(isNodeJS)
 	};
 
 }
-else if(typeof setImmediate===TypeOfValue.Function)
+else if(typeof setImmediate===TypeOf.Function)
 {
 	// In IE10, Node.js 0.9+, or https://github.com/NobleJS/setImmediate
-	if(typeof window!==TypeOfValue.Undefined)
+	if(typeof window!==TypeOf.Undefined)
 	{
 		requestTick = setImmediate.bind(window, flush);
 	}
@@ -208,7 +208,7 @@ else if(typeof setImmediate===TypeOfValue.Function)
 	}
 
 }
-else if(typeof MessageChannel!==TypeOfValue.Undefined)
+else if(typeof MessageChannel!==TypeOf.Undefined)
 {
 	// modern browsers
 	// http://www.nonblocking.io/2011/06/windownexttick.html

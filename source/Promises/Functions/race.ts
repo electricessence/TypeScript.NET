@@ -5,7 +5,7 @@
 
 import PromiseBase from "../PromiseBase";
 import wrap from "./wrap";
-import TSDNPromise from "../Promise";
+import Promise from "../Promise";
 import ArgumentException from "../../Exceptions/ArgumentException";
 
 /**
@@ -14,9 +14,9 @@ import ArgumentException from "../../Exceptions/ArgumentException";
  * @param promises An array of Promises.
  * @returns A new Promise.
  */
-function race<T>(promises:PromiseLike<T>[]):PromiseBase<T>
-function race<T>(promise:PromiseLike<T>, ...rest:PromiseLike<T>[]):PromiseBase<T>
-function race(
+export default function race<T>(promises:PromiseLike<T>[]):PromiseBase<T>
+export default function race<T>(promise:PromiseLike<T>, ...rest:PromiseLike<T>[]):PromiseBase<T>
+export default function race(
 	first:PromiseLike<any> | PromiseLike<any>[],
 	...rest:PromiseLike<any>[]):PromiseBase<any>
 {
@@ -36,7 +36,7 @@ function race(
 		if(p instanceof PromiseBase && p.isSettled) return p;
 	}
 
-	return new TSDNPromise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		let cleanup = () => {
 			reject = <any>null;
 			resolve = <any>null;
@@ -62,5 +62,3 @@ function race(
 		}
 	});
 }
-
-export default race;

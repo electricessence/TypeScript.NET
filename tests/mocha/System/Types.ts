@@ -1,7 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import hasMember from "../../../dist/umd/Reflection/hasMember";
+import hasMember from "../../../source/Reflection/hasMember";
 
 describe('.hasMember()', ()=>
 {

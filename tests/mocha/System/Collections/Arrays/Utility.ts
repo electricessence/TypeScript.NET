@@ -1,8 +1,25 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import * as Arrays from "../../../../../dist/umd/Collections/Array/Compare";
-import * as ArrayUtility from "../../../../../dist/umd/Collections/Array/Utility";
-import Stopwatch from "../../../../../dist/umd/Diagnostics/Stopwatch";
+import Stopwatch from "../../../../../source/Diagnostics/Stopwatch";
+import initializeArray from "../../../../../source/Collections/Array/initializeArray";
+import removeElement from "../../../../../source/Collections/Array/removeElement";
+import removeElementByIndex from "../../../../../source/Collections/Array/removeElementByIndex";
+import copyArray from "../../../../../source/Collections/Array/copyArray";
+import areArraysEqual from "../../../../../source/Collections/Array/areArraysEqual";
+import copyArrayTo from "../../../../../source/Collections/Array/copyArrayTo";
+import containsElement from "../../../../../source/Collections/Array/containsElement";
+import replaceElement from "../../../../../source/Collections/Array/replaceElement";
+import findElementIndex from "../../../../../source/Collections/Array/findElementIndex";
+import registerElement from "../../../../../source/Collections/Array/registerElement";
+import indexOfElement from "../../../../../source/Collections/Array/indexOfElement";
+import updateRange from "../../../../../source/Collections/Array/updateRange";
+import clearElements from "../../../../../source/Collections/Array/clearElements";
+import forEachElement from "../../../../../source/Collections/Array/forEachElement";
+import {repeatElement} from "../../../../../source/Collections/Array/repeatElement";
+import applyToElements from "../../../../../source/Collections/Array/applyToElements";
+import rangeOfNumbers from "../../../../../source/Collections/Array/rangeOfNumbers";
+import rangeOfNumbersUntil from "../../../../../source/Collections/Array/rangeOfNumbersUntil";
+import flatten from "../../../../../source/Collections/Array/flatten";
 
 
 // Min/Max tests...
@@ -19,7 +36,7 @@ describe(".initializeArray(length)", ()=>
 	{
 		it("should be length " + len, ()=>
 		{
-			const a = ArrayUtility.initialize(len);
+			const a = initializeArray(len);
 			assert.equal(a.length, len, ".length should be " + len);
 		});
 	}
@@ -34,13 +51,13 @@ describe(".arrayCopy(source) & .equals(old,new)", ()=>
 	it("should equal", ()=>
 	{
 		const s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3],
-		      s2 = ArrayUtility.copy(s1);
-		let s3 = ArrayUtility.copy(s1, 1),
-		    s4 = ArrayUtility.copy(s1, 1, 3);
-		assert.ok(Arrays.areEqual(s1, s2));
-		const s5 = ArrayUtility.copy(<any>null);
-		assert.ok(Arrays.areEqual(s3, s1.slice(1)));
-		assert.ok(Arrays.areEqual(s4, s1.slice(1,4)));
+		      s2 = copyArray(s1);
+		let s3 = copyArray(s1, 1),
+		    s4 = copyArray(s1, 1, 3);
+		assert.ok(areArraysEqual(s1, s2));
+		const s5 = copyArray(<any>null);
+		assert.ok(areArraysEqual(s3, s1.slice(1)));
+		assert.ok(areArraysEqual(s4, s1.slice(1,4)));
 		assert.equal(s5, <any>null);
 	});
 
@@ -50,12 +67,12 @@ describe(".copyTo(source,destination)", ()=>
 {
 	it("should throw for invalid parameter", ()=>
 	{
-		assert.throws(()=> {ArrayUtility.copyTo(<any>null, <any>null);});
-		assert.throws(()=> {ArrayUtility.copyTo([], <any>null);});
-		assert.throws(()=> {ArrayUtility.copyTo([1], [], -1);});
-		assert.throws(()=> {ArrayUtility.copyTo([1], [], 2);});
-		assert.throws(()=> {ArrayUtility.copyTo([1], {length: -1});});
-		assert.throws(()=> {ArrayUtility.copyTo([1], [], 0, 0, 5);});
+		assert.throws(()=> {copyArrayTo(<any>null, <any>null);});
+		assert.throws(()=> {copyArrayTo([], <any>null);});
+		assert.throws(()=> {copyArrayTo([1], [], -1);});
+		assert.throws(()=> {copyArrayTo([1], [], 2);});
+		assert.throws(()=> {copyArrayTo([1], {length: -1});});
+		assert.throws(()=> {copyArrayTo([1], [], 0, 0, 5);});
 	});
 });
 
@@ -64,7 +81,7 @@ describe(".indexOf(source,value)", ()=>
 	const a = initTestArray();
 	it("should return true for a value contained", ()=>
 	{
-		assert.notEqual(ArrayUtility.indexOf(a, -1), -1);
+		assert.notEqual(indexOfElement(a, -1), -1);
 	});
 });
 
@@ -74,11 +91,11 @@ describe(".contains(source,value)", ()=>
 	const a = initTestArray();
 	it("should return true for a value contained", ()=>
 	{
-		assert.ok(ArrayUtility.contains(a, -1));
+		assert.ok(containsElement(a, -1));
 	});
 	it("should return false for a value that is not present", ()=>
 	{
-		assert.ok(!ArrayUtility.contains(a, -9876));
+		assert.ok(!containsElement(a, -9876));
 	});
 });
 
@@ -89,18 +106,18 @@ describe(".replace(source,oldValue,newValue)", ()=>
 	a.push(5);
 	it("should properly replace items with max", ()=>
 	{
-		assert.equal(ArrayUtility.replace(<any>null, 5, 6), 0);
-		assert.equal(ArrayUtility.replace(<number[]>[], 5, 6), 0);
-		assert.equal(ArrayUtility.replace(a, 5, 6), 2);
-		assert.ok(ArrayUtility.contains(a, 6));
-		assert.equal(ArrayUtility.replace(a, 6, 5, 1), 1);
-		assert.ok(ArrayUtility.contains(a, 6));
-		assert.ok(ArrayUtility.contains(a, 5));
+		assert.equal(replaceElement(<any>null, 5, 6), 0);
+		assert.equal(replaceElement(<number[]>[], 5, 6), 0);
+		assert.equal(replaceElement(a, 5, 6), 2);
+		assert.ok(containsElement(a, 6));
+		assert.equal(replaceElement(a, 6, 5, 1), 1);
+		assert.ok(containsElement(a, 6));
+		assert.ok(containsElement(a, 5));
 
 	});
 	it("should throw for invalid parameter", ()=>
 	{
-		assert.throws(()=> {ArrayUtility.replace([4, 5, 6], 5, 6, -5);});
+		assert.throws(()=> {replaceElement([4, 5, 6], 5, 6, -5);});
 	});
 });
 
@@ -109,21 +126,21 @@ describe(".findIndex(source,of)", ()=>
 	const a = initTestArray(), b:ArrayLike<number> = {0: 3, 1: 1, 2: 2, length: 3};
 	it("should find and return the correct index", ()=>
 	{
-		assert.equal(ArrayUtility.findIndex(a, (v:number)=>v== -1), 2);
+		assert.equal(findElementIndex(a, (v:number)=>v== -1), 2);
 	});
 	it("should find and return the correct index", ()=>
 	{
-		assert.equal(ArrayUtility.findIndex(b, (v:number)=>v==1), 1);
+		assert.equal(findElementIndex(b, (v:number)=>v==1), 1);
 	});
 	it("should return -1 when the value is not present", ()=>
 	{
-		assert.equal(ArrayUtility.findIndex(a, (v:number)=> v== -9876), -1);
+		assert.equal(findElementIndex(a, (v:number)=> v== -9876), -1);
 	});
 
 	it("should throw for invalid parameter", ()=>
 	{
-		assert.throws(()=> {ArrayUtility.findIndex(<any>null, ()=>true)});
-		assert.throws(()=> {ArrayUtility.findIndex(a, <any>null)});
+		assert.throws(()=> {findElementIndex(<any>null, ()=>true)});
+		assert.throws(()=> {findElementIndex(a, <any>null)});
 	});
 });
 
@@ -133,7 +150,7 @@ describe(".register(target,value)", ()=>
 	{
 		const a = initTestArray();
 		const len = a.length;
-		assert.ok(ArrayUtility.register(a, -9876));
+		assert.ok(registerElement(a, -9876));
 		assert.equal(a.length, len + 1);
 	});
 
@@ -141,13 +158,13 @@ describe(".register(target,value)", ()=>
 	{
 		const a = initTestArray();
 		const len = a.length;
-		assert.ok(!ArrayUtility.register(a, -1));
+		assert.ok(!registerElement(a, -1));
 		assert.equal(a.length, len);
 	});
 
 	it("should throw for invalid parameter", ()=>
 	{
-		assert.throws(()=> {ArrayUtility.register(<any>null, -1, ()=>true)});
+		assert.throws(()=> {registerElement(<any>null, -1, ()=>true)});
 	});
 
 });
@@ -160,31 +177,31 @@ describe(".remove(target,value)", ()=>
 		const s = [10, 9, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 3];
 		let len = s.length;
 
-		assert.equal(ArrayUtility.remove(s, 9, 1), 1, "Only 9 removed once");
+		assert.equal(removeElement(s, 9, 1), 1, "Only 9 removed once");
 		assert.equal(s.length, len - 1, ".length should be less by one");
-		assert.equal(ArrayUtility.remove(s, 9, 3), 2, "Remaining 9s removed.");
+		assert.equal(removeElement(s, 9, 3), 2, "Remaining 9s removed.");
 		assert.equal(s[1], 8, "Index [1] is now 8");
 		len = s.length;
 
-		assert.equal(ArrayUtility.remove(s, 2), 2, "2 removed twice");
+		assert.equal(removeElement(s, 2), 2, "2 removed twice");
 		assert.equal(s.length, len - 2, ".length should be less by two");
 		assert.equal(s[7], 1, "Index [7] is now 1");
 		assert.equal(s[10], 3, "Index [10] is now 3");
 		len = s.length;
 
-		assert.equal(ArrayUtility.remove(s, 15), 0, "15 does not exist");
+		assert.equal(removeElement(s, 15), 0, "15 does not exist");
 		assert.equal(s.length, len, ".length should be the same");
 		len = s.length;
 
-		assert.ok(ArrayUtility.removeIndex(s, 5), "Index [5] removed");
+		assert.ok(removeElementByIndex(s, 5), "Index [5] removed");
 		assert.equal(s.length, len - 1, ".length should be less by one");
 		len = s.length;
 
-		assert.equal(ArrayUtility.remove(s, 3, <any>null), 3, "All 3s removed.");
+		assert.equal(removeElement(s, 3, <any>null), 3, "All 3s removed.");
 		assert.equal(s.length, len - 3, ".length should be the same");
 		len = s.length;
 
-		assert.ok(!ArrayUtility.removeIndex(s, 15), "Index [15] doesn't exist");
+		assert.ok(!removeElementByIndex(s, 15), "Index [15] doesn't exist");
 		assert.equal(s.length, len, ".length should be the same");
 	});
 
@@ -192,15 +209,15 @@ describe(".remove(target,value)", ()=>
 	{
 		assert.throws(()=>
 		{
-			ArrayUtility.removeIndex(<any>null, 0);
+			removeElementByIndex(<any>null, 0);
 		});
 		assert.throws(()=>
 		{
-			ArrayUtility.removeIndex([1, 2], -1);
+			removeElementByIndex([1, 2], -1);
 		});
 		assert.throws(()=>
 		{
-			ArrayUtility.remove([1, 2], 1, -2);
+			removeElement([1, 2], 1, -2);
 		});
 	});
 
@@ -216,8 +233,8 @@ describe(".updateRange(value,count)", ()=>
 	{
 
 		const value = 10, count = 3, r = [1, 2, 3];
-		assert.doesNotThrow(()=> {ArrayUtility.updateRange(<any>null, value)});
-		ArrayUtility.updateRange(r, value);
+		assert.doesNotThrow(()=> {updateRange(<any>null, value)});
+		updateRange(r, value);
 
 		assert.equal(r.length, count, ".length should be 3");
 		for(let i = 0; i<count; i++)
@@ -225,7 +242,7 @@ describe(".updateRange(value,count)", ()=>
 			assert.equal(r[i], value);
 		}
 
-		ArrayUtility.clear(r);
+		clearElements(r);
 		for(let i = 0; i<count; i++)
 		{
 			assert.equal(r[i], null);
@@ -234,7 +251,7 @@ describe(".updateRange(value,count)", ()=>
 
 	it("should throw for invalid parameter stop less than start", ()=>
 	{
-		assert.throws(()=> {ArrayUtility.updateRange([1, 2, 3], 4, 2, 1);})
+		assert.throws(()=> {updateRange([1, 2, 3], 4, 2, 1);})
 	})
 });
 
@@ -245,8 +262,8 @@ describe(".applyTo(source,action)", ()=>
 
 
 		const count = 3, r = [1, 2, 3];
-		assert.doesNotThrow(()=> {ArrayUtility.applyTo(<any>null, ()=>null)});
-		ArrayUtility.applyTo(r, ()=>null);
+		assert.doesNotThrow(()=> {applyToElements(<any>null, ()=>null)});
+		applyToElements(r, ()=>null);
 		assert.equal(r.length, count, ".length should be 3");
 		for(let i = 0; i<count; i++)
 		{
@@ -263,8 +280,8 @@ describe(".applyTo(source,action)", ()=>
 
 		let count = 0;
 		const r = [1, 2, 3];
-		assert.doesNotThrow(()=> {ArrayUtility.forEach(<any>null, ()=>true)});
-		ArrayUtility.forEach(r, (n, i)=>
+		assert.doesNotThrow(()=> {forEachElement(<any>null, ()=>true)});
+		forEachElement(r, (n, i)=>
 		{
 			assert.equal(count, i, "count should be " + i);
 			count++;
@@ -279,7 +296,7 @@ describe(".repeat(value,count)", ()=>
 	it("should correctly repeat the value requested", ()=>
 	{
 		const value = 10, count = 3;
-		const r = ArrayUtility.repeat(value, count);
+		const r = repeatElement(value, count);
 		assert.equal(r.length, count, ".length should be 3");
 		for(let i = 0; i<count; i++)
 		{
@@ -289,7 +306,7 @@ describe(".repeat(value,count)", ()=>
 
 	it("should throw for invalid parameter", ()=>
 	{
-		assert.throws(()=> {ArrayUtility.repeat(1, -2);})
+		assert.throws(()=> {repeatElement(1, -2);})
 	})
 });
 
@@ -298,7 +315,7 @@ describe(".rangeUntil(first,until,step)", ()=>
 	it("should correctly increase the value requested", ()=>
 	{
 		const first = 10, count = 3, step = 2, until = first + count*step;
-		const r = ArrayUtility.rangeUntil(first, until, 2);
+		const r = rangeOfNumbersUntil(first, until, 2);
 		assert.equal(r.length, count, ".length should be 3");
 		for(let i = 0; i<count; i++)
 		{
@@ -308,12 +325,12 @@ describe(".rangeUntil(first,until,step)", ()=>
 
 	it("should throw for invalid parameter", ()=>
 	{
-		assert.throws(()=> {ArrayUtility.rangeUntil(Infinity, 10);});
-		assert.throws(()=> {ArrayUtility.rangeUntil(NaN, 10);});
-		assert.throws(()=> {ArrayUtility.rangeUntil(1, NaN);});
-		assert.throws(()=> {ArrayUtility.rangeUntil(1, Infinity);});
-		assert.throws(()=> {ArrayUtility.range(1, -1);});
-		assert.throws(()=> {ArrayUtility.rangeUntil(1, 5, 0);});
+		assert.throws(()=> {rangeOfNumbersUntil(Infinity, 10);});
+		assert.throws(()=> {rangeOfNumbersUntil(NaN, 10);});
+		assert.throws(()=> {rangeOfNumbersUntil(1, NaN);});
+		assert.throws(()=> {rangeOfNumbersUntil(1, Infinity);});
+		assert.throws(()=> {rangeOfNumbers(1, -1);});
+		assert.throws(()=> {rangeOfNumbersUntil(1, 5, 0);});
 	});
 });
 
@@ -321,14 +338,14 @@ describe(".flatten(source,recurseDepth)",()=>{
 	it("should convert multi dimensional array tree to a flat one",()=>{
 		const len = initTestArray().length;
 		const a = [[initTestArray(), initTestArray()], initTestArray()];
-		const b = ArrayUtility.flatten(a, 3);
+		const b = flatten(a, 3);
 		assert.equal(b.length,len*3);
 	});
 
 	it("should reduce multi dimensional array tree",()=>{
 		const len = initTestArray().length;
 		const a = [[initTestArray(), initTestArray()], initTestArray()];
-		const b = ArrayUtility.flatten(a);
+		const b = flatten(a);
 		assert.equal(b.length,len+2);
 	})
 

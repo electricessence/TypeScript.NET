@@ -5,8 +5,8 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import Enumerable from "../../../../dist/umd/Exceptions/Linq";
-import LazyList from "../../../../dist/umd/Collections/LazyList";
+import Enumerable from "../../../../source/Exceptions/Linq";
+import LazyList from "../../../../source/Collections/LazyList";
 const LENGTH = 10;
 
 describe('.get(i)', ()=>

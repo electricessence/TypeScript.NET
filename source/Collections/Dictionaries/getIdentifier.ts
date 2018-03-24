@@ -5,7 +5,7 @@
 
 import {IHashable, ISymbolizable} from "./IDictionary";
 import {Selector} from "../../FunctionTypes";
-import TypeOfValue from "../../Reflection/TypeOfValue";
+import TypeOf from "../../Reflection/TypeOf";
 import isPropertyKey from "../../Reflection/isPropertyKey";
 import hasMethod from "../../Reflection/hasMethod";
 
@@ -19,7 +19,7 @@ function getIdentifier(obj:any, throwIfUnknown:boolean|Selector<any,string|numbe
 {
 	if(isPropertyKey(obj)) return obj;
 	if(obj===null) return NULL;
-	if(obj===VOID0) return TypeOfValue.Undefined;
+	if(obj===VOID0) return TypeOf.Undefined;
 
 	// See ISymbolizable.
 	if(hasMethod<ISymbolizable>(obj, GET_SYMBOL))
@@ -40,7 +40,7 @@ function getIdentifier(obj:any, throwIfUnknown:boolean|Selector<any,string|numbe
 			throw "Cannot create known identity.";
 	}
 
-	return (typeof obj.toString==TypeOfValue.Function)
+	return (typeof obj.toString==TypeOf.Function)
 		? obj.toString()
 		: Object.prototype.toString.call(obj);
 }

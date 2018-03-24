@@ -6,7 +6,7 @@ import * as File from "../_utility/file-promise";
 import {JsonMap} from "../source/JSON";
 import {IMap} from "../source/IMap";
 import {streamToPromise as stream} from "../_utility/stream-to-promise";
-import {TSDNPromise as NPromise} from "../source/System/Promises/Promise";
+import {Promise as NPromise} from "../source/System/Promises/Promise";
 import create from "../source/System/Promises/Functions/create";
 
 const fields:IMap<boolean> = {

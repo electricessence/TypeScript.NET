@@ -9,14 +9,14 @@ import {Executor, Fulfill, Reject} from "./PromiseTypes";
 import {defer} from "../Threading/defer";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import PromiseBase from "./PromiseBase";
-import TSDNPromise from "./Promise";
+import Promise from "./Promise";
 
 const VOID0:any = void 0;
 
 /**
  * A promise that waits for the first then to trigger the resolver.
  */
-export class LazyPromise<T> extends TSDNPromise<T>
+export default class LazyPromise<T> extends Promise<T>
 {
 
 	constructor(private _resolver:Executor<T>)
@@ -201,5 +201,3 @@ export class LazyPromise<T> extends TSDNPromise<T>
 
 	}
 }
-
-export default LazyPromise;

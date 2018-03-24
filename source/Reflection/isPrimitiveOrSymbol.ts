@@ -4,7 +4,7 @@
  */
 
 
-import TypeOfValue from "./TypeOfValue";
+import TypeOf from "./TypeOf";
 import Primitive from "../Primitive";
 import isPrimitive from "./isPrimitive";
 
@@ -27,5 +27,5 @@ export default function isPrimitiveOrSymbol(
 export default function isPrimitiveOrSymbol(
 	value:any,
 	allowUndefined:boolean = false):value is Primitive | symbol {
-	return typeof value===TypeOfValue.Symbol ? true : isPrimitive(value, allowUndefined);
+	return typeof value===TypeOf.Symbol ? true : isPrimitive(value, allowUndefined);
 }

@@ -6,7 +6,7 @@
 import * as fs from "fs";
 import {JsonArray, JsonData, JsonMap} from "../source/JSON";
 import using from "../source/System/Promises/Functions/using";
-import TSDNPromise from "../source/System/Promises/Promise";
+import Promise from "../source/System/Promises/Promise";
 import PromiseBase from "../source/System/Promises/PromiseBase";
 
 
@@ -25,9 +25,9 @@ export type WriteOptions = {
 	flag?:string;
 };
 
-function readFile(path:string, encoding:string = ENCODING.UTF8):TSDNPromise<string>
+function readFile(path:string, encoding:string = ENCODING.UTF8):Promise<string>
 {
-	return new TSDNPromise<string>((resolve, reject)=>
+	return new Promise<string>((resolve, reject)=>
 	{
 		fs.readFile(
 			path,

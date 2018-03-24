@@ -10,7 +10,7 @@ import copyEntries from "./copyEntries";
  * @param a
  * @param b
  */
-export function mergeEntries(a, b) {
+export default function mergeEntries(a, b) {
     return applyEntries(copyEntries(a), b);
 }
 //# sourceMappingURL=mergeEntries.js.map
