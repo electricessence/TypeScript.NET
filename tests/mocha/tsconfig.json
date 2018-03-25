@@ -12,5 +12,8 @@
   "compileOnSave": true,
   "include": [
     "./"
+  ],
+  "exclude": [
+    "../../source"
   ]
 }
