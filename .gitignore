@@ -202,4 +202,4 @@ source/**/*.js.map
 tests/mocha/**/*.js
 tests/mocha/**/*.js.map
 
-build/*/dist/**/*.*
+build/*/dist
