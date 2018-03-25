@@ -6,7 +6,7 @@
 import * as fs from "fs";
 import {JsonArray, JsonData, JsonMap} from "../source/JSON";
 import using from "../source/System/Promises/Functions/using";
-import Promise from "../source/System/Promises/Promise";
+import NPromise from "../source/System/Promises/Promise";
 import PromiseBase from "../source/System/Promises/PromiseBase";
 
 

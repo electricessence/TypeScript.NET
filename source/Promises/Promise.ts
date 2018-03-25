@@ -10,12 +10,10 @@ import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import ObjectPool from "../Disposable/ObjectPool";
 import ObjectDisposedException from "../Disposable/ObjectDisposedException";
 import {Executor, Fulfill, Reject, Resolution, Resolver} from "./PromiseTypes";
-import PromiseBase from "./PromiseBase";
+import PromiseBase, {handleDispatch, handleResolutionMethods} from "./PromiseBase";
 import isPromise from "./Functions/isPromise";
-import wrap from "./Functions/wrap";
-import resolve from "./Functions/resolve";
 import {PromiseStateValue} from "./PromiseState";
-
+import ArgumentException from "../Exceptions/ArgumentException";
 
 const VOID0:any     = void 0,
       NULL:any      = null,
@@ -24,6 +22,31 @@ const VOID0:any     = void 0,
       THEN          = "then",
       TARGET        = "target";
 
+export function wrap<T>(target:T | PromiseLike<T>):PromiseBase<T>
+{
+	if(!target) throw new ArgumentNullException("target");
+	return isPromise(target)
+		? (target instanceof PromiseBase ? target : new PromiseWrapper(target))
+		: new Fulfilled<T>(target);
+}
+
+/**
+ * Creates a new resolved promise .
+ * @returns A resolved promise.
+ */
+export function resolve():PromiseBase<void>
+
+/**
+ * Creates a new resolved promise for the provided value.
+ * @param value A value or promise.
+ * @returns A promise whose internal state matches the provided promise.
+ */
+export function resolve<T>(value:T | PromiseLike<T>):PromiseBase<T>;
+export function resolve(value?:any):PromiseBase<any>
+{
+
+	return isPromise(value) ? wrap(value) : new Fulfilled(value);
+}
 
 function resolveInternal<T>(
 	value:Resolution<T>, resolver:Resolver,
@@ -173,6 +196,81 @@ export class Rejected<T>
 	{
 		super(PromiseStateValue.Rejected, <any>void(0), error);
 	}
+}
+
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT
+ */
+
+/**
+ * Provided as a means for extending the interface of other PromiseLike<T> objects.
+ */
+export class PromiseWrapper<T>
+	extends Resolvable<T>
+{
+	constructor(private _target:PromiseLike<T>)
+	{
+		super();
+
+		if(!_target)
+			throw new ArgumentNullException(TARGET);
+
+		if(!isPromise(_target))
+			throw new ArgumentException(TARGET, "Must be a promise-like object.");
+
+		_target.then(
+			(v:T) => {
+				this._state = PromiseStateValue.Fulfilled;
+				this._result = v;
+				this._error = <any>null;
+				this._target = <any>null;
+			},
+			e => {
+				this._state = PromiseStateValue.Rejected;
+				this._error = e;
+				this._target = <any>null;
+			})
+	}
+
+	thenSynchronous<TFulfilled = T, TRejected = never>(
+		onFulfilled:Fulfill<T, TFulfilled>,
+		onRejected?:Reject<TRejected>):PromiseBase<TFulfilled | TRejected>
+	{
+		this.throwIfDisposed();
+
+		let t = this._target;
+		if(!t) return super.thenSynchronous(onFulfilled, onRejected);
+
+		return new Promise<TFulfilled | TRejected>((resolve, reject) => {
+			handleDispatch(t,
+				result => handleResolutionMethods(resolve, reject, result, onFulfilled),
+				error => onRejected
+					? handleResolutionMethods(resolve, null, error, onRejected)
+					: reject(error)
+			);
+		}, true);
+	}
+
+	doneNow(
+		onFulfilled:Fulfill<T, any>,
+		onRejected?:Reject<any>):void
+	{
+		this.throwIfDisposed();
+
+		let t = this._target;
+		if(t)
+			handleDispatch(t, onFulfilled, onRejected);
+		else
+			super.doneNow(onFulfilled, onRejected);
+	}
+
+	protected _onDispose():void
+	{
+		super._onDispose();
+		this._target = <any>null;
+	}
+
 }
 
 
@@ -491,6 +589,4 @@ interface IPromiseCallbacks<T>
 	onRejected?:Reject<any>;
 	promise?:Promise<any>;
 }
-
-
 
