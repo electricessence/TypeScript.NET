@@ -1,9 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT
- */
-import IIterator from "./IIterator";
-import IEnumerator from "./IEnumerator";
-import IEnumerableOrArray from "../IEnumerableOrArray";
-declare type ForEachEnumerable<T> = IEnumerableOrArray<T> | IEnumerator<T> | IIterator<T>;
-export default ForEachEnumerable;

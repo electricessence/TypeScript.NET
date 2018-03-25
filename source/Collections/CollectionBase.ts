@@ -14,7 +14,7 @@ import IEnumerateEach from "./Enumeration/IEnumerateEach";
 import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
 import IEnumerableOrArray from "./IEnumerableOrArray";
 import ArrayLikeWritable from "./Array/ArrayLikeWritable";
-import {LinqEnumerable} from "../Exceptions/Linq";
+import {LinqEnumerable} from "../Linq";
 import {isRequireJS} from "../Environment";
 
 //noinspection SpellCheckingInspection
@@ -25,7 +25,7 @@ const
 	CMRO = "Cannot modify a read-only collection.",
 	TWAPIL = "There was a problem importing System.Linq/Linq";
 const
-	LINQ_PATH = /* webpackChunkName: "Linq" */ "../../System.Linq/Linq";
+	LINQ_PATH = /* webpackChunkName: "Linq" */ "../Linq";
 
 abstract class CollectionBase<T>
 extends DisposableBase implements ICollection<T>, IEnumerateEach<T>

@@ -1,8 +1,8 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import * as ICollectionTests from "./ICollection";
-import Set from "../../../../source/Collections/Set";
-import Primitive from "../../../../source/Primitive";
+import Set from "../../../../dist/umd/Collections/Set";
+import Primitive from "../../../../dist/umd/Primitive";
 
 
 //noinspection SpellCheckingInspection

@@ -1,1 +1,0 @@
-{"version":3,"file":"escapeRegExp.js","sourceRoot":"","sources":["../../../source/Text/escapeRegExp.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,IAAM,OAAO,GAAG,wBAAwB,CAAC;AACzC,IAAM,WAAW,GAAG,MAAM,CAAC;AAE3B;;;;GAIG;AACH,MAAM,CAAC,OAAO,uBAAuB,MAAa;IAEjD,OAAO,MAAM,CAAC,OAAO,CAAC,OAAO,EAAE,WAAW,CAAC,CAAC;AAC7C,CAAC"}

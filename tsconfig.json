@@ -1,9 +1,18 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "noEmit": true,
-    "strictNullChecks": false,
-    "moduleResolution": "node"
-  }
+	"compilerOptions": {
+		"strict": true,
+		"pretty": true,
+		"noEmit": true,
+		"watch": true,
+		"sourceMap": true,
+		"declaration": true,
+		"importHelpers": true,
+		"removeComments": false,
+		"moduleResolution": "node",
+		"target": "esnext",
+	},
+	"compileOnSave": true,
+	"include": [
+		"source"
+	]
 }

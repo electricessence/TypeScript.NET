@@ -195,4 +195,13 @@ documentation
 .nuget/
 .idea/shelf/*
 .idea/codeStyles/codeStyleConfig.xml
-.idea/codeStyles/codeStyleConfig.xml
+
+./source/**/*.js
+./source/**/*.js.map
+
+./tests/mocha/**/*.js
+./tests/mocha/**/*.js.map
+
+./dist/**/*.js
+./dist/**/*.d.ts
+./dist/**/*.js.map

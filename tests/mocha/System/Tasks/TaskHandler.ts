@@ -1,7 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import TaskHandler from "../../../../source/Threading/Tasks/TaskHandler";
-import Functions from "../../../../source/Functions";
+import TaskHandler from "../../../../dist/umd/Threading/Tasks/TaskHandler";
+import Functions from "../../../../dist/umd/Functions";
 
 
 describe('new',()=>{

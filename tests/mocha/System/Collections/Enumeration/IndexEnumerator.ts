@@ -1,7 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import IndexEnumerator from "../../../../../source/Collections/Enumeration/IndexEnumerator";
+import IndexEnumerator from "../../../../../dist/umd/Collections/Enumeration/IndexEnumerator";
 
 const a:{ [index:number]:number } = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4};
 

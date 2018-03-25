@@ -1,8 +1,8 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import areArraysEqual from "../../../../../source/Collections/Array/areArraysEqual";
-import areArraysAllEqual from "../../../../../source/Collections/Array/areArraysAllEqual";
-import areArraysEquivalent from "../../../../../source/Collections/Array/areArraysEquivalent";
+import areArraysEqual from "../../../../../dist/umd/Collections/Array/areArraysEqual";
+import areArraysAllEqual from "../../../../../dist/umd/Collections/Array/areArraysAllEqual";
+import areArraysEquivalent from "../../../../../dist/umd/Collections/Array/areArraysEquivalent";
 
 const a1 = [1,2,3];
 const a2 = [1,2,3];
