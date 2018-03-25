@@ -80,7 +80,7 @@ module Integer
 	{
 		let i = assert(n, argumentName) && n>=0;
 		if(!i)
-			throw new ArgumentLessThanMinimumException(argumentName || 'n', n, 0);
+			throw new ArgumentLessThanMinimumException(argumentName || 'n', 0, n);
 		return i;
 	}
 
@@ -94,7 +94,7 @@ module Integer
 	{
 		let i = assert(n, argumentName) && n>0;
 		if(!i)
-			throw new ArgumentLessThanMinimumException(argumentName || 'n', n, 1);
+			throw new ArgumentLessThanMinimumException(argumentName || 'n', 1, n);
 		return i;
 	}
 

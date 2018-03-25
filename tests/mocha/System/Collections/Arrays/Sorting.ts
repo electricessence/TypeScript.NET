@@ -1,13 +1,13 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import {Selector} from "../../../../../dist/umd/FunctionTypes";
-import {ArraySort} from "../../../../../dist/umd/Collections/Array/Sort";
-import compare from "../../../../../dist/umd/Comparison/compare";
-import Random from "../../../../../dist/umd/Random";
-import areEqual from "../../../../../dist/umd/Comparison/areEqual";
-import insertionSort from "../../../../../dist/umd/Collections/Array/Sorting/insertionSort";
-import quickSort from "../../../../../dist/umd/Collections/Array/Sorting/quickSort";
-import mergeSort from "../../../../../dist/umd/Collections/Array/Sorting/mergeSort";
+import {Selector} from "../../../../../build/umd/dist/FunctionTypes";
+import {ArraySort} from "../../../../../build/umd/dist/Collections/Array/Sort";
+import Random from "../../../../../build/umd/dist/Random";
+import compare from "../../../../../build/umd/dist/Comparison/compare";
+import insertionSort from "../../../../../build/umd/dist/Collections/Array/Sorting/insertionSort";
+import quickSort from "../../../../../build/umd/dist/Collections/Array/Sorting/quickSort";
+import mergeSort from "../../../../../build/umd/dist/Collections/Array/Sorting/mergeSort";
+import areArraysEqual from "../../../../../source/Collections/Array/areArraysEqual";
 
 const performanceCheck = false;  // Change to true to performance test/log
 
@@ -47,7 +47,7 @@ function assertResults(result:number[][]):void
 {
 	for(let i = 0; i<sourceCount; i++)
 	{
-		let ok = areEqual(arrayResults[i], result[i]);
+		let ok = areArraysEqual(arrayResults[i], result[i]);
 		if(!ok) console.warn(result);
 		assert.ok(ok);
 	}

@@ -1,7 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import TypeValidator, {TypeInfoHelper} from "../../../dist/umd/Reflection/TypeValidator";
+import TypeValidator, {TypeInfoHelper} from "../../../build/umd/dist/Reflection/TypeValidator";
 
 const example = new TypeInfoHelper({
 	a: {},

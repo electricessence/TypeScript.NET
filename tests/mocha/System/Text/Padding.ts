@@ -1,6 +1,6 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import {padLeft, padRight} from "../../../../dist/umd/Text/Padding";
+import {padLeft, padRight} from "../../../../build/umd/dist/Text/Padding";
 
 
 describe('.padLeft()', ()=>

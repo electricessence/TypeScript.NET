@@ -20,10 +20,10 @@ export function supplant(
 	params:IMap<Primitive> | ArrayLike<Primitive>):string
 {
 	return source.replace(/{([^{}]*)}/g,
-		(a:string, b:string):string => {
-			if(b in params) return (<any>params)[b]+'';
-			throw `Param {${b}} value not provided.`;
-		}
+		(a:string, b:string):string =>
+			(b in params)
+				? ((<any>params)[b]+'')
+				: a
 	);
 }
 

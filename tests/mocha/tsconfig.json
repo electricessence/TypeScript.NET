@@ -1,16 +1,16 @@
 {
-	"compilerOptions": {
-		"pretty": true,
-		"watch": true,
-		"sourceMap": true,
-		"importHelpers": true,
-		"removeComments": false,
-		"moduleResolution": "node",
-		"target": "es5",
-		"module": "commonjs"
-	},
-	"compileOnSave": true,
-	"include": [
-		"./"
-	]
+  "compilerOptions": {
+    "pretty": true,
+    "watch": true,
+    "sourceMap": true,
+    "importHelpers": true,
+    "removeComments": false,
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "commonjs"
+  },
+  "compileOnSave": true,
+  "include": [
+    "./"
+  ]
 }

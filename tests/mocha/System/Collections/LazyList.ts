@@ -5,8 +5,8 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import Enumerable from "../../../../dist/umd/Linq";
-import LazyList from "../../../../dist/umd/Collections/LazyList";
+import Enumerable from "../../../../build/umd/dist/Linq";
+import LazyList from "../../../../build/umd/dist/Collections/LazyList";
 
 const LENGTH = 10;
 

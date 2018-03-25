@@ -1,6 +1,6 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import ObservableNodeBase from "../../../../dist/umd/Observable/ObservableNodeBase";
+import ObservableNodeBase from "../../../../build/umd/dist/Observable/ObservableNodeBase";
 
 
 it("should receive signals only when subscribed", ()=>

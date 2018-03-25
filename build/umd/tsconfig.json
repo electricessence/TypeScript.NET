@@ -1,9 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/esnext",
-    "module": "esnext",
-    "target": "esnext",
+    "outDir": "./dist",
+    "module": "umd",
+    "target": "es5",
     "noEmit": false
   }
 }

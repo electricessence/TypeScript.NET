@@ -17,7 +17,7 @@ const COUNT = 'count';
  */
 export function repeatElement<T>(element:T, count:number):T[]
 {
-	Integer.assertPositive(count, COUNT);
+	Integer.assertZeroOrGreater(count, COUNT);
 	const result = init<T>(count);
 	for(let i = 0; i<count; i++)
 		result[i] = element;

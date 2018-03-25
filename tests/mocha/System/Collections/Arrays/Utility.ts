@@ -1,25 +1,25 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import Stopwatch from "../../../../../dist/umd/Diagnostics/Stopwatch";
-import initializeArray from "../../../../../dist/umd/Collections/Array/initializeArray";
-import removeElement from "../../../../../dist/umd/Collections/Array/removeElement";
-import removeElementByIndex from "../../../../../dist/umd/Collections/Array/removeElementByIndex";
-import copyArray from "../../../../../dist/umd/Collections/Array/copyArray";
-import areArraysEqual from "../../../../../dist/umd/Collections/Array/areArraysEqual";
-import copyArrayTo from "../../../../../dist/umd/Collections/Array/copyArrayTo";
-import containsElement from "../../../../../dist/umd/Collections/Array/containsElement";
-import replaceElement from "../../../../../dist/umd/Collections/Array/replaceElement";
-import findElementIndex from "../../../../../dist/umd/Collections/Array/findElementIndex";
-import registerElement from "../../../../../dist/umd/Collections/Array/registerElement";
-import indexOfElement from "../../../../../dist/umd/Collections/Array/indexOfElement";
-import updateRange from "../../../../../dist/umd/Collections/Array/updateRange";
-import clearElements from "../../../../../dist/umd/Collections/Array/clearElements";
-import forEachElement from "../../../../../dist/umd/Collections/Array/forEachElement";
-import {repeatElement} from "../../../../../dist/umd/Collections/Array/repeatElement";
-import applyToElements from "../../../../../dist/umd/Collections/Array/applyToElements";
-import rangeOfNumbers from "../../../../../dist/umd/Collections/Array/rangeOfNumbers";
-import rangeOfNumbersUntil from "../../../../../dist/umd/Collections/Array/rangeOfNumbersUntil";
-import flatten from "../../../../../dist/umd/Collections/Array/flatten";
+import Stopwatch from "../../../../../build/umd/dist/Diagnostics/Stopwatch";
+import initializeArray from "../../../../../build/umd/dist/Collections/Array/initializeArray";
+import removeElement from "../../../../../build/umd/dist/Collections/Array/removeElement";
+import removeElementByIndex from "../../../../../build/umd/dist/Collections/Array/removeElementByIndex";
+import copyArray from "../../../../../build/umd/dist/Collections/Array/copyArray";
+import areArraysEqual from "../../../../../build/umd/dist/Collections/Array/areArraysEqual";
+import copyArrayTo from "../../../../../build/umd/dist/Collections/Array/copyArrayTo";
+import containsElement from "../../../../../build/umd/dist/Collections/Array/containsElement";
+import replaceElement from "../../../../../build/umd/dist/Collections/Array/replaceElement";
+import findElementIndex from "../../../../../build/umd/dist/Collections/Array/findElementIndex";
+import registerElement from "../../../../../build/umd/dist/Collections/Array/registerElement";
+import indexOfElement from "../../../../../build/umd/dist/Collections/Array/indexOfElement";
+import updateRange from "../../../../../build/umd/dist/Collections/Array/updateRange";
+import clearElements from "../../../../../build/umd/dist/Collections/Array/clearElements";
+import forEachElement from "../../../../../build/umd/dist/Collections/Array/forEachElement";
+import {repeatElement} from "../../../../../build/umd/dist/Collections/Array/repeatElement";
+import applyToElements from "../../../../../build/umd/dist/Collections/Array/applyToElements";
+import rangeOfNumbers from "../../../../../build/umd/dist/Collections/Array/rangeOfNumbers";
+import rangeOfNumbersUntil from "../../../../../build/umd/dist/Collections/Array/rangeOfNumbersUntil";
+import flatten from "../../../../../build/umd/dist/Collections/Array/flatten";
 
 
 // Min/Max tests...
@@ -67,12 +67,11 @@ describe(".copyTo(source,destination)", ()=>
 {
 	it("should throw for invalid parameter", ()=>
 	{
-		assert.throws(()=> {copyArrayTo(<any>null, <any>null);});
-		assert.throws(()=> {copyArrayTo([], <any>null);});
-		assert.throws(()=> {copyArrayTo([1], [], -1);});
-		assert.throws(()=> {copyArrayTo([1], [], 2);});
-		assert.throws(()=> {copyArrayTo([1], {length: -1});});
-		assert.throws(()=> {copyArrayTo([1], [], 0, 0, 5);});
+		assert.throws(()=> {copyArrayTo(<any>null, <any>null);},"Both null");
+		assert.throws(()=> {copyArrayTo([], <any>null);},"destination null");
+		assert.throws(()=> {copyArrayTo([1], [], -1);},"-1 source index");
+		assert.throws(()=> {copyArrayTo([1], [], 2);},"2 is greater than source length");
+		assert.throws(()=> {copyArrayTo([1], [], 0, 0, 5);},"length exceeds source array");
 	});
 });
 
@@ -114,10 +113,6 @@ describe(".replace(source,oldValue,newValue)", ()=>
 		assert.ok(containsElement(a, 6));
 		assert.ok(containsElement(a, 5));
 
-	});
-	it("should throw for invalid parameter", ()=>
-	{
-		assert.throws(()=> {replaceElement([4, 5, 6], 5, 6, -5);});
 	});
 });
 
@@ -210,15 +205,11 @@ describe(".remove(target,value)", ()=>
 		assert.throws(()=>
 		{
 			removeElementByIndex(<any>null, 0);
-		});
+		},"Null source.");
 		assert.throws(()=>
 		{
 			removeElementByIndex([1, 2], -1);
-		});
-		assert.throws(()=>
-		{
-			removeElement([1, 2], 1, -2);
-		});
+		},"Negative index.");
 	});
 
 });

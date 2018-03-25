@@ -23,7 +23,7 @@ export default function registerElement<T>(
 	if(!array)
 		throw new ArgumentNullException('array');
 	let len = array.length; // avoid querying .length more than once. *
-	const ok = !len || indexOfElement(array, item, equalityComparer)!=-1;
+	const ok = !len || indexOfElement(array, item, equalityComparer)==-1;
 	if(ok) array[len] = item; // * push would query length again.
 	return ok;
 }

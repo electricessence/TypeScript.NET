@@ -24,5 +24,5 @@ export default function isArrayLike<T>(instance:any):instance is ArrayLikeWritab
 	 */
 	return instance instanceof Array
 		|| type==TypeOf.String
-		|| type==TypeOf.Function && hasMember(instance, LENGTH);
+		|| type!=TypeOf.Function && hasMember(instance, LENGTH);
 }

@@ -1,7 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import Integer from "../../../dist/umd/Integer";
+import Integer from "../../../build/umd/dist/Integer";
 
 
 const TEST_FLOAT = 10.915, TEST_INT = 10, MAX = 9007199254740991;

@@ -7,11 +7,12 @@ import ArrayLikeWritable from "./ArrayLikeWritable";
 import ArgumentNullException from "../../Exceptions/ArgumentNullException";
 import ArgumentOutOfRangeException from "../../Exceptions/ArgumentOutOfRangeException";
 import Integer from "../../Integer";
+import assertZeroOrGreater = Integer.assertZeroOrGreater;
 
 const
-	SOURCE = 'source',
-	DESTINATION = 'destination',
-	SOURCE_INDEX = 'sourceIndex',
+	SOURCE            = 'source',
+	DESTINATION       = 'destination',
+	SOURCE_INDEX      = 'sourceIndex',
 	DESTINATION_INDEX = 'destinationIndex';
 
 /**
@@ -23,20 +24,19 @@ const
  * @param length An optional limit to stop copying.
  * @returns The destination array.
  */
-export default function copyArrayTo<T,TDestination extends ArrayLikeWritable<T>>(
+export default function copyArrayTo<T, TDestination extends ArrayLikeWritable<T>>(
 	source:ArrayLike<T>,
 	destination:TDestination,
-	sourceIndex:number = 0,
+	sourceIndex:number      = 0,
 	destinationIndex:number = 0,
-	length:number = Infinity):TDestination
-{
+	length:number           = Infinity):TDestination {
 	if(!source)
 		throw new ArgumentNullException(SOURCE);
 
 	if(!destination)
 		throw new ArgumentNullException(DESTINATION);
 
-	Integer.assertZeroOrGreater(sourceIndex, SOURCE_INDEX);
+	assertZeroOrGreater(sourceIndex, SOURCE_INDEX);
 
 	let sourceLength = source.length;
 	if(!sourceLength)
@@ -44,7 +44,7 @@ export default function copyArrayTo<T,TDestination extends ArrayLikeWritable<T>>
 	if(sourceIndex>=sourceLength)
 		throw new ArgumentOutOfRangeException(SOURCE_INDEX, sourceIndex, 'Must be less than the length of the source array.');
 
-	Integer.assertZeroOrGreater(destinationIndex, DESTINATION_INDEX);
+	assertZeroOrGreater(destinationIndex, DESTINATION_INDEX);
 
 	const maxLength = source.length - sourceIndex;
 	if(isFinite(length) && length>maxLength)
@@ -55,7 +55,9 @@ export default function copyArrayTo<T,TDestination extends ArrayLikeWritable<T>>
 	if(newLength>destination.length) destination.length = newLength;
 
 	for(let i = 0; i<length; i++)
+	{
 		destination[destinationIndex + i] = source[sourceIndex + i];
+	}
 
 	return destination;
 }

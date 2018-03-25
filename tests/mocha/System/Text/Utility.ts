@@ -1,8 +1,8 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import trim from "../../../../dist/umd/Text/trim";
-import {format, supplant} from "../../../../dist/umd/Text/supplant";
-import {endsWith, startsWith} from "../../../../dist/umd/Text/Text";
+import trim from "../../../../build/umd/dist/Text/trim";
+import {format, supplant} from "../../../../build/umd/dist/Text/supplant";
+import {endsWith, startsWith} from "../../../../build/umd/dist/Text/Text";
 
 const s1 = "	 HI  ";
 const s2 = ".-.-xHIX//\\";

@@ -5,6 +5,7 @@
 
 import areEqual from "../../Comparison/areEqual";
 import {EqualityComparison} from "../../FunctionTypes";
+import TypeOf from "../../Reflection/TypeOf";
 
 /**
  * Finds and removes a value from an array.  Will remove all instances unless a maximum is specified.
@@ -18,7 +19,7 @@ export default function removeElement<T>(
 	array:T[], value:T, maxCount:number = Infinity,
 	equalityComparer:EqualityComparison<T> = areEqual):number
 {
-	if(!array || !array.length || !isNaN(maxCount) && maxCount<=0) return 0;
+	if(!array || !array.length || typeof maxCount==TypeOf.Number && maxCount<=0) return 0;
 	let count = 0;
 	if(!maxCount || !isFinite(maxCount))
 	{

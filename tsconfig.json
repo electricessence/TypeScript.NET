@@ -9,7 +9,7 @@
 		"importHelpers": true,
 		"removeComments": false,
 		"moduleResolution": "node",
-		"target": "esnext",
+		"target": "esnext"
 	},
 	"compileOnSave": true,
 	"include": [

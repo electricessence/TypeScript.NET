@@ -20,7 +20,7 @@ export default function rangeOfNumbers(
 {
 	if(!isFinite(first))
 		throw new ArgumentOutOfRangeException('first',first);
-	if(!isFinite(count))
+	if(!isFinite(count) || count<0)
 		throw new ArgumentOutOfRangeException('count',count);
 	if(!isFinite(step))
 		throw new ArgumentOutOfRangeException('step',step);

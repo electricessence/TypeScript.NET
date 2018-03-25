@@ -1,9 +1,9 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import ClockTime from "../../../../dist/umd/Time/ClockTime";
-import {Milliseconds} from "../../../../dist/umd/Time/HowMany";
-import Random from "../../../../dist/umd/Random";
+import ClockTime from "../../../../build/umd/dist/Time/ClockTime";
+import {Milliseconds} from "../../../../build/umd/dist/Time/HowMany";
+import Random from "../../../../build/umd/dist/Random";
 
 
 const

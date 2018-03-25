@@ -1,9 +1,9 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import {InfiniteLinqEnumerable, LinqEnumerable} from "../../../dist/umd/Linq";
-import List from "../../../dist/umd/Collections/List";
-import CollectionBase from "../../../dist/umd/Collections/CollectionBase";
+import {InfiniteLinqEnumerable, LinqEnumerable} from "../../../build/umd/dist/Linq";
+import List from "../../../build/umd/dist/Collections/List";
+import CollectionBase from "../../../build/umd/dist/Collections/CollectionBase";
 
 class A {
 	constructor() {
