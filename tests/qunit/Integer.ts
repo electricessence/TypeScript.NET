@@ -1,7 +1,7 @@
 ///<reference types='qunit'/>
 ///<amd-dependency path='QUnit'/>
 
-import Integer from "../../dist/amd/System/Integer";
+import Integer from "../../dist/amd/Integer";
 
 
 export default function run()

@@ -23,6 +23,6 @@ export default function isArrayLike<T>(instance:any):instance is ArrayLikeWritab
 	 * Behave like arrays but don't have the same exact methods.
 	 */
 	return instance instanceof Array
-		|| type==TypeOf.String
-		|| type!=TypeOf.Function && hasMember(instance, LENGTH);
+		|| type==TypeOf.STRING
+		|| type!=TypeOf.FUNCTION && hasMember(instance, LENGTH);
 }

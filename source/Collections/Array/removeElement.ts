@@ -19,7 +19,7 @@ export default function removeElement<T>(
 	array:T[], value:T, maxCount:number = Infinity,
 	equalityComparer:EqualityComparison<T> = areEqual):number
 {
-	if(!array || !array.length || typeof maxCount==TypeOf.Number && maxCount<=0) return 0;
+	if(!array || !array.length || typeof maxCount==TypeOf.NUMBER && maxCount<=0) return 0;
 	let count = 0;
 	if(!maxCount || !isFinite(maxCount))
 	{

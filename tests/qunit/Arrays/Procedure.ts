@@ -1,6 +1,6 @@
 ///<reference types="qunit"/>
 ///<amd-dependency path="QUnit"/>
-import * as ArrayProcedure from "../../../dist/amd/System/Collections/Array/Procedure";
+import * as ArrayProcedure from "../../../dist/amd/Collections/Array/Procedure";
 
 export default function run()
 {

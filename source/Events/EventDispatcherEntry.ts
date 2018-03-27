@@ -29,7 +29,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 
 		if(!listener)
 			throw new ArgumentNullException('listener');
-		if(isObject(listener) && !hasMemberOfType(listener, "handleEvent", TypeOf.Function))
+		if(isObject(listener) && !hasMemberOfType(listener, "handleEvent", TypeOf.FUNCTION))
 			throw new ArgumentException('listener', "is invalid type.  Must be a function or an object with 'handleEvent'.");
 
 		const _ = this;

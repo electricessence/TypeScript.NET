@@ -27,5 +27,5 @@ export default function isPrimitiveOrSymbol(
 export default function isPrimitiveOrSymbol(
 	value:any,
 	allowUndefined:boolean = false):value is Primitive | symbol {
-	return typeof value===TypeOf.Symbol ? true : isPrimitive(value, allowUndefined);
+	return typeof value===TypeOf.SYMBOL ? true : isPrimitive(value, allowUndefined);
 }

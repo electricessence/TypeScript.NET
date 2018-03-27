@@ -12,5 +12,5 @@ import TypeOf from "./TypeOf";
  */
 export default function isString(value:any):value is string
 {
-	return typeof value===TypeOf.String;
+	return typeof value===TypeOf.STRING;
 }

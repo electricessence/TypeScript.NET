@@ -54,25 +54,25 @@ export default class TypeInfo
 
 		switch(this.type = typeof target)
 		{
-			case TypeOf.Boolean:
+			case TypeOf.BOOLEAN:
 				this.isBoolean = true;
 				this.isPrimitive = true;
 				break;
-			case TypeOf.Number:
+			case TypeOf.NUMBER:
 				this.isNumber = true;
 				this.isTrueNaN = isNaN(target);
 				this.isFinite = isFinite(target);
 				this.isValidNumber = !this.isTrueNaN;
 				this.isPrimitive = true;
 				break;
-			case TypeOf.String:
+			case TypeOf.STRING:
 				this.isString = true;
 				this.isPrimitive = true;
 				break;
-			case TypeOf.Symbol:
+			case TypeOf.SYMBOL:
 				this.isSymbol = true;
 				break;
-			case TypeOf.Object:
+			case TypeOf.OBJECT:
 				this.target = target;
 				if(target===null)
 				{
@@ -86,11 +86,11 @@ export default class TypeInfo
 					this.isObject = true;
 				}
 				break;
-			case TypeOf.Function:
+			case TypeOf.FUNCTION:
 				this.target = target;
 				this.isFunction = true;
 				break;
-			case TypeOf.Undefined:
+			case TypeOf.UNDEFINED:
 				this.isUndefined = true;
 				this.isNullOrUndefined = true;
 				this.isPrimitive = true;
@@ -130,8 +130,8 @@ export default class TypeInfo
 		const type:string = typeof target;
 		switch(type)
 		{
-			case TypeOf.Object:
-			case TypeOf.Function:
+			case TypeOf.OBJECT:
+			case TypeOf.FUNCTION:
 				return new TypeInfo(target);
 		}
 		let info = typeInfoRegistry[type];

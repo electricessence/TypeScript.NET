@@ -8,5 +8,5 @@ import hasMemberOfType from "../../Reflection/hasMemberOfType";
 
 export default function isPromise<T>(value:any):value is PromiseLike<T>
 {
-	return hasMemberOfType(value, "then", TypeOf.Function);
+	return hasMemberOfType(value, "then", TypeOf.FUNCTION);
 }

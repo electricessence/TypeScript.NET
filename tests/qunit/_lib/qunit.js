@@ -84,8 +84,8 @@ function inArray( elem, array ) {
  * Makes a clone of an object using only Array or Object as base,
  * and copies over the own enumerable properties.
  *
- * @param {Object} obj
- * @return {Object} New object with only the own properties (recursively).
+ * @param {OBJECT} obj
+ * @return {OBJECT} New object with only the own properties (recursively).
  */
 function objectValues ( obj ) {
 	var key, val,

@@ -1,7 +1,7 @@
 ﻿///<reference types="qunit"/>
 ///<amd-dependency path='QUnit'/>
-import Uri from "../../dist/amd/System/Uri/Uri";
-import {IUri} from "../../dist/amd/System/Uri/IUri";
+import Uri from "../../dist/amd/Uri/Uri";
+import {IUri} from "../../dist/amd/Uri/IUri";
 
 
 export default function run()

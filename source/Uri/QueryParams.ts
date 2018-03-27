@@ -114,7 +114,7 @@ export function encodeValue(value:UriComponent.Value):string
  */
 export function isUriComponentFormattable(instance:any):instance is UriComponent.Formattable
 {
-	return hasMemberOfType<UriComponent.Formattable>(instance, TO_URI_COMPONENT, TypeOf.Function);
+	return hasMemberOfType<UriComponent.Formattable>(instance, TO_URI_COMPONENT, TypeOf.FUNCTION);
 }
 
 /**

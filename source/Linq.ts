@@ -799,16 +799,16 @@ export class InfiniteLinqEnumerable<T>
 		switch(<any>type)
 		{
 			case Number:
-				typeName = TypeOf.Number;
+				typeName = TypeOf.NUMBER;
 				break;
 			case String:
-				typeName = TypeOf.String;
+				typeName = TypeOf.STRING;
 				break;
 			case Boolean:
-				typeName = TypeOf.Boolean;
+				typeName = TypeOf.BOOLEAN;
 				break;
 			case Function:
-				typeName = TypeOf.Function;
+				typeName = TypeOf.FUNCTION;
 				break;
 			default:
 				return <any> this
@@ -3870,7 +3870,7 @@ export module Enumerable
 		if(input==null)
 			throw new ArgumentNullException("input");
 		const type = typeof input;
-		if(type!=TypeOf.String)
+		if(type!=TypeOf.STRING)
 			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
 
 		if(pattern instanceof RegExp)

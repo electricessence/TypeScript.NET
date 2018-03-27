@@ -1,16 +1,16 @@
-declare const enum TypeOf
+export namespace TypeOf
 {
-	Boolean   = 'boolean',
-	Number    = 'number',
-	String    = 'string',
-	Symbol    = 'symbol',
-	Object    = 'object',
-	Undefined = 'undefined',
-	Function  = 'function'
+	export const BOOLEAN = 'boolean';
+	export const NUMBER = 'number';
+	export const STRING = 'string';
+	export const SYMBOL = 'symbol';
+	export const OBJECT = 'object';
+	export const UNDEFINED = 'undefined';
+	export const FUNCTION = 'function';
 }
 
-export type TypeOfValue = TypeOf
-	| 'boolean'
+export type TypeOfValue =
+	'boolean'
 	| 'number'
 	| 'string'
 	| 'symbol'

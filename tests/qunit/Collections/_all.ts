@@ -2,7 +2,7 @@ import LinkedList from "./LinkedList";
 import Queue from "./Queue";
 import OrderedStringKeyDictionary from "./OrderedStringKeyDictionary";
 import {Enumerable} from "../../../dist/amd/System.Linq/Linq";
-import {Set} from "../../../dist/amd/System/Collections/Set";
+import {Set} from "../../../dist/amd/Collections/Set";
 
 export default function run()
 {

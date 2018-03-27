@@ -110,7 +110,7 @@ export function from<T>(source:ForEachEnumerable<T>|InfiniteValueFactory<T>):IEn
 
 export function isEnumerable<T>(instance:any):instance is IEnumerable<T>
 {
-	return hasMemberOfType<IEnumerable<T>>(instance, "getEnumerator", TypeOf.Function);
+	return hasMemberOfType<IEnumerable<T>>(instance, "getEnumerator", TypeOf.FUNCTION);
 }
 
 export function isEnumerableOrArrayLike<T>(instance:any):instance is IEnumerableOrArray<T>
@@ -120,12 +120,12 @@ export function isEnumerableOrArrayLike<T>(instance:any):instance is IEnumerable
 
 export function isEnumerator<T>(instance:any):instance is IEnumerator<T>
 {
-	return hasMemberOfType<IEnumerator<T>>(instance, "moveNext", TypeOf.Function);
+	return hasMemberOfType<IEnumerator<T>>(instance, "moveNext", TypeOf.FUNCTION);
 }
 
 export function isIterator<T>(instance:any):instance is IIterator<T>
 {
-	return hasMemberOfType<IIterator<T>>(instance, "next", TypeOf.Function);
+	return hasMemberOfType<IIterator<T>>(instance, "next", TypeOf.FUNCTION);
 }
 
 /**

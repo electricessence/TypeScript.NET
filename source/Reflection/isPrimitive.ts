@@ -24,13 +24,13 @@ export default function isPrimitive(
 	const t = typeof value;
 	switch(t)
 	{
-		case TypeOf.Boolean:
-		case TypeOf.String:
-		case TypeOf.Number:
+		case TypeOf.BOOLEAN:
+		case TypeOf.STRING:
+		case TypeOf.NUMBER:
 			return true;
-		case TypeOf.Undefined:
+		case TypeOf.UNDEFINED:
 			return allowUndefined;
-		case TypeOf.Object:
+		case TypeOf.OBJECT:
 			return value===null;
 
 	}

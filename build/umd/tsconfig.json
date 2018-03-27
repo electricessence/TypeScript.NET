@@ -4,6 +4,7 @@
     "outDir": "./dist",
     "module": "umd",
     "target": "es5",
-    "noEmit": false
+    "noEmit": false,
+    "preserveConstEnums": false
   }
 }

@@ -15,7 +15,7 @@ export default class ArrayEnumerator<T> extends IndexEnumerator<T>
 		super(
 			() =>
 			{
-				const array = typeof arrayOrFactory == TypeOf.Function ? arrayOrFactory() : arrayOrFactory;
+				const array = typeof arrayOrFactory == TypeOf.FUNCTION ? arrayOrFactory() : arrayOrFactory;
 				return {
 					source: array,
 					pointer: start,

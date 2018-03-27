@@ -12,5 +12,5 @@ import TypeOf from "./TypeOf";
  */
 export default function isTrueNaN(value:any):value is number
 {
-	return typeof value===TypeOf.Number && isNaN(value);
+	return typeof value===TypeOf.NUMBER && isNaN(value);
 }

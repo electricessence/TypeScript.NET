@@ -11,7 +11,7 @@ import IEnumerableOrArray from "./IEnumerableOrArray";
 import TypeOf from "../Reflection/TypeOf";
 
 function getId(obj:any):string|number|symbol {
-	return getIdentifier(obj, typeof obj!=TypeOf.Boolean);
+	return getIdentifier(obj, typeof obj!=TypeOf.BOOLEAN);
 }
 
 export default class Set<T extends Primitive|ISymbolizable|symbol>

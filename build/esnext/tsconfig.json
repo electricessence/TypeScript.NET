@@ -4,6 +4,7 @@
     "outDir": "./dist",
     "module": "esnext",
     "target": "esnext",
-    "noEmit": false
+    "noEmit": false,
+    "preserveConstEnums": false
   }
 }

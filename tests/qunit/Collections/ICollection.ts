@@ -1,10 +1,10 @@
 ///<reference types="qunit"/>
 ///<amd-dependency path="QUnit"/>
-import * as Text from "../../../dist/amd/System/Text/Utility";
-import * as AU from "../../../dist/amd/System/Collections/Array/Utility";
-import NotImplementedException from "../../../dist/amd/System/Exceptions/NotImplementedException";
-import {ICollection} from "../../../dist/amd/System/Collections/ICollection";
-import {CollectionBase} from "../../../dist/amd/System/Collections/CollectionBase";
+import * as Text from "../../../dist/amd/Text/Utility";
+import * as AU from "../../../dist/amd/Collections/Array/Utility";
+import NotImplementedException from "../../../dist/amd/Exceptions/NotImplementedException";
+import {ICollection} from "../../../dist/amd/Collections/ICollection";
+import {CollectionBase} from "../../../dist/amd/Collections/CollectionBase";
 
 /*
  * This is a reusable set of unit test for use with any ICollection to ensureEntries all features of that ICollection function properly.

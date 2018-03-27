@@ -9,9 +9,9 @@ import IMap from "../IMap";
 export module PropertyKey
 {
 	export const typeOfValues:ReadonlyArray<TypeOf> = Object.freeze([
-		TypeOf.String,
-		TypeOf.Number,
-		TypeOf.Symbol,
+		TypeOf.STRING,
+		TypeOf.NUMBER,
+		TypeOf.SYMBOL,
 	]);
 }
 

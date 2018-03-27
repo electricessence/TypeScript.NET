@@ -9,12 +9,6 @@
     "type": "git",
     "url": "https://github.com/electricessence/TypeScript.NET.git"
   },
-  "directories": {
-    "lib": "./source"
-  },
-  "browser": {
-    "child_process": false
-  },
   "keywords": [
     "JavaScript",
     "TypeScript",
@@ -42,7 +36,6 @@
     "fs": "0.0.2",
     "gulp": "^3.9.1",
     "gulp-bump": "^1.0.0",
-    "gulp-nuget-pack": "0.0.6",
     "gulp-typedoc": "^2.0.0",
     "gulp-typescript-helper": "^1.4.3",
     "karma": "^0.13.21",

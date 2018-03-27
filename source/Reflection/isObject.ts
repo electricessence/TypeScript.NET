@@ -13,5 +13,5 @@ import TypeOf from "./TypeOf";
  */
 export default function isObject(value:any, allowNull:boolean = false):boolean
 {
-	return typeof value===TypeOf.Object && (allowNull || value!==null);
+	return typeof value===TypeOf.OBJECT && (allowNull || value!==null);
 }

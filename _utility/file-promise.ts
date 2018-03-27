@@ -5,9 +5,9 @@
 
 import * as fs from "fs";
 import {JsonArray, JsonData, JsonMap} from "../source/JSON";
-import using from "../source/System/Promises/Functions/using";
-import NPromise from "../source/System/Promises/Promise";
-import PromiseBase from "../source/System/Promises/PromiseBase";
+import using from "../source/Promises/Functions/using";
+import NPromise from "../source/Promises/Promise";
+import PromiseBase from "../source/Promises/PromiseBase";
 
 
 export module ENCODING
@@ -25,9 +25,9 @@ export type WriteOptions = {
 	flag?:string;
 };
 
-function readFile(path:string, encoding:string = ENCODING.UTF8):Promise<string>
+function readFile(path:string, encoding:string = ENCODING.UTF8):NPromise<string>
 {
-	return new Promise<string>((resolve, reject)=>
+	return new NPromise<string>((resolve, reject)=>
 	{
 		fs.readFile(
 			path,

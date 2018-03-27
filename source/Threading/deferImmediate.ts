@@ -192,10 +192,10 @@ if(isNodeJS)
 	};
 
 }
-else if(typeof setImmediate===TypeOf.Function)
+else if(typeof setImmediate===TypeOf.FUNCTION)
 {
 	// In IE10, Node.js 0.9+, or https://github.com/NobleJS/setImmediate
-	if(typeof window!==TypeOf.Undefined)
+	if(typeof window!==TypeOf.UNDEFINED)
 	{
 		requestTick = setImmediate.bind(window, flush);
 	}
@@ -208,7 +208,7 @@ else if(typeof setImmediate===TypeOf.Function)
 	}
 
 }
-else if(typeof MessageChannel!==TypeOf.Undefined)
+else if(typeof MessageChannel!==TypeOf.UNDEFINED)
 {
 	// modern browsers
 	// http://www.nonblocking.io/2011/06/windownexttick.html

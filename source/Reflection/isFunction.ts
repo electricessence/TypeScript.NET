@@ -12,5 +12,5 @@ import TypeOf from "./TypeOf";
  */
 export default function isFunction(value:any):value is Function
 {
-	return typeof value===TypeOf.Function;
+	return typeof value===TypeOf.FUNCTION;
 }

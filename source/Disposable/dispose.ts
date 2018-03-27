@@ -136,7 +136,7 @@ function disposeSingle(
 {
 	if(
 		disposable
-		&& typeof disposable==TypeOf.Object
+		&& typeof disposable==TypeOf.OBJECT
 		&& typeof disposable['dispose'] == "function"
 	)
 	{

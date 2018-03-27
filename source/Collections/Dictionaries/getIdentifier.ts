@@ -19,7 +19,7 @@ function getIdentifier(obj:any, throwIfUnknown:boolean|Selector<any,string|numbe
 {
 	if(isPropertyKey(obj)) return obj;
 	if(obj===null) return NULL;
-	if(obj===VOID0) return TypeOf.Undefined;
+	if(obj===VOID0) return TypeOf.UNDEFINED;
 
 	// See ISymbolizable.
 	if(hasMethod<ISymbolizable>(obj, GET_SYMBOL))
@@ -40,7 +40,7 @@ function getIdentifier(obj:any, throwIfUnknown:boolean|Selector<any,string|numbe
 			throw "Cannot create known identity.";
 	}
 
-	return (typeof obj.toString==TypeOf.Function)
+	return (typeof obj.toString==TypeOf.FUNCTION)
 		? obj.toString()
 		: Object.prototype.toString.call(obj);
 }

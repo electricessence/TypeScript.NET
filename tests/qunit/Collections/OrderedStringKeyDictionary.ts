@@ -1,6 +1,6 @@
 import * as ICollectionTests from "./ICollection";
-import OrderedStringKeyDictionary from "../../../dist/amd/System/Collections/Dictionaries/OrderedStringKeyDictionary";
-import {IKeyValuePair} from "../../../dist/amd/System/KeyValuePair";
+import OrderedStringKeyDictionary from "../../../dist/amd/Collections/Dictionaries/OrderedStringKeyDictionary";
+import {IKeyValuePair} from "../../../dist/amd/KeyValuePair";
 
 
 export default function run()

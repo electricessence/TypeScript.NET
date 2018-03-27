@@ -24,7 +24,7 @@ declare const __dirname:string;
 const
 	MAX_WORKERS:number = 16,
 	VOID0:undefined    = void 0,
-	URL                = typeof self!==TypeOf.Undefined
+	URL                = typeof self!==TypeOf.UNDEFINED
 		? (self.URL ? self.URL : (<any>self).webkitURL)
 		: null,
 	_supports          = isNodeJS || !!(<any>self).Worker; // node always supports parallel
@@ -232,13 +232,13 @@ export class Parallel
 		{
 			switch(typeof a)
 			{
-				case TypeOf.String:
+				case TypeOf.STRING:
 					this._requiredScripts.push(<string>a);
 					break;
-				case TypeOf.Function:
+				case TypeOf.FUNCTION:
 					this._requiredFunctions.push({fn: <Function>a});
 					break;
-				case TypeOf.Object:
+				case TypeOf.OBJECT:
 					this._requiredFunctions.push(<{name?:string,fn:Function}>a);
 					break;
 				default:

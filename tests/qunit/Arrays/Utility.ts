@@ -1,7 +1,5 @@
 ///<reference types="qunit"/>
 ///<amd-dependency path="QUnit"/>
-import * as Arrays from "../../../dist/amd/System/Collections/Array/Compare";
-import * as ArrayUtility from "../../../dist/amd/System/Collections/Array/Utility";
 
 export default function run()
 {

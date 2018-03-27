@@ -158,8 +158,8 @@ var requirejs, require, define;
 
     /**
      * Constructs an error with a pointer to an URL with more information.
-     * @param {String} id the error ID that maps to an ID on a web page.
-     * @param {String} message human readable error.
+     * @param {STRING} id the error ID that maps to an ID on a web page.
+     * @param {STRING} message human readable error.
      * @param {Error} [err] the original error, if there is one.
      *
      * @returns {Error}
@@ -259,12 +259,12 @@ var requirejs, require, define;
         /**
          * Given a relative module name, like ./something, normalize it to
          * a real name that can be mapped to a path.
-         * @param {String} name the relative name
-         * @param {String} baseName a real name that the name arg is relative
+         * @param {STRING} name the relative name
+         * @param {STRING} baseName a real name that the name arg is relative
          * to.
-         * @param {Boolean} applyMap applyEntries the map config to the value. Should
+         * @param {BOOLEAN} applyMap applyEntries the map config to the value. Should
          * only be done if this normalization is for a dependency ID.
-         * @returns {String} normalized name
+         * @returns {STRING} normalized name
          */
         function normalize(name, baseName, applyMap) {
             var pkgMain, mapValue, nameParts, i, j, nameSegment, lastIndex,
@@ -403,15 +403,15 @@ var requirejs, require, define;
          * name, and path. If parentModuleMap is provided it will
          * also normalize the name via require.normalize()
          *
-         * @param {String} name the module name
-         * @param {String} [parentModuleMap] parent module map
+         * @param {STRING} name the module name
+         * @param {STRING} [parentModuleMap] parent module map
          * for the module name, used to resolve relative names.
-         * @param {Boolean} isNormalized: is the ID already normalized.
+         * @param {BOOLEAN} isNormalized: is the ID already normalized.
          * This is true if this call is done for a define() module ID.
-         * @param {Boolean} applyMap: applyEntries the map config to the ID.
+         * @param {BOOLEAN} applyMap: applyEntries the map config to the ID.
          * Should only be true if this map is for a dependency.
          *
-         * @returns {Object}
+         * @returns {OBJECT}
          */
         function makeModuleMap(name, parentModuleMap, isNormalized, applyMap) {
             var url, pluginModule, suffix, nameParts,
@@ -1220,7 +1220,7 @@ var requirejs, require, define;
          * Given an event from a script node, get the requirejs info from it,
          * and then removes the event listeners on the node.
          * @param {Event} evt
-         * @returns {Object}
+         * @returns {OBJECT}
          */
         function getScriptData(evt) {
             //Using currentTarget instead of target for Firefox 2.0's sake. Not
@@ -1274,7 +1274,7 @@ var requirejs, require, define;
 
             /**
              * Set a configuration for the context.
-             * @param {Object} cfg config object to integrate.
+             * @param {OBJECT} cfg config object to integrate.
              */
             configure: function (cfg) {
                 //Make sure the baseUrl ends in a slash.
@@ -1559,7 +1559,7 @@ var requirejs, require, define;
              * Internal method used by environment adapters to complete a load event.
              * A load event could be a script load or just a load pass from a synchronous
              * load call.
-             * @param {String} moduleName the name of the module to potentially complete.
+             * @param {STRING} moduleName the name of the module to potentially complete.
              */
             completeLoad: function (moduleName) {
                 var found, args, mod,
@@ -1806,7 +1806,7 @@ var requirejs, require, define;
      * Execute something after the current tick
      * of the event loop. Override for other envs
      * that have a better solution than setTimeout.
-     * @param  {Function} fn function to execute later.
+     * @param  {FUNCTION} fn function to execute later.
      */
     req.nextTick = typeof setTimeout !== 'undefined' ? function (fn) {
         setTimeout(fn, 4);
@@ -1884,9 +1884,9 @@ var requirejs, require, define;
      * Make this a separate function to allow other environments
      * to override it.
      *
-     * @param {Object} context the require context to find state.
-     * @param {String} moduleName the name of the module.
-     * @param {Object} url the URL to the module.
+     * @param {OBJECT} context the require context to find state.
+     * @param {STRING} moduleName the name of the module.
+     * @param {OBJECT} url the URL to the module.
      */
     req.load = function (context, moduleName, url) {
         var config = (context && context.config) || {},
@@ -2130,7 +2130,7 @@ var requirejs, require, define;
      * Executes the text. Normally just uses eval, but can be modified
      * to use a better, environment-specific call. Only used for transpiling
      * loader plugins, not for plain JS modules.
-     * @param {String} text the text to execute/evaluate.
+     * @param {STRING} text the text to execute/evaluate.
      */
     req.exec = function (text) {
         /*jslint evil: true */

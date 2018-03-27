@@ -9,7 +9,7 @@
 /**
  *  Represents the current stage in the lifecycle of a Task.
  */
-declare const enum TaskStatus
+const enum TaskStatus
 {
 	/**
 	 *  The task has been initialized but has not yet been scheduled.

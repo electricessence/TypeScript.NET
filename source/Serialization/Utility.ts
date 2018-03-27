@@ -20,11 +20,11 @@ export function toString(
 	let v = <any>value;
 	switch(typeof v)
 	{
-		case TypeOf.String:
+		case TypeOf.STRING:
 			return v;
-		case TypeOf.Boolean:
+		case TypeOf.BOOLEAN:
 			return v ? TRUE : FALSE;
-		case TypeOf.Number:
+		case TypeOf.NUMBER:
 			return EMPTY + v;
 		default:
 
@@ -46,7 +46,7 @@ export function toString(
 
 export function isSerializable(instance:any):instance is ISerializable
 {
-	return hasMemberOfType<ISerializable>(instance, 'serialize', TypeOf.Function);
+	return hasMemberOfType<ISerializable>(instance, 'serialize', TypeOf.FUNCTION);
 }
 
 export function toPrimitive(
@@ -64,7 +64,7 @@ export function toPrimitive(
 		{
 			case 'null':
 				return null;
-			case TypeOf.Undefined:
+			case TypeOf.UNDEFINED:
 				return void(0);
 			case TRUE:
 				return true;
