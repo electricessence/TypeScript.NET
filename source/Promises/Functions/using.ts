@@ -15,7 +15,7 @@ import PromiseBase from "../PromiseBase";
  */
 export default function using<T>(
 	resolver:Executor<T>,
-	forceSynchronous:boolean = false):PromiseBase<T>
+	forceSynchronous:boolean = false):Promise<T>
 {
 	return new Promise<T>(resolver, forceSynchronous);
 }

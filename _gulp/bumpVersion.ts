@@ -1,3 +1,4 @@
+///<reference types="node"/>
 import * as gulp from "gulp";
 import * as semver from "semver";
 import * as file from "../_utility/file-promise";

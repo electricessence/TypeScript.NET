@@ -18,3 +18,5 @@ export interface JsonMap extends IMap<JsonEntry>
 }
 
 export type JsonData = JsonMap | JsonArray;
+
+export default JsonData;

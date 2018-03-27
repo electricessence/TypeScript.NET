@@ -6,7 +6,7 @@
 import * as fs from "fs";
 import {JsonArray, JsonData, JsonMap} from "../source/JSON";
 import using from "../source/Promises/Functions/using";
-import NPromise from "../source/Promises/Promise";
+import Promise from "../source/Promises/Promise";
 import PromiseBase from "../source/Promises/PromiseBase";
 
 
@@ -25,9 +25,9 @@ export type WriteOptions = {
 	flag?:string;
 };
 
-function readFile(path:string, encoding:string = ENCODING.UTF8):NPromise<string>
+function readFile(path:string, encoding:string = ENCODING.UTF8):Promise<string>
 {
-	return new NPromise<string>((resolve, reject)=>
+	return new Promise<string>((resolve, reject)=>
 	{
 		fs.readFile(
 			path,
@@ -40,7 +40,7 @@ function readFile(path:string, encoding:string = ENCODING.UTF8):NPromise<string>
 	});
 }
 
-function writeFile(path:string, data:string, options?:WriteOptions):PromiseBase<void>
+function writeFile(path:string, data:string, options?:WriteOptions):Promise<void>
 {
 	return using<void>((resolve, reject)=>
 	{
@@ -69,12 +69,14 @@ export module json
 		path:string,
 		encoding:string = ENCODING.UTF8):PromiseBase<T>
 	{
-		return readFile(path, encoding).then(result=>JSON.parse(result));
+		return readFile(path, encoding)
+			.then(result=>JSON.parse(result));
 	}
 
 	export function write(path:string, data:JsonData, options?:WriteOptions):PromiseBase<void>
 	{
-		return using<string>(resolve=>resolve(JSON.stringify(data, null, 2)))
+		return using<string>(
+			resolve=>resolve(JSON.stringify(data, null, 2)))
 			.thenSynchronous(s=>writeFile(path, s, options));
 	}
 

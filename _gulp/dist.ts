@@ -4,9 +4,9 @@ import * as gulp from "gulp";
 import * as TASK from "./constants/TaskNames";
 import * as File from "../_utility/file-promise";
 import {JsonMap} from "../source/JSON";
-import {IMap} from "../source/IMap";
-import {streamToPromise as stream} from "../_utility/stream-to-promise";
-import {Promise as NPromise} from "../source/Promises/Promise";
+import IMap from "../source/IMap";
+import stream from "../_utility/stream-to-promise";
+import NPromise from "../source/Promises/Promise";
 import create from "../source/Promises/Functions/create";
 
 const fields:IMap<boolean> = {

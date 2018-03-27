@@ -1,12 +1,12 @@
 export namespace TypeOf
 {
-	export const BOOLEAN = 'boolean';
-	export const NUMBER = 'number';
-	export const STRING = 'string';
-	export const SYMBOL = 'symbol';
-	export const OBJECT = 'object';
-	export const UNDEFINED = 'undefined';
-	export const FUNCTION = 'function';
+	export const BOOLEAN:'boolean' = 'boolean';
+	export const NUMBER:'number' = 'number';
+	export const STRING:'string' = 'string';
+	export const SYMBOL:'symbol' = 'symbol';
+	export const OBJECT:'object' = 'object';
+	export const UNDEFINED:'undefined' = 'undefined';
+	export const FUNCTION:'function' = 'function';
 }
 
 export type TypeOfValue =

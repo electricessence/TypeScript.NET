@@ -1,28 +1,16 @@
-import * as fs from "fs";
+///<reference types="node"/>
+import "mocha";
+import getDirectories from "../../_utility/getDirectories";
+import getFiles from "../../_utility/getFiles";
 
 const root = "./tests/mocha/";
 
-function getFilesAt(path:string, ext?:string):string[]
-{
-	return fs
-		.readdirSync(path)
-		.filter((name)=>
-		(!ext || name.lastIndexOf(ext)==name.length - ext.length)
-		&& fs.statSync(path + '/' + name).isFile());
-}
-
-function getDirectoriesAt(path:string):string[]
-{
-	return fs
-		.readdirSync(path)
-		.filter((name)=>fs.statSync(path + '/' + name).isDirectory());
-}
 
 function importRecursive(path:string = "", importFiles:boolean = false, base:string = "")
 {
 	const dirPath = base + path;
 	if(importFiles) console.log(dirPath);
-	getDirectoriesAt(root + dirPath)
+	getDirectories(root + dirPath)
 		.sort()
 		.forEach((dirname)=>
 		{
@@ -34,7 +22,7 @@ function importRecursive(path:string = "", importFiles:boolean = false, base:str
 
 	if(importFiles)
 	{
-		const files = getFilesAt(root + dirPath, '.js'), count = files.length;
+		const files = getFiles(root + dirPath, '.js'), count = files.length;
 
 		files
 			.sort()
