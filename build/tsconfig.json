@@ -1,8 +1,9 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "preserveConstEnums": true
+    "preserveConstEnums": false
   },
+  "compileOnSave": true,
   "include": [
     "../source"
   ]
