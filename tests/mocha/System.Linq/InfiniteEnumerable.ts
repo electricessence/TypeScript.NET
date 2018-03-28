@@ -1,7 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import Enumerable from "../../../build/umd/dist/Linq";
+import Enumerable from "../../../source/Linq";
 
 
 const source = Enumerable.toInfinity().asEnumerable();

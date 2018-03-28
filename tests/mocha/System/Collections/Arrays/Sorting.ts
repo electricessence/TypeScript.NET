@@ -1,12 +1,12 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import {Selector} from "../../../../../build/umd/dist/FunctionTypes";
-import {ArraySort} from "../../../../../build/umd/dist/Collections/Array/Sort";
-import Random from "../../../../../build/umd/dist/Random";
-import compare from "../../../../../build/umd/dist/Comparison/compare";
-import insertionSort from "../../../../../build/umd/dist/Collections/Array/Sorting/insertionSort";
-import quickSort from "../../../../../build/umd/dist/Collections/Array/Sorting/quickSort";
-import mergeSort from "../../../../../build/umd/dist/Collections/Array/Sorting/mergeSort";
+import {Selector} from "../../../../../source/FunctionTypes";
+import {ArraySort} from "../../../../../source/Collections/Array/Sort";
+import Random from "../../../../../source/Random";
+import compare from "../../../../../source/Comparison/compare";
+import insertionSort from "../../../../../source/Collections/Array/Sorting/insertionSort";
+import quickSort from "../../../../../source/Collections/Array/Sorting/quickSort";
+import mergeSort from "../../../../../source/Collections/Array/Sorting/mergeSort";
 import areArraysEqual from "../../../../../source/Collections/Array/areArraysEqual";
 
 const performanceCheck = false;  // Change to true to performance test/log

@@ -1,7 +1,7 @@
 import {BuildHelper, Module, Target} from "gulp-typescript-helper";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
-import create from "../build/umd/dist/Promises/Functions/create";
+import create from "../source/Promises/Functions/create";
 
 const renderer = BuildHelper
 	.inject(create)

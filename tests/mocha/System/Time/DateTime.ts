@@ -1,7 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import DateTime from "../../../../build/umd/dist/Time/DateTime";
+import DateTime from "../../../../source/Time/DateTime";
 
 
 describe(".daysInMonth(year,month) & .isLeapYear(year)",()=>{

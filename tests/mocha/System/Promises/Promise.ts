@@ -1,20 +1,20 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import Stopwatch from "../../../../build/umd/dist/Diagnostics/Stopwatch";
-import {defer} from "../../../../build/umd/dist/Threading/defer";
-import LazyPromise from "../../../../build/umd/dist/Promises/LazyPromise";
-import rangeOfNumbers from "../../../../build/umd/dist/Collections/Array/rangeOfNumbers";
-import PromiseBase from "../../../../build/umd/dist/Promises/PromiseBase";
-import Promise, {Fulfilled} from "../../../../build/umd/dist/Promises/Promise";
-import PromiseCollection from "../../../../build/umd/dist/Promises/PromiseCollection";
-import resolve from "../../../../build/umd/dist/Promises/Functions/resolve";
-import reject from "../../../../build/umd/dist/Promises/Functions/reject";
-import createFrom from "../../../../build/umd/dist/Promises/Functions/createFrom";
-import {Fulfill} from "../../../../build/umd/dist/Promises/PromiseTypes";
-import waitAll from "../../../../build/umd/dist/Promises/Functions/waitAll";
-import all from "../../../../build/umd/dist/Promises/Functions/all";
-import race from "../../../../build/umd/dist/Promises/Functions/race";
-import ObjectDisposedException from "../../../../build/umd/dist/Disposable/ObjectDisposedException";
+import Stopwatch from "../../../../source/Diagnostics/Stopwatch";
+import {defer} from "../../../../source/Threading/defer";
+import LazyPromise from "../../../../source/Promises/LazyPromise";
+import rangeOfNumbers from "../../../../source/Collections/Array/rangeOfNumbers";
+import PromiseBase from "../../../../source/Promises/PromiseBase";
+import Promise, {Fulfilled} from "../../../../source/Promises/Promise";
+import PromiseCollection from "../../../../source/Promises/PromiseCollection";
+import resolve from "../../../../source/Promises/Functions/resolve";
+import reject from "../../../../source/Promises/Functions/reject";
+import createFrom from "../../../../source/Promises/Functions/createFrom";
+import {Fulfill} from "../../../../source/Promises/PromiseTypes";
+import waitAll from "../../../../source/Promises/Functions/waitAll";
+import all from "../../../../source/Promises/Functions/all";
+import race from "../../../../source/Promises/Functions/race";
+import ObjectDisposedException from "../../../../source/Disposable/ObjectDisposedException";
 
 const REASON = "this is not an error, but it might show up in the console";
 

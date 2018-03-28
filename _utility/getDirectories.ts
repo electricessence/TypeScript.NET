@@ -3,7 +3,6 @@
  * Licensing: MIT
  */
 
-
 import * as fs from "fs";
 
 export default function getDirectories(path:string):string[]

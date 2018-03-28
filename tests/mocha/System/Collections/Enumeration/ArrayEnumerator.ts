@@ -1,7 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import ArrayEnumerator from "../../../../../build/umd/dist/Collections/Enumeration/ArrayEnumerator";
+import ArrayEnumerator from "../../../../../source/Collections/Enumeration/ArrayEnumerator";
 
 describe("new & .moveNext()",()=>{
 	it("should allow empty arrays", ()=>

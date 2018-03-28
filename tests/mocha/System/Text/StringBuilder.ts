@@ -4,7 +4,7 @@
  */
 ///<reference types="node"/>
 import * as assert from "assert";
-import StringBuilder from "../../../../build/umd/dist/Text/StringBuilder";
+import StringBuilder from "../../../../source/Text/StringBuilder";
 
 it("should match expected value",()=>{
 	const sb = new StringBuilder();

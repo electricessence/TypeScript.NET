@@ -3,8 +3,9 @@ import "mocha";
 import getDirectories from "../../_utility/getDirectories";
 import getFiles from "../../_utility/getFiles";
 
-const root = "./tests/mocha/";
+const root = "./tests/mocha";
 
+describe("",()=>{}); // Trick WebStorm into thinking this can be tested.
 
 function importRecursive(path:string = "", importFiles:boolean = false, base:string = "")
 {
@@ -22,7 +23,7 @@ function importRecursive(path:string = "", importFiles:boolean = false, base:str
 
 	if(importFiles)
 	{
-		const files = getFiles(root + dirPath, '.js'), count = files.length;
+		const files = getFiles(root + dirPath, '.ts'), count = files.length;
 
 		files
 			.sort()

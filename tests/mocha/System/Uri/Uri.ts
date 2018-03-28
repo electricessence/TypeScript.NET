@@ -1,9 +1,9 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import Uri from "../../../../build/umd/dist/Uri/Uri";
-import Functions from "../../../../build/umd/dist/Functions";
-import Scheme from "../../../../build/umd/dist/Uri/Scheme";
+import Uri from "../../../../source/Uri/Uri";
+import Functions from "../../../../source/Functions";
+import Scheme from "../../../../source/Uri/Scheme";
 
 
 const pathAfterRoot = 'one/two/three.html';
@@ -292,7 +292,7 @@ describe('KVP versus Tuple', ()=>
 // Disabled for code coverage report
 // describe('es6 > babel > commonjs', ()=>
 // {
-// 	const Uri2 = require('../../../../build/umd/dist/Uri/Uri').default;
+// 	const Uri2 = require('../../../../source/Uri/Uri').default;
 //
 // 	var u2 = Uri2.from(path + query);
 //

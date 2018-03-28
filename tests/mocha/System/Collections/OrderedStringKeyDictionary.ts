@@ -1,6 +1,6 @@
 import * as ICollectionTests from "./ICollection";
-import OrderedStringKeyDictionary from "../../../../build/umd/dist/Collections/Dictionaries/OrderedStringKeyDictionary";
-import {IKeyValuePair} from "../../../../build/umd/dist/KeyValuePair";
+import OrderedStringKeyDictionary from "../../../../source/Collections/Dictionaries/OrderedStringKeyDictionary";
+import {IKeyValuePair} from "../../../../source/KeyValuePair";
 
 ICollectionTests.Collection<IKeyValuePair<string,number>>(
 	'OrderedStringKeyDictionary<'+'number>',

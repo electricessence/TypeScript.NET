@@ -1,7 +1,7 @@
 // ///<reference types="node"/>
 // import * as assert from "assert";
-// import Stopwatch from "../../../../build/umd/dist/Diagnostics/Stopwatch";
-// import {Parallel} from "../../../../build/umd/dist/Threading/Tasks/Parallel";
+// import Stopwatch from "../../../../source/Diagnostics/Stopwatch";
+// import {Parallel} from "../../../../source/Threading/Tasks/Parallel";
 //
 // it("should return the expected concatenation", () =>
 // {

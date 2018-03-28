@@ -1,9 +1,9 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import ICollection from "../../../../build/umd/dist/Collections/ICollection";
-import initializeArray from "../../../../build/umd/dist/Collections/Array/initializeArray";
-import NotImplementedException from "../../../../build/umd/dist/Exceptions/NotImplementedException";
+import ICollection from "../../../../source/Collections/ICollection";
+import initializeArray from "../../../../source/Collections/Array/initializeArray";
+import NotImplementedException from "../../../../source/Exceptions/NotImplementedException";
 
 /*
  * This is a reusable set of unit test for use with any ICollection to ensureEntries all features of that ICollection function properly.

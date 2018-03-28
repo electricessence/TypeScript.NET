@@ -2,8 +2,8 @@
 import * as assert from "assert";
 import "mocha";
 import * as ICollectionTests from "./ICollection";
-import LinkedList from "../../../../build/umd/dist/Collections/LinkedList";
-import areArraysEqual from "../../../../build/umd/dist/Collections/Array/areArraysEqual";
+import LinkedList from "../../../../source/Collections/LinkedList";
+import areArraysEqual from "../../../../source/Collections/Array/areArraysEqual";
 
 const CLASS_NAME = 'LinkedList';
 ICollectionTests.StringCollection(CLASS_NAME, new LinkedList<string>());

@@ -1,10 +1,10 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import {sum} from "../../../../../build/umd/dist/Collections/Array/Procedure/sum";
-import {average} from "../../../../../build/umd/dist/Collections/Array/Procedure/average";
-import {product} from "../../../../../build/umd/dist/Collections/Array/Procedure/product";
-import {quotient} from "../../../../../build/umd/dist/Collections/Array/Procedure/quotient";
-import {max, min} from "../../../../../build/umd/dist/Collections/Array/Procedure/minmax";
+import {sum} from "../../../../../source/Collections/Array/Procedure/sum";
+import {average} from "../../../../../source/Collections/Array/Procedure/average";
+import {product} from "../../../../../source/Collections/Array/Procedure/product";
+import {quotient} from "../../../../../source/Collections/Array/Procedure/quotient";
+import {max, min} from "../../../../../source/Collections/Array/Procedure/minmax";
 
 const
 	minA     = -10,

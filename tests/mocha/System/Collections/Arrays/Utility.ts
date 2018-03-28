@@ -1,25 +1,25 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import Stopwatch from "../../../../../build/umd/dist/Diagnostics/Stopwatch";
-import initializeArray from "../../../../../build/umd/dist/Collections/Array/initializeArray";
-import removeElement from "../../../../../build/umd/dist/Collections/Array/removeElement";
-import removeElementByIndex from "../../../../../build/umd/dist/Collections/Array/removeElementByIndex";
-import copyArray from "../../../../../build/umd/dist/Collections/Array/copyArray";
-import areArraysEqual from "../../../../../build/umd/dist/Collections/Array/areArraysEqual";
-import copyArrayTo from "../../../../../build/umd/dist/Collections/Array/copyArrayTo";
-import containsElement from "../../../../../build/umd/dist/Collections/Array/containsElement";
-import replaceElement from "../../../../../build/umd/dist/Collections/Array/replaceElement";
-import findElementIndex from "../../../../../build/umd/dist/Collections/Array/findElementIndex";
-import registerElement from "../../../../../build/umd/dist/Collections/Array/registerElement";
-import indexOfElement from "../../../../../build/umd/dist/Collections/Array/indexOfElement";
-import updateRange from "../../../../../build/umd/dist/Collections/Array/updateRange";
-import clearElements from "../../../../../build/umd/dist/Collections/Array/clearElements";
-import forEachElement from "../../../../../build/umd/dist/Collections/Array/forEachElement";
-import {repeatElement} from "../../../../../build/umd/dist/Collections/Array/repeatElement";
-import applyToElements from "../../../../../build/umd/dist/Collections/Array/applyToElements";
-import rangeOfNumbers from "../../../../../build/umd/dist/Collections/Array/rangeOfNumbers";
-import rangeOfNumbersUntil from "../../../../../build/umd/dist/Collections/Array/rangeOfNumbersUntil";
-import flatten from "../../../../../build/umd/dist/Collections/Array/flatten";
+import Stopwatch from "../../../../../source/Diagnostics/Stopwatch";
+import initializeArray from "../../../../../source/Collections/Array/initializeArray";
+import removeElement from "../../../../../source/Collections/Array/removeElement";
+import removeElementByIndex from "../../../../../source/Collections/Array/removeElementByIndex";
+import copyArray from "../../../../../source/Collections/Array/copyArray";
+import areArraysEqual from "../../../../../source/Collections/Array/areArraysEqual";
+import copyArrayTo from "../../../../../source/Collections/Array/copyArrayTo";
+import containsElement from "../../../../../source/Collections/Array/containsElement";
+import replaceElement from "../../../../../source/Collections/Array/replaceElement";
+import findElementIndex from "../../../../../source/Collections/Array/findElementIndex";
+import registerElement from "../../../../../source/Collections/Array/registerElement";
+import indexOfElement from "../../../../../source/Collections/Array/indexOfElement";
+import updateRange from "../../../../../source/Collections/Array/updateRange";
+import clearElements from "../../../../../source/Collections/Array/clearElements";
+import forEachElement from "../../../../../source/Collections/Array/forEachElement";
+import {repeatElement} from "../../../../../source/Collections/Array/repeatElement";
+import applyToElements from "../../../../../source/Collections/Array/applyToElements";
+import rangeOfNumbers from "../../../../../source/Collections/Array/rangeOfNumbers";
+import rangeOfNumbersUntil from "../../../../../source/Collections/Array/rangeOfNumbersUntil";
+import flatten from "../../../../../source/Collections/Array/flatten";
 
 
 // Min/Max tests...

@@ -1,20 +1,16 @@
 ﻿///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import Functions from "../../../build/umd/dist/Functions";
-import containsElement from "../../../build/umd/dist/Collections/Array/containsElement";
-import {
-	default as Enumerable,
-	InfiniteLinqEnumerable,
-	LinqEnumerable
-} from "../../../build/umd/dist/Linq";
-import List from "../../../build/umd/dist/Collections/List";
-import {repeatElement} from "../../../build/umd/dist/Collections/Array/repeatElement";
-import {product} from "../../../build/umd/dist/Collections/Array/Procedure/product";
-import {quotient} from "../../../build/umd/dist/Collections/Array/Procedure/quotient";
-import {average} from "../../../build/umd/dist/Collections/Array/Procedure/average";
-import {sum} from "../../../build/umd/dist/Collections/Array/Procedure/sum";
-import EmptyEnumerator from "../../../build/umd/dist/Collections/Enumeration/EmptyEnumerator";
+import Functions from "../../../source/Functions";
+import containsElement from "../../../source/Collections/Array/containsElement";
+import {default as Enumerable, InfiniteLinqEnumerable, LinqEnumerable} from "../../../source/Linq";
+import List from "../../../source/Collections/List";
+import {repeatElement} from "../../../source/Collections/Array/repeatElement";
+import {product} from "../../../source/Collections/Array/Procedure/product";
+import {quotient} from "../../../source/Collections/Array/Procedure/quotient";
+import {average} from "../../../source/Collections/Array/Procedure/average";
+import {sum} from "../../../source/Collections/Array/Procedure/sum";
+import EmptyEnumerator from "../../../source/Collections/Enumeration/EmptyEnumerator";
 
 interface TestItem
 {
