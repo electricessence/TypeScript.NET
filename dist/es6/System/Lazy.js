@@ -8,6 +8,7 @@ import { ResolverBase } from "./ResolverBase";
 export class Lazy extends ResolverBase {
     constructor(valueFactory, trapExceptions = false, allowReset = false) {
         super(valueFactory, trapExceptions, allowReset);
+        // @ts-ignore // Force this override.
         this._disposableObjectName = 'Lazy';
         this._isValueCreated = false;
     }
@@ -30,6 +31,7 @@ export class Lazy extends ResolverBase {
 export class ResettableLazy extends Lazy {
     constructor(valueFactory, trapExceptions = false) {
         super(valueFactory, trapExceptions, true);
+        // @ts-ignore // Force this override.
         this._disposableObjectName = 'ResettableLazy';
     }
     static create(valueFactory, trapExceptions = false) {

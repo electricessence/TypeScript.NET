@@ -4,6 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on code from: https://github.com/kriskowal/q
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../Types");
 var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
 var Queue_1 = require("../Collections/Queue");
@@ -32,7 +33,7 @@ function flush() {
 var immediateQueue = new LinkedNodeList_1.LinkedNodeList();
 // queue for late tasks, used by unhandled rejection tracking
 var laterQueue = new Queue_1.Queue();
-var entryPool = new ObjectPool_1.ObjectPool(40, function () { return {}; }, function (o) {
+var entryPool = new ObjectPool_1.ObjectPool(40, function () { return ({}); }, function (o) {
     o.task = null;
     o.domain = null;
     o.context = null;
@@ -85,7 +86,7 @@ function requestFlush() {
  * @param task
  * @param context
  * @param args
- * @returns {{cancel: (()=>boolean), dispose: (()=>undefined)}}
+ * @returns ICancellable
  */
 function deferImmediate(task, context, args) {
     var entry = entryPool.take();
@@ -159,5 +160,4 @@ else {
         setTimeout(flush, 0);
     };
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = deferImmediate;

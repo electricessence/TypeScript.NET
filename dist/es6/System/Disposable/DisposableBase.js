@@ -4,7 +4,8 @@
  */
 import { ObjectDisposedException } from "./ObjectDisposedException";
 export class DisposableBase {
-    constructor(__finalizer) {
+    constructor(_disposableObjectName, __finalizer) {
+        this._disposableObjectName = _disposableObjectName;
         this.__finalizer = __finalizer;
         this.__wasDisposed = false;
         // Allow for simple override of name.

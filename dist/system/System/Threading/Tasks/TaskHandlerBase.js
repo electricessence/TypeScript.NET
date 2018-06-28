@@ -28,8 +28,7 @@ System.register(["../../Disposable/DisposableBase", "../../../extends"], functio
             TaskHandlerBase = /** @class */ (function (_super) {
                 __extends(TaskHandlerBase, _super);
                 function TaskHandlerBase() {
-                    var _this = _super.call(this) || this;
-                    _this._disposableObjectName = NAME;
+                    var _this = _super.call(this, NAME) || this;
                     _this._timeoutId = null;
                     _this._status = 0 /* Created */;
                     return _this;

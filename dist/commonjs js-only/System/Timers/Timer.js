@@ -1,4 +1,9 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
 var ObservableBase_1 = require("../Observable/ObservableBase");
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
@@ -6,20 +11,21 @@ var __extends = extends_1.default;
 /**
  * A timer class that uses an Observable pattern to allow for subscribing to ticks.
  */
-var Timer = (function (_super) {
+var Timer = /** @class */ (function (_super) {
     __extends(Timer, _super);
     function Timer(_interval, _maxCount, _initialDelay) {
         if (_maxCount === void 0) { _maxCount = Infinity; }
         if (_initialDelay === void 0) { _initialDelay = _interval; }
-        _super.call(this);
-        this._interval = _interval;
-        this._maxCount = _maxCount;
-        this._initialDelay = _initialDelay;
-        this._count = 0;
-        if (_interval === null || _interval === void (0))
+        var _this = _super.call(this) || this;
+        _this._interval = _interval;
+        _this._maxCount = _maxCount;
+        _this._initialDelay = _initialDelay;
+        _this._count = 0;
+        if (_interval === null)
             throw "'interval' must be a valid number.";
         if (_interval < 0)
             throw "'interval' cannot be negative.";
+        return _this;
     }
     /**
      * Initializes a new timer and starts it.
@@ -65,7 +71,7 @@ var Timer = (function (_super) {
         _.throwIfDisposed("This timer has been disposed and can't be reused.");
         if (!_._cancel && _._count < _._maxCount) {
             // For now, if it's isn't the start...
-            if (_._count || _._initialDelay == _._interval) {
+            if (_._count || _._initialDelay === _._interval) {
                 var i_1 = setInterval(Timer._onTick, _._interval, _);
                 _._cancel = function () {
                     clearInterval(i_1);
@@ -108,7 +114,7 @@ var Timer = (function (_super) {
     Timer.prototype.cancel = function () {
         if (this._cancel) {
             this._cancel();
-            this._cancel = null;
+            this._cancel = undefined;
             return true;
         }
         return false;
@@ -136,5 +142,4 @@ var Timer = (function (_super) {
     };
     return Timer;
 }(ObservableBase_1.ObservableBase));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Timer;

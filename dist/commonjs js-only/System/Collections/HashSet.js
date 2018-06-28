@@ -3,6 +3,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../Types");
 var SetBase_1 = require("./SetBase");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
@@ -10,19 +11,20 @@ var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var VOID0 = void 0;
-var HashSet = (function (_super) {
+var HashSet = /** @class */ (function (_super) {
     __extends(HashSet, _super);
     function HashSet(source, keyGenerator) {
-        _super.call(this);
+        var _this = _super.call(this) || this;
         if (Types_1.Type.isFunction(source)) {
-            this._keyGenerator = source;
+            _this._keyGenerator = source;
         }
         else {
             if (!keyGenerator)
                 throw new ArgumentNullException_1.ArgumentNullException("keyGenerator");
-            this._keyGenerator = keyGenerator;
-            this._importEntries(source);
+            _this._keyGenerator = keyGenerator;
+            _this._importEntries(source);
         }
+        return _this;
     }
     HashSet.prototype.newUsing = function (source) {
         return new HashSet(source, this._keyGenerator);
@@ -89,5 +91,4 @@ function wipe(map, depth) {
         }
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = HashSet;

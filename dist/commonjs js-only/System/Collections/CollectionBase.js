@@ -3,30 +3,30 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Enumerator_1 = require("./Enumeration/Enumerator");
 var Compare_1 = require("../Compare");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
 var DisposableBase_1 = require("../Disposable/DisposableBase");
-var extends_1 = require("../../extends");
 var Environment_1 = require("../Environment");
+var extends_1 = require("../../extends");
 //noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 //noinspection SpellCheckingInspection
-var NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
+var REQUIRE = "require", NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", TWAPIL = "There was a problem importing System.Linq/Linq";
 var LINQ_PATH = "../../System.Linq/Linq";
-var CollectionBase = (function (_super) {
+var CollectionBase = /** @class */ (function (_super) {
     __extends(CollectionBase, _super);
     function CollectionBase(source, _equalityComparer) {
         if (_equalityComparer === void 0) { _equalityComparer = Compare_1.areEqual; }
-        _super.call(this);
-        this._equalityComparer = _equalityComparer;
-        var _ = this;
-        _._disposableObjectName = NAME;
-        _._importEntries(source);
-        _._updateRecursion = 0;
-        _._modifiedCount = 0;
-        _._version = 0;
+        var _this = _super.call(this, NAME) || this;
+        _this._equalityComparer = _equalityComparer;
+        _this._importEntries(source);
+        _this._updateRecursion = 0;
+        _this._modifiedCount = 0;
+        _this._version = 0;
+        return _this;
     }
     Object.defineProperty(CollectionBase.prototype, "count", {
         get: function () {
@@ -126,6 +126,7 @@ var CollectionBase = (function (_super) {
             _._updateRecursion--;
         }
         _._signalModification();
+        return _;
     };
     /**
      * Removes entries from the collection allowing for a limit.
@@ -184,7 +185,7 @@ var CollectionBase = (function (_super) {
         var _this = this;
         var added = 0;
         if (entries) {
-            if (Array.isArray(entries)) {
+            if ((entries) instanceof (Array)) {
                 // Optimize for avoiding a new closure.
                 for (var _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
                     var e = entries_1[_i];
@@ -227,7 +228,7 @@ var CollectionBase = (function (_super) {
      * Returns an array filtered by the provided predicate.
      * Provided for similarity to JS Array.
      * @param predicate
-     * @returns {T[]}
+     * @returns {[]}
      */
     CollectionBase.prototype.filter = function (predicate) {
         if (!predicate)
@@ -326,18 +327,24 @@ var CollectionBase = (function (_super) {
     };
     Object.defineProperty(CollectionBase.prototype, "linq", {
         /**
-         * .linq will return an ILinqEnumerable if .linqAsync() has completed successfully or the default module loader is NodeJS+CommonJS.
-         * @returns {ILinqEnumerable}
+         * .linq will return an LinqEnumerable if .linqAsync() has completed successfully or the default module loader is NodeJS+CommonJS.
+         * @returns {LinqEnumerable}
          */
         get: function () {
             this.throwIfDisposed();
             var e = this._linq;
             if (!e) {
-                if (!Environment_1.isNodeJS || !Environment_1.isCommonJS)
-                    throw "using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.\nImport System.Linq/Linq and use Enumerable.from(e) instead.\nOr use .linqAsync(callback) for AMD/RequireJS.";
-                this._linq = e = eval("require")(LINQ_PATH).default.from(this);
-                if (!e)
-                    throw "There was a problem importing System.Linq/Linq";
+                var r = void 0;
+                try {
+                    r = eval(REQUIRE);
+                }
+                catch (ex) { }
+                this._linq = e = r && r(LINQ_PATH).default.from(this);
+                if (!e) {
+                    throw Environment_1.isRequireJS
+                        ? "using .linq to load and initialize a LinqEnumerable is currently only supported within a NodeJS environment.\nImport System.Linq/Linq and use Enumerable.from(e) instead.\nYou can also preload the Linq module as a dependency or use .linqAsync(callback) for AMD/RequireJS."
+                        : TWAPIL;
+                }
             }
             return e;
         },
@@ -347,11 +354,11 @@ var CollectionBase = (function (_super) {
     /**
      * .linqAsync() is for use with deferred loading.
      * Ensures an instance of the Linq extensions is available and then passes it to the callback.
-     * Returns an ILinqEnumerable if one is already available, otherwise undefined.
-     * Passing no parameters will still initiate loading and initializing the ILinqEnumerable which can be useful for pre-loading.
-     * Any call to .linqAsync() where an ILinqEnumerable is returned can be assured that any subsequent calls to .linq will return the same instance.
+     * Returns an LinqEnumerable if one is already available, otherwise undefined.
+     * Passing no parameters will still initiate loading and initializing the LinqEnumerable which can be useful for pre-loading.
+     * Any call to .linqAsync() where an LinqEnumerable is returned can be assured that any subsequent calls to .linq will return the same instance.
      * @param callback
-     * @returns {ILinqEnumerable}
+     * @returns {LinqEnumerable}
      */
     CollectionBase.prototype.linqAsync = function (callback) {
         var _this = this;
@@ -359,13 +366,13 @@ var CollectionBase = (function (_super) {
         var e = this._linq;
         if (!e) {
             if (Environment_1.isRequireJS) {
-                eval("require")([LINQ_PATH], function (linq) {
+                eval(REQUIRE)([LINQ_PATH], function (linq) {
                     // Could end up being called more than once, be sure to check for ._linq before setting...
                     e = _this._linq;
                     if (!e)
                         _this._linq = e = linq.default.from(_this);
                     if (!e)
-                        throw "There was a problem importing System.Linq/Linq";
+                        throw TWAPIL;
                     if (callback)
                         callback(e);
                     callback = void 0; // In case this is return synchronously..

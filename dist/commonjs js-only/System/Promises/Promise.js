@@ -10,6 +10,7 @@
  * https://promisesaplus.com/
  * https://github.com/kriskowal/q
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../Types");
 var deferImmediate_1 = require("../Threading/deferImmediate");
 var DisposableBase_1 = require("../Disposable/DisposableBase");
@@ -32,19 +33,21 @@ function resolve(value, resolver, promiseFactory) {
         ? resolver(value)
         : value;
     return nextValue && isPromise(nextValue)
-        ? Promise.wrap(nextValue)
+        ? TSDNPromise.wrap(nextValue)
         : promiseFactory(nextValue);
 }
 function handleResolution(p, value, resolver) {
     try {
         var v = resolver ? resolver(value) : value;
-        if (p)
+        if (p) {
             p.resolve(v);
+        }
         return null;
     }
     catch (ex) {
-        if (p)
+        if (p) {
             p.reject(ex);
+        }
         return ex;
     }
 }
@@ -60,10 +63,12 @@ function handleResolutionMethods(targetFulfill, targetReject, value, resolver) {
     }
 }
 function handleDispatch(p, onFulfilled, onRejected) {
-    if (p instanceof PromiseBase)
-        p.thenThis(onFulfilled, onRejected);
-    else
+    if (p instanceof PromiseBase) {
+        p.doneNow(onFulfilled, onRejected);
+    }
+    else {
         p.then(onFulfilled, onRejected);
+    }
 }
 function handleSyncIfPossible(p, onFulfilled, onRejected) {
     if (p instanceof PromiseBase)
@@ -72,16 +77,16 @@ function handleSyncIfPossible(p, onFulfilled, onRejected) {
         return p.then(onFulfilled, onRejected);
 }
 function newODE() {
-    return new ObjectDisposedException_1.ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
+    return new ObjectDisposedException_1.ObjectDisposedException("TSDNPromise", "An underlying promise-result was disposed.");
 }
-var PromiseState = (function (_super) {
+var PromiseState = /** @class */ (function (_super) {
     __extends(PromiseState, _super);
     function PromiseState(_state, _result, _error) {
-        _super.call(this);
-        this._state = _state;
-        this._result = _result;
-        this._error = _error;
-        this._disposableObjectName = PROMISE_STATE;
+        var _this = _super.call(this, PROMISE_STATE) || this;
+        _this._state = _state;
+        _this._result = _result;
+        _this._error = _error;
+        return _this;
     }
     PromiseState.prototype._onDispose = function () {
         this._state = VOID0;
@@ -100,28 +105,28 @@ var PromiseState = (function (_super) {
     });
     Object.defineProperty(PromiseState.prototype, "isPending", {
         get: function () {
-            return this.getState() === Promise.State.Pending;
+            return this.getState() === TSDNPromise.State.Pending;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(PromiseState.prototype, "isSettled", {
         get: function () {
-            return this.getState() != Promise.State.Pending; // Will also include undefined==0 aka disposed!=resolved.
+            return this.getState() != TSDNPromise.State.Pending; // Will also include undefined==0 aka disposed!=resolved.
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(PromiseState.prototype, "isFulfilled", {
         get: function () {
-            return this.getState() === Promise.State.Fulfilled;
+            return this.getState() === TSDNPromise.State.Fulfilled;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(PromiseState.prototype, "isRejected", {
         get: function () {
-            return this.getState() === Promise.State.Rejected;
+            return this.getState() === TSDNPromise.State.Rejected;
         },
         enumerable: true,
         configurable: true
@@ -154,23 +159,36 @@ var PromiseState = (function (_super) {
     return PromiseState;
 }(DisposableBase_1.DisposableBase));
 exports.PromiseState = PromiseState;
-var PromiseBase = (function (_super) {
+var PromiseBase = /** @class */ (function (_super) {
     __extends(PromiseBase, _super);
+    //readonly [Symbol.toStringTag]: "Promise";
     function PromiseBase() {
-        _super.call(this, Promise.State.Pending);
-        this._disposableObjectName = PROMISE;
+        var _this = _super.call(this, TSDNPromise.State.Pending) || this;
+        // @ts-ignore
+        _this._disposableObjectName = PROMISE;
+        return _this;
     }
+    /**
+     * Same as 'thenSynchronous' but does not return the result.  Returns the current promise instead.
+     * You may not need an additional promise result, and this will not create a new one.
+     * @param onFulfilled
+     * @param onRejected
+     */
+    PromiseBase.prototype.thenThis = function (onFulfilled, onRejected) {
+        this.doneNow(onFulfilled, onRejected);
+        return this;
+    };
     /**
      * Standard .then method that defers execution until resolved.
      * @param onFulfilled
      * @param onRejected
-     * @returns {Promise}
+     * @returns {TSDNPromise}
      */
     PromiseBase.prototype.then = function (onFulfilled, onRejected) {
         var _this = this;
         this.throwIfDisposed();
-        return new Promise(function (resolve, reject) {
-            _this.thenThis(function (result) {
+        return new TSDNPromise(function (resolve, reject) {
+            _this.doneNow(function (result) {
                 return handleResolutionMethods(resolve, reject, result, onFulfilled);
             }, function (error) {
                 return onRejected
@@ -183,13 +201,13 @@ var PromiseBase = (function (_super) {
      * Same as .then but doesn't trap errors.  Exceptions may end up being fatal.
      * @param onFulfilled
      * @param onRejected
-     * @returns {Promise}
+     * @returns {TSDNPromise}
      */
     PromiseBase.prototype.thenAllowFatal = function (onFulfilled, onRejected) {
         var _this = this;
         this.throwIfDisposed();
-        return new Promise(function (resolve, reject) {
-            _this.thenThis(function (result) {
+        return new TSDNPromise(function (resolve, reject) {
+            _this.doneNow(function (result) {
                 return resolve((onFulfilled ? onFulfilled(result) : result));
             }, function (error) {
                 return reject(onRejected ? onRejected(error) : error);
@@ -204,9 +222,7 @@ var PromiseBase = (function (_super) {
      */
     PromiseBase.prototype.done = function (onFulfilled, onRejected) {
         var _this = this;
-        defer_1.defer(function () {
-            return _this.thenThis(onFulfilled, onRejected);
-        });
+        defer_1.defer(function () { return _this.doneNow(onFulfilled, onRejected); });
     };
     /**
      * Will yield for a number of milliseconds from the time called before continuing.
@@ -217,9 +233,9 @@ var PromiseBase = (function (_super) {
         var _this = this;
         if (milliseconds === void 0) { milliseconds = 0; }
         this.throwIfDisposed();
-        return new Promise(function (resolve, reject) {
+        return new TSDNPromise(function (resolve, reject) {
             defer_1.defer(function () {
-                _this.thenThis(function (v) { return resolve(v); }, function (e) { return reject(e); });
+                _this.doneNow(function (v) { return resolve(v); }, function (e) { return reject(e); });
             }, milliseconds);
         }, true // Since the resolve/reject is deferred.
         );
@@ -236,8 +252,8 @@ var PromiseBase = (function (_super) {
         this.throwIfDisposed();
         if (this.isSettled)
             return this.delayFromNow(milliseconds);
-        return new Promise(function (resolve, reject) {
-            _this.thenThis(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
+        return new TSDNPromise(function (resolve, reject) {
+            _this.doneNow(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
         }, true // Since the resolve/reject is deferred.
         );
     };
@@ -281,30 +297,42 @@ var PromiseBase = (function (_super) {
      * @returns {PromiseBase}
      */
     PromiseBase.prototype.finallyThis = function (fin, synchronous) {
-        this.throwIfDisposed();
         var f = synchronous ? fin : function () { return deferImmediate_1.deferImmediate(fin); };
-        this.thenThis(f, f);
+        this.doneNow(f, f);
         return this;
     };
     return PromiseBase;
 }(PromiseState));
 exports.PromiseBase = PromiseBase;
-var Resolvable = (function (_super) {
+var Resolvable = /** @class */ (function (_super) {
     __extends(Resolvable, _super);
     function Resolvable() {
-        _super.apply(this, arguments);
+        return _super !== null && _super.apply(this, arguments) || this;
     }
+    Resolvable.prototype.doneNow = function (onFulfilled, onRejected) {
+        this.throwIfDisposed();
+        switch (this.state) {
+            case TSDNPromise.State.Fulfilled:
+                if (onFulfilled)
+                    onFulfilled(this._result);
+                break;
+            case TSDNPromise.State.Rejected:
+                if (onRejected)
+                    onRejected(this._error);
+                break;
+        }
+    };
     Resolvable.prototype.thenSynchronous = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
         try {
             switch (this.state) {
-                case Promise.State.Fulfilled:
+                case TSDNPromise.State.Fulfilled:
                     return onFulfilled
-                        ? resolve(this._result, onFulfilled, Promise.resolve)
+                        ? resolve(this._result, onFulfilled, TSDNPromise.resolve)
                         : this; // Provided for catch cases.
-                case Promise.State.Rejected:
+                case TSDNPromise.State.Rejected:
                     return onRejected
-                        ? resolve(this._error, onRejected, Promise.resolve)
+                        ? resolve(this._error, onRejected, TSDNPromise.resolve)
                         : this;
             }
         }
@@ -313,33 +341,20 @@ var Resolvable = (function (_super) {
         }
         throw new Error("Invalid state for a resolved promise.");
     };
-    Resolvable.prototype.thenThis = function (onFulfilled, onRejected) {
-        this.throwIfDisposed();
-        switch (this.state) {
-            case Promise.State.Fulfilled:
-                if (onFulfilled)
-                    onFulfilled(this._result);
-                break;
-            case Promise.State.Rejected:
-                if (onRejected)
-                    onRejected(this._error);
-                break;
-        }
-        return this;
-    };
     return Resolvable;
 }(PromiseBase));
 exports.Resolvable = Resolvable;
 /**
  * The simplest usable version of a promise which returns synchronously the resolved state provided.
  */
-var Resolved = (function (_super) {
+var Resolved = /** @class */ (function (_super) {
     __extends(Resolved, _super);
     function Resolved(state, result, error) {
-        _super.call(this);
-        this._result = result;
-        this._error = error;
-        this._state = state;
+        var _this = _super.call(this) || this;
+        _this._result = result;
+        _this._error = error;
+        _this._state = state;
+        return _this;
     }
     return Resolved;
 }(Resolvable));
@@ -347,10 +362,10 @@ exports.Resolved = Resolved;
 /**
  * A fulfilled Resolved<T>.  Provided for readability.
  */
-var Fulfilled = (function (_super) {
+var Fulfilled = /** @class */ (function (_super) {
     __extends(Fulfilled, _super);
     function Fulfilled(value) {
-        _super.call(this, Promise.State.Fulfilled, value);
+        return _super.call(this, TSDNPromise.State.Fulfilled, value) || this;
     }
     return Fulfilled;
 }(Resolved));
@@ -358,10 +373,10 @@ exports.Fulfilled = Fulfilled;
 /**
  * A rejected Resolved<T>.  Provided for readability.
  */
-var Rejected = (function (_super) {
+var Rejected = /** @class */ (function (_super) {
     __extends(Rejected, _super);
     function Rejected(error) {
-        _super.call(this, Promise.State.Rejected, VOID0, error);
+        return _super.call(this, TSDNPromise.State.Rejected, VOID0, error) || this;
     }
     return Rejected;
 }(Resolved));
@@ -369,45 +384,45 @@ exports.Rejected = Rejected;
 /**
  * Provided as a means for extending the interface of other PromiseLike<T> objects.
  */
-var PromiseWrapper = (function (_super) {
+var PromiseWrapper = /** @class */ (function (_super) {
     __extends(PromiseWrapper, _super);
     function PromiseWrapper(_target) {
-        var _this = this;
-        _super.call(this);
-        this._target = _target;
+        var _this = _super.call(this) || this;
+        _this._target = _target;
         if (!_target)
             throw new ArgumentNullException_1.ArgumentNullException(TARGET);
         if (!isPromise(_target))
             throw new ArgumentException_1.ArgumentException(TARGET, "Must be a promise-like object.");
         _target.then(function (v) {
-            _this._state = Promise.State.Fulfilled;
+            _this._state = TSDNPromise.State.Fulfilled;
             _this._result = v;
             _this._error = VOID0;
             _this._target = VOID0;
         }, function (e) {
-            _this._state = Promise.State.Rejected;
+            _this._state = TSDNPromise.State.Rejected;
             _this._error = e;
             _this._target = VOID0;
         });
+        return _this;
     }
     PromiseWrapper.prototype.thenSynchronous = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
         var t = this._target;
         if (!t)
             return _super.prototype.thenSynchronous.call(this, onFulfilled, onRejected);
-        return new Promise(function (resolve, reject) {
+        return new TSDNPromise(function (resolve, reject) {
             handleDispatch(t, function (result) { return handleResolutionMethods(resolve, reject, result, onFulfilled); }, function (error) { return onRejected
                 ? handleResolutionMethods(resolve, null, error, onRejected)
                 : reject(error); });
         }, true);
     };
-    PromiseWrapper.prototype.thenThis = function (onFulfilled, onRejected) {
+    PromiseWrapper.prototype.doneNow = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
         var t = this._target;
-        if (!t)
-            return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
-        handleDispatch(t, onFulfilled, onRejected);
-        return this;
+        if (t)
+            handleDispatch(t, onFulfilled, onRejected);
+        else
+            _super.prototype.doneNow.call(this, onFulfilled, onRejected);
     };
     PromiseWrapper.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
@@ -418,8 +433,8 @@ var PromiseWrapper = (function (_super) {
 /**
  * This promise class that facilitates pending resolution.
  */
-var Promise = (function (_super) {
-    __extends(Promise, _super);
+var TSDNPromise = /** @class */ (function (_super) {
+    __extends(TSDNPromise, _super);
     /*
      * A note about deferring:
      * The caller can set resolveImmediate to true if they intend to initialize code that will end up being deferred itself.
@@ -429,36 +444,36 @@ var Promise = (function (_super) {
      * resolveUsing allows for the same ability but does not defer by default: allowing the caller to take on the work load.
      * If calling resolve or reject and a deferred response is desired, then use deferImmediate with a closure to do so.
      */
-    function Promise(resolver, forceSynchronous) {
+    function TSDNPromise(resolver, forceSynchronous) {
         if (forceSynchronous === void 0) { forceSynchronous = false; }
-        _super.call(this);
+        var _this = _super.call(this) || this;
         if (resolver)
-            this.resolveUsing(resolver, forceSynchronous);
+            _this.resolveUsing(resolver, forceSynchronous);
+        return _this;
     }
-    Promise.prototype.thenSynchronous = function (onFulfilled, onRejected) {
+    TSDNPromise.prototype.thenSynchronous = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
         // Already fulfilled?
         if (this._state)
             return _super.prototype.thenSynchronous.call(this, onFulfilled, onRejected);
-        var p = new Promise();
+        var p = new TSDNPromise();
         (this._waiting || (this._waiting = []))
-            .push(pools.PromiseCallbacks.init(onFulfilled, onRejected, p));
+            .push(Pool.init(onFulfilled, onRejected, p));
         return p;
     };
-    Promise.prototype.thenThis = function (onFulfilled, onRejected) {
+    TSDNPromise.prototype.doneNow = function (onFulfilled, onRejected) {
         this.throwIfDisposed();
         // Already fulfilled?
         if (this._state)
-            return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
+            return _super.prototype.doneNow.call(this, onFulfilled, onRejected);
         (this._waiting || (this._waiting = []))
-            .push(pools.PromiseCallbacks.init(onFulfilled, onRejected));
-        return this;
+            .push(Pool.init(onFulfilled, onRejected));
     };
-    Promise.prototype._onDispose = function () {
+    TSDNPromise.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
         this._resolvedCalled = VOID0;
     };
-    Promise.prototype.resolveUsing = function (resolver, forceSynchronous) {
+    TSDNPromise.prototype.resolveUsing = function (resolver, forceSynchronous) {
         var _this = this;
         if (forceSynchronous === void 0) { forceSynchronous = false; }
         if (!resolver)
@@ -466,7 +481,7 @@ var Promise = (function (_super) {
         if (this._resolvedCalled)
             throw new InvalidOperationException_1.InvalidOperationException(".resolve() already called.");
         if (this.state)
-            throw new InvalidOperationException_1.InvalidOperationException("Already resolved: " + Promise.State[this.state]);
+            throw new InvalidOperationException_1.InvalidOperationException("Already resolved: " + TSDNPromise.State[this.state]);
         this._resolvedCalled = true;
         var state = 0;
         var rejectHandler = function (reason) {
@@ -501,13 +516,13 @@ var Promise = (function (_super) {
         else
             deferImmediate_1.deferImmediate(function () { return resolver(fulfillHandler, rejectHandler); });
     };
-    Promise.prototype._emitDisposalRejection = function (p) {
+    TSDNPromise.prototype._emitDisposalRejection = function (p) {
         var d = p.wasDisposed;
         if (d)
             this._rejectInternal(newODE());
         return d;
     };
-    Promise.prototype._resolveInternal = function (result) {
+    TSDNPromise.prototype._resolveInternal = function (result) {
         var _this = this;
         if (this.wasDisposed)
             return;
@@ -518,13 +533,13 @@ var Promise = (function (_super) {
             if (this._emitDisposalRejection(r))
                 return;
             switch (r.state) {
-                case Promise.State.Pending:
-                    r.thenSynchronous(function (v) { return _this._resolveInternal(v); }, function (e) { return _this._rejectInternal(e); });
+                case TSDNPromise.State.Pending:
+                    r.doneNow(function (v) { return _this._resolveInternal(v); }, function (e) { return _this._rejectInternal(e); });
                     return;
-                case Promise.State.Rejected:
+                case TSDNPromise.State.Rejected:
                     this._rejectInternal(r.error);
                     return;
-                case Promise.State.Fulfilled:
+                case TSDNPromise.State.Fulfilled:
                     result = r.result;
                     break;
             }
@@ -533,7 +548,7 @@ var Promise = (function (_super) {
             result.then(function (v) { return _this._resolveInternal(v); }, function (e) { return _this._rejectInternal(e); });
         }
         else {
-            this._state = Promise.State.Fulfilled;
+            this._state = TSDNPromise.State.Fulfilled;
             this._result = result;
             this._error = VOID0;
             var o = this._waiting;
@@ -542,18 +557,19 @@ var Promise = (function (_super) {
                 for (var _i = 0, o_1 = o; _i < o_1.length; _i++) {
                     var c = o_1[_i];
                     var onFulfilled = c.onFulfilled, promise = c.promise;
-                    pools.PromiseCallbacks.recycle(c);
+                    Pool.recycle(c);
                     //let ex =
                     handleResolution(promise, result, onFulfilled);
+                    //if(!p && ex) console.error("Unhandled exception in onFulfilled:",ex);
                 }
                 o.length = 0;
             }
         }
     };
-    Promise.prototype._rejectInternal = function (error) {
+    TSDNPromise.prototype._rejectInternal = function (error) {
         if (this.wasDisposed)
             return;
-        this._state = Promise.State.Rejected;
+        this._state = TSDNPromise.State.Rejected;
         this._error = error;
         var o = this._waiting;
         if (o) {
@@ -561,25 +577,27 @@ var Promise = (function (_super) {
             for (var _i = 0, o_2 = o; _i < o_2.length; _i++) {
                 var c = o_2[_i];
                 var onRejected = c.onRejected, promise = c.promise;
-                pools.PromiseCallbacks.recycle(c);
+                Pool.recycle(c);
                 if (onRejected) {
                     //let ex =
                     handleResolution(promise, error, onRejected);
+                    //if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
                 }
-                else if (promise)
+                else if (promise) {
                     promise.reject(error);
+                }
             }
             o.length = 0;
         }
     };
-    Promise.prototype.resolve = function (result, throwIfSettled) {
+    TSDNPromise.prototype.resolve = function (result, throwIfSettled) {
         if (throwIfSettled === void 0) { throwIfSettled = false; }
         this.throwIfDisposed();
         if (result == this)
             throw new InvalidOperationException_1.InvalidOperationException("Cannot resolve a promise as itself.");
         if (this._state) {
             // Same value? Ignore...
-            if (!throwIfSettled || this._state == Promise.State.Fulfilled && this._result === result)
+            if (!throwIfSettled || this._state == TSDNPromise.State.Fulfilled && this._result === result)
                 return;
             throw new InvalidOperationException_1.InvalidOperationException("Changing the fulfilled state/value of a promise is not supported.");
         }
@@ -590,12 +608,12 @@ var Promise = (function (_super) {
         }
         this._resolveInternal(result);
     };
-    Promise.prototype.reject = function (error, throwIfSettled) {
+    TSDNPromise.prototype.reject = function (error, throwIfSettled) {
         if (throwIfSettled === void 0) { throwIfSettled = false; }
         this.throwIfDisposed();
         if (this._state) {
             // Same value? Ignore...
-            if (!throwIfSettled || this._state == Promise.State.Rejected && this._error === error)
+            if (!throwIfSettled || this._state == TSDNPromise.State.Rejected && this._error === error)
                 return;
             throw new InvalidOperationException_1.InvalidOperationException("Changing the rejected state/value of a promise is not supported.");
         }
@@ -606,16 +624,17 @@ var Promise = (function (_super) {
         }
         this._rejectInternal(error);
     };
-    return Promise;
+    return TSDNPromise;
 }(Resolvable));
-exports.Promise = Promise;
+exports.TSDNPromise = TSDNPromise;
+exports.Promise = TSDNPromise;
 /**
  * By providing an ArrayPromise we expose useful methods/shortcuts for dealing with array results.
  */
-var ArrayPromise = (function (_super) {
+var ArrayPromise = /** @class */ (function (_super) {
     __extends(ArrayPromise, _super);
     function ArrayPromise() {
-        _super.apply(this, arguments);
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     /**
      * Simplifies the use of a map function on an array of results when the source is assured to be an array.
@@ -626,7 +645,7 @@ var ArrayPromise = (function (_super) {
         var _this = this;
         this.throwIfDisposed();
         return new ArrayPromise(function (resolve) {
-            _this.thenThis(function (result) { return resolve(result.map(transform)); });
+            _this.doneNow(function (result) { return resolve(result.map(transform)); });
         }, true);
     };
     /**
@@ -643,18 +662,18 @@ var ArrayPromise = (function (_super) {
         return new ArrayPromise(function (resolve) { return value; }, true);
     };
     return ArrayPromise;
-}(Promise));
+}(TSDNPromise));
 exports.ArrayPromise = ArrayPromise;
 var PROMISE_COLLECTION = "PromiseCollection";
 /**
  * A Promise collection exposes useful methods for handling a collection of promises and their results.
  */
-var PromiseCollection = (function (_super) {
+var PromiseCollection = /** @class */ (function (_super) {
     __extends(PromiseCollection, _super);
     function PromiseCollection(source) {
-        _super.call(this);
-        this._disposableObjectName = PROMISE_COLLECTION;
-        this._source = source && source.slice() || [];
+        var _this = _super.call(this, PROMISE_COLLECTION) || this;
+        _this._source = source && source.slice() || [];
+        return _this;
     }
     PromiseCollection.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
@@ -679,7 +698,7 @@ var PromiseCollection = (function (_super) {
      */
     PromiseCollection.prototype.all = function () {
         this.throwIfDisposed();
-        return Promise.all(this._source);
+        return TSDNPromise.all(this._source);
     };
     /**
      * Creates a Promise that is resolved or rejected when any of the provided Promises are resolved
@@ -688,7 +707,7 @@ var PromiseCollection = (function (_super) {
      */
     PromiseCollection.prototype.race = function () {
         this.throwIfDisposed();
-        return Promise.race(this._source);
+        return TSDNPromise.race(this._source);
     };
     /**
      * Returns a promise that is fulfilled with array of provided promises when all provided promises have resolved (fulfill or reject).
@@ -697,7 +716,7 @@ var PromiseCollection = (function (_super) {
      */
     PromiseCollection.prototype.waitAll = function () {
         this.throwIfDisposed();
-        return Promise.waitAll(this._source);
+        return TSDNPromise.waitAll(this._source);
     };
     /**
      * Waits for all the values to resolve and then applies a transform.
@@ -709,7 +728,7 @@ var PromiseCollection = (function (_super) {
         this.throwIfDisposed();
         return new ArrayPromise(function (resolve) {
             _this.all()
-                .thenThis(function (result) { return resolve(result.map(transform)); });
+                .doneNow(function (result) { return resolve(result.map(transform)); });
         }, true);
     };
     /**
@@ -731,7 +750,7 @@ var PromiseCollection = (function (_super) {
      */
     PromiseCollection.prototype.reduce = function (reduction, initialValue) {
         this.throwIfDisposed();
-        return Promise.wrap(this._source
+        return TSDNPromise.wrap(this._source
             .reduce(function (previous, current, i, array) {
             return handleSyncIfPossible(previous, function (p) { return handleSyncIfPossible(current, function (c) { return reduction(p, c, i, array); }); });
         }, isPromise(initialValue)
@@ -741,96 +760,55 @@ var PromiseCollection = (function (_super) {
     return PromiseCollection;
 }(DisposableBase_1.DisposableBase));
 exports.PromiseCollection = PromiseCollection;
-var pools;
-(function (pools) {
-    // export module pending
-    // {
-    //
-    //
-    // 	var pool:ObjectPool<Promise<any>>;
-    //
-    // 	function getPool()
-    // 	{
-    // 		return pool || (pool = new ObjectPool<Promise<any>>(40, factory, c=>c.dispose()));
-    // 	}
-    //
-    // 	function factory():Promise<any>
-    // 	{
-    // 		return new Promise();
-    // 	}
-    //
-    // 	export function get():Promise<any>
-    // 	{
-    // 		var p:any = getPool().take();
-    // 		p.__wasDisposed = false;
-    // 		p._state = Promise.State.Pending;
-    // 		return p;
-    // 	}
-    //
-    // 	export function recycle<T>(c:Promise<T>):void
-    // 	{
-    // 		if(c) getPool().add(c);
-    // 	}
-    //
-    // }
-    //
-    // export function recycle<T>(c:PromiseBase<T>):void
-    // {
-    // 	if(!c) return;
-    // 	if(c instanceof Promise && c.constructor==Promise) pending.recycle(c);
-    // 	else c.dispose();
-    // }
-    var PromiseCallbacks;
-    (function (PromiseCallbacks) {
-        var pool;
-        //noinspection JSUnusedLocalSymbols
-        function getPool() {
-            return pool
-                || (pool = new ObjectPool_1.ObjectPool(40, factory, function (c) {
-                    c.onFulfilled = NULL;
-                    c.onRejected = NULL;
-                    c.promise = NULL;
-                }));
-        }
-        function factory() {
-            return {
-                onFulfilled: NULL,
-                onRejected: NULL,
-                promise: NULL
-            };
-        }
-        function init(onFulfilled, onRejected, promise) {
-            var c = getPool().take();
-            c.onFulfilled = onFulfilled;
-            c.onRejected = onRejected;
-            c.promise = promise;
-            return c;
-        }
-        PromiseCallbacks.init = init;
-        function recycle(c) {
-            getPool().add(c);
-        }
-        PromiseCallbacks.recycle = recycle;
-    })(PromiseCallbacks = pools.PromiseCallbacks || (pools.PromiseCallbacks = {}));
-})(pools || (pools = {}));
-var Promise;
-(function (Promise) {
+var Pool;
+(function (Pool) {
+    var pool;
+    //noinspection JSUnusedLocalSymbols
+    function getPool() {
+        return pool
+            || (pool = new ObjectPool_1.ObjectPool(40, factory, function (c) {
+                c.onFulfilled = NULL;
+                c.onRejected = NULL;
+                c.promise = NULL;
+            }));
+    }
+    function factory() {
+        return {
+            onFulfilled: NULL,
+            onRejected: NULL,
+            promise: NULL
+        };
+    }
+    function init(onFulfilled, onRejected, promise) {
+        var c = getPool().take();
+        c.onFulfilled = onFulfilled || undefined;
+        c.onRejected = onRejected || undefined;
+        c.promise = promise;
+        return c;
+    }
+    Pool.init = init;
+    function recycle(c) {
+        getPool().add(c);
+    }
+    Pool.recycle = recycle;
+})(Pool || (Pool = {}));
+(function (TSDNPromise) {
     /**
      * The state of a promise.
      * https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
      * If a promise is disposed the value will be undefined which will also evaluate (promise.state)==false.
      */
+    var State;
     (function (State) {
         State[State["Pending"] = 0] = "Pending";
         State[State["Fulfilled"] = 1] = "Fulfilled";
         State[State["Rejected"] = -1] = "Rejected";
-    })(Promise.State || (Promise.State = {}));
-    var State = Promise.State;
+    })(State = TSDNPromise.State || (TSDNPromise.State = {}));
     Object.freeze(State);
     function factory(e) {
-        return new Promise(e);
+        return new TSDNPromise(e);
     }
-    Promise.factory = factory;
+    TSDNPromise.factory = factory;
     function group(first) {
         var rest = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -838,10 +816,10 @@ var Promise;
         }
         if (!first && !rest.length)
             throw new ArgumentNullException_1.ArgumentNullException("promises");
-        return new PromiseCollection((Array.isArray(first) ? first : [first])
+        return new PromiseCollection(((first) instanceof (Array) ? first : [first])
             .concat(rest));
     }
-    Promise.group = group;
+    TSDNPromise.group = group;
     function all(first) {
         var rest = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -849,7 +827,7 @@ var Promise;
         }
         if (!first && !rest.length)
             throw new ArgumentNullException_1.ArgumentNullException("promises");
-        var promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
+        var promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy!
         if (!promises.length || promises.every(function (v) { return !v; }))
             return new ArrayPromise(function (r) { return r(promises); }, true); // it's a new empty, reuse it. :|
         // Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
@@ -888,7 +866,7 @@ var Promise;
                     r(e);
                 }
             };
-            var _loop_1 = function(i) {
+            var _loop_1 = function (i) {
                 var p = promises[i];
                 if (p)
                     p.then(function (v) { return onFulfill(v, i); }, onReject);
@@ -901,7 +879,7 @@ var Promise;
             }
         });
     }
-    Promise.all = all;
+    TSDNPromise.all = all;
     function waitAll(first) {
         var rest = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -909,7 +887,7 @@ var Promise;
         }
         if (!first && !rest.length)
             throw new ArgumentNullException_1.ArgumentNullException("promises");
-        var promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
+        var promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy!
         if (!promises.length || promises.every(function (v) { return !v; }))
             return new ArrayPromise(function (r) { return r(promises); }, true); // it's a new empty, reuse it. :|
         // Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
@@ -936,7 +914,7 @@ var Promise;
                     checkIfShouldResolve();
                 }
             };
-            var _loop_2 = function(i) {
+            var _loop_2 = function (i) {
                 var p = promises[i];
                 if (p)
                     p.then(function (v) { return onResolved(i); }, function (e) { return onResolved(i); });
@@ -948,13 +926,13 @@ var Promise;
             }
         });
     }
-    Promise.waitAll = waitAll;
+    TSDNPromise.waitAll = waitAll;
     function race(first) {
         var rest = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             rest[_i - 1] = arguments[_i];
         }
-        var promises = first && (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy?
+        var promises = first && ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy?
         if (!promises || !promises.length || !(promises = promises.filter(function (v) { return v != null; })).length)
             throw new ArgumentException_1.ArgumentException("Nothing to wait for.");
         var len = promises.length;
@@ -967,7 +945,7 @@ var Promise;
             if (p instanceof PromiseBase && p.isSettled)
                 return p;
         }
-        return new Promise(function (resolve, reject) {
+        return new TSDNPromise(function (resolve, reject) {
             var cleanup = function () {
                 reject = NULL;
                 resolve = NULL;
@@ -990,22 +968,22 @@ var Promise;
             }
         });
     }
-    Promise.race = race;
+    TSDNPromise.race = race;
     function resolve(value) {
         return isPromise(value) ? wrap(value) : new Fulfilled(value);
     }
-    Promise.resolve = resolve;
+    TSDNPromise.resolve = resolve;
     /**
      * Syntactic shortcut for avoiding 'new'.
      * @param resolver
      * @param forceSynchronous
-     * @returns {Promise}
+     * @returns {TSDNPromise}
      */
     function using(resolver, forceSynchronous) {
         if (forceSynchronous === void 0) { forceSynchronous = false; }
-        return new Promise(resolver, forceSynchronous);
+        return new TSDNPromise(resolver, forceSynchronous);
     }
-    Promise.using = using;
+    TSDNPromise.using = using;
     function resolveAll(first) {
         var rest = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -1013,11 +991,11 @@ var Promise;
         }
         if (!first && !rest.length)
             throw new ArgumentNullException_1.ArgumentNullException("resolutions");
-        return new PromiseCollection((Array.isArray(first) ? first : [first])
+        return new PromiseCollection(((first) instanceof (Array) ? first : [first])
             .concat(rest)
             .map(function (v) { return resolve(v); }));
     }
-    Promise.resolveAll = resolveAll;
+    TSDNPromise.resolveAll = resolveAll;
     /**
      * Creates a PromiseCollection containing promises that will resolve on the next tick using the transform function.
      * This utility function does not chain promises together to create the result,
@@ -1027,7 +1005,7 @@ var Promise;
      * @returns {PromiseCollection<T>}
      */
     function map(source, transform) {
-        return new PromiseCollection(source.map(function (d) { return new Promise(function (r, j) {
+        return new PromiseCollection(source.map(function (d) { return new TSDNPromise(function (r, j) {
             try {
                 r(transform(d));
             }
@@ -1036,7 +1014,7 @@ var Promise;
             }
         }); }));
     }
-    Promise.map = map;
+    TSDNPromise.map = map;
     /**
      * Creates a new rejected promise for the provided reason.
      * @param reason The reason the promise was rejected.
@@ -1045,7 +1023,7 @@ var Promise;
     function reject(reason) {
         return new Rejected(reason);
     }
-    Promise.reject = reject;
+    TSDNPromise.reject = reject;
     /**
      * Takes any Promise-Like object and ensures an extended version of it from this module.
      * @param target The Promise-Like object
@@ -1058,7 +1036,7 @@ var Promise;
             ? (target instanceof PromiseBase ? target : new PromiseWrapper(target))
             : new Fulfilled(target);
     }
-    Promise.wrap = wrap;
+    TSDNPromise.wrap = wrap;
     /**
      * A function that acts like a 'then' method (aka then-able) can be extended by providing a function that takes an onFulfill and onReject.
      * @param then
@@ -1069,7 +1047,8 @@ var Promise;
             throw new ArgumentNullException_1.ArgumentNullException(THEN);
         return new PromiseWrapper({ then: then });
     }
-    Promise.createFrom = createFrom;
-})(Promise = exports.Promise || (exports.Promise = {}));
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = Promise;
+    TSDNPromise.createFrom = createFrom;
+})(TSDNPromise = exports.TSDNPromise || (exports.TSDNPromise = {}));
+exports.TSDNPromise = TSDNPromise;
+exports.Promise = TSDNPromise;
+exports.default = TSDNPromise;

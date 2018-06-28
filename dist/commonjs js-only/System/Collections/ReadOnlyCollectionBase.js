@@ -3,14 +3,15 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var CollectionBase_1 = require("./CollectionBase");
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
-var ReadOnlyCollectionBase = (function (_super) {
+var ReadOnlyCollectionBase = /** @class */ (function (_super) {
     __extends(ReadOnlyCollectionBase, _super);
     function ReadOnlyCollectionBase() {
-        _super.apply(this, arguments);
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     ReadOnlyCollectionBase.prototype.getCount = function () {
         return this._getCount();
@@ -35,5 +36,4 @@ var ReadOnlyCollectionBase = (function (_super) {
     return ReadOnlyCollectionBase;
 }(CollectionBase_1.CollectionBase));
 exports.ReadOnlyCollectionBase = ReadOnlyCollectionBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ReadOnlyCollectionBase;

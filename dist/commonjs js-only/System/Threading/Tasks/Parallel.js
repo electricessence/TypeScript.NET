@@ -4,6 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Promise_1 = require("../../Promises/Promise");
 var Types_1 = require("../../Types");
 var Worker_1 = require("../Worker");
@@ -16,7 +17,7 @@ var __extends = extends_1.default;
 //noinspection JSUnusedAssignment
 var MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFINED
     ? (self.URL ? self.URL : self.webkitURL)
-    : null, _supports = !!(Environment_1.isNodeJS || self.Worker); // node always supports parallel
+    : null, _supports = Environment_1.isNodeJS || !!self.Worker; // node always supports parallel
 //noinspection JSUnusedAssignment
 var defaults = {
     evalPath: Environment_1.isNodeJS ? __dirname + '/eval.js' : VOID0,
@@ -32,7 +33,7 @@ function extend(from, to) {
         to = {};
     for (var _i = 0, _a = Object.keys(from); _i < _a.length; _i++) {
         var i = _a[_i];
-        if (to[i] === void 0)
+        if (to[i] === VOID0)
             to[i] = from[i];
     }
     return to;
@@ -45,19 +46,19 @@ function interact(w, onMessage, onError, message) {
     if (message !== VOID0)
         w.postMessage(message);
 }
-var WorkerPromise = (function (_super) {
+var WorkerPromise = /** @class */ (function (_super) {
     __extends(WorkerPromise, _super);
     function WorkerPromise(worker, data) {
-        _super.call(this, function (resolve, reject) {
+        return _super.call(this, function (resolve, reject) {
             interact(worker, function (response) {
                 resolve(response.data);
             }, function (e) {
                 reject(e);
             }, data);
-        }, true);
+        }, true) || this;
     }
     return WorkerPromise;
-}(Promise_1.Promise));
+}(Promise_1.TSDNPromise));
 var workers;
 (function (workers) {
     /*
@@ -96,17 +97,19 @@ var workers;
     function getNew(key, url) {
         var worker = new Worker_1.default(url);
         worker.__key = key;
-        worker.dispose = function () {
-            worker.onmessage = null;
-            worker.onerror = null;
-            worker.dispose = null;
-            worker.terminate();
-        };
+        if (!worker.dispose) {
+            worker.dispose = function () {
+                worker.onmessage = null;
+                worker.onerror = null;
+                worker.dispose = null;
+                worker.terminate();
+            };
+        }
         return worker;
     }
     workers.getNew = getNew;
 })(workers || (workers = {}));
-var Parallel = (function () {
+var Parallel = /** @class */ (function () {
     function Parallel(options) {
         this.options = extend(defaults, options);
         this._requiredScripts = [];
@@ -133,12 +136,12 @@ var Parallel = (function () {
         var ns = this.options.envNamespace;
         return preStr + (Environment_1.isNodeJS
             ? "process.on(\"message\", function(e) {global." + ns + " = " + env + ";process.send(JSON.stringify((" + task.toString() + ")(JSON.parse(e).data)))})"
-            : "self.onmessage = function(e) {var global = {}; global." + ns + " = " + env + "';self.postMessage((" + task.toString() + ")(e.data))}");
+            : "self.onmessage = function(e) {var global = {}; global." + ns + " = " + env + ";self.postMessage((" + task.toString() + ")(e.data))}");
     };
     Parallel.prototype.require = function () {
         var required = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            required[_i - 0] = arguments[_i];
+            required[_i] = arguments[_i];
         }
         return this.requireThese(required);
     };
@@ -172,7 +175,7 @@ var Parallel = (function () {
         var evalPath = this.options.evalPath;
         if (!evalPath) {
             if (Environment_1.isNodeJS)
-                throw new Error("Can't use NodeJD without eval.js!");
+                throw new Error("Can't use NodeJS without eval.js!");
             if (scripts.length)
                 throw new Error("Can't use required scripts without eval.js!");
             if (!URL)
@@ -189,23 +192,43 @@ var Parallel = (function () {
         }
         return worker;
     };
+    /**
+     * Schedules the task to be run in the worker pool.
+     * @param data
+     * @param task
+     * @param env
+     * @returns {TSDNPromise<U>|TSDNPromise}
+     */
     Parallel.prototype.startNew = function (data, task, env) {
         var _ = this;
-        var worker = _._spawnWorker(task, extend(_.options.env, env || {}));
+        var maxConcurrency = this.ensureClampedMaxConcurrency();
+        var worker = maxConcurrency ? _._spawnWorker(task, extend(_.options.env, env || {})) : null;
         if (worker) {
             return new WorkerPromise(worker, data)
                 .finallyThis(function () { return workers.recycle(worker); });
         }
         if (_.options.allowSynchronous)
-            return new Promise_1.Promise(function (resolve, reject) {
-                try {
-                    resolve(task(data));
-                }
-                catch (e) {
-                    reject(e);
-                }
-            });
-        throw new Error('Workers do not exist and synchronous operation not allowed!');
+            return this.startLocal(data, task);
+        throw new Error(maxConcurrency
+            ? "Workers do not exist and synchronous operation not allowed!"
+            : "'maxConcurrency' set to 0 but 'allowSynchronous' is false.");
+    };
+    /**
+     * Runs the task within the local thread/process.
+     * Is good for use with testing.
+     * @param data
+     * @param task
+     * @returns {TSDNPromise<U>|TSDNPromise}
+     */
+    Parallel.prototype.startLocal = function (data, task) {
+        return new Promise_1.TSDNPromise(function (resolve, reject) {
+            try {
+                resolve(task(data));
+            }
+            catch (e) {
+                reject(e);
+            }
+        });
     };
     /**
      * Returns an array of promises that each resolve after their task completes.
@@ -221,20 +244,22 @@ var Parallel = (function () {
         if (data && data.length) {
             var len_1 = data.length;
             var taskString = task.toString();
-            var maxConcurrency = this.ensureClampedMaxConcurrency(), error_1;
+            var maxConcurrency = this.ensureClampedMaxConcurrency();
+            var error_1;
             var i_1 = 0;
-            var _loop_1 = function(w) {
-                var worker = this_1._spawnWorker(taskString, env);
+            var _loop_1 = function (w) {
+                var worker = maxConcurrency ? this_1._spawnWorker(taskString, env) : null;
                 if (!worker) {
                     if (!this_1.options.allowSynchronous)
-                        throw new Error('Workers do not exist and synchronous operation not allowed!');
-                    // Concurrency doesn't matter in a single thread... Just queue it all up.
-                    return { value: Promise_1.Promise.map(data, task) };
+                        throw new Error(maxConcurrency
+                            ? "Workers do not exist and synchronous operation not allowed!"
+                            : "'maxConcurrency' set to 0 but 'allowSynchronous' is false.");
+                    return { value: Promise_1.TSDNPromise.map(data, task) };
                 }
                 if (!result) {
                     // There is a small risk that the consumer could call .resolve() which would result in a double resolution.
                     // But it's important to minimize the number of objects created.
-                    result = data.map(function (d) { return new Promise_1.Promise(); });
+                    result = data.map(function (d) { return new Promise_1.TSDNPromise(); });
                 }
                 var next = function () {
                     if (error_1) {
@@ -245,12 +270,15 @@ var Parallel = (function () {
                             //noinspection JSReferencingMutableVariableFromClosure
                             var ii = i_1++, p_1 = result[ii];
                             var wp_1 = new WorkerPromise(worker, data[ii]);
+                            //noinspection JSIgnoredPromiseFromCall
                             wp_1.thenSynchronous(function (r) {
+                                //noinspection JSIgnoredPromiseFromCall
                                 p_1.resolve(r);
                                 next();
                             }, function (e) {
                                 if (!error_1) {
                                     error_1 = e;
+                                    //noinspection JSIgnoredPromiseFromCall
                                     p_1.reject(e);
                                     worker = workers.recycle(worker);
                                 }
@@ -269,14 +297,15 @@ var Parallel = (function () {
             var this_1 = this;
             for (var w = 0; !error_1 && i_1 < Math.min(len_1, maxConcurrency); w++) {
                 var state_1 = _loop_1(w);
-                if (typeof state_1 === "object") return state_1.value;
+                if (typeof state_1 === "object")
+                    return state_1.value;
             }
         }
         return new Promise_1.PromiseCollection(result);
     };
     Parallel.prototype.ensureClampedMaxConcurrency = function () {
         var maxConcurrency = this.options.maxConcurrency;
-        if (maxConcurrency > MAX_WORKERS) {
+        if (maxConcurrency && maxConcurrency > MAX_WORKERS) {
             this.options.maxConcurrency = maxConcurrency = MAX_WORKERS;
             console.warn("More than " + MAX_WORKERS + " workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to " + MAX_WORKERS + ".");
         }
@@ -292,7 +321,7 @@ var Parallel = (function () {
     Parallel.prototype.map = function (data, task, env) {
         var _this = this;
         if (!data || !data.length)
-            return Promise_1.ArrayPromise.fulfilled(data && []);
+            return Promise_1.ArrayPromise.fulfilled([]);
         // Would return the same result, but has extra overhead.
         // return this.pipe(data,task).all();
         data = data.slice(); // Never use the original.
@@ -302,13 +331,13 @@ var Parallel = (function () {
             var taskString = task.toString();
             var maxConcurrency = _this.ensureClampedMaxConcurrency(), error;
             var i = 0, resolved = 0;
-            var _loop_2 = function(w) {
+            var _loop_2 = function (w) {
                 var worker = _this._spawnWorker(taskString, env);
                 if (!worker) {
                     if (!_this.options.allowSynchronous)
                         throw new Error('Workers do not exist and synchronous operation not allowed!');
                     // Concurrency doesn't matter in a single thread... Just queue it all up.
-                    resolve(Promise_1.Promise.map(data, task).all());
+                    resolve(Promise_1.TSDNPromise.map(data, task).all());
                     return { value: void 0 };
                 }
                 var next = function () {
@@ -319,6 +348,7 @@ var Parallel = (function () {
                         if (i < len) {
                             var ii_1 = i++;
                             var wp_2 = new WorkerPromise(worker, data[ii_1]);
+                            //noinspection JSIgnoredPromiseFromCall
                             wp_2.thenSynchronous(function (r) {
                                 result[ii_1] = r;
                                 next();
@@ -349,7 +379,8 @@ var Parallel = (function () {
             };
             for (var w = 0; !error && i < Math.min(len, maxConcurrency); w++) {
                 var state_2 = _loop_2(w);
-                if (typeof state_2 === "object") return state_2.value;
+                if (typeof state_2 === "object")
+                    return state_2.value;
             }
         });
     };
@@ -364,7 +395,7 @@ var Parallel = (function () {
     Parallel.require = function () {
         var required = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            required[_i - 0] = arguments[_i];
+            required[_i] = arguments[_i];
         }
         return (new Parallel()).requireThese(required);
     };
@@ -383,5 +414,101 @@ var Parallel = (function () {
     return Parallel;
 }());
 exports.Parallel = Parallel;
-Object.defineProperty(exports, "__esModule", { value: true });
+//
+//
+// 	private _spawnReduceWorker<N>(
+// 		data:any,
+// 		cb:(data:N) => N,
+// 		done:(err?:any, wrk?:WorkerLike)=>void,
+// 		env?:any,
+// 		wrk?:WorkerLike)
+// 	{
+// 		const _ = this;
+// 		if(!wrk) wrk = _._spawnWorker(cb, env);
+//
+// 		if(wrk!==VOID0)
+// 		{
+// 			interact(wrk,
+// 				msg=>
+// 				{
+// 					_.data[_.data.length] = msg.data;
+// 					done(null, wrk);
+// 				},
+// 				e=>
+// 				{
+// 					wrk.terminate();
+// 					done(e, null);
+// 				},
+// 				data);
+// 		}
+// 		else if(_.options.allowSynchronous)
+// 		{
+// 			deferImmediate(()=>
+// 			{
+// 				_.data[_.data.length] = cb(data);
+// 				done();
+// 			});
+// 		}
+// 		else
+// 		{
+// 			throw new Error('Workers do not exist and synchronous operation not allowed!');
+// 		}
+// 	}
+//
+//
+//
+//
+// 	reduce<N>(cb:(data:N[]) => N, env?:any):Parallel<T>
+// 	{
+// 		env = extend(this.options.env, env || {});
+//
+// 		var runningWorkers = 0;
+// 		const _ = this;
+//
+//
+// 		_._operation = new Promise<any>((resolve, reject)=>
+// 		{
+//
+// 			const done = (err?:any, wrk?:WorkerLike)=>
+// 			{
+// 				--runningWorkers;
+// 				if(err)
+// 				{
+// 					reject(err);
+// 				}
+// 				else if(_.data.length===1 && runningWorkers===0)
+// 				{
+// 					resolve(_.data = _.data[0]);
+// 					if(wrk) wrk.terminate();
+// 				}
+// 				else if(_.data.length>1)
+// 				{
+// 					++runningWorkers;
+// 					_._spawnReduceWorker([_.data[0], _.data[1]], cb, done, env, wrk);
+// 					_.data.splice(0, 2);
+// 				}
+// 				else
+// 				{
+// 					if(wrk) wrk.terminate();
+// 				}
+// 			};
+//
+// 			if(_.data.length===1)
+// 			{
+// 				resolve(_.data[0]);
+// 			}
+// 			else
+// 			{
+// 				for(var i = 0; i<_.options.maxConcurrency && i<Math.floor(_.data.length/2); ++i)
+// 				{
+// 					++runningWorkers;
+// 					_._spawnReduceWorker([_.data[i*2], _.data[i*2 + 1]], cb, done, env);
+// 				}
+//
+// 				_.data.splice(0, i*2);
+// 			}
+// 		}, true);
+// 		return this;
+//
+// 	}
 exports.default = Parallel;

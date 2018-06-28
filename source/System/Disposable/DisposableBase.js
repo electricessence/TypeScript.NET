@@ -15,7 +15,8 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     var ObjectDisposedException_1 = require("./ObjectDisposedException");
     var DisposableBase = /** @class */ (function () {
-        function DisposableBase(__finalizer) {
+        function DisposableBase(_disposableObjectName, __finalizer) {
+            this._disposableObjectName = _disposableObjectName;
             this.__finalizer = __finalizer;
             this.__wasDisposed = false;
             // Allow for simple override of name.

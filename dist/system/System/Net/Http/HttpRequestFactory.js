@@ -37,9 +37,8 @@ System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/Dis
             HttpRequestFactory = /** @class */ (function (_super) {
                 __extends(HttpRequestFactory, _super);
                 function HttpRequestFactory(_http, uriDefaults) {
-                    var _this = _super.call(this) || this;
+                    var _this = _super.call(this, NAME) || this;
                     _this._http = _http;
-                    _this._disposableObjectName = NAME;
                     if (!_http)
                         throw new ArgumentNullException_1.ArgumentNullException('_http');
                     _this._uriDefaults = Uri_1.Uri.from(uriDefaults);

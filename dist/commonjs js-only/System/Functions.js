@@ -1,12 +1,13 @@
+"use strict";
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Can be used statically or extended for varying different reusable function signatures.
  */
-var Functions = (function () {
+var Functions = /** @class */ (function () {
     function Functions() {
     }
     //noinspection JSMethodCanBeStatic
@@ -36,7 +37,6 @@ var Functions = (function () {
 exports.Functions = Functions;
 var rootFunctions = new Functions();
 // Expose static versions.
-var Functions;
 (function (Functions) {
     /**
      * A typed method for use with simple selection of the parameter.
@@ -58,7 +58,7 @@ var Functions;
      */
     Functions.Blank = rootFunctions.Blank;
 })(Functions = exports.Functions || (exports.Functions = {}));
+exports.Functions = Functions;
 // Make this read only.  Should still allow for sub-classing since extra methods are added to prototype.
 Object.freeze(Functions);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Functions;

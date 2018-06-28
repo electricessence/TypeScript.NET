@@ -1,19 +1,29 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based on .NET DateTime's interface.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
 var TimeSpan_1 = require("./TimeSpan");
 var ClockTime_1 = require("./ClockTime");
 var TimeStamp_1 = require("./TimeStamp");
-var DateTime = (function () {
+var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
+var VOID0 = void 0;
+var DateTime = /** @class */ (function () {
     function DateTime(value, kind) {
         if (value === void 0) { value = new Date(); }
-        if (kind === void 0) { kind = 1 /* Local */; }
-        var _ = this;
+        if (kind === void 0) { kind = DateTime.Kind.Local; }
         this._kind = kind;
-        if (value instanceof DateTime)
+        if (value instanceof DateTime) {
             this._value = value.toJsDate();
+            if (kind === VOID0)
+                this._kind = value._kind;
+        }
         else if (value instanceof Date)
             this._value = new Date(value.getTime());
         else
-            this._value = value === void (0)
+            this._value = value === VOID0
                 ? new Date()
                 : new Date(value);
     }
@@ -201,21 +211,70 @@ var DateTime = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(DateTime.prototype, "toUniversalTime", {
-        /**
-         * Returns a UTC version of this date if its kind is local.
-         * @returns {DateTime}
-         */
-        get: function () {
-            var _ = this;
-            if (_._kind != 1 /* Local */)
-                return new DateTime(_, _._kind);
-            var d = _._value;
-            return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), 2 /* Utc */);
-        },
-        enumerable: true,
-        configurable: true
-    });
+    /**
+     * Returns a UTC version of this date if its kind is local.
+     * @returns {DateTime}
+     */
+    DateTime.prototype.toUniversalTime = function () {
+        var _ = this;
+        if (_._kind != DateTime.Kind.Local)
+            return new DateTime(_, _._kind);
+        var d = _._value;
+        return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), DateTime.Kind.Utc);
+    };
+    DateTime.prototype.equals = function (other, strict) {
+        if (strict === void 0) { strict = false; }
+        if (!other)
+            return false;
+        if (other == this)
+            return true;
+        if (other instanceof Date) {
+            var v = this._value;
+            return other == v || other.getTime() == v.getTime();
+        }
+        if (other instanceof DateTime) {
+            if (strict) {
+                var ok = other._kind;
+                if (!ok && this._kind || ok != this._kind)
+                    return false;
+            }
+            return this.equals(other._value);
+        }
+        else if (strict)
+            return false;
+        return this.equals(other.toJsDate());
+    };
+    // https://msdn.microsoft.com/en-us/library/System.IComparable.CompareTo(v=vs.110).aspx
+    DateTime.prototype.compareTo = function (other) {
+        if (!other)
+            throw new ArgumentNullException_1.ArgumentNullException("other");
+        if (other == this)
+            return 0;
+        if (other instanceof DateTime) {
+            other = other._value;
+        }
+        var ms = this._value.getTime();
+        if (other instanceof Date) {
+            return ms - other.getTime();
+        }
+        return ms - other.toJsDate().getTime();
+    };
+    DateTime.prototype.equivalent = function (other) {
+        if (!other)
+            return false;
+        if (other == this)
+            return true;
+        if (other instanceof Date) {
+            var v = this._value;
+            // TODO: What is the best way to handle this when kinds match or don't?
+            return v.toUTCString() == other.toUTCString();
+        }
+        if (other instanceof DateTime) {
+            if (this.equals(other, true))
+                return true;
+        }
+        return this.equivalent(other.toJsDate());
+    };
     Object.defineProperty(DateTime, "today", {
         /**
          * The date component for now.
@@ -298,6 +357,15 @@ var DateTime = (function () {
     return DateTime;
 }());
 exports.DateTime = DateTime;
+// Extend DateTime's usefulness.
+(function (DateTime) {
+    var Kind;
+    (function (Kind) {
+        Kind[Kind["Unspecified"] = 0] = "Unspecified";
+        Kind[Kind["Local"] = 1] = "Local";
+        Kind[Kind["Utc"] = 2] = "Utc";
+    })(Kind = DateTime.Kind || (DateTime.Kind = {}));
+})(DateTime = exports.DateTime || (exports.DateTime = {}));
+exports.DateTime = DateTime;
 Object.freeze(DateTime);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = DateTime;

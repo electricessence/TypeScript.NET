@@ -1,9 +1,14 @@
 "use strict";
-var valid = new ValidationResult(true);
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+var VALID = null;
 /**
  * A class for generating responses to validation.
  */
-var ValidationResult = (function () {
+var ValidationResult = /** @class */ (function () {
     /**
      * Allows for rare cases that ValidationResult.valid and ValidationResult.invalid() don't cover.
      */
@@ -34,7 +39,7 @@ var ValidationResult = (function () {
          * Allows for returning this instance like you would return 'true'.
          */
         get: function () {
-            return valid;
+            return VALID || (VALID = new ValidationResult(true));
         },
         enumerable: true,
         configurable: true
@@ -48,5 +53,4 @@ var ValidationResult = (function () {
     };
     return ValidationResult;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ValidationResult;

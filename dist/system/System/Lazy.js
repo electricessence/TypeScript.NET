@@ -28,6 +28,7 @@ System.register(["./ResolverBase", "../extends"], function (exports_1, context_1
                     if (trapExceptions === void 0) { trapExceptions = false; }
                     if (allowReset === void 0) { allowReset = false; }
                     var _this = _super.call(this, valueFactory, trapExceptions, allowReset) || this;
+                    // @ts-ignore // Force this override.
                     _this._disposableObjectName = 'Lazy';
                     _this._isValueCreated = false;
                     return _this;
@@ -65,6 +66,7 @@ System.register(["./ResolverBase", "../extends"], function (exports_1, context_1
                 function ResettableLazy(valueFactory, trapExceptions) {
                     if (trapExceptions === void 0) { trapExceptions = false; }
                     var _this = _super.call(this, valueFactory, trapExceptions, true) || this;
+                    // @ts-ignore // Force this override.
                     _this._disposableObjectName = 'ResettableLazy';
                     return _this;
                 }

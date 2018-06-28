@@ -3,6 +3,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var LinkedNodeList_1 = require("./LinkedNodeList");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var Enumerator_1 = require("./Enumeration/Enumerator");
@@ -15,11 +16,12 @@ var extends_1 = require("../../extends");
 var __extends = extends_1.default;
 var VOID0 = void 0;
 var OTHER = 'other';
-var SetBase = (function (_super) {
+var SetBase = /** @class */ (function (_super) {
     __extends(SetBase, _super);
     function SetBase(source) {
-        _super.call(this, VOID0, Compare_1.areEqual);
-        this._importEntries(source);
+        var _this = _super.call(this, VOID0, Compare_1.areEqual) || this;
+        _this._importEntries(source);
+        return _this;
     }
     SetBase.prototype._getSet = function () {
         var s = this._set;
@@ -164,9 +166,12 @@ var SetBase = (function (_super) {
             : EmptyEnumerator_1.EmptyEnumerator;
     };
     SetBase.prototype.forEach = function (action, useCopy) {
+        var s = this._set;
+        if (!s)
+            return 0;
         return useCopy
             ? _super.prototype.forEach.call(this, action, useCopy)
-            : this._set.forEach(function (node, i) { return action(node.value, i); });
+            : s.forEach(function (node, i) { return action(node.value, i); });
     };
     SetBase.prototype._removeNode = function (node) {
         return !!node
@@ -183,16 +188,4 @@ var SetBase = (function (_super) {
     return SetBase;
 }(CollectionBase_1.CollectionBase));
 exports.SetBase = SetBase;
-function wipe(map, depth) {
-    if (depth === void 0) { depth = 1; }
-    if (map && depth) {
-        for (var _i = 0, _a = Object.keys(map); _i < _a.length; _i++) {
-            var key = _a[_i];
-            var v = map[key];
-            delete map[key];
-            wipe(v, depth - 1);
-        }
-    }
-}
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SetBase;

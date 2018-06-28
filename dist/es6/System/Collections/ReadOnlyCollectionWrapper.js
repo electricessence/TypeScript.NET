@@ -32,8 +32,9 @@ export default class ReadOnlyCollectionWrapper extends ReadOnlyCollectionBase {
     }
     _onDispose() {
         super._onDispose();
-        this.__getCount = null;
-        this.__getEnumerator = null;
+        const _ = this;
+        _.__getCount = null;
+        _.__getEnumerator = null;
     }
 }
 //# sourceMappingURL=ReadOnlyCollectionWrapper.js.map

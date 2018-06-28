@@ -10,8 +10,7 @@ const NAME = "TaskHandlerBase";
  */
 export class TaskHandlerBase extends DisposableBase {
     constructor() {
-        super();
-        this._disposableObjectName = NAME;
+        super(NAME);
         this._timeoutId = null;
         this._status = 0 /* Created */;
     }

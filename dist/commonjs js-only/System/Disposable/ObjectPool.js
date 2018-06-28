@@ -5,6 +5,7 @@
  * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
  * Uses .add(T) and .take():T
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var dispose_1 = require("./dispose");
 var DisposableBase_1 = require("./DisposableBase");
 var TaskHandler_1 = require("../Threading/Tasks/TaskHandler");
@@ -14,29 +15,29 @@ var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = "Must be less than or equal to " + ABSOLUTE_MAX_SIZE + ".";
-var ObjectPool = (function (_super) {
+var ObjectPool = /** @class */ (function (_super) {
     __extends(ObjectPool, _super);
     function ObjectPool(_maxSize, _generator, _recycler) {
-        _super.call(this);
-        this._maxSize = _maxSize;
-        this._generator = _generator;
-        this._recycler = _recycler;
+        var _this = _super.call(this, OBJECT_POOL) || this;
+        _this._maxSize = _maxSize;
+        _this._generator = _generator;
+        _this._recycler = _recycler;
         /**
          * By default will clear after 5 seconds of non-use.
          */
-        this.autoClearTimeout = 5000;
+        _this.autoClearTimeout = 5000;
         if (isNaN(_maxSize) || _maxSize < 1)
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_GT1);
         if (_maxSize > ABSOLUTE_MAX_SIZE)
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_LTM);
-        this._localAbsMaxSize = Math.min(_maxSize * 2, ABSOLUTE_MAX_SIZE);
-        var _ = this;
-        _._disposableObjectName = OBJECT_POOL;
-        _._pool = [];
-        _._trimmer = new TaskHandler_1.TaskHandler(function () { return _._trim(); });
+        _this._localAbsMaxSize = Math.min(_maxSize * 2, ABSOLUTE_MAX_SIZE);
+        var _ = _this;
+        _this._pool = [];
+        _this._trimmer = new TaskHandler_1.TaskHandler(function () { return _._trim(); });
         var clear = function () { return _._clear(); };
-        _._flusher = new TaskHandler_1.TaskHandler(clear);
-        _._autoFlusher = new TaskHandler_1.TaskHandler(clear);
+        _this._flusher = new TaskHandler_1.TaskHandler(clear);
+        _this._autoFlusher = new TaskHandler_1.TaskHandler(clear);
+        return _this;
     }
     Object.defineProperty(ObjectPool.prototype, "maxSize", {
         /**
@@ -64,7 +65,7 @@ var ObjectPool = (function (_super) {
     ObjectPool.prototype._trim = function () {
         var pool = this._pool;
         while (pool.length > this._maxSize) {
-            dispose_1.dispose.withoutException(pool.pop());
+            dispose_1.dispose.single(pool.pop(), true);
         }
     };
     /**
@@ -81,7 +82,7 @@ var ObjectPool = (function (_super) {
         _._trimmer.cancel();
         _._flusher.cancel();
         _._autoFlusher.cancel();
-        dispose_1.dispose.these(p, true);
+        dispose_1.dispose.these.noCopy(p, true);
         p.length = 0;
     };
     /**
@@ -176,5 +177,4 @@ var ObjectPool = (function (_super) {
     return ObjectPool;
 }(DisposableBase_1.DisposableBase));
 exports.ObjectPool = ObjectPool;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ObjectPool;

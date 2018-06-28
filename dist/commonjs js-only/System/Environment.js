@@ -1,10 +1,15 @@
+"use strict";
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // Need to spoof this so WebPack doesn't panic (warnings).
-var r = eval('require');
+var r;
+try {
+    r = eval('require');
+}
+catch (ex) { }
 //noinspection JSUnusedGlobalSymbols
 exports.isCommonJS = !!(r && r.resolve);
 //noinspection JSUnusedGlobalSymbols
@@ -23,4 +28,7 @@ exports.isNodeJS = typeof process == "object"
     && process.toString() === "[object process]"
     && process.nextTick != void 0;
 //noinspection JSUnusedAssignment
-Object.freeze(exports);
+try {
+    Object.freeze(exports);
+}
+catch (ex) { }

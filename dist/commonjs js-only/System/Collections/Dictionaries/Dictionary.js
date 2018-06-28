@@ -4,6 +4,7 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Compare_1 = require("../../Compare");
 var Types_1 = require("../../Types");
 var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
@@ -16,7 +17,7 @@ var extends_1 = require("../../../extends");
 var __extends = extends_1.default;
 var VOID0 = void 0;
 // LinkedList for Dictionary
-var HashEntry = (function () {
+var HashEntry = /** @class */ (function () {
     function HashEntry(key, value, previous, next) {
         this.key = key;
         this.value = value;
@@ -35,13 +36,14 @@ function linkedNodeList(recycle) {
         return linkedListPool.take();
     linkedListPool.add(recycle);
 }
-var Dictionary = (function (_super) {
+var Dictionary = /** @class */ (function (_super) {
     __extends(Dictionary, _super);
     function Dictionary(_keyGenerator) {
-        _super.call(this);
-        this._keyGenerator = _keyGenerator;
-        this._entries = linkedNodeList();
-        this._buckets = {};
+        var _this = _super.call(this) || this;
+        _this._keyGenerator = _keyGenerator;
+        _this._entries = linkedNodeList();
+        _this._buckets = {};
+        return _this;
     }
     Dictionary.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
@@ -54,7 +56,7 @@ var Dictionary = (function (_super) {
         return this._entries && this._entries.unsafeCount || 0;
     };
     Dictionary.prototype._getBucket = function (hash, createIfMissing) {
-        if (hash === null || hash === VOID0 || !createIfMissing && !this.getCount())
+        if (hash == null || !createIfMissing && !this.getCount())
             return null;
         if (!Types_1.Type.isPrimitiveOrSymbol(hash))
             console.warn("Key type not indexable and could cause Dictionary to be extremely slow.");
@@ -67,7 +69,7 @@ var Dictionary = (function (_super) {
         return bucket || null;
     };
     Dictionary.prototype._getBucketEntry = function (key, hash, bucket) {
-        if (key === null || key === VOID0 || !this.getCount())
+        if (key == null || !this.getCount())
             return null;
         var _ = this, comparer = _._keyGenerator, compareKey = comparer ? comparer(key) : key;
         if (!bucket)
@@ -183,5 +185,4 @@ var Dictionary = (function (_super) {
     return Dictionary;
 }(DictionaryBase_1.default));
 exports.Dictionary = Dictionary;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Dictionary;

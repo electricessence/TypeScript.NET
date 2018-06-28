@@ -206,7 +206,7 @@ export declare module Type {
      * @param type
      * @returns {boolean}
      */
-    function hasMemberOfType<T>(instance: any, property: string, type: TypeValue.Any): instance is T;
+    function hasMemberOfType<T>(instance: any, property: string, type: TypeValue): instance is T;
     function hasMethod<T>(instance: any, property: string): instance is T;
     function isArrayLike<T>(instance: any): instance is ArrayLikeWritable<T>;
 }

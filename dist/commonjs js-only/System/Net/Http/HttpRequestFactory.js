@@ -1,4 +1,9 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
 var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var DisposableBase_1 = require("../../Disposable/DisposableBase");
 var HttpMethod_1 = require("./HttpMethod");
@@ -10,15 +15,15 @@ var NAME = 'HttpRequestFactory';
 /**
  * This class exposes a factory for making requests to prepared uri and params.
  */
-var HttpRequestFactory = (function (_super) {
+var HttpRequestFactory = /** @class */ (function (_super) {
     __extends(HttpRequestFactory, _super);
     function HttpRequestFactory(_http, uriDefaults) {
-        _super.call(this);
-        this._http = _http;
-        this._disposableObjectName = NAME;
+        var _this = _super.call(this, NAME) || this;
+        _this._http = _http;
         if (!_http)
             throw new ArgumentNullException_1.ArgumentNullException('_http');
-        this._uriDefaults = Uri_1.Uri.from(uriDefaults);
+        _this._uriDefaults = Uri_1.Uri.from(uriDefaults);
+        return _this;
     }
     HttpRequestFactory.prototype._onDispose = function () {
         // super._onDispose(); // Not required for first level inheritance.
@@ -48,18 +53,18 @@ var HttpRequestFactory = (function (_super) {
         });
     };
     HttpRequestFactory.prototype.get = function () {
-        return this.request(HttpMethod_1.GET);
+        return this.request(HttpMethod_1.HttpMethod.GET);
     };
     HttpRequestFactory.prototype.put = function () {
-        return this.request(HttpMethod_1.PUT);
+        return this.request(HttpMethod_1.HttpMethod.PUT);
     };
     HttpRequestFactory.prototype.post = function (data) {
-        return this.request(HttpMethod_1.POST, data);
+        return this.request(HttpMethod_1.HttpMethod.POST, data);
     };
     HttpRequestFactory.prototype['delete'] = function () {
-        return this.request(HttpMethod_1.DELETE);
+        return this.request(HttpMethod_1.HttpMethod.DELETE);
     };
     return HttpRequestFactory;
 }(DisposableBase_1.DisposableBase));
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.HttpRequestFactory = HttpRequestFactory;
 exports.default = HttpRequestFactory;

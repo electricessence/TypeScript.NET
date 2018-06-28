@@ -17,15 +17,16 @@
  *      g : "literal"
  * }
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("./Types");
 var Compare_1 = require("./Compare");
 var extends_1 = require("../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
-var TypeInfoHelper = (function (_super) {
+var TypeInfoHelper = /** @class */ (function (_super) {
     __extends(TypeInfoHelper, _super);
     function TypeInfoHelper(value) {
-        _super.call(this, value, function (self) { return self._value = value; });
+        return _super.call(this, value, function (self) { return self._value = value; }) || this;
     }
     TypeInfoHelper.prototype.contains = function (descriptor) {
         var value = this._value;
@@ -48,7 +49,7 @@ var TypeInfoHelper = (function (_super) {
         if (this.type != typeof descriptor || this.isPrimitive && !Compare_1.areEqual(value, descriptor))
             return false;
         // Check array contents and confirm intersections.
-        if (this.isArray && Array.isArray(descriptor)) {
+        if (this.isArray && Types_1.Type.isArrayLike(descriptor)) {
             var max = Math.min(descriptor.length, value.length);
             for (var i = 0; i < max; i++) {
                 if (areInvalid(value[i], descriptor[i]))
@@ -88,7 +89,7 @@ function areInvalid(v, d) {
     }
     return false;
 }
-var TypeValidator = (function () {
+var TypeValidator = /** @class */ (function () {
     function TypeValidator(_typeDescriptor) {
         this._typeDescriptor = _typeDescriptor;
         Object.freeze(this);
@@ -100,5 +101,4 @@ var TypeValidator = (function () {
     return TypeValidator;
 }());
 exports.TypeValidator = TypeValidator;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TypeValidator;

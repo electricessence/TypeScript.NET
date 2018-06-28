@@ -26,7 +26,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 		public params?:TParams,
 		finalizer?:Closure)//, useWeakReference: boolean = false)
 	{
-		super(finalizer);
+		super(NAME, finalizer);
 
 		if(!listener)
 			throw new ArgumentNullException('listener');
@@ -37,7 +37,6 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 		_.type = type;
 		_.listener = listener;
 		_.params = params;
-		_._disposableObjectName = NAME;
 	}
 
 	protected _onDispose():void

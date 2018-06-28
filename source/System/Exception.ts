@@ -66,7 +66,9 @@ export class Exception implements Error, IDisposable
 			this.stack = this.toStringWithoutBrackets() + stack;
 		}
 		catch(ex)
-		{}
+		{
+			this.stack = "";
+		}
 
 		Object.freeze(this);
 	}

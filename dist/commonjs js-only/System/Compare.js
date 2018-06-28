@@ -3,6 +3,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("./Types");
 var isTrueNaN = Types_1.Type.isTrueNaN;
 var VOID0 = void 0;
@@ -51,7 +52,7 @@ function areEquivalent(a, b, nullEquivalency, extraDepth) {
     // Take a step by step approach to ensure efficiency.
     if (areEqual(a, b, true))
         return true;
-    if (a === null || a === VOID0 || b == null || b === VOID0) {
+    if (a == null || b == null) {
         if (!nullEquivalency)
             return false;
         if (Types_1.Type.isObject(a)) {
@@ -60,7 +61,7 @@ function areEquivalent(a, b, nullEquivalency, extraDepth) {
         if (Types_1.Type.isObject(b)) {
             return !Object.keys(b).length;
         }
-        return (a === null || a === VOID0) && (b == null || b === VOID0);
+        return a == null && b == null;
     }
     if (Types_1.Type.isObject(a) && Types_1.Type.isObject(b)) {
         var aKeys = Object.keys(a), bKeys = Object.keys(b), len = aKeys.length;

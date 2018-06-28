@@ -3,6 +3,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var AU = require("../Collections/Array/Utility");
 var shallowCopy_1 = require("../Utility/shallowCopy");
 var DisposableBase_1 = require("../Disposable/DisposableBase");
@@ -13,18 +14,20 @@ var extends_1 = require("../../extends");
 var __extends = extends_1.default;
 var DISPOSING = 'disposing', DISPOSED = 'disposed';
 function entryFinalizer() {
-    var p = this.params;
-    p.dispatcher.removeEntry(this);
+    // @ts-ignore
+    var _ = this;
+    var p = _.params;
+    p.dispatcher.removeEntry(_);
     p.dispatcher = null;
 }
 var NAME = "EventDispatcherBase";
-var EventDispatcherBase = (function (_super) {
+var EventDispatcherBase = /** @class */ (function (_super) {
     __extends(EventDispatcherBase, _super);
     function EventDispatcherBase() {
-        _super.call(this);
+        var _this = _super.call(this, NAME) || this;
         // When dispatching events, we need a way to prevent recursion when disposing.
-        this._isDisposing = false;
-        this._disposableObjectName = NAME;
+        _this._isDisposing = false;
+        return _this;
     }
     EventDispatcherBase.prototype.addEventListener = function (type, listener, priority) {
         if (priority === void 0) { priority = 0; }
@@ -49,12 +52,14 @@ var EventDispatcherBase = (function (_super) {
     };
     EventDispatcherBase.prototype.hasEventListener = function (type, listener) {
         var e = this._entries;
-        return e && e.some(function (value) {
+        return !!e && e.some(function (value) {
             return type == value.type && (!listener || listener == value.listener);
         });
     };
     EventDispatcherBase.prototype.removeEventListener = function (type, listener) {
-        dispose_1.dispose.these(this._entries.filter(function (entry) { return entry.matches(type, listener); }));
+        var e = this._entries;
+        if (e)
+            dispose_1.dispose.these.noCopy(e.filter(function (entry) { return entry.matches(type, listener); }));
     };
     EventDispatcherBase.prototype.dispatchEvent = function (e, params) {
         var _this = this;
@@ -63,7 +68,7 @@ var EventDispatcherBase = (function (_super) {
         if (!l || !l.length)
             return false;
         var event;
-        if (typeof e == "string") {
+        if (typeof e == 'string') {
             event = (Event && Object.create(Event) || {});
             if (!params)
                 params = {};
@@ -127,5 +132,4 @@ var EventDispatcherBase = (function (_super) {
     };
     return EventDispatcherBase;
 }(DisposableBase_1.DisposableBase));
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = EventDispatcherBase;

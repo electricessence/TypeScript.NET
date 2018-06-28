@@ -17,7 +17,8 @@ System.register(["./ObjectDisposedException"], function (exports_1, context_1) {
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
             DisposableBase = /** @class */ (function () {
-                function DisposableBase(__finalizer) {
+                function DisposableBase(_disposableObjectName, __finalizer) {
+                    this._disposableObjectName = _disposableObjectName;
                     this.__finalizer = __finalizer;
                     this.__wasDisposed = false;
                     // Allow for simple override of name.

@@ -299,7 +299,7 @@ export class Parallel {
      */
     map(data, task, env) {
         if (!data || !data.length)
-            return ArrayPromise.fulfilled(data && []);
+            return ArrayPromise.fulfilled([]);
         // Would return the same result, but has extra overhead.
         // return this.pipe(data,task).all();
         data = data.slice(); // Never use the original.

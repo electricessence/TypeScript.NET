@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
@@ -40,7 +41,7 @@ var RegexOptions;
     RegexOptions.IGNORE_PATTERN_WHITESPACE = _W;
     RegexOptions.W = _W;
 })(RegexOptions = exports.RegexOptions || (exports.RegexOptions = {}));
-var Regex = (function () {
+var Regex = /** @class */ (function () {
     function Regex(pattern, options) {
         var extra = [];
         for (var _i = 2; _i < arguments.length; _i++) {
@@ -48,7 +49,7 @@ var Regex = (function () {
         }
         if (!pattern)
             throw new Error("'pattern' cannot be null or empty.");
-        var patternString, flags = (options && (Array.isArray(options) ? options : [options]).concat(extra) || extra)
+        var patternString, flags = (options && ((options) instanceof (Array) ? options : [options]).concat(extra) || extra)
             .join(EMPTY)
             .toLowerCase();
         if (pattern instanceof RegExp) {
@@ -99,7 +100,7 @@ var Regex = (function () {
         for (var i = 0, len = r.length; i < len; ++i) {
             var text = r[i];
             var g = EmptyGroup;
-            if (text !== null || text !== void 0) {
+            if (text != null) {
                 // Empty string might mean \b match or similar.
                 g = new Group(text, loc);
                 g.freeze();
@@ -127,7 +128,7 @@ var Regex = (function () {
     };
     Regex.prototype.replace = function (input, r, count) {
         if (count === void 0) { count = Infinity; }
-        if (!input || r === null || r === void 0 || !(count > 0))
+        if (!input || r == null || !(count > 0))
             return input;
         var result = [];
         var p = 0;
@@ -158,7 +159,7 @@ var Regex = (function () {
     return Regex;
 }());
 exports.Regex = Regex;
-var Capture = (function () {
+var Capture = /** @class */ (function () {
     function Capture(value, index) {
         if (value === void 0) { value = EMPTY; }
         if (index === void 0) { index = -1; }
@@ -179,12 +180,12 @@ var Capture = (function () {
     return Capture;
 }());
 exports.Capture = Capture;
-var Group = (function (_super) {
+var Group = /** @class */ (function (_super) {
     __extends(Group, _super);
     function Group(value, index) {
         if (value === void 0) { value = EMPTY; }
         if (index === void 0) { index = -1; }
-        _super.call(this, value, index);
+        return _super.call(this, value, index) || this;
     }
     Object.defineProperty(Group.prototype, "success", {
         get: function () {
@@ -205,16 +206,17 @@ var Group = (function (_super) {
 exports.Group = Group;
 var EmptyGroup = new Group();
 EmptyGroup.freeze();
-var Match = (function (_super) {
+var Match = /** @class */ (function (_super) {
     __extends(Match, _super);
     function Match(value, index, groups, namedGroups) {
         if (value === void 0) { value = EMPTY; }
         if (index === void 0) { index = -1; }
         if (groups === void 0) { groups = []; }
         if (namedGroups === void 0) { namedGroups = {}; }
-        _super.call(this, value, index);
-        this.groups = groups;
-        this.namedGroups = namedGroups;
+        var _this = _super.call(this, value, index) || this;
+        _this.groups = groups;
+        _this.namedGroups = namedGroups;
+        return _this;
     }
     Match.prototype.freeze = function () {
         if (!this.groups)
@@ -237,5 +239,4 @@ var Match = (function (_super) {
 exports.Match = Match;
 var EmptyMatch = new Match();
 EmptyMatch.freeze();
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Regex;

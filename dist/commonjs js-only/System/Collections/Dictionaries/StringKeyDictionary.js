@@ -3,18 +3,20 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Compare_1 = require("../../Compare");
 var DictionaryBase_1 = require("./DictionaryBase");
 var extends_1 = require("../../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var VOID0 = void 0;
-var StringKeyDictionary = (function (_super) {
+var StringKeyDictionary = /** @class */ (function (_super) {
     __extends(StringKeyDictionary, _super);
     function StringKeyDictionary() {
-        _super.apply(this, arguments);
-        this._count = 0;
-        this._map = {};
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._count = 0;
+        _this._map = {};
+        return _this;
     }
     StringKeyDictionary.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
@@ -28,8 +30,7 @@ var StringKeyDictionary = (function (_super) {
         };
     };
     StringKeyDictionary.prototype.containsKey = function (key) {
-        return key !== null
-            && key !== VOID0
+        return key != null
             && this._count != 0
             && this._map[key] !== VOID0;
     };
@@ -44,7 +45,7 @@ var StringKeyDictionary = (function (_super) {
         return false;
     };
     StringKeyDictionary.prototype.getValue = function (key) {
-        return key === null || key === VOID0 || !this._count
+        return key == null || !this._count
             ? VOID0
             : this._map[key];
     };
@@ -112,5 +113,4 @@ var StringKeyDictionary = (function (_super) {
     return StringKeyDictionary;
 }(DictionaryBase_1.DictionaryBase));
 exports.StringKeyDictionary = StringKeyDictionary;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = StringKeyDictionary;

@@ -3,11 +3,12 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var TimeSpan_1 = require("../Time/TimeSpan");
 function getTimestampMilliseconds() {
     return (new Date()).getTime();
 }
-var Stopwatch = (function () {
+var Stopwatch = /** @class */ (function () {
     function Stopwatch() {
         this.reset();
     }
@@ -104,5 +105,4 @@ var Stopwatch = (function () {
     });
     return Stopwatch;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Stopwatch;

@@ -3,15 +3,17 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var EnumeratorBase_1 = require("./EnumeratorBase");
 var extends_1 = require("../../../extends");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
-var IndexEnumerator = (function (_super) {
+var IndexEnumerator = /** @class */ (function (_super) {
     __extends(IndexEnumerator, _super);
     function IndexEnumerator(sourceFactory) {
+        var _this = this;
         var source;
-        _super.call(this, function () {
+        _this = _super.call(this, function () {
             source = sourceFactory();
             if (source && source.source) {
                 var len = source.length;
@@ -39,7 +41,11 @@ var IndexEnumerator = (function (_super) {
             if (!len || isNaN(len))
                 return yielder.yieldBreak();
             var current = source.pointer;
-            source.pointer += source.step;
+            if (source.pointer == null)
+                source.pointer = 0; // should never happen but is in place to negate compiler warnings.
+            if (!source.step)
+                source.step = 1; // should never happen but is in place to negate compiler warnings.
+            source.pointer = source.pointer + source.step;
             return (current < len && current >= 0)
                 ? yielder.yieldReturn(source.source[current])
                 : yielder.yieldBreak();
@@ -47,11 +53,11 @@ var IndexEnumerator = (function (_super) {
             if (source) {
                 source.source = null;
             }
-        });
-        this._isEndless = false;
+        }) || this;
+        _this._isEndless = false;
+        return _this;
     }
     return IndexEnumerator;
 }(EnumeratorBase_1.EnumeratorBase));
 exports.IndexEnumerator = IndexEnumerator;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = IndexEnumerator;

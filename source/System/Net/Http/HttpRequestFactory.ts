@@ -31,9 +31,7 @@ export class HttpRequestFactory extends DisposableBase
 		private _http:IHttpRequestAdapter,
 		uriDefaults?:string|IUri)
 	{
-		super();
-
-		this._disposableObjectName = NAME;
+		super(NAME);
 
 		if(!_http)
 			throw new ArgumentNullException('_http');

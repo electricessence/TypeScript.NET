@@ -178,6 +178,7 @@ coverage
 
 
 # IntelliJ
+.idea/codeStyles/*.xml
 .idea/*.iml
 .idea/vcs.xml
 .idea/misc.xml
@@ -193,3 +194,5 @@ typings
 documentation
 .nuget/
 .idea/shelf/*
+.idea/codeStyles/codeStyleConfig.xml
+.idea/codeStyles/codeStyleConfig.xml

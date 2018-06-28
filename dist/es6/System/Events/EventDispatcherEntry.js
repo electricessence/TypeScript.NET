@@ -11,7 +11,7 @@ import { areEquivalent } from "../Compare";
 const NAME = "EventDispatcherEntry";
 export class EventDispatcherEntry extends DisposableBase {
     constructor(type, listener, params, finalizer) {
-        super(finalizer);
+        super(NAME, finalizer);
         this.type = type;
         this.listener = listener;
         this.params = params;
@@ -23,7 +23,6 @@ export class EventDispatcherEntry extends DisposableBase {
         _.type = type;
         _.listener = listener;
         _.params = params;
-        _._disposableObjectName = NAME;
     }
     _onDispose() {
         super._onDispose();

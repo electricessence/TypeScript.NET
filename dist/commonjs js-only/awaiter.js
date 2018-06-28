@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 function awaiter(thisArg, _arguments, P, generator) {
     if (!P)
         throw "Must provide Promise constructor.  Try injecting Promise using awaiter.factory(PromiseConstructorLike).";
@@ -29,5 +30,4 @@ function awaiter(thisArg, _arguments, P, generator) {
     });
 }
 exports.awaiter = awaiter;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = awaiter;

@@ -1,4 +1,9 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
 var SimpleEnumerableBase_1 = require("./SimpleEnumerableBase");
 var extends_1 = require("../../../extends");
 // noinspection JSUnusedLocalSymbols
@@ -9,16 +14,17 @@ var __extends = extends_1.default;
  *
  *
  */
-var IteratorEnumerator = (function (_super) {
+var IteratorEnumerator = /** @class */ (function (_super) {
     __extends(IteratorEnumerator, _super);
     /**
      * @param _iterator
      * @param _isEndless true and false are explicit where as undefined means 'unknown'.
      */
     function IteratorEnumerator(_iterator, _isEndless) {
-        _super.call(this);
-        this._iterator = _iterator;
-        this._isEndless = _isEndless;
+        var _this = _super.call(this) || this;
+        _this._iterator = _iterator;
+        _this._isEndless = _isEndless;
+        return _this;
     }
     IteratorEnumerator.prototype._canMoveNext = function () {
         return this._iterator != null;
@@ -46,5 +52,4 @@ var IteratorEnumerator = (function (_super) {
     return IteratorEnumerator;
 }(SimpleEnumerableBase_1.SimpleEnumerableBase));
 exports.IteratorEnumerator = IteratorEnumerator;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = IteratorEnumerator;

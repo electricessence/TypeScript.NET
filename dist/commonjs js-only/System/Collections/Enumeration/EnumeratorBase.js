@@ -3,6 +3,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../../Types");
 var DisposableBase_1 = require("../../Disposable/DisposableBase");
 var ObjectPool_1 = require("../../Disposable/ObjectPool");
@@ -21,7 +22,7 @@ function yielder(recycle) {
         return yielderPool.take();
     yielderPool.add(recycle);
 }
-var Yielder = (function () {
+var Yielder = /** @class */ (function () {
     function Yielder() {
         this._current = VOID0;
         this._index = NaN;
@@ -58,20 +59,20 @@ var Yielder = (function () {
 var NAME = "EnumeratorBase";
 // "Enumerator" is conflict JScript's "Enumerator"
 // Naming this class EnumeratorBase to avoid collision with IE.
-var EnumeratorBase = (function (_super) {
+var EnumeratorBase = /** @class */ (function (_super) {
     __extends(EnumeratorBase, _super);
     function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
-        _super.call(this);
-        this._initializer = _initializer;
-        this._tryGetNext = _tryGetNext;
-        this._disposableObjectName = NAME;
-        this.reset();
+        var _this = _super.call(this, NAME) || this;
+        _this._initializer = _initializer;
+        _this._tryGetNext = _tryGetNext;
+        _this.reset();
         if (Types_1.Type.isBoolean(isEndless))
-            this._isEndless = isEndless;
+            _this._isEndless = isEndless;
         else if (Types_1.Type.isBoolean(disposer))
-            this._isEndless = disposer;
+            _this._isEndless = disposer;
         if (Types_1.Type.isFunction(disposer))
-            this._disposer = disposer;
+            _this._disposer = disposer;
+        return _this;
     }
     Object.defineProperty(EnumeratorBase.prototype, "current", {
         get: function () {
@@ -114,7 +115,7 @@ var EnumeratorBase = (function (_super) {
         if (y)
             yielder(y); // recycle until actually needed.
     };
-    EnumeratorBase.prototype._assertBadState = function () {
+    EnumeratorBase.prototype._assertValidState = function () {
         var _ = this;
         switch (_._state) {
             case 3 /* Faulted */:
@@ -130,7 +131,7 @@ var EnumeratorBase = (function (_super) {
      * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
      */
     EnumeratorBase.prototype.tryGetCurrent = function (out) {
-        this._assertBadState();
+        this._assertValidState();
         if (this._state === 1 /* Active */) {
             out(this.current);
             return true;
@@ -150,7 +151,7 @@ var EnumeratorBase = (function (_super) {
      */
     EnumeratorBase.prototype.moveNext = function () {
         var _ = this;
-        _._assertBadState();
+        _._assertValidState();
         try {
             switch (_._state) {
                 case 0 /* Before */:
@@ -208,7 +209,7 @@ var EnumeratorBase = (function (_super) {
     };
     EnumeratorBase.prototype['return'] = function (value) {
         var _ = this;
-        _._assertBadState();
+        _._assertValidState();
         try {
             return value === VOID0 || _._state === 2 /* Completed */ || _._state === 4 /* Interrupted */
                 ? IteratorResult_1.IteratorResult.Done
@@ -230,9 +231,9 @@ var EnumeratorBase = (function (_super) {
         _._isEndless = false;
         var disposer = _._disposer;
         _._initializer = null;
-        _._disposer = null;
+        _._disposer = undefined;
         var y = _._yielder;
-        _._yielder = null;
+        _._yielder = undefined;
         this._state = 5 /* Disposed */;
         if (y)
             yielder(y);
@@ -242,5 +243,4 @@ var EnumeratorBase = (function (_super) {
     return EnumeratorBase;
 }(DisposableBase_1.DisposableBase));
 exports.EnumeratorBase = EnumeratorBase;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = EnumeratorBase;

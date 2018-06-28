@@ -4,9 +4,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../Types");
-var QueryParams = require("./QueryParams");
-var Scheme = require("./Scheme");
+var Scheme_1 = require("./Scheme");
+var QueryParams_1 = require("./QueryParams");
 var Utility_1 = require("../Text/Utility");
 var ArgumentException_1 = require("../Exceptions/ArgumentException");
 var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
@@ -17,7 +18,7 @@ var VOID0 = void 0;
  * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
  * ICloneable&lt;Uri&gt; is not used to prevent unnecessary copying of values that won't change.
  */
-var Uri = (function () {
+var Uri = /** @class */ (function () {
     /**
      * @param scheme The user name, password, or other user-specific information associated with the specified URI.
      * @param userInfo The host component of this instance.
@@ -36,11 +37,11 @@ var Uri = (function () {
         this.authority = _.getAuthority() || null;
         this.path = path || null;
         if (!Types_1.Type.isString(query))
-            query = QueryParams.encode(query);
+            query = QueryParams_1.encode(query);
         this.query = formatQuery(query) || null;
         Object.freeze(this.queryParams
             = _.query
-                ? QueryParams.parseToMap(_.query)
+                ? QueryParams_1.parseToMap(_.query)
                 : {});
         this.pathAndQuery = _.getPathAndQuery() || null;
         this.fragment = formatFragment(fragment) || null;
@@ -68,7 +69,7 @@ var Uri = (function () {
         var u = Types_1.Type.isString(uri)
             ? Uri.parse(uri) // Parsing a string should throw errors.  Null or undefined simply means empty.
             : uri;
-        return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Types_1.Type.isNumber(u.port) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
+        return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Types_1.Type.isNumber(u.port, true) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
     };
     Uri.parse = function (url, throwIfInvalid) {
         if (throwIfInvalid === void 0) { throwIfInvalid = true; }
@@ -168,6 +169,7 @@ var Uri = (function () {
     return Uri;
 }());
 exports.Uri = Uri;
+var Fields;
 (function (Fields) {
     Fields[Fields["scheme"] = 0] = "scheme";
     Fields[Fields["userInfo"] = 1] = "userInfo";
@@ -176,8 +178,7 @@ exports.Uri = Uri;
     Fields[Fields["path"] = 4] = "path";
     Fields[Fields["query"] = 5] = "query";
     Fields[Fields["fragment"] = 6] = "fragment";
-})(exports.Fields || (exports.Fields = {}));
-var Fields = exports.Fields;
+})(Fields = exports.Fields || (exports.Fields = {}));
 Object.freeze(Fields);
 function copyUri(from, to) {
     var i = 0, field;
@@ -190,7 +191,7 @@ function copyUri(from, to) {
     }
     return to;
 }
-var SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
+var SLASH = '/', SLASH2 = '//', QM = QueryParams_1.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
 function getScheme(scheme) {
     var s = scheme;
     if (Types_1.Type.isString(s)) {
@@ -201,11 +202,11 @@ function getScheme(scheme) {
             .replace(/[^a-z0-9+.-]+$/g, EMPTY);
         if (!s)
             return null;
-        if (Scheme.isValid(s))
+        if (Scheme_1.Scheme.isValid(s))
             return s;
     }
     else {
-        if (s === null || s === undefined)
+        if (s == null)
             return s;
     }
     throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
@@ -216,7 +217,7 @@ function getPort(port) {
     if (!port)
         return null;
     var p;
-    if (Types_1.Type.isNumber(port, true)) {
+    if (Types_1.Type.isNumber(port)) {
         p = port;
         if (p >= 0 && isFinite(p))
             return p;
@@ -230,7 +231,7 @@ function getAuthority(uri) {
     if (!uri.host) {
         if (uri.userInfo)
             throw new ArgumentException_1.ArgumentException('host', 'Cannot include user info when there is no host.');
-        if (Types_1.Type.isNumber(uri.port, false))
+        if (Types_1.Type.isNumber(uri.port, true))
             throw new ArgumentException_1.ArgumentException('host', 'Cannot include a port when there is no host.');
     }
     /*
@@ -340,5 +341,4 @@ function tryParse(url, out) {
     // null is good! (here)
     return null;
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Uri;

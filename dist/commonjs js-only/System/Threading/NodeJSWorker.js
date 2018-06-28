@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ObservableBase_1 = require("../Observable/ObservableBase");
 var extends_1 = require("../../extends");
 // noinspection JSUnusedLocalSymbols
@@ -8,14 +9,14 @@ var ps = require("child_process");
 /**
  * This class takes the place of a WebWorker
  */
-var NodeJSWorker = (function (_super) {
+var NodeJSWorker = /** @class */ (function (_super) {
     __extends(NodeJSWorker, _super);
     function NodeJSWorker(url) {
-        var _this = this;
-        _super.call(this);
-        var process = this._process = ps.fork(url);
+        var _this = _super.call(this) || this;
+        var process = _this._process = ps.fork(url);
         process.on('message', function (msg) { return _this._onNext(JSON.parse(msg)); });
         process.on('error', function (err) { return _this._onError(err); });
+        return _this;
     }
     NodeJSWorker.prototype._onNext = function (data) {
         _super.prototype._onNext.call(this, data);
@@ -43,5 +44,4 @@ var NodeJSWorker = (function (_super) {
     return NodeJSWorker;
 }(ObservableBase_1.ObservableBase));
 exports.NodeJSWorker = NodeJSWorker;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = NodeJSWorker;
