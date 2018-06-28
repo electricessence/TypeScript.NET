@@ -6,7 +6,6 @@ import { IteratorResult } from "./IteratorResult";
 const VOID0 = void 0;
 export class SimpleEnumerableBase {
     constructor() {
-        this._index = -1;
         this.reset();
     }
     get current() {

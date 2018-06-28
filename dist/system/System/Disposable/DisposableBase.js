@@ -21,8 +21,6 @@ System.register(["./ObjectDisposedException"], function (exports_1, context_1) {
                     this._disposableObjectName = _disposableObjectName;
                     this.__finalizer = __finalizer;
                     this.__wasDisposed = false;
-                    // Allow for simple override of name.
-                    this._disposableObjectName = "DisposableBase";
                 }
                 Object.defineProperty(DisposableBase.prototype, "wasDisposed", {
                     get: function () {

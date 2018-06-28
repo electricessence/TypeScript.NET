@@ -17,7 +17,6 @@
     var VOID0 = void 0;
     var SimpleEnumerableBase = /** @class */ (function () {
         function SimpleEnumerableBase() {
-            this._index = -1;
             this.reset();
         }
         Object.defineProperty(SimpleEnumerableBase.prototype, "current", {

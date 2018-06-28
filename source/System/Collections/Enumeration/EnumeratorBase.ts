@@ -74,7 +74,8 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 {
 
 	private _yielder:Yielder<T>|undefined;
-	private _state:EnumeratorState = EnumeratorState.Before;
+	// @ts-ignore;
+	private _state:EnumeratorState;
 	private _disposer:Closure|undefined;
 
 	get current():T|undefined
@@ -99,13 +100,12 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		disposer?:Closure|null,
 		isEndless?:boolean);
 	constructor(
-		private _initializer:Closure,
+		private _initializer:Closure|null,
 		private _tryGetNext:(yielder:IYield<T>) => boolean,
 		disposer?:Closure|boolean|null,
 		isEndless?:boolean)
 	{
-		super();
-		this._disposableObjectName = NAME;
+		super(NAME);
 		this.reset();
 		if(Type.isBoolean(isEndless))
 			this._isEndless = isEndless;

@@ -43,9 +43,8 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                 __extends(CollectionBase, _super);
                 function CollectionBase(source, _equalityComparer) {
                     if (_equalityComparer === void 0) { _equalityComparer = Compare_1.areEqual; }
-                    var _this = _super.call(this) || this;
+                    var _this = _super.call(this, NAME) || this;
                     _this._equalityComparer = _equalityComparer;
-                    _this._disposableObjectName = NAME;
                     _this._importEntries(source);
                     _this._updateRecursion = 0;
                     _this._modifiedCount = 0;

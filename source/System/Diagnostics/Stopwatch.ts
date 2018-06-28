@@ -20,14 +20,21 @@ export default class Stopwatch
 		return getTimestampMilliseconds();
 	}
 
-	private _elapsed:number = 0;
-	private _startTimeStamp:number = NaN;
-	private _isRunning:boolean = false;
-
+	// @ts-ignore;
+	private _elapsed:number;
+	// @ts-ignore;
+	private _startTimeStamp:number;
+	// @ts-ignore;
+	private _isRunning:boolean;
 
 	get isRunning():boolean
 	{
 		return this._isRunning;
+	}
+
+	constructor()
+	{
+		this.reset();
 	}
 
 	static startNew():Stopwatch

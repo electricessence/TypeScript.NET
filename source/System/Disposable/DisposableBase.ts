@@ -10,7 +10,9 @@ import {Closure} from "../FunctionTypes";
 export abstract class DisposableBase implements IDisposableAware
 {
 
-	constructor(private readonly __finalizer?:Closure|null)
+	protected constructor(
+		protected readonly _disposableObjectName:string,
+		private readonly __finalizer?:Closure|null)
 	{
 	}
 
@@ -20,9 +22,6 @@ export abstract class DisposableBase implements IDisposableAware
 	{
 		return this.__wasDisposed;
 	}
-
-	// Allow for simple override of name.
-	protected _disposableObjectName:string = "DisposableBase";
 
 	protected throwIfDisposed(
 		message?:string,

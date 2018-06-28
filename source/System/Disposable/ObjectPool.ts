@@ -45,7 +45,7 @@ export class ObjectPool<T> extends DisposableBase
 		private _generator?:(...args:any[])=>T,
 		private _recycler?:(o:T)=>void)
 	{
-		super();
+		super(OBJECT_POOL);
 		if(isNaN(_maxSize) || _maxSize<1)
 			throw new ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_GT1);
 		if(_maxSize>ABSOLUTE_MAX_SIZE)
@@ -53,7 +53,6 @@ export class ObjectPool<T> extends DisposableBase
 
 		this._localAbsMaxSize = Math.min(_maxSize*2, ABSOLUTE_MAX_SIZE);
 
-		this._disposableObjectName = OBJECT_POOL;
 		this._pool = [];
 		this._trimmer = new TaskHandler(()=>this._trim());
 		const clear = () => this._clear();

@@ -27,7 +27,7 @@ export abstract class SetBase<T>
 extends CollectionBase<T> implements ISet<T>, IDisposable
 {
 
-	constructor(source?:IEnumerableOrArray<T>)
+	protected constructor(source?:IEnumerableOrArray<T>)
 	{
 		super(VOID0, areEqual);
 		this._importEntries(source);

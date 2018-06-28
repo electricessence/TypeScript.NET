@@ -5,11 +5,11 @@
 import { IDisposableAware } from "./IDisposableAware";
 import { Closure } from "../FunctionTypes";
 export declare abstract class DisposableBase implements IDisposableAware {
+    protected readonly _disposableObjectName: string;
     private readonly __finalizer?;
-    constructor(__finalizer?: Closure | null | undefined);
+    protected constructor(_disposableObjectName: string, __finalizer?: Closure | null | undefined);
     private __wasDisposed;
     readonly wasDisposed: boolean;
-    protected _disposableObjectName: string;
     protected throwIfDisposed(message?: string, objectName?: string): true | never;
     dispose(): void;
     protected _onDispose(): void;

@@ -38,7 +38,6 @@ System.register([], function (exports_1, context_1) {
                     if (beforeSealing)
                         beforeSealing(this);
                     // Node has a .stack, let's use it...
-                    this.stack = '';
                     try {
                         var stack = eval("new Error()").stack;
                         stack = stack
@@ -48,7 +47,9 @@ System.register([], function (exports_1, context_1) {
                             || '';
                         this.stack = this.toStringWithoutBrackets() + stack;
                     }
-                    catch (ex) { }
+                    catch (ex) {
+                        this.stack = "";
+                    }
                     Object.freeze(this);
                 }
                 /**

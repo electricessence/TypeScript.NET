@@ -11,7 +11,7 @@ import { IEnumerator } from "./Enumeration/IEnumerator";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";
 import { ISet } from "./ISet";
 export declare abstract class SetBase<T> extends CollectionBase<T> implements ISet<T>, IDisposable {
-    constructor(source?: IEnumerableOrArray<T>);
+    protected constructor(source?: IEnumerableOrArray<T>);
     protected abstract newUsing(source?: IEnumerableOrArray<T>): SetBase<T>;
     protected _set: LinkedNodeList<ILinkedNodeWithValue<T>> | undefined;
     protected _getSet(): LinkedNodeList<ILinkedNodeWithValue<T>>;

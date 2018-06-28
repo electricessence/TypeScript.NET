@@ -21,7 +21,7 @@ import {Set} from "../Collections/Set";
 import {defer} from "../Threading/defer";
 import {ObjectDisposedException} from "../Disposable/ObjectDisposedException";
 import __extendsImport from "../../extends";
-import {Closure} from "../FunctionTypes";
+import {Closure, Selector} from "../FunctionTypes";
 //noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -33,9 +33,10 @@ function isPromise<T>(value:any):value is PromiseLike<T>
 	return Type.hasMemberOfType(value, THEN, Type.FUNCTION);
 }
 
+export type Resolver = Selector<TSDNPromise.Resolution<any>,any> | null | undefined;
+
 function resolve<T>(
-	value:TSDNPromise.Resolution<T>,
-	resolver:Function,
+	value:TSDNPromise.Resolution<T>, resolver:Resolver,
 	promiseFactory:(v:any) => PromiseBase<any>):PromiseBase<any>
 {
 	let nextValue = resolver
@@ -50,7 +51,7 @@ function resolve<T>(
 function handleResolution(
 	p:TSDNPromise<any> | null | undefined,
 	value:TSDNPromise.Resolution<any>,
-	resolver?:(v:TSDNPromise.Resolution<any>) => any):any
+	resolver?:Resolver):any
 {
 	try
 	{
@@ -70,8 +71,6 @@ function handleResolution(
 		return ex;
 	}
 }
-
-export type Resolver = (v:TSDNPromise.Resolution<any>) => any;
 
 function handleResolutionMethods(
 	targetFulfill:TSDNPromise.Fulfill<any, any> | null | undefined,
@@ -130,8 +129,7 @@ export class PromiseState<T>
 		protected _result?:T,
 		protected _error?:any)
 	{
-		super();
-		this._disposableObjectName = PROMISE_STATE;
+		super(PROMISE_STATE);
 	}
 
 	protected _onDispose():void
@@ -207,6 +205,7 @@ export abstract class PromiseBase<T>
 	protected constructor()
 	{
 		super(TSDNPromise.State.Pending);
+		// @ts-ignore
 		this._disposableObjectName = PROMISE;
 	}
 
@@ -848,7 +847,7 @@ export class ArrayPromise<T>
 	{
 		this.throwIfDisposed();
 		return new ArrayPromise<U>(resolve => {
-			this.doneNow((result:T[]) => resolve(result.map(transform)));
+			this.doneNow(result => resolve(result.map(transform)));
 		}, true);
 	}
 
@@ -872,7 +871,7 @@ export class ArrayPromise<T>
 	{
 
 		return this
-			.thenSynchronous((result:T[]) => result.reduce(reduction, <any>initialValue));
+			.thenSynchronous(result => result.reduce(reduction, <any>initialValue));
 	}
 
 	static fulfilled<T>(value:T[]):ArrayPromise<T>
@@ -893,8 +892,7 @@ export class PromiseCollection<T>
 
 	constructor(source:PromiseLike<T>[] | null | undefined)
 	{
-		super();
-		this._disposableObjectName = PROMISE_COLLECTION;
+		super(PROMISE_COLLECTION);
 		this._source = source && source.slice() || [];
 	}
 
@@ -957,7 +955,7 @@ export class PromiseCollection<T>
 		this.throwIfDisposed();
 		return new ArrayPromise<U>(resolve => {
 			this.all()
-				.doneNow((result:T[]) => resolve(result && result.map(transform)));
+				.doneNow(result => resolve(result.map(transform)));
 		}, true);
 	}
 

@@ -38,9 +38,8 @@ var ReadOnlyCollectionWrapper = /** @class */ (function (_super) {
     };
     ReadOnlyCollectionWrapper.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
-        var _ = this;
-        _.__getCount = null;
-        _.__getEnumerator = null;
+        this.__getCount = null;
+        this.__getEnumerator = null;
     };
     return ReadOnlyCollectionWrapper;
 }(ReadOnlyCollectionBase_1.ReadOnlyCollectionBase));

@@ -21,9 +21,7 @@ System.register(["../Time/TimeSpan"], function (exports_1, context_1) {
              */
             Stopwatch = /** @class */ (function () {
                 function Stopwatch() {
-                    this._elapsed = 0;
-                    this._startTimeStamp = NaN;
-                    this._isRunning = false;
+                    this.reset();
                 }
                 Stopwatch.getTimestampMilliseconds = function () {
                     return getTimestampMilliseconds();

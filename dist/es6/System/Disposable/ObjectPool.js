@@ -13,7 +13,7 @@ import { ArgumentException } from "../Exceptions/ArgumentException";
 const OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = `Must be less than or equal to ${ABSOLUTE_MAX_SIZE}.`;
 export class ObjectPool extends DisposableBase {
     constructor(_maxSize, _generator, _recycler) {
-        super();
+        super(OBJECT_POOL);
         this._maxSize = _maxSize;
         this._generator = _generator;
         this._recycler = _recycler;
@@ -26,7 +26,6 @@ export class ObjectPool extends DisposableBase {
         if (_maxSize > ABSOLUTE_MAX_SIZE)
             throw new ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_LTM);
         this._localAbsMaxSize = Math.min(_maxSize * 2, ABSOLUTE_MAX_SIZE);
-        this._disposableObjectName = OBJECT_POOL;
         this._pool = [];
         this._trimmer = new TaskHandler(() => this._trim());
         const clear = () => this._clear();

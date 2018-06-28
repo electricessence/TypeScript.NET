@@ -56,8 +56,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 {
 
 	constructor() {
-		super();
-		this._disposableObjectName = NAME;
+		super(NAME);
 	}
 
 	protected _entries:EventDispatcherEntry<IEntryParams>[]|undefined;

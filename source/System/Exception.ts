@@ -53,7 +53,6 @@ export class Exception implements Error, IDisposable
 		if(beforeSealing) beforeSealing(this);
 
 		// Node has a .stack, let's use it...
-		this.stack = '';
 		try
 		{
 			let stack:string = eval("new Error()").stack;

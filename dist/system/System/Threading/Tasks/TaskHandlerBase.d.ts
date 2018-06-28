@@ -10,7 +10,7 @@ import { TaskStatus } from "./TaskStatus";
  */
 export declare abstract class TaskHandlerBase extends DisposableBase implements ICancellable {
     private _status;
-    constructor();
+    protected constructor();
     private _timeoutId;
     readonly isScheduled: boolean;
     /**

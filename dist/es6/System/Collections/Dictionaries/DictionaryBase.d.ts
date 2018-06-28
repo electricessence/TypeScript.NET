@@ -9,7 +9,7 @@ import { IEnumerator } from "../Enumeration/IEnumerator";
 import { IEnumerableOrArray } from "../IEnumerableOrArray";
 import { Action } from "../../FunctionTypes";
 export declare abstract class DictionaryBase<TKey, TValue> extends CollectionBase<IKeyValuePair<TKey, TValue>> implements IDictionary<TKey, TValue> {
-    constructor(source?: IEnumerableOrArray<IKeyValuePair<TKey, TValue>>);
+    protected constructor(source?: IEnumerableOrArray<IKeyValuePair<TKey, TValue>>);
     protected _onValueModified(key: TKey, value: TValue | undefined, old: TValue | undefined): void;
     protected _addInternal(item: KeyValuePair<TKey, TValue>): boolean;
     protected _clearInternal(): number;

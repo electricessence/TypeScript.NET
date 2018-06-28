@@ -8,8 +8,6 @@ export class DisposableBase {
         this._disposableObjectName = _disposableObjectName;
         this.__finalizer = __finalizer;
         this.__wasDisposed = false;
-        // Allow for simple override of name.
-        this._disposableObjectName = "DisposableBase";
     }
     get wasDisposed() {
         return this.__wasDisposed;

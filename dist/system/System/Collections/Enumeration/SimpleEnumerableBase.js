@@ -19,7 +19,6 @@ System.register(["./IteratorResult"], function (exports_1, context_1) {
             VOID0 = void 0;
             SimpleEnumerableBase = /** @class */ (function () {
                 function SimpleEnumerableBase() {
-                    this._index = -1;
                     this.reset();
                 }
                 Object.defineProperty(SimpleEnumerableBase.prototype, "current", {

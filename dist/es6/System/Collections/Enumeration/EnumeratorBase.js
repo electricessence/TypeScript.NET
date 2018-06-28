@@ -47,11 +47,9 @@ const NAME = "EnumeratorBase";
 // Naming this class EnumeratorBase to avoid collision with IE.
 export class EnumeratorBase extends DisposableBase {
     constructor(_initializer, _tryGetNext, disposer, isEndless) {
-        super();
+        super(NAME);
         this._initializer = _initializer;
         this._tryGetNext = _tryGetNext;
-        this._state = 0 /* Before */;
-        this._disposableObjectName = NAME;
         this.reset();
         if (Type.isBoolean(isEndless))
             this._isEndless = isEndless;

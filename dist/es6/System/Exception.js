@@ -27,7 +27,6 @@ export class Exception {
         if (beforeSealing)
             beforeSealing(this);
         // Node has a .stack, let's use it...
-        this.stack = '';
         try {
             let stack = eval("new Error()").stack;
             stack = stack
@@ -37,7 +36,9 @@ export class Exception {
                 || '';
             this.stack = this.toStringWithoutBrackets() + stack;
         }
-        catch (ex) { }
+        catch (ex) {
+            this.stack = "";
+        }
         Object.freeze(this);
     }
     /**

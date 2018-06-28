@@ -13,8 +13,7 @@ const NAME = "SubscribableBase";
 // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
 export class SubscribableBase extends DisposableBase {
     constructor() {
-        super();
-        this._disposableObjectName = NAME;
+        super(NAME);
     }
     _getSubscribers() {
         const s = this.__subscriptions;
@@ -23,8 +22,8 @@ export class SubscribableBase extends DisposableBase {
             : null;
     }
     _findEntryNode(subscriber) {
-        const s = this.__subscriptions;
-        return s && s.find(n => !!n.value && n.value.subscriber === subscriber) || null;
+        const s = this.__subscriptions || null;
+        return s && s.find(n => !!n.value && n.value.subscriber === subscriber);
     }
     // It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.
     subscribe(subscriber) {

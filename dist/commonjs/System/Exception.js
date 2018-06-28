@@ -29,7 +29,6 @@ var Exception = /** @class */ (function () {
         if (beforeSealing)
             beforeSealing(this);
         // Node has a .stack, let's use it...
-        this.stack = '';
         try {
             var stack = eval("new Error()").stack;
             stack = stack
@@ -39,7 +38,9 @@ var Exception = /** @class */ (function () {
                 || '';
             this.stack = this.toStringWithoutBrackets() + stack;
         }
-        catch (ex) { }
+        catch (ex) {
+            this.stack = "";
+        }
         Object.freeze(this);
     }
     /**

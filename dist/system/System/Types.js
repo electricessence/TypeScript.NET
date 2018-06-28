@@ -27,17 +27,17 @@ System.register([], function (exports_1, context_1) {
                     this.isBoolean = false;
                     this.isNumber = false;
                     this.isFinite = false;
-                    this.isString = false;
                     this.isValidNumber = false;
+                    this.isString = false;
                     this.isTrueNaN = false;
                     this.isObject = false;
-                    this.isArray = false;
                     this.isFunction = false;
                     this.isUndefined = false;
                     this.isNull = false;
-                    this.isNullOrUndefined = false;
                     this.isPrimitive = false;
                     this.isSymbol = false;
+                    this.isArray = false;
+                    this.isNullOrUndefined = false;
                     switch (this.type = typeof target) {
                         case _BOOLEAN:
                             this.isBoolean = true;

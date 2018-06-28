@@ -19,9 +19,7 @@
     }
     var Stopwatch = /** @class */ (function () {
         function Stopwatch() {
-            this._elapsed = 0;
-            this._startTimeStamp = NaN;
-            this._isRunning = false;
+            this.reset();
         }
         Stopwatch.getTimestampMilliseconds = function () {
             return getTimestampMilliseconds();

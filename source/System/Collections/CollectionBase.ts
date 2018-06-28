@@ -36,8 +36,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		source?:IEnumerableOrArray<T>|IEnumerator<T>,
 		protected _equalityComparer:EqualityComparison<T> = areEqual)
 	{
-		super();
-		this._disposableObjectName = NAME;
+		super(NAME);
 		this._importEntries(source);
 		this._updateRecursion = 0;
 		this._modifiedCount = 0;

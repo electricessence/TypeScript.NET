@@ -71,11 +71,9 @@
     var EnumeratorBase = /** @class */ (function (_super) {
         __extends(EnumeratorBase, _super);
         function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
-            var _this = _super.call(this) || this;
+            var _this = _super.call(this, NAME) || this;
             _this._initializer = _initializer;
             _this._tryGetNext = _tryGetNext;
-            _this._state = 0 /* Before */;
-            _this._disposableObjectName = NAME;
             _this.reset();
             if (Types_1.Type.isBoolean(isEndless))
                 _this._isEndless = isEndless;

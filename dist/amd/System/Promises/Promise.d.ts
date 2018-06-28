@@ -5,8 +5,8 @@
  * heavily influenced by Q (https://github.com/kriskowal/q) and uses some of Q's spec.
  */
 import { DisposableBase } from "../Disposable/DisposableBase";
-import { Closure } from "../FunctionTypes";
-export declare type Resolver = (v: TSDNPromise.Resolution<any>) => any;
+import { Closure, Selector } from "../FunctionTypes";
+export declare type Resolver = Selector<TSDNPromise.Resolution<any>, any> | null | undefined;
 export declare class PromiseState<T> extends DisposableBase {
     protected _state: TSDNPromise.State;
     protected _result?: T | undefined;

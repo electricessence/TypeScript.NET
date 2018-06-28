@@ -26,7 +26,7 @@ const VOID0:undefined = void 0;
 export abstract class DictionaryBase<TKey, TValue>
 extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, TValue>
 {
-	constructor(source?:IEnumerableOrArray<IKeyValuePair<TKey,TValue>>)
+	protected constructor(source?:IEnumerableOrArray<IKeyValuePair<TKey,TValue>>)
 	{
 		super(source);
 	}

@@ -22,10 +22,9 @@ function entryFinalizer() {
 const NAME = "EventDispatcherBase";
 export default class EventDispatcherBase extends DisposableBase {
     constructor() {
-        super();
+        super(NAME);
         // When dispatching events, we need a way to prevent recursion when disposing.
         this._isDisposing = false;
-        this._disposableObjectName = NAME;
     }
     addEventListener(type, listener, priority = 0) {
         let e = this._entries;

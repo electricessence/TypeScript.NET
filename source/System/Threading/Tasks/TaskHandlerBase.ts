@@ -18,7 +18,7 @@ export abstract class TaskHandlerBase extends DisposableBase implements ICancell
 {
 	private _status:TaskStatus;
 
-	constructor()
+	protected constructor()
 	{
 		super(NAME);
 		this._timeoutId = null;

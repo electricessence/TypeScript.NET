@@ -34,15 +34,14 @@ extends DisposableBase
 
 	constructor()
 	{
-		super();
-		this._disposableObjectName = NAME;
+		super(NAME);
 	}
 
 	private _findEntryNode(
 		subscriber:TSubscriber):ILinkedNodeWithValue<Subscription<TSubscriber>>|null
 	{
-		const s = this.__subscriptions;
-		return s && s.find(n=>!!n.value && n.value.subscriber===subscriber) || null;
+		const s = this.__subscriptions || null;
+		return s && s.find(n=>!!n.value && n.value.subscriber===subscriber);
 	}
 
 	// It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.
