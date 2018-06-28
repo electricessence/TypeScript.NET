@@ -10,7 +10,7 @@ export declare enum TimeUnit {
     Seconds = 2,
     Minutes = 3,
     Hours = 4,
-    Days = 5,
+    Days = 5
 }
 export declare module TimeUnit {
     function toMilliseconds(value: number, units?: TimeUnit): number;

@@ -4,12 +4,12 @@
  */
 System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRangeException"], function (exports_1, context_1) {
     "use strict";
+    var ArgumentException_1, ArgumentOutOfRangeException_1;
     var __moduleName = context_1 && context_1.id;
     function Integer(n) {
         return Math.floor(n);
     }
     exports_1("Integer", Integer);
-    var ArgumentException_1, ArgumentOutOfRangeException_1;
     return {
         setters: [
             function (ArgumentException_1_1) {

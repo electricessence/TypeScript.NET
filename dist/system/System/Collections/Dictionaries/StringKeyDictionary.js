@@ -4,8 +4,8 @@
  */
 System.register(["../../Compare", "./DictionaryBase", "../../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Compare_1, DictionaryBase_1, extends_1, __extends, VOID0, StringKeyDictionary;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Compare_1_1) {
@@ -100,7 +100,8 @@ System.register(["../../Compare", "./DictionaryBase", "../../../extends"], funct
                     var result = {};
                     if (_._count)
                         for (var key in _._map) {
-                            if (_._map.hasOwnProperty(key)) {
+                            if (_._map.hasOwnProperty(key)) // This simply satisfies inspection.
+                             {
                                 var value = _._map[key];
                                 if (selector)
                                     value = selector(key, value);

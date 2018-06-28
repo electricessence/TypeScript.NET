@@ -4,6 +4,7 @@
  */
 System.register(["../Types", "../Exceptions/InvalidOperationException"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, InvalidOperationException_1, EMPTY, TRUE, FALSE;
     var __moduleName = context_1 && context_1.id;
     function toString(value, defaultForUnknown) {
         var v = value;
@@ -68,7 +69,6 @@ System.register(["../Types", "../Exceptions/InvalidOperationException"], functio
         return value;
     }
     exports_1("toPrimitive", toPrimitive);
-    var Types_1, InvalidOperationException_1, EMPTY, TRUE, FALSE;
     return {
         setters: [
             function (Types_1_1) {

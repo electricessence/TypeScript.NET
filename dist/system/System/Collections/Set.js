@@ -4,11 +4,11 @@
  */
 System.register(["../Types", "./Dictionaries/getIdentifier", "./HashSet", "../../extends"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, getIdentifier_1, HashSet_1, extends_1, __extends, Set;
     var __moduleName = context_1 && context_1.id;
     function getId(obj) {
         return getIdentifier_1.getIdentifier(obj, typeof obj != Types_1.Type.BOOLEAN);
     }
-    var Types_1, getIdentifier_1, HashSet_1, extends_1, __extends, Set;
     return {
         setters: [
             function (Types_1_1) {

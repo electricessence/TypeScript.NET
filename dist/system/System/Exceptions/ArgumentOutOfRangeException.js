@@ -5,8 +5,8 @@
  */
 System.register(["./ArgumentException", "../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var ArgumentException_1, extends_1, __extends, NAME, ArgumentOutOfRangeException;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (ArgumentException_1_1) {

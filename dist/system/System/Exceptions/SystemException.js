@@ -5,8 +5,8 @@
  */
 System.register(["../Exception", "../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Exception_1, extends_1, __extends, NAME, SystemException;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Exception_1_1) {

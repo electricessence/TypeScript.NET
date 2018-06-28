@@ -39,14 +39,14 @@
         };
         SubscribableBase.prototype._findEntryNode = function (subscriber) {
             var s = this.__subscriptions;
-            return s && s.find(function (n) { return !!n.value && n.value.subscriber === subscriber; });
+            return s && s.find(function (n) { return !!n.value && n.value.subscriber === subscriber; }) || null;
         };
         // It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.
         SubscribableBase.prototype.subscribe = function (subscriber) {
             var _ = this;
             _.throwIfDisposed();
             var n = _._findEntryNode(subscriber);
-            if (n)
+            if (n) // Ensure only one instance of the existing subscription exists.
                 return n.value;
             var _s = _.__subscriptions;
             if (!_s)
@@ -61,10 +61,12 @@
             // _.throwIfDisposed(); If it was disposed, then it's still safe to try and unsubscribe.
             var n = _._findEntryNode(subscriber);
             if (n) {
-                var s = n.value;
-                _.__subscriptions.removeNode(n);
-                if (s)
-                    s.dispose(); // Prevent further usage of a dead subscription.
+                var v = n.value;
+                var _s = _.__subscriptions;
+                if (_s)
+                    _s.removeNode(n);
+                if (v)
+                    v.dispose(); // Prevent further usage of a dead subscription.
             }
         };
         SubscribableBase.prototype._unsubscribeAll = function (returnSubscribers) {

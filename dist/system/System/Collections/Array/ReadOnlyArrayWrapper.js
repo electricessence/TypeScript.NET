@@ -4,8 +4,8 @@
  */
 System.register(["../ReadOnlyCollectionWrapper", "../../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var ReadOnlyCollectionWrapper_1, extends_1, __extends, ReadOnlyArrayWrapper;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (ReadOnlyCollectionWrapper_1_1) {

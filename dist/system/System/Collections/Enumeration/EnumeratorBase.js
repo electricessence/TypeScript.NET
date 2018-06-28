@@ -4,6 +4,7 @@
  */
 System.register(["../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool", "./IteratorResult", "../../../extends"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, DisposableBase_1, ObjectPool_1, IteratorResult_1, extends_1, __extends, VOID0, yielderPool, Yielder, NAME, EnumeratorBase;
     var __moduleName = context_1 && context_1.id;
     //noinspection JSUnusedLocalSymbols
     function yielder(recycle) {
@@ -14,7 +15,6 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
             return yielderPool.take();
         yielderPool.add(recycle);
     }
-    var Types_1, DisposableBase_1, ObjectPool_1, IteratorResult_1, extends_1, __extends, VOID0, yielderPool, Yielder, NAME, EnumeratorBase;
     return {
         setters: [
             function (Types_1_1) {
@@ -83,12 +83,15 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                     var _this = _super.call(this) || this;
                     _this._initializer = _initializer;
                     _this._tryGetNext = _tryGetNext;
+                    _this._state = 0 /* Before */;
                     _this._disposableObjectName = NAME;
                     _this.reset();
                     if (Types_1.Type.isBoolean(isEndless))
                         _this._isEndless = isEndless;
                     else if (Types_1.Type.isBoolean(disposer))
                         _this._isEndless = disposer;
+                    else
+                        _this._isEndless = false;
                     if (Types_1.Type.isFunction(disposer))
                         _this._disposer = disposer;
                     return _this;
@@ -129,7 +132,7 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                     var _ = this;
                     _.throwIfDisposed();
                     var y = _._yielder;
-                    _._yielder = null;
+                    _._yielder = undefined;
                     _._state = 0 /* Before */;
                     if (y)
                         yielder(y); // recycle until actually needed.
@@ -252,7 +255,7 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                     _._initializer = null;
                     _._disposer = null;
                     var y = _._yielder;
-                    _._yielder = null;
+                    _._yielder = undefined;
                     this._state = 5 /* Disposed */;
                     if (y)
                         yielder(y);

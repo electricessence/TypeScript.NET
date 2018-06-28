@@ -4,6 +4,7 @@
  */
 System.register(["../../Integer"], function (exports_1, context_1) {
     "use strict";
+    var Integer_1;
     var __moduleName = context_1 && context_1.id;
     /**
      * Initializes an array depending on the requested capacity.
@@ -24,7 +25,6 @@ System.register(["../../Integer"], function (exports_1, context_1) {
         return array;
     }
     exports_1("initialize", initialize);
-    var Integer_1;
     return {
         setters: [
             function (Integer_1_1) {

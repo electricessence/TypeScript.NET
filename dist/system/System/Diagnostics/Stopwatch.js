@@ -4,11 +4,11 @@
  */
 System.register(["../Time/TimeSpan"], function (exports_1, context_1) {
     "use strict";
+    var TimeSpan_1, Stopwatch;
     var __moduleName = context_1 && context_1.id;
     function getTimestampMilliseconds() {
         return (new Date()).getTime();
     }
-    var TimeSpan_1, Stopwatch;
     return {
         setters: [
             function (TimeSpan_1_1) {
@@ -21,7 +21,9 @@ System.register(["../Time/TimeSpan"], function (exports_1, context_1) {
              */
             Stopwatch = /** @class */ (function () {
                 function Stopwatch() {
-                    this.reset();
+                    this._elapsed = 0;
+                    this._startTimeStamp = NaN;
+                    this._isRunning = false;
                 }
                 Stopwatch.getTimestampMilliseconds = function () {
                     return getTimestampMilliseconds();

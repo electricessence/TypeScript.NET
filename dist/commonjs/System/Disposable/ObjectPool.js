@@ -31,13 +31,12 @@ var ObjectPool = /** @class */ (function (_super) {
         if (_maxSize > ABSOLUTE_MAX_SIZE)
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_LTM);
         _this._localAbsMaxSize = Math.min(_maxSize * 2, ABSOLUTE_MAX_SIZE);
-        var _ = _this;
-        _._disposableObjectName = OBJECT_POOL;
-        _._pool = [];
-        _._trimmer = new TaskHandler_1.TaskHandler(function () { return _._trim(); });
-        var clear = function () { return _._clear(); };
-        _._flusher = new TaskHandler_1.TaskHandler(clear);
-        _._autoFlusher = new TaskHandler_1.TaskHandler(clear);
+        _this._disposableObjectName = OBJECT_POOL;
+        _this._pool = [];
+        _this._trimmer = new TaskHandler_1.TaskHandler(function () { return _this._trim(); });
+        var clear = function () { return _this._clear(); };
+        _this._flusher = new TaskHandler_1.TaskHandler(clear);
+        _this._autoFlusher = new TaskHandler_1.TaskHandler(clear);
         return _this;
     }
     Object.defineProperty(ObjectPool.prototype, "maxSize", {
@@ -96,12 +95,11 @@ var ObjectPool = /** @class */ (function (_super) {
         this._flusher.start(defer);
     };
     ObjectPool.prototype.toArrayAndClear = function () {
-        var _ = this;
-        _.throwIfDisposed();
-        _._trimmer.cancel();
-        _._flusher.cancel();
-        var p = _._pool;
-        _._pool = [];
+        this.throwIfDisposed();
+        this._trimmer.cancel();
+        this._flusher.cancel();
+        var p = this._pool;
+        this._pool = [];
         return p;
     };
     /**

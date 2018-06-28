@@ -10,7 +10,6 @@ export default class Stopwatch implements ITimer {
     private _startTimeStamp;
     private _isRunning;
     readonly isRunning: boolean;
-    constructor();
     static startNew(): Stopwatch;
     static measure(closure: () => void): TimeSpan;
     start(): void;

@@ -4,6 +4,7 @@
  */
 System.register(["../Types"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, EMPTY;
     var __moduleName = context_1 && context_1.id;
     /**
      * Returns a numerical (integer) hash code of the string.  Can be used for identifying inequality of contents, but two different strings in rare cases will have the same hash code.
@@ -153,7 +154,6 @@ System.register(["../Types"], function (exports_1, context_1) {
         return Types_1.Type.isBoolean(m) ? m : source.lastIndexOf(pattern) == (source.length - pattern.length);
     }
     exports_1("endsWith", endsWith);
-    var Types_1, EMPTY;
     return {
         setters: [
             function (Types_1_1) {

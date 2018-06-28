@@ -65,12 +65,15 @@ var EnumeratorBase = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this._initializer = _initializer;
         _this._tryGetNext = _tryGetNext;
+        _this._state = 0 /* Before */;
         _this._disposableObjectName = NAME;
         _this.reset();
         if (Types_1.Type.isBoolean(isEndless))
             _this._isEndless = isEndless;
         else if (Types_1.Type.isBoolean(disposer))
             _this._isEndless = disposer;
+        else
+            _this._isEndless = false;
         if (Types_1.Type.isFunction(disposer))
             _this._disposer = disposer;
         return _this;
@@ -111,7 +114,7 @@ var EnumeratorBase = /** @class */ (function (_super) {
         var _ = this;
         _.throwIfDisposed();
         var y = _._yielder;
-        _._yielder = null;
+        _._yielder = undefined;
         _._state = 0 /* Before */;
         if (y)
             yielder(y); // recycle until actually needed.
@@ -234,7 +237,7 @@ var EnumeratorBase = /** @class */ (function (_super) {
         _._initializer = null;
         _._disposer = null;
         var y = _._yielder;
-        _._yielder = null;
+        _._yielder = undefined;
         this._state = 5 /* Disposed */;
         if (y)
             yielder(y);

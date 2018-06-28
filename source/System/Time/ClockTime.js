@@ -61,7 +61,7 @@
             value += milliseconds;
             return value;
         };
-        ClockTime.prototype.toString = function () {
+        ClockTime.prototype.toString = function ( /*format?:string, formatProvider?:IFormatProvider*/) {
             /* INSERT CUSTOM FORMATTING CODE HERE */
             var _ = this;
             var a = [];

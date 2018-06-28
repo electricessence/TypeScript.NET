@@ -4,8 +4,8 @@
  */
 System.register(["./EnumeratorBase", "../../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var EnumeratorBase_1, extends_1, __extends, IndexEnumerator;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (EnumeratorBase_1_1) {
@@ -30,7 +30,7 @@ System.register(["./EnumeratorBase", "../../../extends"], function (exports_1, c
                         source = sourceFactory();
                         if (source && source.source) {
                             var len = source.length;
-                            if (len < 0)
+                            if (len < 0) // Null is allowed but will exit immediately.
                                 throw new Error("length must be zero or greater");
                             if (!isFinite(len))
                                 throw new Error("length must finite number");

@@ -12,12 +12,16 @@ export class TypeInfo {
     constructor(target, onBeforeFreeze) {
         this.isBoolean = false;
         this.isNumber = false;
+        this.isFinite = false;
         this.isString = false;
+        this.isValidNumber = false;
         this.isTrueNaN = false;
         this.isObject = false;
+        this.isArray = false;
         this.isFunction = false;
         this.isUndefined = false;
         this.isNull = false;
+        this.isNullOrUndefined = false;
         this.isPrimitive = false;
         this.isSymbol = false;
         switch (this.type = typeof target) {

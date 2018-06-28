@@ -5,6 +5,7 @@
  */
 System.register(["./TimeQuantity", "../../extends"], function (exports_1, context_1) {
     "use strict";
+    var TimeQuantity_1, extends_1, __extends, ClockTime;
     var __moduleName = context_1 && context_1.id;
     // Temporary until the full TimeSpanFormat is available.
     function pluralize(value, label) {
@@ -12,7 +13,6 @@ System.register(["./TimeQuantity", "../../extends"], function (exports_1, contex
             label += "s";
         return label;
     }
-    var TimeQuantity_1, extends_1, __extends, ClockTime;
     return {
         setters: [
             function (TimeQuantity_1_1) {
@@ -72,7 +72,7 @@ System.register(["./TimeQuantity", "../../extends"], function (exports_1, contex
                     value += milliseconds;
                     return value;
                 };
-                ClockTime.prototype.toString = function () {
+                ClockTime.prototype.toString = function ( /*format?:string, formatProvider?:IFormatProvider*/) {
                     /* INSERT CUSTOM FORMATTING CODE HERE */
                     var _ = this;
                     var a = [];

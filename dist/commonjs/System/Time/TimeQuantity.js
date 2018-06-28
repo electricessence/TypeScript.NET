@@ -42,7 +42,7 @@ var TimeQuantity = /** @class */ (function () {
     /**
      * Compares this instance against any other time quantity instance.
      * @param other
-     * @returns {CompareResult}
+     * @returns {number}
      */
     TimeQuantity.prototype.compareTo = function (other) {
         return Compare_1.compare(this.getTotalMilliseconds(), other && other.total && other.total.milliseconds);

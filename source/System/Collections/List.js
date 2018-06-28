@@ -128,7 +128,7 @@
                     return yielder.yieldBreak();
                 }
                 _.assertVersion(version);
-                if (index >= source.length)
+                if (index >= source.length) // Just in case the size changes as we enumerate use '>='.
                     return yielder.yieldBreak();
                 return yielder.yieldReturn(source[index++]);
             });

@@ -4,8 +4,8 @@
  */
 System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullException", "../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var DisposableBase_1, ArgumentNullException_1, extends_1, __extends, NULL, NAME, ResolverBase;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (DisposableBase_1_1) {

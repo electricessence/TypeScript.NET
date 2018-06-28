@@ -118,7 +118,7 @@ var Dictionary = /** @class */ (function (_super) {
             if (!bucket)
                 bucket = _._getBucket(hash, true);
             if (!bucket)
-                throw new Error("\"" + hash + "\" cannot be added to lookup table.");
+                throw new Error("\"" + hash.toString() + "\" cannot be added to lookup table.");
             var entry = new HashEntry(key, value);
             entries.addNode(entry);
             bucket.addNode(new HashEntry(key, entry));

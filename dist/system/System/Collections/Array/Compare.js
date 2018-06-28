@@ -4,6 +4,7 @@
  */
 System.register(["../../Compare", "../../Types"], function (exports_1, context_1) {
     "use strict";
+    var Values, Types_1;
     var __moduleName = context_1 && context_1.id;
     /*  validateSize: Utility for quick validation/invalidation of array equality.
         Why this way?  Why not pass a closure for the last return?
@@ -93,7 +94,6 @@ System.register(["../../Compare", "../../Types"], function (exports_1, context_1
         return true;
     }
     exports_1("areEquivalent", areEquivalent);
-    var Values, Types_1;
     return {
         setters: [
             function (Values_1) {

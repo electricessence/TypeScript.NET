@@ -4,6 +4,7 @@
  */
 System.register(["../../Types"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, VOID0, NULL, GET_SYMBOL, GET_HASH_CODE;
     var __moduleName = context_1 && context_1.id;
     function getIdentifier(obj, throwIfUnknown) {
         if (throwIfUnknown === void 0) { throwIfUnknown = false; }
@@ -32,7 +33,6 @@ System.register(["../../Types"], function (exports_1, context_1) {
             : Object.prototype.toString.call(obj);
     }
     exports_1("getIdentifier", getIdentifier);
-    var Types_1, VOID0, NULL, GET_SYMBOL, GET_HASH_CODE;
     return {
         setters: [
             function (Types_1_1) {

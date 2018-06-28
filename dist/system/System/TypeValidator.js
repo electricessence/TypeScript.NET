@@ -18,6 +18,7 @@
  */
 System.register(["./Types", "./Compare", "../extends"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, Compare_1, extends_1, __extends, TypeInfoHelper, TypeValidator;
     var __moduleName = context_1 && context_1.id;
     function areInvalid(v, d) {
         if (!Compare_1.areEqual(v, d)) {
@@ -27,7 +28,6 @@ System.register(["./Types", "./Compare", "../extends"], function (exports_1, con
         }
         return false;
     }
-    var Types_1, Compare_1, extends_1, __extends, TypeInfoHelper, TypeValidator;
     return {
         setters: [
             function (Types_1_1) {

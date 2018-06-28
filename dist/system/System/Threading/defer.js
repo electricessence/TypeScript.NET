@@ -4,6 +4,7 @@
  */
 System.register(["../../extends"], function (exports_1, context_1) {
     "use strict";
+    var extends_1, __extends, DeferBase, Defer, DeferInterval;
     var __moduleName = context_1 && context_1.id;
     function defer(task, delay, payload) {
         return new Defer(task, delay, payload);
@@ -14,7 +15,6 @@ System.register(["../../extends"], function (exports_1, context_1) {
         return new DeferInterval(task, interval, count);
     }
     exports_1("interval", interval);
-    var extends_1, __extends, DeferBase, Defer, DeferInterval;
     return {
         setters: [
             function (extends_1_1) {

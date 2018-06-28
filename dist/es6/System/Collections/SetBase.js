@@ -40,6 +40,7 @@ export class SetBase extends CollectionBase {
         if (!other)
             throw new ArgumentNullException(OTHER);
         const _ = this;
+        // noinspection SuspiciousInstanceOfGuard
         if (other instanceof SetBase) {
             let s = _._set;
             if (s)
@@ -56,6 +57,7 @@ export class SetBase extends CollectionBase {
     isProperSubsetOf(other) {
         if (!other)
             throw new ArgumentNullException(OTHER);
+        // noinspection SuspiciousInstanceOfGuard
         return other instanceof SetBase
             ? other.isProperSupersetOf(this)
             : using(this.newUsing(other), o => o.isProperSupersetOf(this));
@@ -64,6 +66,7 @@ export class SetBase extends CollectionBase {
         if (!other)
             throw new ArgumentNullException(OTHER);
         let result = true, count;
+        // noinspection SuspiciousInstanceOfGuard
         if (other instanceof SetBase) {
             result = this.isSupersetOf(other);
             count = other.getCount();
@@ -83,6 +86,7 @@ export class SetBase extends CollectionBase {
     isSubsetOf(other) {
         if (!other)
             throw new ArgumentNullException(OTHER);
+        // noinspection SuspiciousInstanceOfGuard
         return other instanceof SetBase
             ? other.isSupersetOf(this)
             : using(this.newUsing(other), o => o.isSupersetOf(this));
@@ -106,6 +110,7 @@ export class SetBase extends CollectionBase {
     setEquals(other) {
         if (!other)
             throw new ArgumentNullException(OTHER);
+        // noinspection SuspiciousInstanceOfGuard
         return this.getCount() == (other instanceof SetBase
             ? other.getCount()
             : using(this.newUsing(other), o => o.getCount()))
@@ -115,6 +120,7 @@ export class SetBase extends CollectionBase {
         if (!other)
             throw new ArgumentNullException(OTHER);
         const _ = this;
+        // noinspection SuspiciousInstanceOfGuard
         if (other instanceof SetBase) {
             forEach(other, v => {
                 if (_.contains(v)) {
@@ -157,7 +163,7 @@ export class SetBase extends CollectionBase {
     forEach(action, useCopy) {
         return useCopy
             ? super.forEach(action, useCopy)
-            : this._set.forEach((node, i) => action(node.value, i));
+            : this._set ? this._set.forEach((node, i) => action(node.value, i)) : 0;
     }
     _removeNode(node) {
         return !!node

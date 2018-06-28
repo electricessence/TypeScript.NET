@@ -29,7 +29,7 @@ export declare class TimeQuantity implements IEquatable<ITimeQuantity>, ICompara
     /**
      * Compares this instance against any other time quantity instance.
      * @param other
-     * @returns {CompareResult}
+     * @returns {number}
      */
     compareTo(other: ITimeQuantity): number;
     protected _total: Lazy<ITimeMeasurement>;

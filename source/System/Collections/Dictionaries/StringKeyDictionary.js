@@ -94,7 +94,8 @@
             var result = {};
             if (_._count)
                 for (var key in _._map) {
-                    if (_._map.hasOwnProperty(key)) {
+                    if (_._map.hasOwnProperty(key)) // This simply satisfies inspection.
+                     {
                         var value = _._map[key];
                         if (selector)
                             value = selector(key, value);

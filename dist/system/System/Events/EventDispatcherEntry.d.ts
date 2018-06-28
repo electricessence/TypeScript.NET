@@ -9,7 +9,7 @@ import { Closure } from "../FunctionTypes";
 export declare class EventDispatcherEntry<TParams> extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>> {
     type: string;
     listener: IEventListener;
-    params: TParams | undefined;
+    params?: TParams | undefined;
     constructor(type: string, listener: IEventListener, params?: TParams | undefined, finalizer?: Closure);
     protected _onDispose(): void;
     /**

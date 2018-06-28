@@ -4,8 +4,8 @@
  */
 System.register(["../../Compare"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Values, SortContext;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Values_1) {

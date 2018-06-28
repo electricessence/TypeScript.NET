@@ -4,6 +4,7 @@
  */
 System.register(["../../Types", "./copy"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, copy_1, VOID0;
     var __moduleName = context_1 && context_1.id;
     /**
      * Simply takes a payload and passes it to all the listeners.
@@ -17,7 +18,6 @@ System.register(["../../Types", "./copy"], function (exports_1, context_1) {
         dispatch.unsafe(copy_1.copy(listeners), payload, trap);
     }
     exports_1("dispatch", dispatch);
-    var Types_1, copy_1, VOID0;
     return {
         setters: [
             function (Types_1_1) {

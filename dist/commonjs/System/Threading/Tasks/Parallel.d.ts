@@ -63,7 +63,7 @@ export declare class Parallel {
      * @returns {PromiseCollection}
      */
     pipe<T, U>(data: T[], task: (data: T) => U, env?: any): PromiseCollection<U>;
-    private ensureClampedMaxConcurrency();
+    private ensureClampedMaxConcurrency;
     /**
      * Waits for all tasks to resolve and returns a promise with the results.
      * @param data

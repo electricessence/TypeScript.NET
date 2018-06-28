@@ -1,7 +1,7 @@
 System.register(["../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var extends_1, __extends, EMPTY, _I, _G, _M, _U, _W, _Y, RegexOptions, Regex, Capture, Group, EmptyGroup, Match, EmptyMatch;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (extends_1_1) {
@@ -57,7 +57,9 @@ System.register(["../../extends"], function (exports_1, context_1) {
                     }
                     if (!pattern)
                         throw new Error("'pattern' cannot be null or empty.");
-                    var patternString, flags = (options && ((options) instanceof (Array) ? options : [options]).concat(extra) || extra)
+                    var patternString, flags = (options && ((options) instanceof (Array)
+                        ? options
+                        : [options]).concat(extra) || extra)
                         .join(EMPTY)
                         .toLowerCase();
                     if (pattern instanceof RegExp) {

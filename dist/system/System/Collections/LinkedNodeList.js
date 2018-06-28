@@ -4,6 +4,7 @@
  */
 System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
+    var Utility_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, EnumeratorBase_1, extends_1, __extends, LinkedNodeList;
     var __moduleName = context_1 && context_1.id;
     function assertValidDetached(node, propName) {
         if (propName === void 0) { propName = 'node'; }
@@ -12,7 +13,6 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
         if (node.next || node.previous)
             throw new InvalidOperationException_1.InvalidOperationException("Cannot add a node to a LinkedNodeList that is already linked.");
     }
-    var Utility_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, EnumeratorBase_1, extends_1, __extends, LinkedNodeList;
     return {
         setters: [
             function (Utility_1_1) {

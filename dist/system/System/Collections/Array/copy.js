@@ -4,6 +4,7 @@
  */
 System.register(["./initialize", "../../Exceptions/ArgumentNullException", "../../Exceptions/ArgumentOutOfRangeException"], function (exports_1, context_1) {
     "use strict";
+    var initialize_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, CBN, CBL0;
     var __moduleName = context_1 && context_1.id;
     /**
      *
@@ -59,7 +60,6 @@ System.register(["./initialize", "../../Exceptions/ArgumentNullException", "../.
         return destination;
     }
     exports_1("copyTo", copyTo);
-    var initialize_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, CBN, CBL0;
     return {
         setters: [
             function (initialize_1_1) {

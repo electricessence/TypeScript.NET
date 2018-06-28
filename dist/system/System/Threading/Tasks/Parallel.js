@@ -5,6 +5,7 @@
  */
 System.register(["../../Promises/Promise", "../../Types", "../Worker", "../deferImmediate", "../../Environment", "../../Disposable/ObjectPool", "../../../extends"], function (exports_1, context_1) {
     "use strict";
+    var Promise_1, Types_1, Worker_1, deferImmediate_1, Environment_1, ObjectPool_1, extends_1, __extends, MAX_WORKERS, VOID0, URL, _supports, defaults, WorkerPromise, workers, Parallel;
     var __moduleName = context_1 && context_1.id;
     function extend(from, to) {
         if (!to)
@@ -24,7 +25,6 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
         if (message !== VOID0)
             w.postMessage(message);
     }
-    var Promise_1, Types_1, Worker_1, deferImmediate_1, Environment_1, ObjectPool_1, extends_1, __extends, MAX_WORKERS, VOID0, URL, _supports, defaults, WorkerPromise, workers, Parallel;
     return {
         setters: [
             function (Promise_1_1) {

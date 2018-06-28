@@ -5,8 +5,8 @@
  */
 System.register(["../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../../extends", "../Lazy"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Types_1, TimeUnit_1, ClockTime_1, TimeQuantity_1, extends_1, Lazy_1, __extends, TimeSpan, timeSpanZero;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Types_1_1) {

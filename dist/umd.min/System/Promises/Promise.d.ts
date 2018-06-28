@@ -9,8 +9,8 @@ import { Closure } from "../FunctionTypes";
 export declare type Resolver = (v: TSDNPromise.Resolution<any>) => any;
 export declare class PromiseState<T> extends DisposableBase {
     protected _state: TSDNPromise.State;
-    protected _result: T | undefined;
-    protected _error: any;
+    protected _result?: T | undefined;
+    protected _error?: any;
     constructor(_state: TSDNPromise.State, _result?: T | undefined, _error?: any);
     protected _onDispose(): void;
     protected getState(): TSDNPromise.State;
@@ -25,7 +25,7 @@ export declare class PromiseState<T> extends DisposableBase {
     readonly error: any;
 }
 export declare abstract class PromiseBase<T> extends PromiseState<T> implements PromiseLike<T> {
-    constructor();
+    protected constructor();
     /**
      * .doneNow is provided as a non-standard means that synchronously resolves as the end of a promise chain.
      * As stated by promisejs.org: 'then' is to 'done' as 'map' is to 'forEach'.
@@ -33,42 +33,41 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
      * @param onFulfilled
      * @param onRejected
      */
-    abstract doneNow(onFulfilled: TSDNPromise.Fulfill<T, any> | undefined | null, onRejected?: TSDNPromise.Reject<any> | undefined | null): void;
-    abstract doneNow(onFulfilled: (v?: T) => any | undefined | null, onRejected?: (v?: any) => any | undefined | null): void;
+    abstract doneNow(onFulfilled: TSDNPromise.Fulfill<T, any> | undefined | null, onRejected?: TSDNPromise.Reject<any> | null): void;
     /**
      * Calls the respective handlers once the promise is resolved.
      * @param onFulfilled
      * @param onRejected
      */
-    abstract thenSynchronous<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | undefined | null): PromiseBase<TFulfilled | TRejected>;
+    abstract thenSynchronous<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | null): PromiseBase<TFulfilled | TRejected>;
     /**
      * Same as 'thenSynchronous' but does not return the result.  Returns the current promise instead.
      * You may not need an additional promise result, and this will not create a new one.
      * @param onFulfilled
      * @param onRejected
      */
-    thenThis(onFulfilled: TSDNPromise.Fulfill<T, any> | undefined | null, onRejected?: TSDNPromise.Reject<any> | undefined | null): this;
+    thenThis(onFulfilled: TSDNPromise.Fulfill<T, any> | undefined | null, onRejected?: TSDNPromise.Reject<any> | null): this;
     /**
      * Standard .then method that defers execution until resolved.
      * @param onFulfilled
      * @param onRejected
      * @returns {TSDNPromise}
      */
-    then<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | undefined | null): PromiseBase<TFulfilled | TRejected>;
+    then<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | null): PromiseBase<TFulfilled | TRejected>;
     /**
      * Same as .then but doesn't trap errors.  Exceptions may end up being fatal.
      * @param onFulfilled
      * @param onRejected
      * @returns {TSDNPromise}
      */
-    thenAllowFatal<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | undefined | null): PromiseBase<TFulfilled | TRejected>;
+    thenAllowFatal<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | null): PromiseBase<TFulfilled | TRejected>;
     /**
      * .done is provided as a non-standard means that maps to similar functionality in other promise libraries.
      * As stated by promisejs.org: 'then' is to 'done' as 'map' is to 'forEach'.
      * @param onFulfilled
      * @param onRejected
      */
-    done(onFulfilled: TSDNPromise.Fulfill<T, any>, onRejected?: TSDNPromise.Reject<any>): void;
+    done(onFulfilled: TSDNPromise.Fulfill<T, any> | undefined | null, onRejected?: TSDNPromise.Reject<any> | null): void;
     /**
      * Will yield for a number of milliseconds from the time called before continuing.
      * @param milliseconds
@@ -116,14 +115,14 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
     finallyThis(fin: Closure, synchronous?: boolean): this;
 }
 export declare abstract class Resolvable<T> extends PromiseBase<T> {
-    doneNow(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
-    thenSynchronous<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | undefined | null): PromiseBase<TFulfilled | TRejected>;
+    doneNow(onFulfilled: TSDNPromise.Fulfill<T, any> | undefined | null, onRejected?: TSDNPromise.Reject<any> | null): void;
+    thenSynchronous<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | null): PromiseBase<TFulfilled | TRejected>;
 }
 /**
  * The simplest usable version of a promise which returns synchronously the resolved state provided.
  */
 export declare abstract class Resolved<T> extends Resolvable<T> {
-    constructor(state: TSDNPromise.State, result: T, error?: any);
+    protected constructor(state: TSDNPromise.State, result: T, error?: any);
 }
 /**
  * A fulfilled Resolved<T>.  Provided for readability.
@@ -143,14 +142,14 @@ export declare class Rejected<T> extends Resolved<T> {
 export declare class TSDNPromise<T> extends Resolvable<T> {
     private _waiting;
     constructor(resolver?: TSDNPromise.Executor<T>, forceSynchronous?: boolean);
-    thenSynchronous<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | undefined | null): PromiseBase<TFulfilled | TRejected>;
-    doneNow(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
+    thenSynchronous<TFulfilled = T, TRejected = never>(onFulfilled: TSDNPromise.Fulfill<T, TFulfilled> | undefined | null, onRejected?: TSDNPromise.Reject<TRejected> | null): PromiseBase<TFulfilled | TRejected>;
+    doneNow(onFulfilled: TSDNPromise.Fulfill<T, any> | undefined | null, onRejected?: TSDNPromise.Reject<any> | null): void;
     protected _onDispose(): void;
-    protected _resolvedCalled: boolean;
+    protected _resolvedCalled: boolean | undefined;
     resolveUsing(resolver: TSDNPromise.Executor<T>, forceSynchronous?: boolean): void;
-    private _emitDisposalRejection(p);
-    private _resolveInternal(result?);
-    private _rejectInternal(error);
+    private _emitDisposalRejection;
+    private _resolveInternal;
+    private _rejectInternal;
     resolve(result?: T | PromiseLike<T>, throwIfSettled?: boolean): void;
     reject(error: any, throwIfSettled?: boolean): void;
 }
@@ -172,7 +171,7 @@ export declare class ArrayPromise<T> extends TSDNPromise<T[]> {
  * A Promise collection exposes useful methods for handling a collection of promises and their results.
  */
 export declare class PromiseCollection<T> extends DisposableBase {
-    private _source;
+    private readonly _source;
     constructor(source: PromiseLike<T>[] | null | undefined);
     protected _onDispose(): void;
     /**
@@ -222,14 +221,14 @@ export declare module TSDNPromise {
     enum State {
         Pending = 0,
         Fulfilled = 1,
-        Rejected = -1,
+        Rejected = -1
     }
     type Resolution<TResult> = TResult | PromiseLike<TResult>;
     interface Fulfill<T, TResult> {
         (value: T): Resolution<TResult>;
     }
     interface Reject<TResult> {
-        (reason: any): TResult | PromiseLike<TResult>;
+        (reason: any): Resolution<TResult>;
     }
     interface Then<T, TResult> {
         (onfulfilled?: Fulfill<T, TResult> | undefined | null, onrejected?: Reject<TResult> | undefined | null): PromiseLike<TResult>;

@@ -4,6 +4,7 @@
  */
 System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentNullException", "./Types"], function (exports_1, context_1) {
     "use strict";
+    var ArgumentException_1, ArgumentNullException_1, Types_1, VOID0, DOT, KEY, VALUE, ITEM, ITEM_1, ITEM_VALUE, INVALID_KVP_MESSAGE, CANNOT_BE_UNDEFINED;
     var __moduleName = context_1 && context_1.id;
     function isKeyValuePair(kvp) {
         return kvp && kvp.hasOwnProperty(KEY) && kvp.hasOwnProperty(VALUE);
@@ -47,7 +48,6 @@ System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentNullExc
         return to(key, value);
     }
     exports_1("extractKeyValue", extractKeyValue);
-    var ArgumentException_1, ArgumentNullException_1, Types_1, VOID0, DOT, KEY, VALUE, ITEM, ITEM_1, ITEM_VALUE, INVALID_KVP_MESSAGE, CANNOT_BE_UNDEFINED;
     return {
         setters: [
             function (ArgumentException_1_1) {

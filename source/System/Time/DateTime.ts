@@ -40,12 +40,14 @@ export class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime>
 			this._value = value.toJsDate();
 			if(kind===VOID0) this._kind = value._kind;
 		}
-		else if(value instanceof Date)
-			this._value = new Date(value.getTime());
-		else
-			this._value = value===VOID0
-				? new Date()
-				: new Date(value);
+		else { // noinspection SuspiciousInstanceOfGuard
+			if(value instanceof Date)
+						this._value = new Date(value.getTime());
+					else
+						this._value = value===VOID0
+							? new Date()
+							: new Date(value);
+		}
 	}
 
 	private readonly _kind:DateTime.Kind;
@@ -207,7 +209,7 @@ export class DateTime implements ICalendarDate, IDateTime, IEquatable<IDateTime>
 		);
 	}
 
-	private _time:ClockTime|null;
+	private _time:ClockTime|undefined;
 
 	/**
 	 * Returns the time of day represented by a ClockTime object.

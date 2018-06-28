@@ -28,7 +28,13 @@ export module RegexOptions
 	export type Sticky = 'y';
 	export type IgnorePatternWhitespace = "w";
 
-	export type Literal = Global | IgnoreCase | MultiLine | Unicode | Sticky | IgnorePatternWhitespace;
+	export type Literal =
+		Global
+		| IgnoreCase
+		| MultiLine
+		| Unicode
+		| Sticky
+		| IgnorePatternWhitespace;
 
 
 	/**
@@ -73,18 +79,20 @@ export module RegexOptions
 export class Regex
 {
 	private readonly _re:RegExp;
-	private readonly _keys:string[];
+	private readonly _keys:string[] | undefined;
 
 	constructor(
-		pattern:string|RegExp,
-		options?:RegexOptions.Literal|RegexOptions.Literal[],
+		pattern:string | RegExp,
+		options?:RegexOptions.Literal | RegexOptions.Literal[],
 		...extra:RegexOptions.Literal[])
 	{
 		if(!pattern) throw new Error("'pattern' cannot be null or empty.");
 
 		let patternString:string,
 		    flags:string
-			    = (options && ((options)instanceof(Array) ? options : [options]).concat(extra) || extra)
+			    = (options && ((options) instanceof (Array)
+			    ? options
+			    : [options]).concat(extra) || extra)
 			    .join(EMPTY)
 			    .toLowerCase();
 
@@ -145,7 +153,7 @@ export class Regex
 
 		const first = startIndex + r.index;
 		let loc = first;
-		const groups:Group[] = [],
+		const groups:Group[]       = [],
 		      groupMap:IMap<Group> = {};
 
 		for(let i = 0, len = r.length; i<len; ++i)
@@ -189,7 +197,7 @@ export class Regex
 
 	replace(
 		input:string,
-		evaluator:SelectorWithIndex<Match,Primitive>,
+		evaluator:SelectorWithIndex<Match, Primitive>,
 		count?:number):string;
 
 	replace(
@@ -239,7 +247,7 @@ export class Regex
 	static replace(
 		input:string,
 		pattern:string,
-		evaluator:SelectorWithIndex<Match,Primitive>,
+		evaluator:SelectorWithIndex<Match, Primitive>,
 		options?:RegexOptions.Literal[]):string;
 
 	static replace(
@@ -274,7 +282,8 @@ export class Capture
 	}
 }
 
-export class Group extends Capture
+export class Group
+	extends Capture
 {
 	get success():boolean
 	{
@@ -294,16 +303,18 @@ export class Group extends Capture
 	}
 
 }
+
 const EmptyGroup = new Group();
 EmptyGroup.freeze();
 
-export class Match extends Group
+export class Match
+	extends Group
 {
 
 	constructor(
-		value:string = EMPTY,
-		index:number = -1,
-		public readonly groups:Group[] = [],
+		value:string                            = EMPTY,
+		index:number                            = -1,
+		public readonly groups:Group[]          = [],
 		public readonly namedGroups:IMap<Group> = {})
 	{
 		super(value, index);
@@ -323,6 +334,7 @@ export class Match extends Group
 		return EmptyMatch;
 	}
 }
+
 const EmptyMatch = new Match();
 EmptyMatch.freeze();
 

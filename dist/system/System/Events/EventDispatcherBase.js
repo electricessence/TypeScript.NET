@@ -4,13 +4,18 @@
  */
 System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../Disposable/DisposableBase", "../Disposable/dispose", "./EventDispatcherEntry", "../../extends"], function (exports_1, context_1) {
     "use strict";
+    var AU, shallowCopy_1, DisposableBase_1, dispose_1, EventDispatcherEntry_1, extends_1, __extends, DISPOSING, DISPOSED, NAME, EventDispatcherBase;
     var __moduleName = context_1 && context_1.id;
     function entryFinalizer() {
-        var p = this.params;
-        p.dispatcher.removeEntry(this);
-        p.dispatcher = null;
+        //@ts-ignore
+        var _ = this;
+        var p = _.params;
+        var d = p && p.dispatcher;
+        if (d) {
+            d.removeEntry(_);
+            p.dispatcher = null;
+        }
     }
-    var AU, shallowCopy_1, DisposableBase_1, dispose_1, EventDispatcherEntry_1, extends_1, __extends, DISPOSING, DISPOSED, NAME, EventDispatcherBase;
     return {
         setters: [
             function (AU_1) {
@@ -74,10 +79,12 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
                     var e = this._entries;
                     return e && e.some(function (value) {
                         return type == value.type && (!listener || listener == value.listener);
-                    });
+                    }) || false;
                 };
                 EventDispatcherBase.prototype.removeEventListener = function (type, listener) {
-                    dispose_1.dispose.these.noCopy(this._entries.filter(function (entry) { return entry.matches(type, listener); }));
+                    var e = this._entries;
+                    if (e)
+                        dispose_1.dispose.these.noCopy(e.filter(function (entry) { return entry.matches(type, listener); }));
                 };
                 EventDispatcherBase.prototype.dispatchEvent = function (e, params) {
                     var _this = this;

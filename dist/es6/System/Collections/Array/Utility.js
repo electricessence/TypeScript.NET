@@ -24,7 +24,7 @@ export function indexOf(array, item, equalityComparer = areEqual) {
     const len = array && array.length;
     if (len) {
         // NaN NEVER evaluates its equality so be careful.
-        if ((array) instanceof (Array) && !Type.isTrueNaN(item))
+        if (equalityComparer == areEqual && (array) instanceof (Array) && !Type.isTrueNaN(item))
             return array.indexOf(item);
         for (let i = 0; i < len; i++) {
             // 'areEqual' includes NaN==NaN evaluation.

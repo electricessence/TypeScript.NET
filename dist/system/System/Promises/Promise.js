@@ -11,6 +11,7 @@
  */
 System.register(["../Types", "../Threading/deferImmediate", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "../Disposable/ObjectPool", "../Collections/Set", "../Threading/defer", "../Disposable/ObjectDisposedException", "../../extends"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, deferImmediate_1, DisposableBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ObjectPool_1, Set_1, defer_1, ObjectDisposedException_1, extends_1, __extends, VOID0, NULL, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, TSDNPromise, ArrayPromise, PROMISE_COLLECTION, PromiseCollection, pools;
     var __moduleName = context_1 && context_1.id;
     function isPromise(value) {
         return Types_1.default.hasMemberOfType(value, THEN, Types_1.default.FUNCTION);
@@ -26,13 +27,13 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
     function handleResolution(p, value, resolver) {
         try {
             var v = resolver ? resolver(value) : value;
-            if (p) {
+            if (p) { //noinspection JSIgnoredPromiseFromCall
                 p.resolve(v);
             }
             return null;
         }
         catch (ex) {
-            if (p) {
+            if (p) { //noinspection JSIgnoredPromiseFromCall
                 p.reject(ex);
             }
             return ex;
@@ -50,6 +51,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
         }
     }
     function handleDispatch(p, onFulfilled, onRejected) {
+        // noinspection SuspiciousInstanceOfGuard
         if (p instanceof PromiseBase) {
             p.doneNow(onFulfilled, onRejected);
         }
@@ -58,6 +60,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
         }
     }
     function handleSyncIfPossible(p, onFulfilled, onRejected) {
+        // noinspection SuspiciousInstanceOfGuard
         if (p instanceof PromiseBase)
             return p.thenSynchronous(onFulfilled, onRejected);
         else
@@ -66,7 +69,6 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
     function newODE() {
         return new ObjectDisposedException_1.ObjectDisposedException("TSDNPromise", "An underlying promise-result was disposed.");
     }
-    var Types_1, deferImmediate_1, DisposableBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ObjectPool_1, Set_1, defer_1, ObjectDisposedException_1, extends_1, __extends, VOID0, NULL, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, TSDNPromise, ArrayPromise, PROMISE_COLLECTION, PromiseCollection, pools;
     return {
         setters: [
             function (Types_1_1) {
@@ -206,6 +208,12 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     _this._disposableObjectName = PROMISE;
                     return _this;
                 }
+                /**
+                 * Same as 'thenSynchronous' but does not return the result.  Returns the current promise instead.
+                 * You may not need an additional promise result, and this will not create a new one.
+                 * @param onFulfilled
+                 * @param onRejected
+                 */
                 PromiseBase.prototype.thenThis = function (onFulfilled, onRejected) {
                     this.doneNow(onFulfilled, onRejected);
                     return this;
@@ -560,6 +568,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                         return;
                     // Note: Avoid recursion if possible.
                     // Check ahead of time for resolution and resolve appropriately
+                    // noinspection SuspiciousInstanceOfGuard
                     while (result instanceof PromiseBase) {
                         var r = result;
                         if (this._emitDisposalRejection(r))
@@ -615,7 +624,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                                 handleResolution(promise, error, onRejected);
                                 //if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
                             }
-                            else if (promise) {
+                            else if (promise) { //noinspection JSIgnoredPromiseFromCall
                                 promise.reject(error);
                             }
                         }
@@ -761,7 +770,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     this.throwIfDisposed();
                     return new ArrayPromise(function (resolve) {
                         _this.all()
-                            .doneNow(function (result) { return resolve(result.map(transform)); });
+                            .doneNow(function (result) { return resolve(result && result.map(transform)); });
                     }, true);
                 };
                 /**
@@ -1104,6 +1113,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 function wrap(target) {
                     if (!target)
                         throw new ArgumentNullException_1.ArgumentNullException(TARGET);
+                    // noinspection SuspiciousInstanceOfGuard
                     return isPromise(target)
                         ? (target instanceof PromiseBase ? target : new PromiseWrapper(target))
                         : new Fulfilled(target);

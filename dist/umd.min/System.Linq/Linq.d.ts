@@ -243,10 +243,10 @@ export declare class OrderedEnumerable<T, TOrderBy extends Comparable> extends F
     private source;
     keySelector: Selector<T, TOrderBy> | null;
     order: Order;
-    parent: OrderedEnumerable<T, any> | null | undefined;
+    parent?: OrderedEnumerable<T, any> | null | undefined;
     comparer: Comparison<T>;
     constructor(source: IEnumerable<T>, keySelector: Selector<T, TOrderBy> | null, order: Order, parent?: OrderedEnumerable<T, any> | null | undefined, comparer?: Comparison<T>);
-    private createOrderedEnumerable(keySelector, order);
+    private createOrderedEnumerable;
     thenBy(keySelector: (value: T) => TOrderBy): IOrderedEnumerable<T>;
     thenUsing(comparison: Comparison<T>): IOrderedEnumerable<T>;
     thenByDescending(keySelector: (value: T) => TOrderBy): IOrderedEnumerable<T>;

@@ -23,7 +23,7 @@ export declare class EnumeratorBase<T> extends DisposableBase implements IEnumer
      * Added for compatibility but only works if the enumerator is active.
      */
     reset(): void;
-    private _assertBadState();
+    private _assertBadState;
     /**
      * Passes the current value to the out callback if the enumerator is active.
      * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
@@ -48,7 +48,7 @@ export declare class EnumeratorBase<T> extends DisposableBase implements IEnumer
     end(): void;
     'return'(): IIteratorResult<void>;
     'return'<TReturn>(value: TReturn): IIteratorResult<TReturn>;
-    private _ensureDisposeState(state);
+    private _ensureDisposeState;
     protected _onDispose(): void;
 }
 export default EnumeratorBase;

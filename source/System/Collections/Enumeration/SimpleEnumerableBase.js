@@ -17,6 +17,7 @@
     var VOID0 = void 0;
     var SimpleEnumerableBase = /** @class */ (function () {
         function SimpleEnumerableBase() {
+            this._index = -1;
             this.reset();
         }
         Object.defineProperty(SimpleEnumerableBase.prototype, "current", {
@@ -41,9 +42,7 @@
             return false;
         };
         SimpleEnumerableBase.prototype.incrementIndex = function () {
-            var i = this._index;
-            this._index = i = isNaN(i) ? 0 : (i + 1);
-            return i;
+            return ++this._index;
         };
         SimpleEnumerableBase.prototype.nextValue = function () {
             this.moveNext();
@@ -69,7 +68,7 @@
         };
         SimpleEnumerableBase.prototype.reset = function () {
             this._current = VOID0;
-            this._index = NaN;
+            this._index = -1;
         };
         SimpleEnumerableBase.prototype.dispose = function () {
             this.reset();

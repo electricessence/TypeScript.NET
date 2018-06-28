@@ -5,8 +5,8 @@
  */
 System.register(["../../Exceptions/SystemException", "../../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var SystemException_1, extends_1, __extends, NAME, UnsupportedEnumerableException;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (SystemException_1_1) {

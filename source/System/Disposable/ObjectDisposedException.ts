@@ -18,6 +18,7 @@ export {Error};
 export class ObjectDisposedException extends InvalidOperationException
 {
 
+	//@ts-ignore
 	readonly objectName:string;
 
 	// For simplicity and consistency, lets stick with 1 signature.

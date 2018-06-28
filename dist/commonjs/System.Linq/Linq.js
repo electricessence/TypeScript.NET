@@ -136,7 +136,7 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
                     var actionResult = action(c, index++);
                     if (actionResult === false || actionResult === 0 /* Break */)
                         return yielder.yieldBreak();
-                    if (actionResult !== 2 /* Skip */)
+                    if (actionResult !== 2 /* Skip */) // || !== 2
                         return yielder.yieldReturn(c);
                     // If actionResult===2, then a signal for skip is received.
                 }
@@ -164,13 +164,13 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
     InfiniteLinqEnumerable.prototype.skip = function (count) {
         var _ = this;
         _.throwIfDisposed();
-        if (!isFinite(count))
+        if (!isFinite(count)) // +Infinity equals skip all so return empty.
             return new InfiniteLinqEnumerable(getEmptyEnumerator);
         Integer_1.Integer.assert(count, "count");
         return this.where(function (element, index) { return index >= count; });
     };
     InfiniteLinqEnumerable.prototype.take = function (count) {
-        if (!(count > 0))
+        if (!(count > 0)) // Out of bounds? Empty.
             return Enumerable.empty();
         var _ = this;
         _.throwIfDisposed();
@@ -610,7 +610,7 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
                         while (!secondEnumerator) {
                             if (secondTemp.count) {
                                 var next = secondTemp.dequeue();
-                                if (next)
+                                if (next) // In case by chance next is null, then try again.
                                     secondEnumerator = enumUtil.from(next);
                             }
                             else
@@ -713,9 +713,10 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
                     while (!enumerator && queue.tryDequeue(function (value) {
                         enumerator = enumUtil.from(value); // 4) Keep going and on to step 2.  Else fall through to yieldBreak().
                     })) { }
-                    if (enumerator && enumerator.moveNext())
+                    if (enumerator && enumerator.moveNext()) // 2) Keep returning until done.
                         return yielder.yieldReturn(enumerator.current);
-                    if (enumerator) {
+                    if (enumerator) // 3) Dispose and reset for next.
+                     {
                         enumerator.dispose();
                         enumerator = NULL;
                         continue;
@@ -797,7 +798,7 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
                 secondEnumerator = enumUtil.from(other);
                 isEnumerated = false;
             }, function (yielder) {
-                if (count == n) {
+                if (count == n) { // Inserting?
                     isEnumerated = true;
                     if (secondEnumerator.moveNext())
                         return yielder.yieldReturn(secondEnumerator.current);
@@ -836,7 +837,7 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
                     buffer = enumerator.current;
             }, function (yielder) {
                 switch (mode) {
-                    case 0 /* Break */:// We're done?
+                    case 0 /* Break */: // We're done?
                         return yielder.yieldBreak();
                     case 2 /* Skip */:
                         if (alternateEnumerator.moveNext())
@@ -1153,6 +1154,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
     LinqEnumerable.prototype.toMap = function (keySelector, elementSelector) {
         var obj = {};
         this.forEach(function (x, i) {
+            //@ts-ignore
             obj[keySelector(x, i)] = elementSelector(x, i);
         });
         return obj;
@@ -1175,9 +1177,9 @@ var LinqEnumerable = /** @class */ (function (_super) {
     LinqEnumerable.prototype.takeExceptLast = function (count) {
         if (count === void 0) { count = 1; }
         var _ = this;
-        if (!(count > 0))
+        if (!(count > 0)) // Out of bounds?
             return _;
-        if (!isFinite(count))
+        if (!isFinite(count)) // +Infinity equals skip all so return empty.
             return Enumerable.empty();
         Integer_1.Integer.assert(count, "count");
         var c = count;
@@ -1208,10 +1210,10 @@ var LinqEnumerable = /** @class */ (function (_super) {
         });
     };
     LinqEnumerable.prototype.skipToLast = function (count) {
-        if (!(count > 0))
+        if (!(count > 0)) // Out of bounds? Empty.
             return Enumerable.empty();
         var _ = this;
-        if (!isFinite(count))
+        if (!isFinite(count)) // Infinity means return all.
             return _;
         Integer_1.Integer.assert(count, "count");
         // This sets up the query so nothing is done until move next is called.
@@ -1272,7 +1274,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
                 var selectedValue = buffer[selectedIndex];
                 buffer[selectedIndex] = buffer[--len]; // Take the last one and put it here.
                 buffer[len] = NULL; // clear possible reference.
-                if (len % 32 == 0)
+                if (len % 32 == 0) // Shrink?
                     buffer.length = len;
                 return yielder.yieldReturn(selectedValue);
             }, function () {
@@ -1585,6 +1587,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
      * @param initialValue
      */
     LinqEnumerable.prototype.reduce = function (reduction, initialValue) {
+        //@ts-ignore
         return this.aggregate(reduction, initialValue);
     };
     LinqEnumerable.prototype.average = function (selector) {
@@ -1746,8 +1749,8 @@ var ArrayEnumerable = /** @class */ (function (_super) {
             });
         }) || this;
         var _ = _this;
-        _._disposableObjectName = "ArrayEnumerable";
-        _._source = source;
+        _this._disposableObjectName = "ArrayEnumerable";
+        _this._source = source;
         return _this;
     }
     ArrayEnumerable.prototype._onDispose = function () {
@@ -1867,6 +1870,7 @@ var ArrayEnumerable = /** @class */ (function (_super) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (Types_1.Type.isArrayLike(second))
             return Arrays.areEqual(this.source, second, true, equalityComparer);
+        // noinspection SuspiciousInstanceOfGuard
         if (second instanceof ArrayEnumerable)
             return second.sequenceEqual(this.source, equalityComparer);
         return _super.prototype.sequenceEqual.call(this, second, equalityComparer);
@@ -2102,6 +2106,7 @@ function enumerableFrom(source, additional) {
      * @returns {any}
      */
     function toArray(source) {
+        // noinspection SuspiciousInstanceOfGuard
         if (source instanceof LinqEnumerable)
             return source.toArray();
         return enumUtil.toArray(source);

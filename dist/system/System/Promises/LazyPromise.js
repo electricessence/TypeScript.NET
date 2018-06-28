@@ -4,8 +4,8 @@
  */
 System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullException", "../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Promise_1, defer_1, ArgumentNullException_1, extends_1, __extends, VOID0, LazyPromise;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Promise_1_1) {
@@ -135,7 +135,7 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
                     };
                     {
                         var detector = function () {
-                            if (finalize)
+                            if (finalize) // We may already be wrapped up so never mind!
                                 timeout = defer_1.defer(finalize, milliseconds);
                         };
                         // Calling super.doneNow does not trigger resolution.

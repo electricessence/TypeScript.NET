@@ -1,9 +1,9 @@
 "use strict";
-/*!
-* @author electricessence / https://github.com/electricessence/
-* Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
-* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-*/
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 var Compare_1 = require("../Compare");
 var AU = require("./Array/Utility");
@@ -29,29 +29,28 @@ var Queue = /** @class */ (function (_super) {
     function Queue(source, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         var _this = _super.call(this, VOID0, equalityComparer) || this;
-        var _ = _this;
-        _._head = 0;
-        _._tail = 0;
-        _._size = 0;
+        _this._head = 0;
+        _this._tail = 0;
+        _this._size = 0;
         if (!source)
-            _._array = emptyArray;
+            _this._array = emptyArray;
         else {
             if (Types_1.Type.isNumber(source)) {
                 var capacity = source;
                 assertIntegerZeroOrGreater(capacity, "capacity");
-                _._array = capacity
+                _this._array = capacity
                     ? AU.initialize(capacity)
                     : emptyArray;
             }
             else {
                 var se = source;
-                _._array = AU.initialize(Types_1.Type.isArrayLike(se)
+                _this._array = AU.initialize(Types_1.Type.isArrayLike(se)
                     ? se.length
                     : DEFAULT_CAPACITY);
-                _._importEntries(se);
+                _this._importEntries(se);
             }
         }
-        _._capacity = _._array.length;
+        _this._capacity = _this._array.length;
         return _this;
     }
     Queue.prototype.getCount = function () {
@@ -97,10 +96,9 @@ var Queue = /** @class */ (function (_super) {
     };
     Queue.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
-        var _ = this;
-        if (_._array != emptyArray) {
-            _._array.length = _._capacity = 0;
-            _._array = emptyArray;
+        if (this._array != emptyArray) {
+            this._array.length = this._capacity = 0;
+            this._array = emptyArray;
         }
     };
     /**
@@ -167,15 +165,14 @@ var Queue = /** @class */ (function (_super) {
         return this.add(item);
     };
     Queue.prototype._tryDequeueInternal = function (out) {
-        var _ = this;
-        if (!_._size)
+        if (!this._size)
             return false;
-        var array = _._array, head = _._head;
-        var removed = _._array[head];
+        var array = this._array, head = this._head;
+        var removed = this._array[head];
         array[head] = null;
-        _._head = (head + 1) % _._capacity;
-        _._size--;
-        _._incrementModified();
+        this._head = (head + 1) % this._capacity;
+        this._size--;
+        this._incrementModified();
         out(removed);
         return true;
     };

@@ -12,7 +12,7 @@ import { SimpleEnumerableBase } from "./SimpleEnumerableBase";
  */
 export declare class IteratorEnumerator<T> extends SimpleEnumerableBase<T> {
     private readonly _iterator;
-    private readonly _isEndless;
+    private readonly _isEndless?;
     /**
      * @param _iterator
      * @param _isEndless true and false are explicit where as undefined means 'unknown'.

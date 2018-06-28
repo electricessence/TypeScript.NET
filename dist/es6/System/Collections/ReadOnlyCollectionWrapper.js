@@ -12,15 +12,14 @@ export default class ReadOnlyCollectionWrapper extends ReadOnlyCollectionBase {
         super();
         if (!collection)
             throw new ArgumentNullException('collection');
-        const _ = this;
         // Attempting to avoid contact with the original collection.
         if (Type.isArrayLike(collection)) {
-            _._getCount = () => collection.length;
-            _._getEnumerator = () => enumeratorFrom(collection);
+            this.__getCount = () => collection.length;
+            this.__getEnumerator = () => enumeratorFrom(collection);
         }
         else {
-            _._getCount = () => collection.count;
-            _._getEnumerator = () => collection.getEnumerator();
+            this.__getCount = () => collection.count;
+            this.__getEnumerator = () => collection.getEnumerator();
         }
     }
     _getCount() {

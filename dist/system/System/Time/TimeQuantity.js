@@ -4,8 +4,8 @@
  */
 System.register(["../Compare", "./TimeUnit", "../Lazy"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Compare_1, TimeUnit_1, Lazy_1, TimeQuantity;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Compare_1_1) {
@@ -57,7 +57,7 @@ System.register(["../Compare", "./TimeUnit", "../Lazy"], function (exports_1, co
                 /**
                  * Compares this instance against any other time quantity instance.
                  * @param other
-                 * @returns {CompareResult}
+                 * @returns {number}
                  */
                 TimeQuantity.prototype.compareTo = function (other) {
                     return Compare_1.compare(this.getTotalMilliseconds(), other && other.total && other.total.milliseconds);

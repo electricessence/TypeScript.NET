@@ -22,7 +22,7 @@ extends DisposableBase
 {
 
 	// Use a linked list since it's much easier to remove a subscriber from anywhere in the list.
-	private __subscriptions:LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>>;
+	private __subscriptions:LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>> | undefined;
 
 	protected _getSubscribers():TSubscriber[]|null
 	{
@@ -42,7 +42,7 @@ extends DisposableBase
 		subscriber:TSubscriber):ILinkedNodeWithValue<Subscription<TSubscriber>>|null
 	{
 		const s = this.__subscriptions;
-		return s && s.find(n=>!!n.value && n.value.subscriber===subscriber);
+		return s && s.find(n=>!!n.value && n.value.subscriber===subscriber) || null;
 	}
 
 	// It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.
@@ -72,9 +72,10 @@ extends DisposableBase
 		const n = _._findEntryNode(subscriber);
 		if(n)
 		{
-			const s = n.value;
-			_.__subscriptions.removeNode(n);
-			if(s) s.dispose(); // Prevent further usage of a dead subscription.
+			const v = n.value;
+			const _s = _.__subscriptions;
+			if(_s) _s.removeNode(n);
+			if(v) v.dispose(); // Prevent further usage of a dead subscription.
 		}
 	}
 

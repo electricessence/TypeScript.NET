@@ -8,7 +8,7 @@ import { Action } from "../../FunctionTypes";
 export declare abstract class SimpleEnumerableBase<T> implements IEnumerator<T> {
     protected _current: T | undefined;
     protected _index: number;
-    constructor();
+    protected constructor();
     readonly current: T | undefined;
     protected abstract _canMoveNext(): boolean;
     readonly canMoveNext: boolean;

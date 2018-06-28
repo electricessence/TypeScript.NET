@@ -19,12 +19,14 @@ export class DateTime {
             if (kind === VOID0)
                 this._kind = value._kind;
         }
-        else if (value instanceof Date)
-            this._value = new Date(value.getTime());
-        else
-            this._value = value === VOID0
-                ? new Date()
-                : new Date(value);
+        else { // noinspection SuspiciousInstanceOfGuard
+            if (value instanceof Date)
+                this._value = new Date(value.getTime());
+            else
+                this._value = value === VOID0
+                    ? new Date()
+                    : new Date(value);
+        }
     }
     get kind() {
         return this._kind;

@@ -4,6 +4,7 @@
  */
 System.register(["../../../Types", "../../../Compare"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, Compare_1;
     var __moduleName = context_1 && context_1.id;
     function ensureArray(value) {
         return (value) instanceof (Array)
@@ -62,7 +63,6 @@ System.register(["../../../Types", "../../../Compare"], function (exports_1, con
         };
     }
     exports_1("createComparer", createComparer);
-    var Types_1, Compare_1;
     return {
         setters: [
             function (Types_1_1) {

@@ -5,6 +5,7 @@
  */
 System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Queue", "../Disposable/ObjectPool", "../Environment"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, LinkedNodeList_1, Queue_1, ObjectPool_1, Environment_1, requestTick, flushing, immediateQueue, laterQueue, entryPool;
     var __moduleName = context_1 && context_1.id;
     // Use the fastest possible means to execute a task in a future turn
     // of the event loop.
@@ -98,7 +99,6 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
         requestFlush();
     }
     exports_1("runAfterDeferred", runAfterDeferred);
-    var Types_1, LinkedNodeList_1, Queue_1, ObjectPool_1, Environment_1, requestTick, flushing, immediateQueue, laterQueue, entryPool;
     return {
         setters: [
             function (Types_1_1) {

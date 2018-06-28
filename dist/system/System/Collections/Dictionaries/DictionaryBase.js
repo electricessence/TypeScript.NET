@@ -4,8 +4,8 @@
  */
 System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../../../extends", "../KeyNotFoundException"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Compare_1, Enumerator_1, CollectionBase_1, EnumeratorBase_1, ArgumentNullException_1, InvalidOperationException_1, KeyValueExtract_1, extends_1, KeyNotFoundException_1, __extends, VOID0, DictionaryBase;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Compare_1_1) {
@@ -203,7 +203,7 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
                         _.assertVersion(ver);
                         while (index < len) {
                             var key = keys[index++], value = _.getValue(key);
-                            if (value !== VOID0)
+                            if (value !== VOID0) // Still valid?
                                 return yielder.yieldReturn({ key: key, value: value });
                         }
                         return yielder.yieldBreak();

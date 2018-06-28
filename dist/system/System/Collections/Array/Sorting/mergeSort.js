@@ -6,6 +6,7 @@
  */
 System.register(["../../../Exceptions/ArgumentNullException", "../Utility"], function (exports_1, context_1) {
     "use strict";
+    var ArgumentNullException_1, Utility_1;
     var __moduleName = context_1 && context_1.id;
     /**
      * Merge internalSort O(n log (n))
@@ -46,7 +47,6 @@ System.register(["../../../Exceptions/ArgumentNullException", "../Utility"], fun
         }
         return target;
     }
-    var ArgumentNullException_1, Utility_1;
     return {
         setters: [
             function (ArgumentNullException_1_1) {

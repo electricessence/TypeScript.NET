@@ -7,6 +7,8 @@ export class DisposableBase {
     constructor(__finalizer) {
         this.__finalizer = __finalizer;
         this.__wasDisposed = false;
+        // Allow for simple override of name.
+        this._disposableObjectName = "DisposableBase";
     }
     get wasDisposed() {
         return this.__wasDisposed;
@@ -26,7 +28,8 @@ export class DisposableBase {
                 _._onDispose(); // Protected override.
             }
             finally {
-                if (_.__finalizer) {
+                if (_.__finalizer) // Private finalizer...
+                 {
                     _.__finalizer();
                     _.__finalizer = void 0;
                 }

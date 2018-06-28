@@ -104,8 +104,8 @@
                 // Assume e.length is constant or at least doesn't deviate to infinite or NaN.
                 throwIfEndless(!isFinite(max) && !isFinite(e.length));
                 var i = 0;
-                for (; i < Math.min(e.length, max); i++) {
-                    if (action(e[i], i) === false)
+                while (i < Math.min(e.length, max)) {
+                    if (action(e[i], i++) === false)
                         break;
                 }
                 return i;

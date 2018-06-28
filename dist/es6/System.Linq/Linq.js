@@ -120,7 +120,7 @@ export class InfiniteLinqEnumerable extends DisposableBase {
                     let actionResult = action(c, index++);
                     if (actionResult === false || actionResult === 0 /* Break */)
                         return yielder.yieldBreak();
-                    if (actionResult !== 2 /* Skip */)
+                    if (actionResult !== 2 /* Skip */) // || !== 2
                         return yielder.yieldReturn(c);
                     // If actionResult===2, then a signal for skip is received.
                 }
@@ -148,13 +148,13 @@ export class InfiniteLinqEnumerable extends DisposableBase {
     skip(count) {
         const _ = this;
         _.throwIfDisposed();
-        if (!isFinite(count))
+        if (!isFinite(count)) // +Infinity equals skip all so return empty.
             return new InfiniteLinqEnumerable(getEmptyEnumerator);
         Integer.assert(count, "count");
         return this.where((element, index) => index >= count);
     }
     take(count) {
-        if (!(count > 0))
+        if (!(count > 0)) // Out of bounds? Empty.
             return Enumerable.empty();
         const _ = this;
         _.throwIfDisposed();
@@ -590,7 +590,7 @@ export class InfiniteLinqEnumerable extends DisposableBase {
                         while (!secondEnumerator) {
                             if (secondTemp.count) {
                                 let next = secondTemp.dequeue();
-                                if (next)
+                                if (next) // In case by chance next is null, then try again.
                                     secondEnumerator = enumUtil.from(next);
                             }
                             else
@@ -689,9 +689,10 @@ export class InfiniteLinqEnumerable extends DisposableBase {
                     while (!enumerator && queue.tryDequeue(value => {
                         enumerator = enumUtil.from(value); // 4) Keep going and on to step 2.  Else fall through to yieldBreak().
                     })) { }
-                    if (enumerator && enumerator.moveNext())
+                    if (enumerator && enumerator.moveNext()) // 2) Keep returning until done.
                         return yielder.yieldReturn(enumerator.current);
-                    if (enumerator) {
+                    if (enumerator) // 3) Dispose and reset for next.
+                     {
                         enumerator.dispose();
                         enumerator = NULL;
                         continue;
@@ -768,7 +769,7 @@ export class InfiniteLinqEnumerable extends DisposableBase {
                 secondEnumerator = enumUtil.from(other);
                 isEnumerated = false;
             }, (yielder) => {
-                if (count == n) {
+                if (count == n) { // Inserting?
                     isEnumerated = true;
                     if (secondEnumerator.moveNext())
                         return yielder.yieldReturn(secondEnumerator.current);
@@ -807,7 +808,7 @@ export class InfiniteLinqEnumerable extends DisposableBase {
                     buffer = enumerator.current;
             }, (yielder) => {
                 switch (mode) {
-                    case 0 /* Break */:// We're done?
+                    case 0 /* Break */: // We're done?
                         return yielder.yieldBreak();
                     case 2 /* Skip */:
                         if (alternateEnumerator.moveNext())
@@ -1104,6 +1105,7 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
     toMap(keySelector, elementSelector) {
         const obj = {};
         this.forEach((x, i) => {
+            //@ts-ignore
             obj[keySelector(x, i)] = elementSelector(x, i);
         });
         return obj;
@@ -1122,9 +1124,9 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
     // #endregion
     takeExceptLast(count = 1) {
         const _ = this;
-        if (!(count > 0))
+        if (!(count > 0)) // Out of bounds?
             return _;
-        if (!isFinite(count))
+        if (!isFinite(count)) // +Infinity equals skip all so return empty.
             return Enumerable.empty();
         Integer.assert(count, "count");
         const c = count;
@@ -1155,10 +1157,10 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
         });
     }
     skipToLast(count) {
-        if (!(count > 0))
+        if (!(count > 0)) // Out of bounds? Empty.
             return Enumerable.empty();
         const _ = this;
-        if (!isFinite(count))
+        if (!isFinite(count)) // Infinity means return all.
             return _;
         Integer.assert(count, "count");
         // This sets up the query so nothing is done until move next is called.
@@ -1218,7 +1220,7 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
                 let selectedValue = buffer[selectedIndex];
                 buffer[selectedIndex] = buffer[--len]; // Take the last one and put it here.
                 buffer[len] = NULL; // clear possible reference.
-                if (len % 32 == 0)
+                if (len % 32 == 0) // Shrink?
                     buffer.length = len;
                 return yielder.yieldReturn(selectedValue);
             }, () => {
@@ -1525,6 +1527,7 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
      * @param initialValue
      */
     reduce(reduction, initialValue) {
+        //@ts-ignore
         return this.aggregate(reduction, initialValue);
     }
     average(selector = Type.numberOrNaN) {
@@ -1673,8 +1676,8 @@ export class ArrayEnumerable extends FiniteEnumerable {
             });
         });
         const _ = this;
-        _._disposableObjectName = "ArrayEnumerable";
-        _._source = source;
+        this._disposableObjectName = "ArrayEnumerable";
+        this._source = source;
     }
     _onDispose() {
         super._onDispose();
@@ -1786,6 +1789,7 @@ export class ArrayEnumerable extends FiniteEnumerable {
     sequenceEqual(second, equalityComparer = areEqualValues) {
         if (Type.isArrayLike(second))
             return Arrays.areEqual(this.source, second, true, equalityComparer);
+        // noinspection SuspiciousInstanceOfGuard
         if (second instanceof ArrayEnumerable)
             return second.sequenceEqual(this.source, equalityComparer);
         return super.sequenceEqual(second, equalityComparer);
@@ -1988,6 +1992,7 @@ function enumerableFrom(source, additional) {
      * @returns {any}
      */
     function toArray(source) {
+        // noinspection SuspiciousInstanceOfGuard
         if (source instanceof LinqEnumerable)
             return source.toArray();
         return enumUtil.toArray(source);

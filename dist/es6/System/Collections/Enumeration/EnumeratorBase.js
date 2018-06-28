@@ -50,12 +50,15 @@ export class EnumeratorBase extends DisposableBase {
         super();
         this._initializer = _initializer;
         this._tryGetNext = _tryGetNext;
+        this._state = 0 /* Before */;
         this._disposableObjectName = NAME;
         this.reset();
         if (Type.isBoolean(isEndless))
             this._isEndless = isEndless;
         else if (Type.isBoolean(disposer))
             this._isEndless = disposer;
+        else
+            this._isEndless = false;
         if (Type.isFunction(disposer))
             this._disposer = disposer;
     }
@@ -83,7 +86,7 @@ export class EnumeratorBase extends DisposableBase {
         const _ = this;
         _.throwIfDisposed();
         const y = _._yielder;
-        _._yielder = null;
+        _._yielder = undefined;
         _._state = 0 /* Before */;
         if (y)
             yielder(y); // recycle until actually needed.
@@ -202,7 +205,7 @@ export class EnumeratorBase extends DisposableBase {
         _._initializer = null;
         _._disposer = null;
         const y = _._yielder;
-        _._yielder = null;
+        _._yielder = undefined;
         this._state = 5 /* Disposed */;
         if (y)
             yielder(y);

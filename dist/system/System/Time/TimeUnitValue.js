@@ -4,11 +4,11 @@
  */
 System.register(["./TimeUnit", "./TimeQuantity", "../../extends"], function (exports_1, context_1) {
     "use strict";
+    var TimeUnit_1, TimeQuantity_1, extends_1, __extends, TimeUnitValue;
     var __moduleName = context_1 && context_1.id;
     function getUnitQuantityFrom(q, units) {
         return TimeUnit_1.TimeUnit.fromMilliseconds(q.getTotalMilliseconds(), units);
     }
-    var TimeUnit_1, TimeQuantity_1, extends_1, __extends, TimeUnitValue;
     return {
         setters: [
             function (TimeUnit_1_1) {

@@ -38,9 +38,15 @@ export interface IEntryParams
 
 function entryFinalizer()
 {
-	const p:IEntryParams = this.params;
-	p.dispatcher.removeEntry(this);
-	(<any>p).dispatcher = null;
+	//@ts-ignore
+	const _:EventDispatcherEntry<IEntryParams> = <any>this;
+	const p = _.params;
+	const d = p && p.dispatcher;
+	if(d)
+	{
+		d.removeEntry(_);
+		(<any>p).dispatcher = null;
+	}
 }
 
 const NAME = "EventDispatcherBase";
@@ -54,7 +60,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 		this._disposableObjectName = NAME;
 	}
 
-	protected _entries:EventDispatcherEntry<IEntryParams>[];
+	protected _entries:EventDispatcherEntry<IEntryParams>[]|undefined;
 
 	addEventListener(
 		type:string,
@@ -95,14 +101,15 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 		return e && e.some(
 				(value:EventDispatcherEntry<IEntryParams>):boolean =>
 				type==value.type && (!listener || listener==value.listener)
-			);
+			) || false;
 	}
 
 	removeEventListener(
 		type:string,
 		listener:IEventListener):void
 	{
-		dispose.these.noCopy(this._entries.filter(entry=> entry.matches(type, listener)));
+		const e = this._entries;
+		if(e) dispose.these.noCopy(e.filter(entry=> entry.matches(type, listener)));
 	}
 
 	dispatchEvent(type:string, params?:any):boolean;

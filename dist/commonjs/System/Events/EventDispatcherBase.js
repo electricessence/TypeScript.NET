@@ -14,9 +14,14 @@ var extends_1 = require("../../extends");
 var __extends = extends_1.default;
 var DISPOSING = 'disposing', DISPOSED = 'disposed';
 function entryFinalizer() {
-    var p = this.params;
-    p.dispatcher.removeEntry(this);
-    p.dispatcher = null;
+    //@ts-ignore
+    var _ = this;
+    var p = _.params;
+    var d = p && p.dispatcher;
+    if (d) {
+        d.removeEntry(_);
+        p.dispatcher = null;
+    }
 }
 var NAME = "EventDispatcherBase";
 var EventDispatcherBase = /** @class */ (function (_super) {
@@ -53,10 +58,12 @@ var EventDispatcherBase = /** @class */ (function (_super) {
         var e = this._entries;
         return e && e.some(function (value) {
             return type == value.type && (!listener || listener == value.listener);
-        });
+        }) || false;
     };
     EventDispatcherBase.prototype.removeEventListener = function (type, listener) {
-        dispose_1.dispose.these.noCopy(this._entries.filter(function (entry) { return entry.matches(type, listener); }));
+        var e = this._entries;
+        if (e)
+            dispose_1.dispose.these.noCopy(e.filter(function (entry) { return entry.matches(type, listener); }));
     };
     EventDispatcherBase.prototype.dispatchEvent = function (e, params) {
         var _this = this;

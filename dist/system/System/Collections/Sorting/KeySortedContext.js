@@ -4,8 +4,8 @@
  */
 System.register(["../../Compare", "./SortContext", "../../Functions", "../../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Values, SortContext_1, Functions_1, extends_1, __extends, KeySortedContext;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Values_1) {

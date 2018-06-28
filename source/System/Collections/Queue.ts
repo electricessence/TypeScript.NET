@@ -1,4 +1,4 @@
-﻿﻿/*!
+﻿/*
  * @author electricessence / https://github.com/electricessence/
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -43,13 +43,12 @@ extends CollectionBase<T>
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super(VOID0, equalityComparer);
-		const _ = this;
-		_._head = 0;
-		_._tail = 0;
-		_._size = 0;
+		this._head = 0;
+		this._tail = 0;
+		this._size = 0;
 
 		if(!source)
-			_._array = emptyArray;
+			this._array = emptyArray;
 		else
 		{
 			if(Type.isNumber(source))
@@ -57,24 +56,24 @@ extends CollectionBase<T>
 				const capacity = <number>source;
 				assertIntegerZeroOrGreater(capacity, "capacity");
 
-				_._array = capacity
+				this._array = capacity
 					? AU.initialize<T>(capacity)
 					: emptyArray;
 			}
 			else
 			{
 				const se = <IEnumerableOrArray<T>> source;
-				_._array = AU.initialize<T>(
+				this._array = AU.initialize<T>(
 					Type.isArrayLike(se)
 						? se.length
 						: DEFAULT_CAPACITY
 				);
 
-				_._importEntries(se);
+				this._importEntries(se);
 			}
 		}
 
-		_._capacity = _._array.length;
+		this._capacity = this._array.length;
 	}
 
 	protected getCount():number
@@ -138,11 +137,10 @@ extends CollectionBase<T>
 	protected _onDispose():void
 	{
 		super._onDispose();
-		const _ = this;
-		if(_._array!=emptyArray)
+		if(this._array!=emptyArray)
 		{
-			_._array.length = _._capacity = 0;
-			_._array = emptyArray;
+			this._array.length = this._capacity = 0;
+			this._array = emptyArray;
 		}
 	}
 
@@ -237,18 +235,17 @@ extends CollectionBase<T>
 
 	protected _tryDequeueInternal(out:Action<T>):boolean
 	{
-		const _ = this;
-		if(!_._size) return false;
+		if(!this._size) return false;
 
-		const array = _._array, head = _._head;
+		const array = this._array, head = this._head;
 
-		const removed = _._array[head];
+		const removed = this._array[head];
 		array[head] = <any>null;
-		_._head = (head + 1)%_._capacity;
+		this._head = (head + 1)%this._capacity;
 
-		_._size--;
+		this._size--;
 
-		_._incrementModified();
+		this._incrementModified();
 
 		out(removed);
 

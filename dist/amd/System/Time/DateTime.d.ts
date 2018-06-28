@@ -151,7 +151,7 @@ export declare module DateTime {
     enum Kind {
         Unspecified = 0,
         Local = 1,
-        Utc = 2,
+        Utc = 2
     }
 }
 export default DateTime;

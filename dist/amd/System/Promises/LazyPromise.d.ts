@@ -10,7 +10,7 @@ export declare class LazyPromise<T> extends TSDNPromise<T> {
     private _resolver;
     constructor(_resolver: TSDNPromise.Executor<T>);
     protected _onDispose(): void;
-    private _onThen();
+    private _onThen;
     thenSynchronous<TResult>(onFulfilled: TSDNPromise.Fulfill<T, TResult> | undefined | null, onRejected?: TSDNPromise.Reject<TResult> | undefined | null): PromiseBase<TResult>;
     doneNow(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): void;
     /**

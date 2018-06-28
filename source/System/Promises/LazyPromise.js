@@ -127,7 +127,7 @@
             };
             {
                 var detector = function () {
-                    if (finalize)
+                    if (finalize) // We may already be wrapped up so never mind!
                         timeout = defer_1.defer(finalize, milliseconds);
                 };
                 // Calling super.doneNow does not trigger resolution.

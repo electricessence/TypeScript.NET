@@ -38,7 +38,7 @@
         var len = array && array.length;
         if (len) {
             // NaN NEVER evaluates its equality so be careful.
-            if ((array) instanceof (Array) && !Types_1.Type.isTrueNaN(item))
+            if (equalityComparer == Compare_1.areEqual && (array) instanceof (Array) && !Types_1.Type.isTrueNaN(item))
                 return array.indexOf(item);
             for (var i = 0; i < len; i++) {
                 // 'areEqual' includes NaN==NaN evaluation.

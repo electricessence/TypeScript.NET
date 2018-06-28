@@ -6,6 +6,7 @@ import { IteratorResult } from "./IteratorResult";
 const VOID0 = void 0;
 export class SimpleEnumerableBase {
     constructor() {
+        this._index = -1;
         this.reset();
     }
     get current() {
@@ -22,9 +23,7 @@ export class SimpleEnumerableBase {
         return false;
     }
     incrementIndex() {
-        let i = this._index;
-        this._index = i = isNaN(i) ? 0 : (i + 1);
-        return i;
+        return ++this._index;
     }
     nextValue() {
         this.moveNext();
@@ -50,7 +49,7 @@ export class SimpleEnumerableBase {
     }
     reset() {
         this._current = VOID0;
-        this._index = NaN;
+        this._index = -1;
     }
     dispose() {
         this.reset();

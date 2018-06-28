@@ -4,8 +4,8 @@
  */
 System.register(["./Integer", "./Collections/Array/initialize", "./Collections/Array/shuffle"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Integer_1, initialize_1, shuffle_1, assert, Random;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Integer_1_1) {

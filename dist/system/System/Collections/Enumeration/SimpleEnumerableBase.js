@@ -4,8 +4,8 @@
  */
 System.register(["./IteratorResult"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var IteratorResult_1, VOID0, SimpleEnumerableBase;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (IteratorResult_1_1) {
@@ -19,6 +19,7 @@ System.register(["./IteratorResult"], function (exports_1, context_1) {
             VOID0 = void 0;
             SimpleEnumerableBase = /** @class */ (function () {
                 function SimpleEnumerableBase() {
+                    this._index = -1;
                     this.reset();
                 }
                 Object.defineProperty(SimpleEnumerableBase.prototype, "current", {
@@ -43,9 +44,7 @@ System.register(["./IteratorResult"], function (exports_1, context_1) {
                     return false;
                 };
                 SimpleEnumerableBase.prototype.incrementIndex = function () {
-                    var i = this._index;
-                    this._index = i = isNaN(i) ? 0 : (i + 1);
-                    return i;
+                    return ++this._index;
                 };
                 SimpleEnumerableBase.prototype.nextValue = function () {
                     this.moveNext();
@@ -71,7 +70,7 @@ System.register(["./IteratorResult"], function (exports_1, context_1) {
                 };
                 SimpleEnumerableBase.prototype.reset = function () {
                     this._current = VOID0;
-                    this._index = NaN;
+                    this._index = -1;
                 };
                 SimpleEnumerableBase.prototype.dispose = function () {
                     this.reset();

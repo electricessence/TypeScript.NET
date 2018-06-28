@@ -4,12 +4,12 @@
  */
 System.register([], function (exports_1, context_1) {
     "use strict";
+    var VOID0, _BOOLEAN, _NUMBER, _STRING, _SYMBOL, _OBJECT, _UNDEFINED, _FUNCTION, LENGTH, typeInfoRegistry, TypeInfo;
     var __moduleName = context_1 && context_1.id;
     function Type(target) {
         return new TypeInfo(target);
     }
     exports_1("Type", Type);
-    var VOID0, _BOOLEAN, _NUMBER, _STRING, _SYMBOL, _OBJECT, _UNDEFINED, _FUNCTION, LENGTH, typeInfoRegistry, TypeInfo;
     return {
         setters: [],
         execute: function () {/*!
@@ -26,12 +26,16 @@ System.register([], function (exports_1, context_1) {
                 function TypeInfo(target, onBeforeFreeze) {
                     this.isBoolean = false;
                     this.isNumber = false;
+                    this.isFinite = false;
                     this.isString = false;
+                    this.isValidNumber = false;
                     this.isTrueNaN = false;
                     this.isObject = false;
+                    this.isArray = false;
                     this.isFunction = false;
                     this.isUndefined = false;
                     this.isNull = false;
+                    this.isNullOrUndefined = false;
                     this.isPrimitive = false;
                     this.isSymbol = false;
                     switch (this.type = typeof target) {

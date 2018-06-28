@@ -6,6 +6,7 @@
  */
 System.register(["./SubscribableBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
+    var SubscribableBase_1, extends_1, __extends, ObservableBase, OBSERVER_ERROR_MESSAGE;
     var __moduleName = context_1 && context_1.id;
     function processAction(observers, handler) {
         if (!observers)
@@ -33,7 +34,6 @@ System.register(["./SubscribableBase", "../../extends"], function (exports_1, co
                 };
         }
     }
-    var SubscribableBase_1, extends_1, __extends, ObservableBase, OBSERVER_ERROR_MESSAGE;
     return {
         setters: [
             function (SubscribableBase_1_1) {

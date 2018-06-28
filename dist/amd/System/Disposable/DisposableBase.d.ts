@@ -5,7 +5,7 @@
 import { IDisposableAware } from "./IDisposableAware";
 import { Closure } from "../FunctionTypes";
 export declare abstract class DisposableBase implements IDisposableAware {
-    private readonly __finalizer;
+    private readonly __finalizer?;
     constructor(__finalizer?: Closure | null | undefined);
     private __wasDisposed;
     readonly wasDisposed: boolean;

@@ -97,7 +97,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		if(!Type.isPrimitiveOrSymbol(hash))
 			console.warn("Key type not indexable and could cause Dictionary to be extremely slow.");
 
-		const buckets = this._buckets;
+		const buckets:any = this._buckets;
 		let bucket = buckets[hash];
 
 		if(createIfMissing && !bucket)
@@ -144,7 +144,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	protected _setValueInternal(key:TKey, value:TValue|undefined):boolean
 	{
 		const _ = this;
-		const buckets    = _._buckets,
+		const buckets:any    = _._buckets,
 		      entries    = _._entries,
 		      compareKey = _._keyGenerator ? _._keyGenerator(key) : key,
 		      hash       = getIdentifier(compareKey);
@@ -183,7 +183,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		else if(value!==VOID0)
 		{
 			if(!bucket) bucket = _._getBucket(hash, true);
-			if(!bucket) throw new Error(`"${hash}" cannot be added to lookup table.`);
+			if(!bucket) throw new Error(`"${hash.toString()}" cannot be added to lookup table.`);
 			let entry = new HashEntry(key, value);
 			entries.addNode(entry);
 			bucket.addNode(new HashEntry(key, entry));

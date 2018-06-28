@@ -14,9 +14,9 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 {
 
 	protected _current:T|undefined;
-	protected _index:number;
+	protected _index:number = -1;
 
-	constructor()
+	protected constructor()
 	{
 		this.reset();
 	}
@@ -45,9 +45,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 
 	protected incrementIndex():number
 	{
-		let i = this._index;
-		this._index = i = isNaN(i) ? 0 : (i + 1);
-		return i;
+		return ++this._index;
 	}
 
 	nextValue():T|undefined
@@ -86,7 +84,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 	reset():void
 	{
 		this._current = VOID0;
-		this._index = NaN;
+		this._index = -1;
 	}
 
 	dispose():void

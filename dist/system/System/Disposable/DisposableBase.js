@@ -4,8 +4,8 @@
  */
 System.register(["./ObjectDisposedException"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var ObjectDisposedException_1, DisposableBase;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (ObjectDisposedException_1_1) {
@@ -20,6 +20,8 @@ System.register(["./ObjectDisposedException"], function (exports_1, context_1) {
                 function DisposableBase(__finalizer) {
                     this.__finalizer = __finalizer;
                     this.__wasDisposed = false;
+                    // Allow for simple override of name.
+                    this._disposableObjectName = "DisposableBase";
                 }
                 Object.defineProperty(DisposableBase.prototype, "wasDisposed", {
                     get: function () {
@@ -44,7 +46,8 @@ System.register(["./ObjectDisposedException"], function (exports_1, context_1) {
                             _._onDispose(); // Protected override.
                         }
                         finally {
-                            if (_.__finalizer) {
+                            if (_.__finalizer) // Private finalizer...
+                             {
                                 _.__finalizer();
                                 _.__finalizer = void 0;
                             }

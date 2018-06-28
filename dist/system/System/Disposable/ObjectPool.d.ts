@@ -7,8 +7,8 @@
 import { DisposableBase } from "./DisposableBase";
 export declare class ObjectPool<T> extends DisposableBase {
     private _maxSize;
-    private _generator;
-    private _recycler;
+    private _generator?;
+    private _recycler?;
     private _pool;
     private _trimmer;
     private _flusher;
@@ -54,7 +54,7 @@ export declare class ObjectPool<T> extends DisposableBase {
     protected _onDispose(): void;
     extendAutoClear(): void;
     add(o: T): void;
-    private _onTaken();
+    private _onTaken;
     tryTake(): T | undefined;
     take(factory?: () => T): T;
 }

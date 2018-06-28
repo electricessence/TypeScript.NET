@@ -9,6 +9,8 @@ var DisposableBase = /** @class */ (function () {
     function DisposableBase(__finalizer) {
         this.__finalizer = __finalizer;
         this.__wasDisposed = false;
+        // Allow for simple override of name.
+        this._disposableObjectName = "DisposableBase";
     }
     Object.defineProperty(DisposableBase.prototype, "wasDisposed", {
         get: function () {
@@ -33,7 +35,8 @@ var DisposableBase = /** @class */ (function () {
                 _._onDispose(); // Protected override.
             }
             finally {
-                if (_.__finalizer) {
+                if (_.__finalizer) // Private finalizer...
+                 {
                     _.__finalizer();
                     _.__finalizer = void 0;
                 }

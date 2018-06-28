@@ -5,8 +5,8 @@
  */
 System.register(["./ReadOnlyCollectionBase", "../Exceptions/ArgumentOutOfRangeException", "./Enumeration/EnumeratorBase", "../../extends", "../Integer"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var ReadOnlyCollectionBase_1, ArgumentOutOfRangeException_1, EnumeratorBase_1, extends_1, Integer_1, __extends, LazyList;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (ReadOnlyCollectionBase_1_1) {

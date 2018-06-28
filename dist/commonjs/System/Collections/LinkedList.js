@@ -82,7 +82,7 @@ var LinkedList = /** @class */ (function (_super) {
     LinkedList.prototype.assertVersion = function (version) {
         if (this._listInternal)
             return this._listInternal.assertVersion(version);
-        else
+        else // In case it's been disposed.
             return _super.prototype.assertVersion.call(this, version);
     };
     LinkedList.prototype._onDispose = function () {

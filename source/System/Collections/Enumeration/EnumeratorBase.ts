@@ -73,9 +73,9 @@ const NAME = "EnumeratorBase";
 export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 {
 
-	private _yielder:Yielder<T>;
-	private _state:EnumeratorState;
-	private _disposer:()=>void;
+	private _yielder:Yielder<T>|undefined;
+	private _state:EnumeratorState = EnumeratorState.Before;
+	private _disposer:Closure|undefined;
 
 	get current():T|undefined
 	{
@@ -111,6 +111,8 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 			this._isEndless = isEndless;
 		else if(Type.isBoolean(disposer))
 			this._isEndless = disposer;
+		else
+			this._isEndless = false;
 
 		if(Type.isFunction(disposer))
 			this._disposer = disposer;
@@ -136,7 +138,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		const _ = this;
 		_.throwIfDisposed();
 		const y = _._yielder;
-		_._yielder = <any>null;
+		_._yielder = undefined;
 
 		_._state = EnumeratorState.Before;
 
@@ -195,7 +197,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 						initializer();
 				// fall through
 				case EnumeratorState.Active:
-					if(_._tryGetNext(_._yielder))
+					if(_._tryGetNext(_._yielder!))
 					{
 						return true;
 					}
@@ -288,7 +290,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 
 
 		const y = _._yielder;
-		_._yielder = <any>null;
+		_._yielder = undefined;
 		this._state = EnumeratorState.Disposed;
 
 		if(y) yielder(y);

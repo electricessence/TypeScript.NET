@@ -35,7 +35,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 
 	protected abstract newUsing(source?:IEnumerableOrArray<T>):SetBase<T>;
 
-	protected _set:LinkedNodeList<ILinkedNodeWithValue<T>>;
+	protected _set:LinkedNodeList<ILinkedNodeWithValue<T>>|undefined;
 
 	protected _getSet():LinkedNodeList<ILinkedNodeWithValue<T>>
 	{
@@ -68,6 +68,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		if(!other) throw new ArgumentNullException(OTHER);
 
 		const _ = this;
+		// noinspection SuspiciousInstanceOfGuard
 		if(other instanceof SetBase)
 		{
 			let s = _._set;
@@ -89,6 +90,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
+		// noinspection SuspiciousInstanceOfGuard
 		return other instanceof SetBase
 			? other.isProperSupersetOf(this)
 			: using(this.newUsing(other), o=> o.isProperSupersetOf(this));
@@ -99,6 +101,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		if(!other) throw new ArgumentNullException(OTHER);
 
 		let result = true, count:number;
+		// noinspection SuspiciousInstanceOfGuard
 		if(other instanceof SetBase)
 		{
 			result = this.isSupersetOf(other);
@@ -125,6 +128,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
+		// noinspection SuspiciousInstanceOfGuard
 		return other instanceof SetBase
 			? other.isSupersetOf(this)
 			: using(this.newUsing(other), o=> o.isSupersetOf(this));
@@ -155,6 +159,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
+		// noinspection SuspiciousInstanceOfGuard
 		return this.getCount()==(
 				other instanceof SetBase
 					? other.getCount()
@@ -167,6 +172,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		if(!other) throw new ArgumentNullException(OTHER);
 
 		const _ = this;
+		// noinspection SuspiciousInstanceOfGuard
 		if(other instanceof SetBase)
 		{
 			forEach(other, v=>
@@ -232,7 +238,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	{
 		return useCopy
 			? super.forEach(action, useCopy)
-			: this._set.forEach((node, i)=>action(<any>node.value, i));
+			: this._set ? this._set.forEach((node, i)=>action(<any>node.value, i)) : 0;
 	}
 
 	protected _removeNode(node:ILinkedNodeWithValue<T>|null|undefined):boolean

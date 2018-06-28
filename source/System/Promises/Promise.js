@@ -48,13 +48,13 @@
     function handleResolution(p, value, resolver) {
         try {
             var v = resolver ? resolver(value) : value;
-            if (p) {
+            if (p) { //noinspection JSIgnoredPromiseFromCall
                 p.resolve(v);
             }
             return null;
         }
         catch (ex) {
-            if (p) {
+            if (p) { //noinspection JSIgnoredPromiseFromCall
                 p.reject(ex);
             }
             return ex;
@@ -72,6 +72,7 @@
         }
     }
     function handleDispatch(p, onFulfilled, onRejected) {
+        // noinspection SuspiciousInstanceOfGuard
         if (p instanceof PromiseBase) {
             p.doneNow(onFulfilled, onRejected);
         }
@@ -80,6 +81,7 @@
         }
     }
     function handleSyncIfPossible(p, onFulfilled, onRejected) {
+        // noinspection SuspiciousInstanceOfGuard
         if (p instanceof PromiseBase)
             return p.thenSynchronous(onFulfilled, onRejected);
         else
@@ -177,6 +179,12 @@
             _this._disposableObjectName = PROMISE;
             return _this;
         }
+        /**
+         * Same as 'thenSynchronous' but does not return the result.  Returns the current promise instead.
+         * You may not need an additional promise result, and this will not create a new one.
+         * @param onFulfilled
+         * @param onRejected
+         */
         PromiseBase.prototype.thenThis = function (onFulfilled, onRejected) {
             this.doneNow(onFulfilled, onRejected);
             return this;
@@ -531,6 +539,7 @@
                 return;
             // Note: Avoid recursion if possible.
             // Check ahead of time for resolution and resolve appropriately
+            // noinspection SuspiciousInstanceOfGuard
             while (result instanceof PromiseBase) {
                 var r = result;
                 if (this._emitDisposalRejection(r))
@@ -586,7 +595,7 @@
                         handleResolution(promise, error, onRejected);
                         //if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
                     }
-                    else if (promise) {
+                    else if (promise) { //noinspection JSIgnoredPromiseFromCall
                         promise.reject(error);
                     }
                 }
@@ -732,7 +741,7 @@
             this.throwIfDisposed();
             return new ArrayPromise(function (resolve) {
                 _this.all()
-                    .doneNow(function (result) { return resolve(result.map(transform)); });
+                    .doneNow(function (result) { return resolve(result && result.map(transform)); });
             }, true);
         };
         /**
@@ -1076,6 +1085,7 @@
         function wrap(target) {
             if (!target)
                 throw new ArgumentNullException_1.ArgumentNullException(TARGET);
+            // noinspection SuspiciousInstanceOfGuard
             return isPromise(target)
                 ? (target instanceof PromiseBase ? target : new PromiseWrapper(target))
                 : new Fulfilled(target);

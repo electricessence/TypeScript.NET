@@ -11,8 +11,8 @@ function getTimestampMilliseconds():number
 	return (new Date()).getTime();
 }
 
-export default
-class Stopwatch implements ITimer
+export default class Stopwatch
+	implements ITimer
 {
 
 	static getTimestampMilliseconds():number
@@ -20,18 +20,14 @@ class Stopwatch implements ITimer
 		return getTimestampMilliseconds();
 	}
 
-	private _elapsed:number;
-	private _startTimeStamp:number;
+	private _elapsed:number = 0;
+	private _startTimeStamp:number = NaN;
+	private _isRunning:boolean = false;
 
-	private _isRunning:boolean;
+
 	get isRunning():boolean
 	{
 		return this._isRunning;
-	}
-
-	constructor()
-	{
-		this.reset();
 	}
 
 	static startNew():Stopwatch
@@ -41,7 +37,7 @@ class Stopwatch implements ITimer
 		return s;
 	}
 
-	static measure(closure:()=>void):TimeSpan
+	static measure(closure:() => void):TimeSpan
 	{
 		const start = getTimestampMilliseconds();
 		closure();

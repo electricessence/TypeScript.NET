@@ -21,8 +21,8 @@ export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedL
     forEach(action: ActionWithIndex<T>, useCopy?: boolean): number;
     forEach(action: PredicateWithIndex<T>, useCopy?: boolean): number;
     getEnumerator(): IEnumerator<T>;
-    private _findFirst(entry);
-    private _findLast(entry);
+    private _findFirst;
+    private _findLast;
     removeOnce(entry: T): boolean;
     readonly first: ILinkedListNode<T> | null;
     readonly firstValue: T | undefined;
@@ -34,7 +34,7 @@ export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedL
     findLast(entry: T): ILinkedListNode<T> | null;
     addFirst(entry: T): this;
     addLast(entry: T): this;
-    private _removeNodeInternal(node);
+    private _removeNodeInternal;
     removeFirst(): boolean;
     removeLast(): boolean;
     removeAt(index: number): boolean;

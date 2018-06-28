@@ -1,10 +1,11 @@
-/*!
-* @author electricessence / https://github.com/electricessence/
-* Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
-* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-*/
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
+    var Compare_1, AU, Types_1, Integer_1, EnumeratorBase_1, NotImplementedException_1, InvalidOperationException_1, ArgumentOutOfRangeException_1, CollectionBase_1, extends_1, __extends, VOID0, MINIMUM_GROW, SHRINK_THRESHOLD, GROW_FACTOR_HALF, DEFAULT_CAPACITY, emptyArray, Queue;
     var __moduleName = context_1 && context_1.id;
     function assertZeroOrGreater(value, property) {
         if (value < 0)
@@ -15,7 +16,6 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
         Integer_1.Integer.assert(value, property);
         return assertZeroOrGreater(value, property);
     }
-    var Compare_1, AU, Types_1, Integer_1, EnumeratorBase_1, NotImplementedException_1, InvalidOperationException_1, ArgumentOutOfRangeException_1, CollectionBase_1, extends_1, __extends, VOID0, MINIMUM_GROW, SHRINK_THRESHOLD, GROW_FACTOR_HALF, DEFAULT_CAPACITY, emptyArray, Queue;
     return {
         setters: [
             function (Compare_1_1) {
@@ -49,11 +49,11 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {/*!
-            * @author electricessence / https://github.com/electricessence/
-            * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
-            * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-            */
+        execute: function () {/*
+             * @author electricessence / https://github.com/electricessence/
+             * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
@@ -68,29 +68,28 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 function Queue(source, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
                     var _this = _super.call(this, VOID0, equalityComparer) || this;
-                    var _ = _this;
-                    _._head = 0;
-                    _._tail = 0;
-                    _._size = 0;
+                    _this._head = 0;
+                    _this._tail = 0;
+                    _this._size = 0;
                     if (!source)
-                        _._array = emptyArray;
+                        _this._array = emptyArray;
                     else {
                         if (Types_1.Type.isNumber(source)) {
                             var capacity = source;
                             assertIntegerZeroOrGreater(capacity, "capacity");
-                            _._array = capacity
+                            _this._array = capacity
                                 ? AU.initialize(capacity)
                                 : emptyArray;
                         }
                         else {
                             var se = source;
-                            _._array = AU.initialize(Types_1.Type.isArrayLike(se)
+                            _this._array = AU.initialize(Types_1.Type.isArrayLike(se)
                                 ? se.length
                                 : DEFAULT_CAPACITY);
-                            _._importEntries(se);
+                            _this._importEntries(se);
                         }
                     }
-                    _._capacity = _._array.length;
+                    _this._capacity = _this._array.length;
                     return _this;
                 }
                 Queue.prototype.getCount = function () {
@@ -136,10 +135,9 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 };
                 Queue.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);
-                    var _ = this;
-                    if (_._array != emptyArray) {
-                        _._array.length = _._capacity = 0;
-                        _._array = emptyArray;
+                    if (this._array != emptyArray) {
+                        this._array.length = this._capacity = 0;
+                        this._array = emptyArray;
                     }
                 };
                 /**
@@ -206,15 +204,14 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     return this.add(item);
                 };
                 Queue.prototype._tryDequeueInternal = function (out) {
-                    var _ = this;
-                    if (!_._size)
+                    if (!this._size)
                         return false;
-                    var array = _._array, head = _._head;
-                    var removed = _._array[head];
+                    var array = this._array, head = this._head;
+                    var removed = this._array[head];
                     array[head] = null;
-                    _._head = (head + 1) % _._capacity;
-                    _._size--;
-                    _._incrementModified();
+                    this._head = (head + 1) % this._capacity;
+                    this._size--;
+                    this._incrementModified();
                     out(removed);
                     return true;
                 };

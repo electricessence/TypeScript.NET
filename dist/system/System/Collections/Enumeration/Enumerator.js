@@ -4,6 +4,7 @@
  */
 System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator", "./IndexEnumerator", "./UnsupportedEnumerableException", "./InfiniteEnumerator", "./EmptyEnumerator", "./IteratorEnumerator"], function (exports_1, context_1) {
     "use strict";
+    var dispose_1, Types_1, ArrayEnumerator_1, IndexEnumerator_1, UnsupportedEnumerableException_1, InfiniteEnumerator_1, EmptyEnumerator_1, IteratorEnumerator_1, STRING_EMPTY, ENDLESS_EXCEPTION_MESSAGE;
     var __moduleName = context_1 && context_1.id;
     function throwIfEndless(isEndless) {
         if (isEndless)
@@ -86,8 +87,8 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
                 // Assume e.length is constant or at least doesn't deviate to infinite or NaN.
                 throwIfEndless(!isFinite(max) && !isFinite(e.length));
                 var i = 0;
-                for (; i < Math.min(e.length, max); i++) {
-                    if (action(e[i], i) === false)
+                while (i < Math.min(e.length, max)) {
+                    if (action(e[i], i++) === false)
                         break;
                 }
                 return i;
@@ -159,7 +160,6 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
         return result;
     }
     exports_1("map", map);
-    var dispose_1, Types_1, ArrayEnumerator_1, IndexEnumerator_1, UnsupportedEnumerableException_1, InfiniteEnumerator_1, EmptyEnumerator_1, IteratorEnumerator_1, STRING_EMPTY, ENDLESS_EXCEPTION_MESSAGE;
     return {
         setters: [
             function (dispose_1_1) {

@@ -4,8 +4,8 @@
  */
 System.register(["../Observable/ObservableBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var ObservableBase_1, extends_1, __extends, Timer;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (ObservableBase_1_1) {
@@ -127,7 +127,7 @@ System.register(["../Observable/ObservableBase", "../../extends"], function (exp
                 Timer.prototype.cancel = function () {
                     if (this._cancel) {
                         this._cancel();
-                        this._cancel = null;
+                        this._cancel = undefined;
                         return true;
                     }
                     return false;

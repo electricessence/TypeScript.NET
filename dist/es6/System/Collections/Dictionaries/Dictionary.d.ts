@@ -11,14 +11,14 @@ import DictionaryBase from "./DictionaryBase";
 export interface IHashEntry<TKey, TValue> extends ILinkedNode<IHashEntry<TKey, TValue>>, IKeyValuePair<TKey, TValue> {
 }
 export declare class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue> {
-    private readonly _keyGenerator;
+    private readonly _keyGenerator?;
     private readonly _entries;
     private readonly _buckets;
     constructor(_keyGenerator?: HashSelector<TKey> | undefined);
     protected _onDispose(): void;
     protected getCount(): number;
-    private _getBucket(hash, createIfMissing?);
-    private _getBucketEntry(key, hash?, bucket?);
+    private _getBucket;
+    private _getBucketEntry;
     protected _getEntry(key: TKey): IHashEntry<TKey, TValue> | null;
     getValue(key: TKey): TValue | undefined;
     protected _setValueInternal(key: TKey, value: TValue | undefined): boolean;

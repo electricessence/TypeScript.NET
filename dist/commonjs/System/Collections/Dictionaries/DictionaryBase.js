@@ -176,7 +176,7 @@ var DictionaryBase = /** @class */ (function (_super) {
             _.assertVersion(ver);
             while (index < len) {
                 var key = keys[index++], value = _.getValue(key);
-                if (value !== VOID0)
+                if (value !== VOID0) // Still valid?
                     return yielder.yieldReturn({ key: key, value: value });
             }
             return yielder.yieldBreak();

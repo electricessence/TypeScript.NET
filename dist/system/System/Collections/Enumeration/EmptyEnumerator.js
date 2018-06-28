@@ -4,8 +4,8 @@
  */
 System.register(["./IteratorResult", "../../Functions"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var IteratorResult_1, Functions_1, VOID0, EmptyEnumerator;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (IteratorResult_1_1) {

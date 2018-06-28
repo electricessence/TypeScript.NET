@@ -4,6 +4,7 @@
  */
 System.register(["./Types"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, isTrueNaN, VOID0, COMPARE_TO;
     var __moduleName = context_1 && context_1.id;
     /**
      * Used for special comparison including NaN.
@@ -84,7 +85,6 @@ System.register(["./Types"], function (exports_1, context_1) {
         return false;
     }
     exports_1("areEquivalent", areEquivalent);
-    var Types_1, isTrueNaN, VOID0, COMPARE_TO;
     return {
         setters: [
             function (Types_1_1) {

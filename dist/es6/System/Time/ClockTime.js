@@ -38,7 +38,7 @@ export class ClockTime extends TimeQuantity {
         value += milliseconds;
         return value;
     }
-    toString() {
+    toString( /*format?:string, formatProvider?:IFormatProvider*/) {
         /* INSERT CUSTOM FORMATTING CODE HERE */
         const _ = this;
         const a = [];

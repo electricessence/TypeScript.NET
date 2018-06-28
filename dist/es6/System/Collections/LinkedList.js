@@ -74,7 +74,7 @@ export class LinkedList extends CollectionBase {
     assertVersion(version) {
         if (this._listInternal)
             return this._listInternal.assertVersion(version);
-        else
+        else // In case it's been disposed.
             return super.assertVersion(version);
     }
     _onDispose() {

@@ -1,5 +1,6 @@
 System.register(["../Types", "./Utility"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, Utility_1, SPACE, ZERO;
     var __moduleName = context_1 && context_1.id;
     function padStringLeft(source, minLength, pad) {
         if (pad === void 0) { pad = SPACE; }
@@ -49,7 +50,6 @@ System.register(["../Types", "./Utility"], function (exports_1, context_1) {
         throw new Error("Invalid source type.");
     }
     exports_1("padRight", padRight);
-    var Types_1, Utility_1, SPACE, ZERO;
     return {
         setters: [
             function (Types_1_1) {

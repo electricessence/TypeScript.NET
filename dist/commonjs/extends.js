@@ -16,6 +16,7 @@ function default_1(d, b) {
     for (var p in b)
         if (b.hasOwnProperty(p))
             d[p] = b[p];
+    //@ts-ignore
     function __() { this.constructor = d; }
     //noinspection CommaExpressionJS
     d.prototype = b === null

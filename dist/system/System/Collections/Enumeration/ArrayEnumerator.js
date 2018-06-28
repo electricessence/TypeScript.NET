@@ -4,8 +4,8 @@
  */
 System.register(["./IndexEnumerator", "../../Types", "../../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var IndexEnumerator_1, Types_1, extends_1, __extends, ArrayEnumerator;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (IndexEnumerator_1_1) {

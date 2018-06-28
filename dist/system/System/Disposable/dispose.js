@@ -4,6 +4,7 @@
  */
 System.register(["../Types"], function (exports_1, context_1) {
     "use strict";
+    var Types_1;
     var __moduleName = context_1 && context_1.id;
     /**
      * Takes any number of disposables as arguments and attempts to dispose them.
@@ -92,6 +93,7 @@ System.register(["../Types"], function (exports_1, context_1) {
                     disposeSingle(next, false);
                     success = true;
                 }
+                // Don't trap the exception in order to allow it to propagate the stack trace.
                 finally {
                     if (!success && index + 1 < len) {
                         /* If code is 'continued' by the debugger,
@@ -106,7 +108,6 @@ System.register(["../Types"], function (exports_1, context_1) {
         }
         return exceptions;
     }
-    var Types_1;
     return {
         setters: [
             function (Types_1_1) {

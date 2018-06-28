@@ -4,8 +4,8 @@
  */
 System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictionary", "../Collections/Enumeration/Enumerator", "./QueryParams", "../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Types_1, OrderedStringKeyDictionary_1, Enumerator_1, QueryParams_1, extends_1, __extends, QueryBuilder;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Types_1_1) {

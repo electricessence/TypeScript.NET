@@ -22,7 +22,7 @@ export abstract class DisposableBase implements IDisposableAware
 	}
 
 	// Allow for simple override of name.
-	protected _disposableObjectName:string;
+	protected _disposableObjectName:string = "DisposableBase";
 
 	protected throwIfDisposed(
 		message?:string,

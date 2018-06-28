@@ -1,8 +1,3 @@
-/*!
-* @author electricessence / https://github.com/electricessence/
-* Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
-* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-*/
 import { CollectionBase } from "./CollectionBase";
 import { Action, ActionWithIndex, EqualityComparison, PredicateWithIndex } from "../FunctionTypes";
 import { IEnumerator } from "./Enumeration/IEnumerator";
@@ -53,7 +48,7 @@ export declare class Queue<T> extends CollectionBase<T> {
      * @returns {boolean} True if a value was retrieved.  False if not.
      */
     tryDequeue(out: Action<T>): boolean;
-    private _getElement(index);
+    private _getElement;
     /**
      * Returns the entry at the head of the queue.
      * Returns undefined if the queue is already empty.

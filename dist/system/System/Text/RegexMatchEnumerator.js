@@ -4,8 +4,8 @@
  */
 System.register(["./RegularExpressions", "../Collections/Enumeration/EmptyEnumerator", "../Collections/Enumeration/EnumeratorBase"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var RegularExpressions_1, EmptyEnumerator_1, EnumeratorBase_1, RegexMatchEnumerator;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (RegularExpressions_1_1) {

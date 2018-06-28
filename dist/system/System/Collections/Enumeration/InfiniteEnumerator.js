@@ -4,8 +4,8 @@
  */
 System.register(["./SimpleEnumerableBase", "../../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var SimpleEnumerableBase_1, extends_1, __extends, InfiniteEnumerator;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (SimpleEnumerableBase_1_1) {

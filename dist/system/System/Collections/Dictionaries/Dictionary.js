@@ -5,6 +5,7 @@
  */
 System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./getIdentifier", "./DictionaryBase", "../../../extends"], function (exports_1, context_1) {
     "use strict";
+    var Compare_1, Types_1, EnumeratorBase_1, LinkedNodeList_1, ObjectPool_1, getIdentifier_1, DictionaryBase_1, extends_1, __extends, VOID0, HashEntry, linkedListPool, Dictionary;
     var __moduleName = context_1 && context_1.id;
     //noinspection JSUnusedLocalSymbols
     function linkedNodeList(recycle) {
@@ -15,7 +16,6 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
             return linkedListPool.take();
         linkedListPool.add(recycle);
     }
-    var Compare_1, Types_1, EnumeratorBase_1, LinkedNodeList_1, ObjectPool_1, getIdentifier_1, DictionaryBase_1, extends_1, __extends, VOID0, HashEntry, linkedListPool, Dictionary;
     return {
         setters: [
             function (Compare_1_1) {
@@ -143,7 +143,7 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
                         if (!bucket)
                             bucket = _._getBucket(hash, true);
                         if (!bucket)
-                            throw new Error("\"" + hash + "\" cannot be added to lookup table.");
+                            throw new Error("\"" + hash.toString() + "\" cannot be added to lookup table.");
                         var entry = new HashEntry(key, value);
                         entries.addNode(entry);
                         bucket.addNode(new HashEntry(key, entry));

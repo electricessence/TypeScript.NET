@@ -1,8 +1,8 @@
-/*!
-* @author electricessence / https://github.com/electricessence/
-* Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
-* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-*/
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { areEqual } from "../Compare";
 import * as AU from "./Array/Utility";
 import { Type } from "../Types";
@@ -23,29 +23,28 @@ const emptyArray = Object.freeze([]);
 export class Queue extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(VOID0, equalityComparer);
-        const _ = this;
-        _._head = 0;
-        _._tail = 0;
-        _._size = 0;
+        this._head = 0;
+        this._tail = 0;
+        this._size = 0;
         if (!source)
-            _._array = emptyArray;
+            this._array = emptyArray;
         else {
             if (Type.isNumber(source)) {
                 const capacity = source;
                 assertIntegerZeroOrGreater(capacity, "capacity");
-                _._array = capacity
+                this._array = capacity
                     ? AU.initialize(capacity)
                     : emptyArray;
             }
             else {
                 const se = source;
-                _._array = AU.initialize(Type.isArrayLike(se)
+                this._array = AU.initialize(Type.isArrayLike(se)
                     ? se.length
                     : DEFAULT_CAPACITY);
-                _._importEntries(se);
+                this._importEntries(se);
             }
         }
-        _._capacity = _._array.length;
+        this._capacity = this._array.length;
     }
     getCount() {
         return this._size;
@@ -90,10 +89,9 @@ export class Queue extends CollectionBase {
     }
     _onDispose() {
         super._onDispose();
-        const _ = this;
-        if (_._array != emptyArray) {
-            _._array.length = _._capacity = 0;
-            _._array = emptyArray;
+        if (this._array != emptyArray) {
+            this._array.length = this._capacity = 0;
+            this._array = emptyArray;
         }
     }
     /**
@@ -159,15 +157,14 @@ export class Queue extends CollectionBase {
         return this.add(item);
     }
     _tryDequeueInternal(out) {
-        const _ = this;
-        if (!_._size)
+        if (!this._size)
             return false;
-        const array = _._array, head = _._head;
-        const removed = _._array[head];
+        const array = this._array, head = this._head;
+        const removed = this._array[head];
         array[head] = null;
-        _._head = (head + 1) % _._capacity;
-        _._size--;
-        _._incrementModified();
+        this._head = (head + 1) % this._capacity;
+        this._size--;
+        this._incrementModified();
         out(removed);
         return true;
     }

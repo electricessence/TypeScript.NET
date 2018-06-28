@@ -34,7 +34,8 @@ function isPromise<T>(value:any):value is PromiseLike<T>
 }
 
 function resolve<T>(
-	value:TSDNPromise.Resolution<T>, resolver:(v:TSDNPromise.Resolution<T>) => any,
+	value:TSDNPromise.Resolution<T>,
+	resolver:Function,
 	promiseFactory:(v:any) => PromiseBase<any>):PromiseBase<any>
 {
 	let nextValue = resolver
@@ -76,7 +77,7 @@ function handleResolutionMethods(
 	targetFulfill:TSDNPromise.Fulfill<any, any> | null | undefined,
 	targetReject:TSDNPromise.Reject<any> | null | undefined,
 	value:TSDNPromise.Resolution<any>,
-	resolver?:Resolver | null | undefined ):void
+	resolver?:Resolver | null | undefined):void
 {
 	try
 	{
@@ -89,9 +90,10 @@ function handleResolutionMethods(
 
 function handleDispatch<T, TFulfilled = T, TRejected = never>(
 	p:PromiseLike<T>,
-	onFulfilled:TSDNPromise.Fulfill<T, TFulfilled>,
-	onRejected?:TSDNPromise.Reject<TRejected>):void
+	onFulfilled:TSDNPromise.Fulfill<T, TFulfilled> | undefined | null,
+	onRejected?:TSDNPromise.Reject<TRejected> | null):void
 {
+	// noinspection SuspiciousInstanceOfGuard
 	if(p instanceof PromiseBase)
 	{
 		p.doneNow(onFulfilled, onRejected);
@@ -107,6 +109,7 @@ function handleSyncIfPossible<T, TFulfilled = T, TRejected = never>(
 	onFulfilled:TSDNPromise.Fulfill<T, TFulfilled>,
 	onRejected?:TSDNPromise.Reject<TRejected>):PromiseLike<TFulfilled | TRejected>
 {
+	// noinspection SuspiciousInstanceOfGuard
 	if(p instanceof PromiseBase)
 		return p.thenSynchronous(onFulfilled, onRejected);
 	else
@@ -201,7 +204,7 @@ export abstract class PromiseBase<T>
 {
 	//readonly [Symbol.toStringTag]: "Promise";
 
-	constructor()
+	protected constructor()
 	{
 		super(TSDNPromise.State.Pending);
 		this._disposableObjectName = PROMISE;
@@ -216,12 +219,7 @@ export abstract class PromiseBase<T>
 	 */
 	abstract doneNow(
 		onFulfilled:TSDNPromise.Fulfill<T, any> | undefined | null,
-		onRejected?:TSDNPromise.Reject<any> | undefined | null):void;
-
-	abstract doneNow(
-		onFulfilled:(v?:T) => any | undefined | null,
-		onRejected?:(v?:any) => any | undefined | null):void;
-
+		onRejected?:TSDNPromise.Reject<any> | null):void;
 
 	/**
 	 * Calls the respective handlers once the promise is resolved.
@@ -230,7 +228,7 @@ export abstract class PromiseBase<T>
 	 */
 	abstract thenSynchronous<TFulfilled = T, TRejected = never>(
 		onFulfilled:TSDNPromise.Fulfill<T, TFulfilled> | undefined | null,
-		onRejected?:TSDNPromise.Reject<TRejected> | undefined | null):PromiseBase<TFulfilled | TRejected>;
+		onRejected?:TSDNPromise.Reject<TRejected> | null):PromiseBase<TFulfilled | TRejected>;
 
 	/**
 	 * Same as 'thenSynchronous' but does not return the result.  Returns the current promise instead.
@@ -240,13 +238,9 @@ export abstract class PromiseBase<T>
 	 */
 	thenThis(
 		onFulfilled:TSDNPromise.Fulfill<T, any> | undefined | null,
-		onRejected?:TSDNPromise.Reject<any> | undefined | null):this;
-
-	thenThis(
-		onFulfilled:(v?:T) => any | undefined | null,
-		onRejected?:(v?:any) => any | undefined | null):this
+		onRejected?:TSDNPromise.Reject<any> | null):this
 	{
-		this.doneNow(onFulfilled,onRejected);
+		this.doneNow(onFulfilled, onRejected);
 		return this;
 	}
 
@@ -260,12 +254,11 @@ export abstract class PromiseBase<T>
 
 	then<TFulfilled = T, TRejected = never>(
 		onFulfilled:TSDNPromise.Fulfill<T, TFulfilled> | undefined | null,
-		onRejected?:TSDNPromise.Reject<TRejected> | undefined | null):PromiseBase<TFulfilled | TRejected>
+		onRejected?:TSDNPromise.Reject<TRejected> | null):PromiseBase<TFulfilled | TRejected>
 	{
 		this.throwIfDisposed();
 
-		return new TSDNPromise<TFulfilled | TRejected>((resolve, reject) =>
-		{
+		return new TSDNPromise<TFulfilled | TRejected>((resolve, reject) => {
 			this.doneNow(
 				result =>
 					handleResolutionMethods(resolve, reject, result, onFulfilled),
@@ -285,12 +278,11 @@ export abstract class PromiseBase<T>
 	 */
 	thenAllowFatal<TFulfilled = T, TRejected = never>(
 		onFulfilled:TSDNPromise.Fulfill<T, TFulfilled> | undefined | null,
-		onRejected?:TSDNPromise.Reject<TRejected> | undefined | null):PromiseBase<TFulfilled | TRejected>
+		onRejected?:TSDNPromise.Reject<TRejected> | null):PromiseBase<TFulfilled | TRejected>
 	{
 		this.throwIfDisposed();
 
-		return new TSDNPromise<TFulfilled | TRejected>((resolve, reject) =>
-		{
+		return new TSDNPromise<TFulfilled | TRejected>((resolve, reject) => {
 			this.doneNow(
 				result =>
 					resolve(<any>(onFulfilled ? onFulfilled(result) : result)),
@@ -308,8 +300,8 @@ export abstract class PromiseBase<T>
 	 * @param onRejected
 	 */
 	done(
-		onFulfilled:TSDNPromise.Fulfill<T, any>,
-		onRejected?:TSDNPromise.Reject<any>):void
+		onFulfilled:TSDNPromise.Fulfill<T, any> | undefined | null,
+		onRejected?:TSDNPromise.Reject<any> | null):void
 	{
 		defer(() => this.doneNow(onFulfilled, onRejected));
 	}
@@ -324,10 +316,8 @@ export abstract class PromiseBase<T>
 		this.throwIfDisposed();
 
 		return new TSDNPromise<T>(
-			(resolve, reject) =>
-			{
-				defer(() =>
-				{
+			(resolve, reject) => {
+				defer(() => {
 					this.doneNow(
 						v => resolve(v),
 						e => reject(e));
@@ -350,8 +340,7 @@ export abstract class PromiseBase<T>
 		if(this.isSettled) return this.delayFromNow(milliseconds);
 
 		return new TSDNPromise<T>(
-			(resolve, reject) =>
-			{
+			(resolve, reject) => {
 				this.doneNow(
 					v => defer(() => resolve(v), milliseconds),
 					e => defer(() => reject(e), milliseconds))
@@ -421,15 +410,15 @@ export abstract class Resolvable<T>
 {
 
 	doneNow(
-		onFulfilled:(v?:T) => any,
-		onRejected?:(v?:any) => any):void
+		onFulfilled:TSDNPromise.Fulfill<T, any> | undefined | null,
+		onRejected?:TSDNPromise.Reject<any> | null):void
 	{
 		this.throwIfDisposed();
 
 		switch(this.state)
 		{
 			case TSDNPromise.State.Fulfilled:
-				if(onFulfilled) onFulfilled(this._result);
+				if(onFulfilled) onFulfilled(this._result!);
 				break;
 			case TSDNPromise.State.Rejected:
 				if(onRejected) onRejected(this._error);
@@ -439,7 +428,7 @@ export abstract class Resolvable<T>
 
 	thenSynchronous<TFulfilled = T, TRejected = never>(
 		onFulfilled:TSDNPromise.Fulfill<T, TFulfilled> | undefined | null,
-		onRejected?:TSDNPromise.Reject<TRejected> | undefined | null):PromiseBase<TFulfilled | TRejected>
+		onRejected?:TSDNPromise.Reject<TRejected> | null):PromiseBase<TFulfilled | TRejected>
 	{
 		this.throwIfDisposed();
 
@@ -473,7 +462,7 @@ export abstract class Resolvable<T>
 export abstract class Resolved<T>
 	extends Resolvable<T>
 {
-	constructor(state:TSDNPromise.State, result:T, error?:any)
+	protected constructor(state:TSDNPromise.State, result:T, error?:any)
 	{
 		super();
 		this._result = result;
@@ -526,15 +515,13 @@ class PromiseWrapper<T>
 			throw new ArgumentException(TARGET, "Must be a promise-like object.");
 
 		_target.then(
-			(v:T) =>
-			{
+			(v:T) => {
 				this._state = TSDNPromise.State.Fulfilled;
 				this._result = v;
 				this._error = VOID0;
 				this._target = VOID0;
 			},
-			e =>
-			{
+			e => {
 				this._state = TSDNPromise.State.Rejected;
 				this._error = e;
 				this._target = VOID0;
@@ -542,16 +529,15 @@ class PromiseWrapper<T>
 	}
 
 	thenSynchronous<TFulfilled = T, TRejected = never>(
-		onFulfilled:TSDNPromise.Fulfill<T, TFulfilled>,
-		onRejected?:TSDNPromise.Reject<TRejected>):PromiseBase<TFulfilled | TRejected>
+		onFulfilled:TSDNPromise.Fulfill<T, TFulfilled> | undefined | null,
+		onRejected?:TSDNPromise.Reject<TRejected> | null):PromiseBase<TFulfilled | TRejected>
 	{
 		this.throwIfDisposed();
 
 		let t = this._target;
 		if(!t) return super.thenSynchronous(onFulfilled, onRejected);
 
-		return new TSDNPromise<TFulfilled | TRejected>((resolve, reject) =>
-		{
+		return new TSDNPromise<TFulfilled | TRejected>((resolve, reject) => {
 			handleDispatch(t,
 				result => handleResolutionMethods(resolve, reject, result, onFulfilled),
 				error => onRejected
@@ -562,8 +548,8 @@ class PromiseWrapper<T>
 	}
 
 	doneNow(
-		onFulfilled:(v?:T) => any,
-		onRejected?:(v?:any) => any):void
+		onFulfilled:TSDNPromise.Fulfill<T, any> | undefined | null,
+		onRejected?:TSDNPromise.Reject<any> | null):void
 	{
 		this.throwIfDisposed();
 
@@ -612,7 +598,7 @@ export class TSDNPromise<T>
 
 	thenSynchronous<TFulfilled = T, TRejected = never>(
 		onFulfilled:TSDNPromise.Fulfill<T, TFulfilled> | undefined | null,
-		onRejected?:TSDNPromise.Reject<TRejected> | undefined | null):PromiseBase<TFulfilled | TRejected>
+		onRejected?:TSDNPromise.Reject<TRejected> | null):PromiseBase<TFulfilled | TRejected>
 	{
 		this.throwIfDisposed();
 
@@ -626,8 +612,8 @@ export class TSDNPromise<T>
 	}
 
 	doneNow(
-		onFulfilled:(v?:T) => any,
-		onRejected?:(v?:any) => any):void
+		onFulfilled:TSDNPromise.Fulfill<T, any> | undefined | null,
+		onRejected?:TSDNPromise.Reject<any> | null):void
 	{
 		this.throwIfDisposed();
 
@@ -646,7 +632,7 @@ export class TSDNPromise<T>
 	}
 
 	// Protects against double calling.
-	protected _resolvedCalled:boolean;
+	protected _resolvedCalled:boolean | undefined;
 
 	resolveUsing(
 		resolver:TSDNPromise.Executor<T>,
@@ -662,8 +648,7 @@ export class TSDNPromise<T>
 		this._resolvedCalled = true;
 
 		let state = 0;
-		const rejectHandler = (reason:any) =>
-		{
+		const rejectHandler = (reason:any) => {
 			if(state)
 			{
 				// Someone else's promise handling down stream could double call this. :\
@@ -679,8 +664,7 @@ export class TSDNPromise<T>
 			}
 		};
 
-		const fulfillHandler = (v:any) =>
-		{
+		const fulfillHandler = (v:any) => {
 			if(state)
 			{
 				// Someone else's promise handling down stream could double call this. :\
@@ -719,6 +703,7 @@ export class TSDNPromise<T>
 		// Note: Avoid recursion if possible.
 
 		// Check ahead of time for resolution and resolve appropriately
+		// noinspection SuspiciousInstanceOfGuard
 		while(result instanceof PromiseBase)
 		{
 			let r:PromiseBase<T> = <any>result;
@@ -792,7 +777,8 @@ export class TSDNPromise<T>
 					handleResolution(promise, error, onRejected);
 					//if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
 				}
-				else if(promise) { //noinspection JSIgnoredPromiseFromCall
+				else if(promise)
+				{ //noinspection JSIgnoredPromiseFromCall
 					promise.reject(error);
 				}
 			}
@@ -861,8 +847,7 @@ export class ArrayPromise<T>
 	map<U>(transform:(value:T) => U):ArrayPromise<U>
 	{
 		this.throwIfDisposed();
-		return new ArrayPromise<U>(resolve =>
-		{
+		return new ArrayPromise<U>(resolve => {
 			this.doneNow((result:T[]) => resolve(result.map(transform)));
 		}, true);
 	}
@@ -897,13 +882,14 @@ export class ArrayPromise<T>
 }
 
 const PROMISE_COLLECTION = "PromiseCollection";
+
 /**
  * A Promise collection exposes useful methods for handling a collection of promises and their results.
  */
 export class PromiseCollection<T>
 	extends DisposableBase
 {
-	private _source:PromiseLike<T>[];
+	private readonly _source:PromiseLike<T>[];
 
 	constructor(source:PromiseLike<T>[] | null | undefined)
 	{
@@ -969,10 +955,9 @@ export class PromiseCollection<T>
 	map<U>(transform:(value:T) => U):ArrayPromise<U>
 	{
 		this.throwIfDisposed();
-		return new ArrayPromise<U>(resolve =>
-		{
+		return new ArrayPromise<U>(resolve => {
 			this.all()
-				.doneNow((result:T[]) => resolve(result.map(transform)));
+				.doneNow((result:T[]) => resolve(result && result.map(transform)));
 		}, true);
 	}
 
@@ -1021,9 +1006,9 @@ export class PromiseCollection<T>
 					handleSyncIfPossible(previous,
 						(p:U) => handleSyncIfPossible(current, (c:T) => reduction(p, c, i, array))),
 
-					isPromise(initialValue)
-						? initialValue
-						: new Fulfilled(<any>initialValue)
+				isPromise(initialValue)
+					? initialValue
+					: new Fulfilled(<any>initialValue)
 			)
 		);
 	}
@@ -1080,8 +1065,7 @@ module pools
 		function getPool()
 		{
 			return pool
-				|| (pool = new ObjectPool<IPromiseCallbacks<any>>(40, factory, c =>
-				{
+				|| (pool = new ObjectPool<IPromiseCallbacks<any>>(40, factory, c => {
 					c.onFulfilled = NULL;
 					c.onRejected = NULL;
 					c.promise = NULL;
@@ -1128,29 +1112,36 @@ export module TSDNPromise
 	 * https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
 	 * If a promise is disposed the value will be undefined which will also evaluate (promise.state)==false.
 	 */
-	export enum State {
+	export enum State
+	{
 		Pending = 0,
 		Fulfilled = 1,
 		Rejected = -1
 	}
+
 	Object.freeze(State);
 
 	export type Resolution<TResult> = TResult | PromiseLike<TResult>;
 
 	export interface Fulfill<T, TResult>
 	{
-		(value:T):Resolution<TResult>
+		(value:T):Resolution<TResult>;
 	}
 
 	export interface Reject<TResult>
 	{
-		(reason:any):TResult | PromiseLike<TResult>;
+		(reason:any):Resolution<TResult>;
 	}
 
 	export interface Then<T, TResult>
 	{
-		(onfulfilled?:Fulfill<T, TResult> | undefined | null, onrejected?:Reject<TResult> | undefined | null):PromiseLike<TResult>;
-		(onfulfilled?:Fulfill<T, TResult> | undefined | null, onrejected?:Reject<void> | undefined | null):PromiseLike<TResult>;
+		(
+			onfulfilled?:Fulfill<T, TResult> | undefined | null,
+			onrejected?:Reject<TResult> | undefined | null):PromiseLike<TResult>;
+
+		(
+			onfulfilled?:Fulfill<T, TResult> | undefined | null,
+			onrejected?:Reject<void> | undefined | null):PromiseLike<TResult>;
 	}
 
 	export interface Executor<T>
@@ -1206,16 +1197,14 @@ export module TSDNPromise
 			r => r(promises), true); // it's a new empty, reuse it. :|
 
 		// Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
-		return new ArrayPromise<any>((resolve, reject) =>
-		{
+		return new ArrayPromise<any>((resolve, reject) => {
 			let result:any[] = [];
 			let len = promises.length;
 			result.length = len;
 			// Using a set instead of -- a number is more reliable if just in case one of the provided promises resolves twice.
 			let remaining = new Set(promises.map((v, i) => i)); // get all the indexes...
 
-			let cleanup = () =>
-			{
+			let cleanup = () => {
 				reject = VOID0;
 				resolve = VOID0;
 				promises.length = 0;
@@ -1224,8 +1213,7 @@ export module TSDNPromise
 				remaining = VOID0;
 			};
 
-			let checkIfShouldResolve = () =>
-			{
+			let checkIfShouldResolve = () => {
 				let r = resolve;
 				if(r && !remaining.count)
 				{
@@ -1234,8 +1222,7 @@ export module TSDNPromise
 				}
 			};
 
-			let onFulfill = (v:any, i:number) =>
-			{
+			let onFulfill = (v:any, i:number) => {
 				if(resolve)
 				{
 					result[i] = v;
@@ -1244,8 +1231,7 @@ export module TSDNPromise
 				}
 			};
 
-			let onReject = (e?:any) =>
-			{
+			let onReject = (e?:any) => {
 				let r = reject;
 				if(r)
 				{
@@ -1283,23 +1269,20 @@ export module TSDNPromise
 
 
 		// Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
-		return new ArrayPromise<any>((resolve, reject) =>
-		{
+		return new ArrayPromise<any>((resolve, reject) => {
 			let len = promises.length;
 
 			// Using a set instead of -- a number is more reliable if just in case one of the provided promises resolves twice.
 			let remaining = new Set(promises.map((v, i) => i)); // get all the indexes...
 
-			let cleanup = () =>
-			{
+			let cleanup = () => {
 				reject = NULL;
 				resolve = NULL;
 				remaining.dispose();
 				remaining = NULL;
 			};
 
-			let checkIfShouldResolve = () =>
-			{
+			let checkIfShouldResolve = () => {
 				let r = resolve;
 				if(r && !remaining.count)
 				{
@@ -1308,8 +1291,7 @@ export module TSDNPromise
 				}
 			};
 
-			let onResolved = (i:number) =>
-			{
+			let onResolved = (i:number) => {
 				if(remaining)
 				{
 					remaining.remove(i);
@@ -1355,18 +1337,15 @@ export module TSDNPromise
 			if(p instanceof PromiseBase && p.isSettled) return p;
 		}
 
-		return new TSDNPromise((resolve, reject) =>
-		{
-			let cleanup = () =>
-			{
+		return new TSDNPromise((resolve, reject) => {
+			let cleanup = () => {
 				reject = NULL;
 				resolve = NULL;
 				promises.length = 0;
 				promises = NULL;
 			};
 
-			let onResolve = (r:(x:any) => void, v:any) =>
-			{
+			let onResolve = (r:(x:any) => void, v:any) => {
 				if(r)
 				{
 					cleanup();
@@ -1449,8 +1428,7 @@ export module TSDNPromise
 	export function map<T, U>(source:T[], transform:(value:T) => U):PromiseCollection<U>
 	{
 		return new PromiseCollection<U>(
-			source.map(d => new TSDNPromise<U>((r, j) =>
-			{
+			source.map(d => new TSDNPromise<U>((r, j) => {
 				try
 				{
 					r(transform(d));
@@ -1481,6 +1459,7 @@ export module TSDNPromise
 	export function wrap<T>(target:T | PromiseLike<T>):PromiseBase<T>
 	{
 		if(!target) throw new ArgumentNullException(TARGET);
+		// noinspection SuspiciousInstanceOfGuard
 		return isPromise(target)
 			? (target instanceof PromiseBase ? target : new PromiseWrapper(target))
 			: new Fulfilled<T>(target);

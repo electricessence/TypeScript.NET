@@ -10,9 +10,14 @@ import { EventDispatcherEntry } from "./EventDispatcherEntry";
 // noinspection JSUnusedLocalSymbols
 const DISPOSING = 'disposing', DISPOSED = 'disposed';
 function entryFinalizer() {
-    const p = this.params;
-    p.dispatcher.removeEntry(this);
-    p.dispatcher = null;
+    //@ts-ignore
+    const _ = this;
+    const p = _.params;
+    const d = p && p.dispatcher;
+    if (d) {
+        d.removeEntry(_);
+        p.dispatcher = null;
+    }
 }
 const NAME = "EventDispatcherBase";
 export default class EventDispatcherBase extends DisposableBase {
@@ -43,10 +48,12 @@ export default class EventDispatcherBase extends DisposableBase {
     }
     hasEventListener(type, listener) {
         const e = this._entries;
-        return e && e.some((value) => type == value.type && (!listener || listener == value.listener));
+        return e && e.some((value) => type == value.type && (!listener || listener == value.listener)) || false;
     }
     removeEventListener(type, listener) {
-        dispose.these.noCopy(this._entries.filter(entry => entry.matches(type, listener)));
+        const e = this._entries;
+        if (e)
+            dispose.these.noCopy(e.filter(entry => entry.matches(type, listener)));
     }
     dispatchEvent(e, params) {
         const _ = this;

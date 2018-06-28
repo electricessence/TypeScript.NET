@@ -4,6 +4,7 @@
  */
 System.register(["../../../Exceptions/ArgumentNullException"], function (exports_1, context_1) {
     "use strict";
+    var ArgumentNullException_1;
     var __moduleName = context_1 && context_1.id;
     /**
      * https://en.wikipedia.org/wiki/Insertion_sort
@@ -26,7 +27,6 @@ System.register(["../../../Exceptions/ArgumentNullException"], function (exports
         return target;
     }
     exports_1("insertionSort", insertionSort);
-    var ArgumentNullException_1;
     return {
         setters: [
             function (ArgumentNullException_1_1) {

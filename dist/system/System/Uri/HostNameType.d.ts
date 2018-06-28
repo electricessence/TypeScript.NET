@@ -23,6 +23,6 @@ export declare enum UriHostNameType {
     /**
      * The type of the host name is not supplied.
      */
-    Unknown = 4,
+    Unknown = 4
 }
 export default UriHostNameType;

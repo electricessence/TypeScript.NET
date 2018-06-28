@@ -4,6 +4,7 @@
  */
 System.register(["../Types", "../Collections/Array/copy"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, copy_1;
     var __moduleName = context_1 && context_1.id;
     function clone(source, depth) {
         if (depth === void 0) { depth = 0; }
@@ -34,7 +35,6 @@ System.register(["../Types", "../Collections/Array/copy"], function (exports_1, 
         }
     }
     exports_1("default", clone);
-    var Types_1, copy_1;
     return {
         setters: [
             function (Types_1_1) {

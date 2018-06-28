@@ -5,6 +5,7 @@
  */
 System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
+    var Compare_1, LinkedNodeList_1, InvalidOperationException_1, ArgumentNullException_1, CollectionBase_1, extends_1, __extends, VOID0, InternalNode, LinkedList, LinkedListNode;
     var __moduleName = context_1 && context_1.id;
     function ensureExternal(node, list) {
         if (!node)
@@ -38,7 +39,6 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
             node.external = VOID0;
         }
     }
-    var Compare_1, LinkedNodeList_1, InvalidOperationException_1, ArgumentNullException_1, CollectionBase_1, extends_1, __extends, VOID0, InternalNode, LinkedList, LinkedListNode;
     return {
         setters: [
             function (Compare_1_1) {
@@ -104,7 +104,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 LinkedList.prototype.assertVersion = function (version) {
                     if (this._listInternal)
                         return this._listInternal.assertVersion(version);
-                    else
+                    else // In case it's been disposed.
                         return _super.prototype.assertVersion.call(this, version);
                 };
                 LinkedList.prototype._onDispose = function () {

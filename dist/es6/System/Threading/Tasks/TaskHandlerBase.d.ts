@@ -21,7 +21,7 @@ export declare abstract class TaskHandlerBase extends DisposableBase implements 
     runSynchronously(): void;
     protected getStatus(): TaskStatus;
     readonly status: TaskStatus;
-    private static _handler(d);
+    private static _handler;
     protected abstract _onExecute(): void;
     protected _onDispose(): void;
     cancel(): boolean;

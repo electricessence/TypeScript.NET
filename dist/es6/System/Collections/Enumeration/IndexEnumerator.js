@@ -10,7 +10,7 @@ export class IndexEnumerator extends EnumeratorBase {
             source = sourceFactory();
             if (source && source.source) {
                 const len = source.length;
-                if (len < 0)
+                if (len < 0) // Null is allowed but will exit immediately.
                     throw new Error("length must be zero or greater");
                 if (!isFinite(len))
                     throw new Error("length must finite number");

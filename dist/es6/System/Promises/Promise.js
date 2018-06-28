@@ -35,13 +35,13 @@ function resolve(value, resolver, promiseFactory) {
 function handleResolution(p, value, resolver) {
     try {
         let v = resolver ? resolver(value) : value;
-        if (p) {
+        if (p) { //noinspection JSIgnoredPromiseFromCall
             p.resolve(v);
         }
         return null;
     }
     catch (ex) {
-        if (p) {
+        if (p) { //noinspection JSIgnoredPromiseFromCall
             p.reject(ex);
         }
         return ex;
@@ -59,6 +59,7 @@ function handleResolutionMethods(targetFulfill, targetReject, value, resolver) {
     }
 }
 function handleDispatch(p, onFulfilled, onRejected) {
+    // noinspection SuspiciousInstanceOfGuard
     if (p instanceof PromiseBase) {
         p.doneNow(onFulfilled, onRejected);
     }
@@ -67,6 +68,7 @@ function handleDispatch(p, onFulfilled, onRejected) {
     }
 }
 function handleSyncIfPossible(p, onFulfilled, onRejected) {
+    // noinspection SuspiciousInstanceOfGuard
     if (p instanceof PromiseBase)
         return p.thenSynchronous(onFulfilled, onRejected);
     else
@@ -130,6 +132,12 @@ export class PromiseBase extends PromiseState {
         super(TSDNPromise.State.Pending);
         this._disposableObjectName = PROMISE;
     }
+    /**
+     * Same as 'thenSynchronous' but does not return the result.  Returns the current promise instead.
+     * You may not need an additional promise result, and this will not create a new one.
+     * @param onFulfilled
+     * @param onRejected
+     */
     thenThis(onFulfilled, onRejected) {
         this.doneNow(onFulfilled, onRejected);
         return this;
@@ -442,6 +450,7 @@ export class TSDNPromise extends Resolvable {
             return;
         // Note: Avoid recursion if possible.
         // Check ahead of time for resolution and resolve appropriately
+        // noinspection SuspiciousInstanceOfGuard
         while (result instanceof PromiseBase) {
             let r = result;
             if (this._emitDisposalRejection(r))
@@ -495,7 +504,7 @@ export class TSDNPromise extends Resolvable {
                     handleResolution(promise, error, onRejected);
                     //if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
                 }
-                else if (promise) {
+                else if (promise) { //noinspection JSIgnoredPromiseFromCall
                     promise.reject(error);
                 }
             }
@@ -622,7 +631,7 @@ export class PromiseCollection extends DisposableBase {
         this.throwIfDisposed();
         return new ArrayPromise(resolve => {
             this.all()
-                .doneNow((result) => resolve(result.map(transform)));
+                .doneNow((result) => resolve(result && result.map(transform)));
         }, true);
     }
     /**
@@ -934,6 +943,7 @@ var pools;
     function wrap(target) {
         if (!target)
             throw new ArgumentNullException(TARGET);
+        // noinspection SuspiciousInstanceOfGuard
         return isPromise(target)
             ? (target instanceof PromiseBase ? target : new PromiseWrapper(target))
             : new Fulfilled(target);

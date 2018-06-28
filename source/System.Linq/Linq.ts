@@ -1973,6 +1973,7 @@ export class LinqEnumerable<T>
 		const obj:IMap<TResult> = {};
 		this.forEach((x, i) =>
 		{
+			//@ts-ignore
 			obj[keySelector(x, i)] = elementSelector(x, i);
 		});
 		return obj;
@@ -2706,6 +2707,7 @@ export class LinqEnumerable<T>
 		reduction:(previous:U, current:T, index?:number) => U,
 		initialValue?:U):U | undefined
 	{
+		//@ts-ignore
 		return this.aggregate(reduction, initialValue);
 	}
 
@@ -2960,8 +2962,8 @@ export class ArrayEnumerable<T>
 		});
 
 		const _ = this;
-		_._disposableObjectName = "ArrayEnumerable";
-		_._source = source;
+		this._disposableObjectName = "ArrayEnumerable";
+		this._source = source;
 
 	}
 
@@ -3144,6 +3146,7 @@ export class ArrayEnumerable<T>
 		if(Type.isArrayLike(second))
 			return Arrays.areEqual(this.source, second, true, equalityComparer);
 
+		// noinspection SuspiciousInstanceOfGuard
 		if(second instanceof ArrayEnumerable)
 			return second.sequenceEqual(this.source, equalityComparer);
 
@@ -3500,6 +3503,7 @@ export module Enumerable
 	 */
 	export function toArray<T>(source:ForEachEnumerable<T>):T[]
 	{
+		// noinspection SuspiciousInstanceOfGuard
 		if(source instanceof LinqEnumerable)
 			return source.toArray();
 

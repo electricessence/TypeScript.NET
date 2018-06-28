@@ -5,8 +5,8 @@
  */
 System.register(["./TimeSpan", "./ClockTime", "./TimeStamp", "../Exceptions/ArgumentNullException"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var TimeSpan_1, ClockTime_1, TimeStamp_1, ArgumentNullException_1, VOID0, DateTime;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (TimeSpan_1_1) {
@@ -38,12 +38,14 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp", "../Exceptions/Argu
                         if (kind === VOID0)
                             this._kind = value._kind;
                     }
-                    else if (value instanceof Date)
-                        this._value = new Date(value.getTime());
-                    else
-                        this._value = value === VOID0
-                            ? new Date()
-                            : new Date(value);
+                    else { // noinspection SuspiciousInstanceOfGuard
+                        if (value instanceof Date)
+                            this._value = new Date(value.getTime());
+                        else
+                            this._value = value === VOID0
+                                ? new Date()
+                                : new Date(value);
+                    }
                 }
                 DateTime.prototype.toJsDate = function () {
                     return new Date(this._value.getTime()); // return a clone.

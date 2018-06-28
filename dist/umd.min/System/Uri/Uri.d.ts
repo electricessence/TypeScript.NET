@@ -138,6 +138,6 @@ export declare enum Fields {
     port = 3,
     path = 4,
     query = 5,
-    fragment = 6,
+    fragment = 6
 }
 export default Uri;

@@ -163,6 +163,7 @@ function disposeTheseInternal(disposables, trapExceptions, index) {
                 disposeSingle(next, false);
                 success = true;
             }
+            // Don't trap the exception in order to allow it to propagate the stack trace.
             finally {
                 if (!success && index + 1 < len) {
                     /* If code is 'continued' by the debugger,

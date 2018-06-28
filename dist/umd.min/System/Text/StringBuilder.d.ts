@@ -8,7 +8,7 @@ export declare class StringBuilder implements IDisposable {
     private readonly _partArray;
     private _latest;
     constructor(...initial: any[]);
-    private appendSingle(item);
+    private appendSingle;
     appendThese(items: any[]): StringBuilder;
     append(...items: any[]): StringBuilder;
     appendLine(...items: any[]): StringBuilder;

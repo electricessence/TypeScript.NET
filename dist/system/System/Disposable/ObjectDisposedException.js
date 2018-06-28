@@ -5,8 +5,8 @@
  */
 System.register(["../Exceptions/InvalidOperationException", "../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var InvalidOperationException_1, extends_1, __extends, NAME, ObjectDisposedException;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (InvalidOperationException_1_1) {

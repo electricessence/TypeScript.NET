@@ -4,8 +4,8 @@
  */
 System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "./Enumeration/EmptyEnumerator", "../Disposable/dispose", "../Compare", "./CollectionBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var LinkedNodeList_1, ArgumentNullException_1, Enumerator_1, EmptyEnumerator_1, dispose_1, Compare_1, CollectionBase_1, extends_1, __extends, VOID0, OTHER, SetBase;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (LinkedNodeList_1_1) {
@@ -71,6 +71,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                     if (!other)
                         throw new ArgumentNullException_1.ArgumentNullException(OTHER);
                     var _ = this;
+                    // noinspection SuspiciousInstanceOfGuard
                     if (other instanceof SetBase) {
                         var s = _._set;
                         if (s)
@@ -88,6 +89,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                     var _this = this;
                     if (!other)
                         throw new ArgumentNullException_1.ArgumentNullException(OTHER);
+                    // noinspection SuspiciousInstanceOfGuard
                     return other instanceof SetBase
                         ? other.isProperSupersetOf(this)
                         : dispose_1.using(this.newUsing(other), function (o) { return o.isProperSupersetOf(_this); });
@@ -97,6 +99,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                     if (!other)
                         throw new ArgumentNullException_1.ArgumentNullException(OTHER);
                     var result = true, count;
+                    // noinspection SuspiciousInstanceOfGuard
                     if (other instanceof SetBase) {
                         result = this.isSupersetOf(other);
                         count = other.getCount();
@@ -117,6 +120,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                     var _this = this;
                     if (!other)
                         throw new ArgumentNullException_1.ArgumentNullException(OTHER);
+                    // noinspection SuspiciousInstanceOfGuard
                     return other instanceof SetBase
                         ? other.isSupersetOf(this)
                         : dispose_1.using(this.newUsing(other), function (o) { return o.isSupersetOf(_this); });
@@ -142,6 +146,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 SetBase.prototype.setEquals = function (other) {
                     if (!other)
                         throw new ArgumentNullException_1.ArgumentNullException(OTHER);
+                    // noinspection SuspiciousInstanceOfGuard
                     return this.getCount() == (other instanceof SetBase
                         ? other.getCount()
                         : dispose_1.using(this.newUsing(other), function (o) { return o.getCount(); }))
@@ -151,6 +156,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                     if (!other)
                         throw new ArgumentNullException_1.ArgumentNullException(OTHER);
                     var _ = this;
+                    // noinspection SuspiciousInstanceOfGuard
                     if (other instanceof SetBase) {
                         Enumerator_1.forEach(other, function (v) {
                             if (_.contains(v)) {
@@ -193,7 +199,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 SetBase.prototype.forEach = function (action, useCopy) {
                     return useCopy
                         ? _super.prototype.forEach.call(this, action, useCopy)
-                        : this._set.forEach(function (node, i) { return action(node.value, i); });
+                        : this._set ? this._set.forEach(function (node, i) { return action(node.value, i); }) : 0;
                 };
                 SetBase.prototype._removeNode = function (node) {
                     return !!node

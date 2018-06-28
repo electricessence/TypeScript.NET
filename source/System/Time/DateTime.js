@@ -29,12 +29,14 @@
                 if (kind === VOID0)
                     this._kind = value._kind;
             }
-            else if (value instanceof Date)
-                this._value = new Date(value.getTime());
-            else
-                this._value = value === VOID0
-                    ? new Date()
-                    : new Date(value);
+            else { // noinspection SuspiciousInstanceOfGuard
+                if (value instanceof Date)
+                    this._value = new Date(value.getTime());
+                else
+                    this._value = value === VOID0
+                        ? new Date()
+                        : new Date(value);
+            }
         }
         DateTime.prototype.toJsDate = function () {
             return new Date(this._value.getTime()); // return a clone.

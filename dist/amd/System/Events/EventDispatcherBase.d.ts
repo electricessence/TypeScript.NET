@@ -18,7 +18,7 @@ export interface IEntryParams {
 }
 export default class EventDispatcherBase extends DisposableBase implements IEventDispatcher {
     constructor();
-    protected _entries: EventDispatcherEntry<IEntryParams>[];
+    protected _entries: EventDispatcherEntry<IEntryParams>[] | undefined;
     addEventListener(type: string, listener: IEventListener, priority?: number): void;
     removeEntry(entry: EventDispatcherEntry<IEntryParams>): boolean;
     registerEventListener(type: string, listener: IEventListener, priority?: number): void;

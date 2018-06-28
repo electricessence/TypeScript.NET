@@ -6,6 +6,7 @@
 
 import {IDisposable} from "./Disposable/IDisposable";
 import {IMap} from "../IMap";
+
 const NAME:string = 'Exception';
 
 // Avoid importing node reference..
@@ -38,22 +39,21 @@ export class Exception implements Error, IDisposable
 		innerException?:Error,
 		beforeSealing?:(ex:any)=>void)
 	{
-		const _ = this;
-
-		this.name = _.getName();
+		this.name = this.getName();
 		this.data = {};
 
 		if(innerException)
-			_.data['innerException'] = innerException;
+			this.data['innerException'] = innerException;
 
 		/* Originally intended to use 'get' accessors for properties,
 		 * But debuggers don't display these readily yet.
 		 * Object.freeze has to be used carefully, but will prevent overriding values at runtime.
 		 */
 
-		if(beforeSealing) beforeSealing(_);
+		if(beforeSealing) beforeSealing(this);
 
 		// Node has a .stack, let's use it...
+		this.stack = '';
 		try
 		{
 			let stack:string = eval("new Error()").stack;
@@ -63,12 +63,12 @@ export class Exception implements Error, IDisposable
 					.replace(/(.|\n)+\s+at new.+/, '')
 				|| '';
 
-			this.stack = _.toStringWithoutBrackets() + stack;
+			this.stack = this.toStringWithoutBrackets() + stack;
 		}
 		catch(ex)
 		{}
 
-		Object.freeze(_);
+		Object.freeze(this);
 	}
 
 

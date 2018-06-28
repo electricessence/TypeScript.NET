@@ -35,7 +35,7 @@ export class TimeQuantity {
     /**
      * Compares this instance against any other time quantity instance.
      * @param other
-     * @returns {CompareResult}
+     * @returns {number}
      */
     compareTo(other) {
         return compare(this.getTotalMilliseconds(), other && other.total && other.total.milliseconds);

@@ -41,7 +41,9 @@ export class Regex {
     constructor(pattern, options, ...extra) {
         if (!pattern)
             throw new Error("'pattern' cannot be null or empty.");
-        let patternString, flags = (options && ((options) instanceof (Array) ? options : [options]).concat(extra) || extra)
+        let patternString, flags = (options && ((options) instanceof (Array)
+            ? options
+            : [options]).concat(extra) || extra)
             .join(EMPTY)
             .toLowerCase();
         if (pattern instanceof RegExp) {

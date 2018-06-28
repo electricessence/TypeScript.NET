@@ -4,6 +4,7 @@
  */
 System.register(["../Types", "./SetBase", "../Exceptions/ArgumentNullException", "../../extends"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, SetBase_1, ArgumentNullException_1, extends_1, __extends, VOID0, HashSet;
     var __moduleName = context_1 && context_1.id;
     function wipe(map, depth) {
         if (depth === void 0) { depth = 1; }
@@ -16,7 +17,6 @@ System.register(["../Types", "./SetBase", "../Exceptions/ArgumentNullException",
             }
         }
     }
-    var Types_1, SetBase_1, ArgumentNullException_1, extends_1, __extends, VOID0, HashSet;
     return {
         setters: [
             function (Types_1_1) {

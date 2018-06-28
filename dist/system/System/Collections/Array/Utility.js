@@ -4,6 +4,7 @@
  */
 System.register(["../../Types", "../../Integer", "../../Compare", "../../Exceptions/ArgumentException", "../../Exceptions/ArgumentNullException", "../../Exceptions/ArgumentOutOfRangeException", "./initialize", "./copy"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, Integer_1, Compare_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, initialize_1, copy_1, CBN, CB0, CBL0, VFN;
     var __moduleName = context_1 && context_1.id;
     /**
      * Checks to see where the provided array contains an item/value.
@@ -18,7 +19,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         var len = array && array.length;
         if (len) {
             // NaN NEVER evaluates its equality so be careful.
-            if ((array) instanceof (Array) && !Types_1.Type.isTrueNaN(item))
+            if (equalityComparer == Compare_1.areEqual && (array) instanceof (Array) && !Types_1.Type.isTrueNaN(item))
                 return array.indexOf(item);
             for (var i = 0; i < len; i++) {
                 // 'areEqual' includes NaN==NaN evaluation.
@@ -321,7 +322,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         return result;
     }
     exports_1("flatten", flatten);
-    var Types_1, Integer_1, Compare_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, initialize_1, copy_1, CBN, CB0, CBL0, VFN;
     return {
         setters: [
             function (Types_1_1) {

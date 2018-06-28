@@ -32,6 +32,7 @@
         TASK.DIST_COMMONJS
     ], function () { return renderer
         .addOptions({ noEmitHelpers: true })
+        //.target(Target.ES6)
         .at('./tests/mocha')
         .init()
         .module(gulp_typescript_helper_1.Module.COMMONJS)

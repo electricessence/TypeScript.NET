@@ -5,6 +5,7 @@
  */
 System.register(["../Types", "./Scheme", "./QueryParams", "../Text/Utility", "../Exceptions/ArgumentException", "../Exceptions/ArgumentOutOfRangeException"], function (exports_1, context_1) {
     "use strict";
+    var Types_1, Scheme_1, QueryParams_1, Utility_1, ArgumentException_1, ArgumentOutOfRangeException_1, VOID0, Uri, Fields, SLASH, SLASH2, QM, HASH, EMPTY, AT;
     var __moduleName = context_1 && context_1.id;
     function copyUri(from, to) {
         var i = 0, field;
@@ -166,7 +167,6 @@ System.register(["../Types", "./Scheme", "./QueryParams", "../Text/Utility", "..
         // null is good! (here)
         return null;
     }
-    var Types_1, Scheme_1, QueryParams_1, Utility_1, ArgumentException_1, ArgumentOutOfRangeException_1, VOID0, Uri, Fields, SLASH, SLASH2, QM, HASH, EMPTY, AT;
     return {
         setters: [
             function (Types_1_1) {

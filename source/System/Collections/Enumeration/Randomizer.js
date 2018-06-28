@@ -41,7 +41,7 @@
                 b = this._buffer, value = b[i], last = p - 1;
                 b[i] = b[last]; // Take the last one and put it here.
                 b[last] = null; // clear possible reference.
-                if (!this._allowReset && last % 32 == 0)
+                if (!this._allowReset && last % 32 == 0) // Shrink?
                     b.length = last;
                 this._pointer = last;
                 _._current = value;

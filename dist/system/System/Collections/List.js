@@ -4,8 +4,8 @@
  */
 System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./CollectionBase", "../../extends", "./Enumeration/EnumeratorBase"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Compare_1, Utility_1, Enumerator_1, Types_1, CollectionBase_1, extends_1, EnumeratorBase_1, __extends, VOID0, List;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Compare_1_1) {
@@ -142,7 +142,7 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
                             return yielder.yieldBreak();
                         }
                         _.assertVersion(version);
-                        if (index >= source.length)
+                        if (index >= source.length) // Just in case the size changes as we enumerate use '>='.
                             return yielder.yieldBreak();
                         return yielder.yieldReturn(source[index++]);
                     });

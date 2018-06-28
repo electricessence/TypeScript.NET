@@ -15,8 +15,8 @@ export declare abstract class ResolverBase<T> extends DisposableBase {
     private readonly _trapExceptions;
     private readonly _allowReset;
     protected _isValueCreated: boolean | null;
-    protected _value: T;
-    constructor(_valueFactory: Func<T>, _trapExceptions: boolean, _allowReset?: boolean);
+    protected _value: T | null | undefined;
+    protected constructor(_valueFactory: Func<T>, _trapExceptions: boolean, _allowReset?: boolean);
     protected _error: any;
     protected getError(): any;
     readonly error: any;

@@ -56,5 +56,5 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
      */
     cancel(): boolean;
     protected _onDispose(): void;
-    private static _onTick(timer, reInitTimer?);
+    private static _onTick;
 }

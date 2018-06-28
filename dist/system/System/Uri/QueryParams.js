@@ -4,6 +4,7 @@
  */
 System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "../Collections/Enumeration/Enumerator"], function (exports_1, context_1) {
     "use strict";
+    var Serialize, Types_1, KeyValueExtract_1, Enumerator_1, EMPTY, QUERY_SEPARATOR, ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, TO_URI_COMPONENT, Separator;
     var __moduleName = context_1 && context_1.id;
     /**
      * Returns the encoded URI string
@@ -136,7 +137,6 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
         return result;
     }
     exports_1("parseToArray", parseToArray);
-    var Serialize, Types_1, KeyValueExtract_1, Enumerator_1, EMPTY, QUERY_SEPARATOR, ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, TO_URI_COMPONENT, Separator;
     return {
         setters: [
             function (Serialize_1) {

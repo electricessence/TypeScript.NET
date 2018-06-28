@@ -114,6 +114,7 @@
         sourceMap: false
     })
         .clear()
+        //.minify()
         .execute()
         .then(function () { return savePackage(gulp_typescript_helper_1.Module.COMMONJS + '-js-only', gulp_typescript_helper_1.Module.COMMONJS + ' js-only'); }); });
     gulp.task(TASK.DIST_COMMONJS, function () { return builder

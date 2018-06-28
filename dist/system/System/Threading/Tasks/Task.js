@@ -4,8 +4,8 @@
  */
 System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", "../../Lazy", "../../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var TaskHandlerBase_1, ArgumentNullException_1, Lazy_1, extends_1, __extends, Task;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (TaskHandlerBase_1_1) {

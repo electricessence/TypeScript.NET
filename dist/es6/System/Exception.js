@@ -16,18 +16,18 @@ export class Exception {
      */
     constructor(message, innerException, beforeSealing) {
         this.message = message;
-        const _ = this;
-        this.name = _.getName();
+        this.name = this.getName();
         this.data = {};
         if (innerException)
-            _.data['innerException'] = innerException;
+            this.data['innerException'] = innerException;
         /* Originally intended to use 'get' accessors for properties,
          * But debuggers don't display these readily yet.
          * Object.freeze has to be used carefully, but will prevent overriding values at runtime.
          */
         if (beforeSealing)
-            beforeSealing(_);
+            beforeSealing(this);
         // Node has a .stack, let's use it...
+        this.stack = '';
         try {
             let stack = eval("new Error()").stack;
             stack = stack
@@ -35,10 +35,10 @@ export class Exception {
                     .replace(/^Error\n/, '')
                     .replace(/(.|\n)+\s+at new.+/, '')
                 || '';
-            this.stack = _.toStringWithoutBrackets() + stack;
+            this.stack = this.toStringWithoutBrackets() + stack;
         }
         catch (ex) { }
-        Object.freeze(_);
+        Object.freeze(this);
     }
     /**
      * A string representation of the error type.

@@ -24,14 +24,14 @@ export class SubscribableBase extends DisposableBase {
     }
     _findEntryNode(subscriber) {
         const s = this.__subscriptions;
-        return s && s.find(n => !!n.value && n.value.subscriber === subscriber);
+        return s && s.find(n => !!n.value && n.value.subscriber === subscriber) || null;
     }
     // It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.
     subscribe(subscriber) {
         const _ = this;
         _.throwIfDisposed();
         const n = _._findEntryNode(subscriber);
-        if (n)
+        if (n) // Ensure only one instance of the existing subscription exists.
             return n.value;
         let _s = _.__subscriptions;
         if (!_s)
@@ -46,10 +46,12 @@ export class SubscribableBase extends DisposableBase {
         // _.throwIfDisposed(); If it was disposed, then it's still safe to try and unsubscribe.
         const n = _._findEntryNode(subscriber);
         if (n) {
-            const s = n.value;
-            _.__subscriptions.removeNode(n);
-            if (s)
-                s.dispose(); // Prevent further usage of a dead subscription.
+            const v = n.value;
+            const _s = _.__subscriptions;
+            if (_s)
+                _s.removeNode(n);
+            if (v)
+                v.dispose(); // Prevent further usage of a dead subscription.
         }
     }
     _unsubscribeAll(returnSubscribers = false) {

@@ -4,8 +4,8 @@
  */
 System.register(["../Exceptions/ArgumentNullException", "./ReadOnlyCollectionBase", "./Enumeration/Enumerator", "../Types", "../../extends"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var ArgumentNullException_1, ReadOnlyCollectionBase_1, Enumerator_1, Types_1, extends_1, __extends, ReadOnlyCollectionWrapper;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (ArgumentNullException_1_1) {
@@ -36,15 +36,14 @@ System.register(["../Exceptions/ArgumentNullException", "./ReadOnlyCollectionBas
                     var _this = _super.call(this) || this;
                     if (!collection)
                         throw new ArgumentNullException_1.ArgumentNullException('collection');
-                    var _ = _this;
                     // Attempting to avoid contact with the original collection.
                     if (Types_1.Type.isArrayLike(collection)) {
-                        _._getCount = function () { return collection.length; };
-                        _._getEnumerator = function () { return Enumerator_1.from(collection); };
+                        _this.__getCount = function () { return collection.length; };
+                        _this.__getEnumerator = function () { return Enumerator_1.from(collection); };
                     }
                     else {
-                        _._getCount = function () { return collection.count; };
-                        _._getEnumerator = function () { return collection.getEnumerator(); };
+                        _this.__getCount = function () { return collection.count; };
+                        _this.__getEnumerator = function () { return collection.getEnumerator(); };
                     }
                     return _this;
                 }

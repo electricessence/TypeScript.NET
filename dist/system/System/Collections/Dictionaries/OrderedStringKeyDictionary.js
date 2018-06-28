@@ -4,8 +4,8 @@
  */
 System.register(["./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../Array/Utility", "../../../extends", "../../Integer"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var StringKeyDictionary_1, ArgumentOutOfRangeException_1, Utility_1, extends_1, Integer_1, __extends, VOID0, OrderedStringKeyDictionary;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (StringKeyDictionary_1_1) {
