@@ -5,7 +5,7 @@
 
 import {Type} from "../Types";
 import {OrderedStringKeyDictionary} from "../Collections/Dictionaries/OrderedStringKeyDictionary";
-import {isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
+import {isFiniteEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
 import {UriComponent} from "./UriComponent";
 import {QueryParam} from "./QueryParam";
 import {encode, parse} from "./QueryParams";
@@ -48,7 +48,7 @@ export class QueryBuilder extends OrderedStringKeyDictionary<UriComponent.Value|
 		{
 			this.importFromString(<string>query, decodeValues);
 		}
-		else if(isEnumerableOrArrayLike(query))
+		else if(isFiniteEnumerableOrArrayLike(query))
 		{
 			this.importEntries(query);
 		}

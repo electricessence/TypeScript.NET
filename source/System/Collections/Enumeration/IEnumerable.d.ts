@@ -12,7 +12,17 @@ export interface IEnumerable<T>
 	/**
 	 * Provides a way of flagging endless enumerations that may cause issues.
 	 */
-	isEndless?:boolean;
+	readonly isEndless?:boolean;
+}
+
+export interface IEndlessEnumerable<T> extends IEnumerable<T>
+{
+	readonly isEndless:true;
+}
+
+export interface IFiniteEnumerable<T> extends IEnumerable<T>
+{
+	readonly isEndless:false;
 }
 
 export default IEnumerable;

@@ -8,11 +8,11 @@ import {UriComponent} from "./UriComponent";
 import {QueryParam} from "./QueryParam";
 import {Type} from "../Types";
 import {extractKeyValue} from "../KeyValueExtract";
-import {forEach, isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
+import {forEach, isFiniteEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
 import {IMap} from "../../IMap";
 import {Primitive} from "../Primitive";
 import {IStringKeyValuePair} from "../KeyValuePair";
-import {IEnumerableOrArray} from "../Collections/IEnumerableOrArray";
+import {IFiniteEnumerableOrArray} from "../Collections/IEnumerableOrArray";
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.
@@ -40,7 +40,7 @@ export function encode(
 	if(!values) return EMPTY;
 	const entries:string[] = [];
 
-	if(isEnumerableOrArrayLike(values))
+	if(isFiniteEnumerableOrArrayLike(values))
 	{
 		forEach(values, entry=>
 			extractKeyValue(entry,
@@ -70,9 +70,9 @@ function appendKeyValueSingle(
 function appendKeyValue(
 	entries:string[],
 	key:string,
-	value:UriComponent.Value|IEnumerableOrArray<UriComponent.Value>):void
+	value:UriComponent.Value|IFiniteEnumerableOrArray<UriComponent.Value>):void
 {
-	if(isEnumerableOrArrayLike(value))
+	if(isFiniteEnumerableOrArrayLike(value))
 	{
 		forEach(value, v=> appendKeyValueSingle(entries, key, v));
 	}

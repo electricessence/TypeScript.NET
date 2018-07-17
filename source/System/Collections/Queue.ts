@@ -15,7 +15,7 @@ import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeExcep
 import {CollectionBase} from "./CollectionBase";
 import {Action, ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
 import {IEnumerator} from "./Enumeration/IEnumerator";
-import {IEnumerableOrArray} from "./IEnumerableOrArray";
+import {IFiniteEnumerableOrArray} from "./IEnumerableOrArray";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -39,7 +39,7 @@ extends CollectionBase<T>
 	private _capacity:number;   // Maps to _array.length;
 
 	constructor(
-		source?:IEnumerableOrArray<T> | number,
+		source?:IFiniteEnumerableOrArray<T> | number,
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super(VOID0, equalityComparer);
@@ -62,7 +62,7 @@ extends CollectionBase<T>
 			}
 			else
 			{
-				const se = <IEnumerableOrArray<T>> source;
+				const se = <IFiniteEnumerableOrArray<T>> source;
 				this._array = AU.initialize<T>(
 					Type.isArrayLike(se)
 						? se.length

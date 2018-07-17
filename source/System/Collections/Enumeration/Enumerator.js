@@ -83,10 +83,10 @@
         return Types_1.Type.hasMemberOfType(instance, "getEnumerator", Types_1.Type.FUNCTION);
     }
     exports.isEnumerable = isEnumerable;
-    function isEnumerableOrArrayLike(instance) {
+    function isFiniteEnumerableOrArrayLike(instance) {
         return Types_1.Type.isArrayLike(instance) || isEnumerable(instance);
     }
-    exports.isEnumerableOrArrayLike = isEnumerableOrArrayLike;
+    exports.isFiniteEnumerableOrArrayLike = isFiniteEnumerableOrArrayLike;
     function isEnumerator(instance) {
         return Types_1.Type.hasMemberOfType(instance, "moveNext", Types_1.Type.FUNCTION);
     }
@@ -124,17 +124,6 @@
                 throwIfEndless(!isFinite(max) && e.isEndless);
                 // For enumerators that aren't EnumerableBase, ensure dispose is called.
                 return dispose_1.using(e.getEnumerator(), function (f) { return forEach(f, action, max); });
-            }
-            if (isIterator(e)) {
-                // For our purpose iterators are endless and a max must be specified before iterating.
-                throwIfEndless(!isFinite(max));
-                var i = 0, r = void 0;
-                // Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-                while (max > i && !(r = e.next()).done) {
-                    if (action(r.value, i++) === false)
-                        break;
-                }
-                return i;
             }
         }
         return -1;

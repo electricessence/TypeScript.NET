@@ -7,7 +7,7 @@ import {Type} from "../Types";
 import {SetBase} from "./SetBase";
 import {IMap} from "../../IMap";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
-import {IEnumerableOrArray} from "./IEnumerableOrArray";
+import {IFiniteEnumerableOrArray} from "./IEnumerableOrArray";
 import {Selector} from "../FunctionTypes";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import __extendsImport from "../../extends";
@@ -23,8 +23,8 @@ extends SetBase<T>
 	private readonly _keyGenerator:Selector<T,string|number|symbol>;
 
 	constructor(keyGenerator:Selector<T,string|number|symbol>)
-	constructor(source:IEnumerableOrArray<T>|undefined, keyGenerator:Selector<T,string|number|symbol>)
-	constructor(source:IEnumerableOrArray<T>|Selector<T,string|number|symbol>|undefined, keyGenerator?:Selector<T,string|number|symbol>)
+	constructor(source:IFiniteEnumerableOrArray<T>|undefined, keyGenerator:Selector<T,string|number|symbol>)
+	constructor(source:IFiniteEnumerableOrArray<T>|Selector<T,string|number|symbol>|undefined, keyGenerator?:Selector<T,string|number|symbol>)
 	{
 		super();
 		if(Type.isFunction(source)) {
@@ -38,7 +38,7 @@ extends SetBase<T>
 	}
 
 
-	protected newUsing(source?:IEnumerableOrArray<T>):HashSet<T>
+	protected newUsing(source?:IFiniteEnumerableOrArray<T>):HashSet<T>
 	{
 		return new HashSet<T>(source,this._keyGenerator);
 	}

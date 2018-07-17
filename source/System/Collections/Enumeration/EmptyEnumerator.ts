@@ -4,7 +4,7 @@
  */
 
 
-import {IEnumerator} from "./IEnumerator";
+import {IFiniteEnumerator} from "./IEnumerator";
 import {IteratorResult} from "./IteratorResult";
 import {Functions} from "../../Functions";
 
@@ -16,7 +16,7 @@ const VOID0:undefined = void 0;
  * Frozen and exported as 'empty' to allow for reuse.
  */
 
-export const EmptyEnumerator:IEnumerator<any> = Object.freeze({
+export const EmptyEnumerator:IFiniteEnumerator<any> = <any>Object.freeze({
 	current: VOID0,
 	moveNext: Functions.False,
 	tryMoveNext: Functions.False,

@@ -14,12 +14,12 @@ export interface IEnumerator<T> extends IIterator<T>, IDisposable
 	/**
 	 * The current value within the enumeration.
 	 */
-	current:T|undefined;
+	readonly current:T|undefined;
 
 	/**
 	 * Will indicate if moveNext is safe.
 	 */
-	canMoveNext?:boolean;
+	readonly canMoveNext?:boolean;
 
 	/**
 	 * Safely moves to the next entry and returns true if there is one.
@@ -49,8 +49,17 @@ export interface IEnumerator<T> extends IIterator<T>, IDisposable
 	/**
 	 * Provides a way of flagging endless enumerations that may cause issues.
 	 */
-	isEndless?:boolean;
+	readonly isEndless?:boolean;
 }
 
+export interface IFiniteEnumerator<T> extends IEnumerator<T>
+{
+	readonly isEndless:false;
+}
+
+export interface IEndlessEnumerator<T> extends IEnumerator<T>
+{
+	readonly isEndless:true;
+}
 
 export default IEnumerator;

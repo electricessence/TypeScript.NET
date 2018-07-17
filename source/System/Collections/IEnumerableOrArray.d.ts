@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {IEnumerable} from "./Enumeration/IEnumerable";
+import {IFiniteEnumerable} from "./Enumeration/IEnumerable";
 
-export declare type IEnumerableOrArray<T> =  ArrayLike<T> | IEnumerable<T>;
+export declare type IFiniteEnumerableOrArray<T> = ArrayLike<T> | IFiniteEnumerable<T>;
 
-export default IEnumerableOrArray;
+export default IFiniteEnumerableOrArray;

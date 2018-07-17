@@ -14,7 +14,7 @@ import {IDisposable} from "../Disposable/IDisposable";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
 import {ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
 import {IEnumerator} from "./Enumeration/IEnumerator";
-import {IEnumerableOrArray} from "./IEnumerableOrArray";
+import {IFiniteEnumerableOrArray} from "./IEnumerableOrArray";
 import {ISet} from "./ISet";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
@@ -27,13 +27,13 @@ export abstract class SetBase<T>
 extends CollectionBase<T> implements ISet<T>, IDisposable
 {
 
-	protected constructor(source?:IEnumerableOrArray<T>)
+	protected constructor(source?:IFiniteEnumerableOrArray<T>)
 	{
 		super(VOID0, areEqual);
 		this._importEntries(source);
 	}
 
-	protected abstract newUsing(source?:IEnumerableOrArray<T>):SetBase<T>;
+	protected abstract newUsing(source?:IFiniteEnumerableOrArray<T>):SetBase<T>;
 
 	protected _set:LinkedNodeList<ILinkedNodeWithValue<T>>|undefined;
 
@@ -49,7 +49,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		return this._set ? this._set.unsafeCount : 0;
 	}
 
-	exceptWith(other:IEnumerableOrArray<T>):void
+	exceptWith(other:IFiniteEnumerableOrArray<T>):void
 	{
 		const _ = this;
 		if(!other) throw new ArgumentNullException(OTHER);
@@ -63,7 +63,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		_._signalModification();
 	}
 
-	intersectWith(other:IEnumerableOrArray<T>):void
+	intersectWith(other:IFiniteEnumerableOrArray<T>):void
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -86,7 +86,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		}
 	}
 
-	isProperSubsetOf(other:IEnumerableOrArray<T>):boolean
+	isProperSubsetOf(other:IFiniteEnumerableOrArray<T>):boolean
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -96,7 +96,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 			: using(this.newUsing(other), o=> o.isProperSupersetOf(this));
 	}
 
-	isProperSupersetOf(other:IEnumerableOrArray<T>):boolean
+	isProperSupersetOf(other:IFiniteEnumerableOrArray<T>):boolean
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -124,7 +124,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		return result && this.getCount()>count;
 	}
 
-	isSubsetOf(other:IEnumerableOrArray<T>):boolean
+	isSubsetOf(other:IFiniteEnumerableOrArray<T>):boolean
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -134,7 +134,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 			: using(this.newUsing(other), o=> o.isSupersetOf(this));
 	}
 
-	isSupersetOf(other:IEnumerableOrArray<T>):boolean
+	isSupersetOf(other:IFiniteEnumerableOrArray<T>):boolean
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -146,7 +146,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		return result;
 	}
 
-	overlaps(other:IEnumerableOrArray<T>):boolean
+	overlaps(other:IFiniteEnumerableOrArray<T>):boolean
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -155,7 +155,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		return result;
 	}
 
-	setEquals(other:IEnumerableOrArray<T>):boolean
+	setEquals(other:IFiniteEnumerableOrArray<T>):boolean
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -167,7 +167,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 			&& this.isSubsetOf(other);
 	}
 
-	symmetricExceptWith(other:IEnumerableOrArray<T>):void
+	symmetricExceptWith(other:IFiniteEnumerableOrArray<T>):void
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -197,7 +197,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		}
 	}
 
-	unionWith(other:IEnumerableOrArray<T>):void
+	unionWith(other:IFiniteEnumerableOrArray<T>):void
 	{
 		this.importEntries(other);
 	}

@@ -32,7 +32,7 @@
         if (!values)
             return EMPTY;
         var entries = [];
-        if (Enumerator_1.isEnumerableOrArrayLike(values)) {
+        if (Enumerator_1.isFiniteEnumerableOrArrayLike(values)) {
             Enumerator_1.forEach(values, function (entry) {
                 return KeyValueExtract_1.extractKeyValue(entry, function (key, value) { return appendKeyValue(entries, key, value); });
             });
@@ -49,7 +49,7 @@
     }
     // According to spec, if there is an array of values with the same key, then each value is replicated with that key.
     function appendKeyValue(entries, key, value) {
-        if (Enumerator_1.isEnumerableOrArrayLike(value)) {
+        if (Enumerator_1.isFiniteEnumerableOrArrayLike(value)) {
             Enumerator_1.forEach(value, function (v) { return appendKeyValueSingle(entries, key, v); });
         }
         else {

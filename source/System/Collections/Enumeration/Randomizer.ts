@@ -4,7 +4,7 @@
  */
 
 import {SimpleEnumerableBase} from "./SimpleEnumerableBase";
-import {ForEachEnumerable} from "./ForEachEnumerable";
+import {FiniteEnumerable} from "./FiniteEnumerable";
 import {toArray} from "./Enumerator";
 
 /**
@@ -17,7 +17,7 @@ export class Randomizer<T> extends SimpleEnumerableBase<T>
 	private _pointer:number;
 
 	constructor(
-		source:ForEachEnumerable<T>,
+		source:FiniteEnumerable<T>,
 		private readonly _allowReset:boolean = false)
 	{
 		super();

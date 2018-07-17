@@ -13,6 +13,7 @@ import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeExcep
 import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
 import __extendsImport from "../../extends";
 import {Integer} from "../Integer";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -43,7 +44,12 @@ export class LazyList<T> extends ReadOnlyCollectionBase<T> implements IReadOnlyL
 
 	protected _getCount():number
 	{
-		this.finish();
+		const e = this._enumerator;
+		if(e && e.isEndless)
+			throw new InvalidOperationException("Cannot count an endless enumerable.");
+		while(this.getNext())
+		{}
+
 		const c = this._cached;
 		return c ? c.length : 0;
 	}
@@ -116,13 +122,6 @@ export class LazyList<T> extends ReadOnlyCollectionBase<T> implements IReadOnlyL
 			this._enumerator = <any>null;
 		}
 		return false;
-	}
-
-
-	private finish():void
-	{
-		while(this.getNext())
-		{}
 	}
 
 
