@@ -7,7 +7,7 @@ import {Type} from "../../Types";
 import {DisposableBase} from "../../Disposable/DisposableBase";
 import {ObjectPool} from "../../Disposable/ObjectPool";
 import {IDisposable} from "../../Disposable/IDisposable";
-import {IEndlessEnumerator, IEnumerator, IFiniteEnumerator} from "./IEnumerator";
+import {EndlessEnumerator, FiniteEnumerator, IEnumerator} from "./IEnumerator";
 import {IIteratorResult} from "./IIterator";
 import {IYield} from "./IYield";
 import {IteratorResult} from "./IteratorResult";
@@ -301,7 +301,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 
 }
 
-export class EndlessEnumeratorBase<T> extends EnumeratorBase<T> implements IEndlessEnumerator<T>
+export class EndlessEnumeratorBase<T> extends EnumeratorBase<T> implements EndlessEnumerator<T>
 {
 	constructor(
 		initializer:Closure|null,
@@ -313,7 +313,7 @@ export class EndlessEnumeratorBase<T> extends EnumeratorBase<T> implements IEndl
 	get isEndless():true { return true; }
 }
 
-export class FiniteEnumeratorBase<T> extends EnumeratorBase<T> implements IFiniteEnumerator<T>
+export class FiniteEnumeratorBase<T> extends EnumeratorBase<T> implements FiniteEnumerator<T>
 {
 	constructor(
 		initializer:Closure|null,

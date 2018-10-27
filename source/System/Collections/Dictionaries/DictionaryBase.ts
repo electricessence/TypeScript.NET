@@ -13,7 +13,7 @@ import {extractKeyValue} from "../../KeyValueExtract";
 import {IKeyValuePair, KeyValuePair} from "../../KeyValuePair";
 import {IDictionary} from "./IDictionary";
 import {IEnumerator} from "../Enumeration/IEnumerator";
-import {IFiniteEnumerableOrArray} from "../IEnumerableOrArray";
+import {FiniteEnumerableOrArrayLike} from "../IEnumerableOrArray";
 import __extendsImport from "../../../extends";
 import {KeyNotFoundException} from "../KeyNotFoundException";
 import {Action} from "../../FunctionTypes";
@@ -26,7 +26,7 @@ const VOID0:undefined = void 0;
 export abstract class DictionaryBase<TKey, TValue>
 extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, TValue>
 {
-	protected constructor(source?:IFiniteEnumerableOrArray<IKeyValuePair<TKey,TValue>>)
+	protected constructor(source?:FiniteEnumerableOrArrayLike<IKeyValuePair<TKey,TValue>>)
 	{
 		super(source);
 	}
@@ -209,13 +209,13 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		return count;
 	}
 
-	importEntries(pairs:IFiniteEnumerableOrArray<KeyValuePair<TKey, TValue>>|IEnumerator<KeyValuePair<TKey, TValue>>|null|undefined):number
+	importEntries(pairs:FiniteEnumerableOrArrayLike<KeyValuePair<TKey, TValue>>|IEnumerator<KeyValuePair<TKey, TValue>>|null|undefined):number
 	{
 		// Allow piping through to trigger onModified properly.
 		return super.importEntries(<any>pairs);
 	}
 
-	protected _importEntries(pairs:IFiniteEnumerableOrArray<KeyValuePair<TKey, TValue>>|IEnumerator<KeyValuePair<TKey, TValue>>|null|undefined):number
+	protected _importEntries(pairs:FiniteEnumerableOrArrayLike<KeyValuePair<TKey, TValue>>|IEnumerator<KeyValuePair<TKey, TValue>>|null|undefined):number
 	{
 		const _ = this;
 		if(!pairs) return 0;

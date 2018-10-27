@@ -10,13 +10,13 @@ import {IndexEnumerator} from "./IndexEnumerator";
 import {UnsupportedEnumerableException} from "./UnsupportedEnumerableException";
 import {ActionWithIndex, PredicateWithIndex, SelectorWithIndex} from "../../FunctionTypes";
 import {IEnumerator} from "./IEnumerator";
-import {IEnumerable} from "./IEnumerable";
-import {IFiniteEnumerableOrArray} from "../IEnumerableOrArray";
+import {FiniteEnumerable, IEnumerable} from "./IEnumerable";
+import {FiniteEnumerableOrArrayLike} from "../FiniteEnumerableOrArrayLike";
 import {InfiniteEnumerator, InfiniteValueFactory} from "./InfiniteEnumerator";
 import {EmptyEnumerator as Empty} from "./EmptyEnumerator";
 import {IIterator} from "./IIterator";
 import {IteratorEnumerator} from "./IteratorEnumerator";
-import {FiniteEnumerable} from "./FiniteEnumerable";
+import {FiniteEnumerableOrEnumerator} from "./FiniteEnumerableOrEnumerator";
 
 
 const
@@ -36,7 +36,7 @@ export function throwIfEndless(isEndless:boolean|undefined):true|never
 }
 
 function initArrayFrom(
-	source:FiniteEnumerable<any>,
+	source:FiniteEnumerableOrEnumerator<any>,
 	max:number = Infinity):any[]
 {
 	if(Type.isArrayLike(source))
@@ -62,7 +62,7 @@ function initArrayFrom(
  * @param source
  * @returns {any}
  */
-export function from<T>(source:FiniteEnumerable<T>|InfiniteValueFactory<T>):IEnumerator<T>
+export function from<T>(source:FiniteEnumerableOrEnumerator<T>|InfiniteValueFactory<T>):IEnumerator<T>
 {
 	// To simplify and prevent null reference exceptions:
 	if(!source)
@@ -110,7 +110,7 @@ export function isEnumerable<T>(instance:any):instance is IEnumerable<T>
 	return Type.hasMemberOfType<IEnumerable<T>>(instance, "getEnumerator", Type.FUNCTION);
 }
 
-export function isFiniteEnumerableOrArrayLike<T>(instance:any):instance is IFiniteEnumerableOrArray<T>
+export function isFiniteEnumerableOrArrayLike<T>(instance:any):instance is FiniteEnumerableOrArrayLike<T>
 {
 	return Type.isArrayLike(instance) || isEnumerable(instance);
 }
@@ -134,17 +134,17 @@ export function isIterator<T>(instance:any):instance is IIterator<T>
  */
 
 export function forEach<T>(
-	e:FiniteEnumerable<T>,
+	e:FiniteEnumerableOrEnumerator<T>,
 	action:ActionWithIndex<T>,
 	max?:number):number
 
 export function forEach<T>(
-	e:FiniteEnumerable<T>,
+	e:FiniteEnumerableOrEnumerator<T>,
 	action:PredicateWithIndex<T>,
 	max?:number):number
 
 export function forEach<T>(
-	e:FiniteEnumerable<T>,
+	e:FiniteEnumerableOrEnumerator<T>,
 	action:ActionWithIndex<T> | PredicateWithIndex<T>,
 	max:number = Infinity):number
 {
@@ -186,7 +186,7 @@ export function forEach<T>(
 
 			// For enumerators that aren't EnumerableBase, ensure dispose is called.
 			return using(
-				(<IEnumerable<T>>e).getEnumerator(),
+				(<FiniteEnumerable<T>>e).getEnumerator(),
 				f=>forEach(f, action, max)
 			);
 		}
@@ -204,7 +204,7 @@ export function forEach<T>(
  * @returns {any}
  */
 export function toArray<T>(
-	source:FiniteEnumerable<T>,
+	source:FiniteEnumerableOrEnumerator<T>,
 	max:number = Infinity):T[]
 {
 	if(<any>source===STRING_EMPTY) return [];
@@ -228,7 +228,7 @@ export function toArray<T>(
  */
 
 export function map<T,TResult>(
-	source:FiniteEnumerable<T>,
+	source:FiniteEnumerableOrEnumerator<T>,
 	selector:SelectorWithIndex<T,TResult>,
 	max:number = Infinity):TResult[]
 {

@@ -12,7 +12,7 @@ import {ICollection} from "./ICollection";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 import {Action, ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
-import {IFiniteEnumerableOrArray} from "./IEnumerableOrArray";
+import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
 import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
 import {LinqEnumerable} from "../../System.Linq/Linq";
 import {isCommonJS, isNodeJS, isRequireJS} from "../Environment";
@@ -33,7 +33,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 {
 
 	protected constructor(
-		source?:IFiniteEnumerableOrArray<T>|IEnumerator<T>,
+		source?:FiniteEnumerableOrArrayLike<T>|IEnumerator<T>,
 		protected _equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super(NAME);
@@ -233,7 +233,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		if(l) l.dispose();
 	}
 
-	protected _importEntries(entries:IFiniteEnumerableOrArray<T>|IEnumerator<T>|null|undefined):number
+	protected _importEntries(entries:FiniteEnumerableOrArrayLike<T>|IEnumerator<T>|null|undefined):number
 	{
 		let added = 0;
 		if(entries)
@@ -262,7 +262,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	 * @param entries
 	 * @returns {number}
 	 */
-	importEntries(entries:IFiniteEnumerableOrArray<T>|IEnumerator<T>):number
+	importEntries(entries:FiniteEnumerableOrArrayLike<T>|IEnumerator<T>):number
 	{
 		const _ = this;
 		if(!entries) return 0;

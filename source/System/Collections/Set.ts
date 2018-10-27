@@ -8,7 +8,7 @@ import {getIdentifier} from "./Dictionaries/getIdentifier";
 import {ISymbolizable} from "./Dictionaries/IDictionary";
 import {HashSet} from "./HashSet";
 import {Primitive} from "../Primitive";
-import {IFiniteEnumerableOrArray} from "./IEnumerableOrArray";
+import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -22,7 +22,7 @@ function getId(obj:any):string|number|symbol {
 export class Set<T extends Primitive|ISymbolizable|symbol>
 extends HashSet<T>
 {
-	constructor(source?:IFiniteEnumerableOrArray<T>)
+	constructor(source?:FiniteEnumerableOrArrayLike<T>)
 	{
 		super(source, getId);
 	}

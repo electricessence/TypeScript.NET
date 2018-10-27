@@ -13,7 +13,7 @@ import {ILinkedListNode, ILinkedNode, INodeWithValue} from "./ILinkedListNode";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
 import {ILinkedList} from "./ILinkedList";
-import {IFiniteEnumerableOrArray} from "./IEnumerableOrArray";
+import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
 import {IDisposable} from "../Disposable/IDisposable";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
@@ -110,7 +110,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 	private readonly _listInternal:LinkedNodeList<InternalNode<T>>;
 
 	constructor(
-		source?:IFiniteEnumerableOrArray<T>,
+		source?:FiniteEnumerableOrArrayLike<T>,
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super(VOID0, equalityComparer);

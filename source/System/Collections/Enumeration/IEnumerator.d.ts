@@ -52,14 +52,14 @@ export interface IEnumerator<T> extends IIterator<T>, IDisposable
 	readonly isEndless?:boolean;
 }
 
-export interface IFiniteEnumerator<T> extends IEnumerator<T>
-{
-	readonly isEndless:false;
-}
-
-export interface IEndlessEnumerator<T> extends IEnumerator<T>
+export interface EndlessEnumerator<T> extends IEnumerator<T>
 {
 	readonly isEndless:true;
+}
+
+export interface FiniteEnumerator<T> extends IEnumerator<T>
+{
+	readonly isEndless:false;
 }
 
 export default IEnumerator;

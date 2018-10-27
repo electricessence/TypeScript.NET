@@ -12,7 +12,7 @@ import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../Functi
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IList} from "./IList";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
-import {IFiniteEnumerableOrArray} from "./IEnumerableOrArray";
+import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
 import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
 import __extendsImport from "../../extends";
 import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
@@ -28,7 +28,7 @@ export class List<T>
 	protected readonly _source:T[];
 
 	constructor(
-		source?:IFiniteEnumerableOrArray<T>,
+		source?:FiniteEnumerableOrArrayLike<T>,
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super(VOID0, equalityComparer);
@@ -74,7 +74,7 @@ export class List<T>
 		return len;
 	}
 
-	protected _importEntries(entries:IFiniteEnumerableOrArray<T> | null | undefined):number
+	protected _importEntries(entries:FiniteEnumerableOrArrayLike<T> | null | undefined):number
 	{
 		if(Type.isArrayLike(entries))
 		{

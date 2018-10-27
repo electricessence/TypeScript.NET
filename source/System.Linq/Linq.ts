@@ -32,11 +32,11 @@ import {ObjectDisposedException} from "../System/Disposable/ObjectDisposedExcept
 import {KeySortedContext} from "../System/Collections/Sorting/KeySortedContext";
 import {ArgumentNullException} from "../System/Exceptions/ArgumentNullException";
 import {ArgumentOutOfRangeException} from "../System/Exceptions/ArgumentOutOfRangeException";
-import {IEnumerator, IFiniteEnumerator} from "../System/Collections/Enumeration/IEnumerator";
+import {FiniteEnumerator, IEnumerator} from "../System/Collections/Enumeration/IEnumerator";
 import {
-	IEndlessEnumerable,
-	IEnumerable,
-	IFiniteEnumerable
+	EndlessEnumerable,
+	FiniteEnumerable,
+	IEnumerable
 } from "../System/Collections/Enumeration/IEnumerable";
 import {
 	Action,
@@ -58,7 +58,6 @@ import {EnumerableAction} from "./EnumerableAction";
 import {IndexEnumerator} from "../System/Collections/Enumeration/IndexEnumerator";
 import {Primitive} from "../System/Primitive";
 import {IteratorEnumerator} from "../System/Collections/Enumeration/IteratorEnumerator";
-import {FiniteEnumerable} from "../System/Collections/Enumeration/FiniteEnumerable";
 import {initialize} from "../System/Collections/Array/initialize";
 import {Random} from "../System/Random";
 import {
@@ -115,7 +114,7 @@ class LinqFunctions
 const Functions = Object.freeze(new LinqFunctions());
 
 // For re-use as a factory.
-function getEmptyEnumerator():IFiniteEnumerator<any>
+function getEmptyEnumerator():FiniteEnumerator<any>
 {
 	return EmptyEnumerator;
 }
@@ -127,7 +126,7 @@ function createEnumerable<T>(
 	finalizer:Closure | null | undefined,
 	isEndless:true):EndlessLinqEnumerable<T>;
 function createEnumerable<T>(
-	enumeratorFactory:Action<IFiniteEnumerable<T>>,
+	enumeratorFactory:Action<FiniteEnumerable<T>>,
 	finalizer:Closure | null | undefined,
 	isEndless:false):FiniteLinqEnumerable<T>;
 function createEnumerable<T>(
@@ -156,7 +155,7 @@ function createEnumerable<T>(
  * I'm not sure if it's the best option to just use overrides, but it honors the typing properly.
  */
 
-abstract class LinqEnumerableBase<T>
+abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 	extends DisposableBase
 	implements IEnumerable<T>
 {
@@ -220,7 +219,7 @@ abstract class LinqEnumerableBase<T>
 		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
 		initializer?:Closure | null,
 		isEndless?:boolean | null,
-		onComplete?:Action<number>):LinqEnumerable<T>
+		onComplete?:Action<number>):TThis
 
 	doAction(
 		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
@@ -313,7 +312,7 @@ abstract class LinqEnumerableBase<T>
 	}
 
 
-	take(count:number):FiniteEnumerable<T>
+	take(count:number):FiniteLinqEnumerable<T>
 	{
 		if(!(count>0)) // Out of bounds? Empty.
 			return Enumerable.empty<T>();
@@ -1637,8 +1636,8 @@ abstract class LinqEnumerableBase<T>
 
 
 export class EndlessLinqEnumerable<T>
-	extends LinqEnumerableBase<T>
-	implements IEndlessEnumerable<T>
+	extends LinqEnumerableBase<T, EndlessLinqEnumerable<T>, >
+	implements EndlessEnumerable<T>
 {
 	constructor(
 		enumeratorFactory:() => IEnumerator<T>,
@@ -2849,10 +2848,10 @@ export interface NotEmptyEnumerable<T>
 // Provided for type guarding.
 export class FiniteLinqEnumerable<T>
 	extends LinqEnumerable<T>
-	implements IFiniteEnumerable<T>
+	implements FiniteEnumerable<T>
 {
 	constructor(
-		enumeratorFactory:() => IFiniteEnumerator<T>,
+		enumeratorFactory:() => FiniteEnumerator<T>,
 		finalizer?:Closure | null)
 	{
 		super(enumeratorFactory, finalizer, false);
@@ -2867,7 +2866,7 @@ export class FiniteLinqEnumerable<T>
 }
 
 export interface IOrderedEnumerable<T>
-	extends IFiniteEnumerable<T>
+	extends FiniteEnumerable<T>
 {
 	thenBy(keySelector:(value:T) => any):IOrderedEnumerable<T>;
 

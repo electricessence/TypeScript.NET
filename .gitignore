@@ -196,3 +196,14 @@ documentation
 .idea/shelf/*
 .idea/codeStyles/codeStyleConfig.xml
 .idea/codeStyles/codeStyleConfig.xml
+
+gulpfile.js.map
+
+
+_gulp/**/*.js.map
+_utility/**/*.js.map
+
+source/**/*.js
+source/**/*.js.map
+tests/mocha/**/*.js
+tests/mocha/**/*.js.map

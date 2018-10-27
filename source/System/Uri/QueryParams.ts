@@ -12,7 +12,7 @@ import {forEach, isFiniteEnumerableOrArrayLike} from "../Collections/Enumeration
 import {IMap} from "../../IMap";
 import {Primitive} from "../Primitive";
 import {IStringKeyValuePair} from "../KeyValuePair";
-import {IFiniteEnumerableOrArray} from "../Collections/IEnumerableOrArray";
+import {FiniteEnumerableOrArrayLike} from "../Collections/IEnumerableOrArray";
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.
@@ -70,7 +70,7 @@ function appendKeyValueSingle(
 function appendKeyValue(
 	entries:string[],
 	key:string,
-	value:UriComponent.Value|IFiniteEnumerableOrArray<UriComponent.Value>):void
+	value:UriComponent.Value|FiniteEnumerableOrArrayLike<UriComponent.Value>):void
 {
 	if(isFiniteEnumerableOrArrayLike(value))
 	{
