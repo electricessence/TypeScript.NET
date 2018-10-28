@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {IEnumerator, EndlessEnumerator, FiniteEnumerator} from "./IEnumerator";
+import {IEnumerator, EndlessIEnumerator, FiniteIEnumerator} from "./IEnumerator";
 
 export interface IEnumerable<T>
 {
@@ -15,16 +15,16 @@ export interface IEnumerable<T>
 	readonly isEndless?:boolean;
 }
 
-export interface EndlessEnumerable<T> extends IEnumerable<T>
+export interface EndlessIEnumerable<T> extends IEnumerable<T>
 {
-	getEnumerator():EndlessEnumerator<T>;
+	getEnumerator():EndlessIEnumerator<T>;
 
 	readonly isEndless:true;
 }
 
-export interface FiniteEnumerable<T> extends IEnumerable<T>
+export interface FiniteIEnumerable<T> extends IEnumerable<T>
 {
-	getEnumerator():FiniteEnumerator<T>;
+	getEnumerator():FiniteIEnumerator<T>;
 
 	readonly isEndless:false;
 }

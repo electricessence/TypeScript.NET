@@ -11,15 +11,15 @@
  */
 
 import Type from "../Types";
-import {deferImmediate} from "../Threading/deferImmediate";
-import {DisposableBase} from "../Disposable/DisposableBase";
-import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
-import {ArgumentException} from "../Exceptions/ArgumentException";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {ObjectPool} from "../Disposable/ObjectPool";
-import {Set} from "../Collections/Set";
-import {defer} from "../Threading/defer";
-import {ObjectDisposedException} from "../Disposable/ObjectDisposedException";
+import deferImmediate from "../Threading/deferImmediate";
+import DisposableBase from "../Disposable/DisposableBase";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentException from "../Exceptions/ArgumentException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import ObjectPool from "../Disposable/ObjectPool";
+import Set from "../Collections/Set";
+import defer from "../Threading/defer";
+import ObjectDisposedException from "../Disposable/ObjectDisposedException";
 import __extendsImport from "../../extends";
 import {Closure, Selector} from "../FunctionTypes";
 //noinspection JSUnusedLocalSymbols
@@ -1149,7 +1149,7 @@ export module TSDNPromise
 			reject:(reason?:any) => void):void;
 	}
 
-	//noinspection JSUnusedGlobalSymbols
+
 	export interface Factory
 	{
 		<T>(executor:Executor<T>):PromiseLike<T>;

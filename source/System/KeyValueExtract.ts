@@ -3,9 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {ArgumentException} from "./Exceptions/ArgumentException";
-import {ArgumentNullException} from "./Exceptions/ArgumentNullException";
-import {IKeyValuePair, KeyValuePair} from "./KeyValuePair";
+import ArgumentException from "./Exceptions/ArgumentException";
+import ArgumentNullException from "./Exceptions/ArgumentNullException";
+import {KeyValuePair, KeyValuePairOrTuple} from "./KeyValuePair";
 import {Type} from "./Types";
 
 const
@@ -19,7 +19,7 @@ const
 	INVALID_KVP_MESSAGE:string = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.',
 	CANNOT_BE_UNDEFINED:string = 'Cannot equal undefined.';
 
-export function isKeyValuePair<TKey,TValue>(kvp:any):kvp is IKeyValuePair<TKey,TValue>
+export function isKeyValuePair<TKey,TValue>(kvp:any):kvp is KeyValuePair<TKey,TValue>
 {
 	return kvp && kvp.hasOwnProperty(KEY) && kvp.hasOwnProperty(VALUE);
 }
@@ -53,7 +53,7 @@ export function assertNotUndefined<T>(value:T, name:string):T|never
 
 
 export function extractKeyValue<TKey, TValue, TResult>(
-	item:KeyValuePair<TKey, TValue>,
+	item:KeyValuePairOrTuple<TKey, TValue>,
 	to:(key:TKey, value:TValue)=>TResult):TResult
 {
 

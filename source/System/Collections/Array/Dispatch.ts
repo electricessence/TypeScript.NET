@@ -4,7 +4,7 @@
  */
 
 import {Type} from "../../Types";
-import {copy} from "./copy";
+import copy from "./copy";
 import {Selector} from "../../FunctionTypes";
 
 const VOID0:undefined = void 0;

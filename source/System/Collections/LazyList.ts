@@ -4,15 +4,15 @@
  * Licensing: MIT
  */
 
-import {IEnumerator} from "./Enumeration/IEnumerator";
-import {ReadOnlyCollectionBase} from "./ReadOnlyCollectionBase";
-import {IEnumerable} from "./Enumeration/IEnumerable";
+import IEnumerator from "./Enumeration/IEnumerator";
+import ReadOnlyCollectionBase from "./ReadOnlyCollectionBase";
+import IEnumerable from "./Enumeration/IEnumerable";
 import {Action} from "../FunctionTypes";
 import {IReadOnlyList} from "./IList";
-import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
-import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
 import __extendsImport from "../../extends";
-import {Integer} from "../Integer";
+import Integer from "../Integer";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

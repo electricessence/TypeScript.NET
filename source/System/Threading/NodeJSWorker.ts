@@ -5,7 +5,7 @@
  */
 ///<reference types="node"/>
 import {WorkerLike} from "./WorkerType";
-import {ObservableBase} from "../Observable/ObservableBase";
+import ObservableBase from "../Observable/ObservableBase";
 import __extendsImport from "../../extends";
 import {Action} from "../FunctionTypes";
 // noinspection JSUnusedLocalSymbols

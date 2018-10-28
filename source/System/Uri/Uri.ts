@@ -5,20 +5,20 @@
  */
 
 import {Type} from "../Types";
-import {UriComponent} from "./UriComponent";
-import {Scheme} from "./Scheme";
-import {SchemeValue} from "./SchemeValue";
-import {QueryParam} from "./QueryParam";
+import UriComponent from "./UriComponent";
+import Scheme from "./Scheme";
+import SchemeValue from "./SchemeValue";
+import QueryParam from "./QueryParam";
 import {encode, parseToMap, Separator} from "./QueryParams";
 import {trim} from "../Text/Utility";
-import {Exception} from "../Exception";
-import {ArgumentException} from "../Exceptions/ArgumentException";
-import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
-import {IUri} from "./IUri";
-import {IMap} from "../../IMap";
-import {Primitive} from "../Primitive";
-import {StringKeyValuePair} from "../KeyValuePair";
-import {IEquatable} from "../IEquatable";
+import Exception from "../Exception";
+import ArgumentException from "../Exceptions/ArgumentException";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import IUri from "./IUri";
+import IMap from "../../IMap";
+import Primitive from "../Primitive";
+import {StringKeyValuePairOrTuple} from "../KeyValuePair";
+import IEquatable from "../IEquatable";
 import {Action} from "../FunctionTypes";
 
 const VOID0:undefined = void 0;
@@ -73,7 +73,7 @@ export class Uri implements IUri, IEquatable<IUri>
 
 
 		if(!Type.isString(query))
-			query = encode(<UriComponent.Map|StringKeyValuePair<Primitive>[]>query);
+			query = encode(<UriComponent.Map|StringKeyValuePairOrTuple<Primitive>[]>query);
 
 		this.query = formatQuery(<string>query) || null;
 		Object.freeze(this.queryParams

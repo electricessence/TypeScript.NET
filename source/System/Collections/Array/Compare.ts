@@ -5,9 +5,9 @@
 
 import * as Values from "../../Compare";
 import {Type} from "../../Types";
-import {Primitive} from "../../Primitive";
+import Primitive from "../../Primitive";
 import {Comparison, EqualityComparison} from "../../FunctionTypes";
-import {IComparable} from "../../IComparable";
+import IComparable from "../../IComparable";
 
 /*  validateSize: Utility for quick validation/invalidation of array equality.
 	Why this way?  Why not pass a closure for the last return?

@@ -3,8 +3,8 @@
 import * as Text from "../../../dist/amd/System/Text/Utility";
 import * as AU from "../../../dist/amd/System/Collections/Array/Utility";
 import NotImplementedException from "../../../dist/amd/System/Exceptions/NotImplementedException";
-import {ICollection} from "../../../dist/amd/System/Collections/ICollection";
-import {CollectionBase} from "../../../dist/amd/System/Collections/CollectionBase";
+import ICollection from "../../../dist/amd/System/Collections/ICollection";
+import CollectionBase from "../../../dist/amd/System/Collections/CollectionBase";
 
 /*
  * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.

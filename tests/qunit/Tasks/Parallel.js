@@ -11,7 +11,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     var Parallel_1 = require("../../../dist/amd/System/Threading/Tasks/Parallel");
     function run() {
-        Parallel_1.Parallel.maxConcurrency(3)
+        Parallel_1.default.maxConcurrency(3)
             .startNew([1, 2, 3], function (data) {
             console.log(data);
         })

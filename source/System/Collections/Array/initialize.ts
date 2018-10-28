@@ -3,7 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Integer} from "../../Integer";
+import Integer from "../../Integer";
+
 /**
  * Initializes an array depending on the requested capacity.
  * The returned array will have a .length equal to the value provided.

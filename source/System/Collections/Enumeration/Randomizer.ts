@@ -3,21 +3,21 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {SimpleEnumerableBase} from "./SimpleEnumerableBase";
-import {FiniteEnumerable} from "./FiniteEnumerable";
+import SimpleEnumeratorBase from "./SimpleEnumeratorBase";
 import {toArray} from "./Enumerator";
+import {FiniteIEnumerable} from "./IEnumerable";
 
 /**
  * Creates a randomized version of the source.
  * Note: An iterator will always require a arrayCopy (buffer) to pull random results one by one.
  */
-export class Randomizer<T> extends SimpleEnumerableBase<T>
+export class Randomizer<T> extends SimpleEnumeratorBase<T>
 {
 	private readonly _buffer:T[];
 	private _pointer:number;
 
 	constructor(
-		source:FiniteEnumerable<T>,
+		source:FiniteIEnumerable<T>,
 		private readonly _allowReset:boolean = false)
 	{
 		super();

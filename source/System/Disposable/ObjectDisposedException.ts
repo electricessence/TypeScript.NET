@@ -5,7 +5,7 @@
  */
 
 import {Error, InvalidOperationException} from "../Exceptions/InvalidOperationException";
-import {IDisposableAware} from "./IDisposableAware";
+import IDisposableAware from "./IDisposableAware";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

@@ -5,7 +5,7 @@
  */
 
 import {Type} from "../Types";
-import {IDisposable} from "../Disposable/IDisposable";
+import IDisposable from "../Disposable/IDisposable";
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:

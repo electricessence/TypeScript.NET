@@ -3,9 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {Primitive} from "./Primitive";
-import {TypeValue} from "./TypeValue";
-import {ArrayLikeWritable} from "./Collections/Array/ArrayLikeWritable";
+import Primitive from "./Primitive";
+import TypeValue from "./TypeValue";
+import ArrayLikeWritable from "./Collections/Array/ArrayLikeWritable";
 
 const
 	VOID0      = <undefined>void(0),

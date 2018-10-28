@@ -5,9 +5,9 @@
 
 import {PromiseBase, TSDNPromise} from "./Promise";
 import {Closure} from "../FunctionTypes";
-import {ICancellable} from "../Threading/ICancellable";
-import {defer} from "../Threading/defer";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
+import ICancellable from "../Threading/ICancellable";
+import defer from "../Threading/defer";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

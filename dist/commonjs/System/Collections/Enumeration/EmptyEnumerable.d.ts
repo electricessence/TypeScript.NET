@@ -2,13 +2,13 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-import { IEnumerable } from "./IEnumerable";
-import { IEnumerator } from "./IEnumerator";
-export declare class EmptyEnumerable implements IEnumerable<any> {
+import { FiniteEnumerable } from "./IEnumerable";
+import { FiniteEnumerator } from "./IEnumerator";
+export default class EmptyEnumerable implements FiniteEnumerable<any> {
     constructor();
-    getEnumerator(): IEnumerator<any>;
+    getEnumerator(): FiniteEnumerator<any>;
     /**
      * Provides a way of flagging endless enumerations that may cause issues.
      */
-    readonly isEndless: boolean;
+    readonly isEndless: false;
 }

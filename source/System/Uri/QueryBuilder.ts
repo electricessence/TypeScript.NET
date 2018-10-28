@@ -4,10 +4,10 @@
  */
 
 import {Type} from "../Types";
-import {OrderedStringKeyDictionary} from "../Collections/Dictionaries/OrderedStringKeyDictionary";
+import OrderedStringKeyDictionary from "../Collections/Dictionaries/OrderedStringKeyDictionary";
 import {isFiniteEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
-import {UriComponent} from "./UriComponent";
-import {QueryParam} from "./QueryParam";
+import UriComponent from "./UriComponent";
+import QueryParam from "./QueryParam";
 import {encode, parse} from "./QueryParams";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols

@@ -4,12 +4,12 @@
  */
 
 import {Type} from "../Types";
-import {DisposableBase} from "../Disposable/DisposableBase";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {ArgumentException} from "../Exceptions/ArgumentException";
+import DisposableBase from "../Disposable/DisposableBase";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import ArgumentException from "../Exceptions/ArgumentException";
 import {areEquivalent} from "../Compare";
-import {IEventListener} from "./IEventListener";
-import {IEquatable} from "../IEquatable";
+import IEventListener from "./IEventListener";
+import IEquatable from "../IEquatable";
 import __extendsImport from "../../extends";
 import {Closure} from "../FunctionTypes";
 // noinspection JSUnusedLocalSymbols

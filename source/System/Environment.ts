@@ -13,12 +13,12 @@ try {
 catch (ex) {}
 
 
-//noinspection JSUnusedGlobalSymbols
+
 export const
 	isCommonJS:boolean
 		= !!(r && r.resolve);
 
-//noinspection JSUnusedGlobalSymbols
+
 export const
 	isRequireJS:boolean
 		= !!(r && r.toUrl && r.defined);

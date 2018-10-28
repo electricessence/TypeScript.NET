@@ -4,15 +4,15 @@
  */
 
 import * as Serialize from "../Serialization/Utility";
-import {UriComponent} from "./UriComponent";
-import {QueryParam} from "./QueryParam";
+import UriComponent from "./UriComponent";
+import QueryParam from "./QueryParam";
 import {Type} from "../Types";
 import {extractKeyValue} from "../KeyValueExtract";
 import {forEach, isFiniteEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
-import {IMap} from "../../IMap";
-import {Primitive} from "../Primitive";
-import {IStringKeyValuePair} from "../KeyValuePair";
-import {FiniteEnumerableOrArrayLike} from "../Collections/IEnumerableOrArray";
+import IMap from "../../IMap";
+import Primitive from "../Primitive";
+import {StringKeyValuePair} from "../KeyValuePair";
+import FiniteEnumerableOrArrayLike from "../Collections/FiniteEnumerableOrArrayLike";
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.
@@ -188,9 +188,9 @@ export function parseToMap(
 export function parseToArray(
 	query:string,
 	deserialize:boolean = true,
-	decodeValues:boolean = true):IStringKeyValuePair<Primitive>[]
+	decodeValues:boolean = true):StringKeyValuePair<Primitive>[]
 {
-	const result:IStringKeyValuePair<Primitive>[] = [];
+	const result:StringKeyValuePair<Primitive>[] = [];
 	parse(query,
 		(key, value)=> {result.push({key: key, value: value});},
 		deserialize,

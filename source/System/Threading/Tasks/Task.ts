@@ -3,12 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {TaskHandlerBase} from "./TaskHandlerBase";
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
+import TaskHandlerBase from "./TaskHandlerBase";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
 import {Func} from "../../FunctionTypes";
-import {Lazy} from "../../Lazy";
-import {ITaskState} from "./ITaskState";
-import {TaskStatus} from "./TaskStatus";
+import Lazy from "../../Lazy";
+import ITaskState from "./ITaskState";
+import TaskStatus from "./TaskStatus";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

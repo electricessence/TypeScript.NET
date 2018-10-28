@@ -3,19 +3,19 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {LinkedNodeList} from "./LinkedNodeList";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
+import LinkedNodeList from "./LinkedNodeList";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import {forEach} from "./Enumeration/Enumerator";
-import {EmptyEnumerator} from "./Enumeration/EmptyEnumerator";
+import EmptyEnumerator from "./Enumeration/EmptyEnumerator";
 import {using} from "../Disposable/dispose";
 import {areEqual} from "../Compare";
-import {CollectionBase} from "./CollectionBase";
-import {IDisposable} from "../Disposable/IDisposable";
+import CollectionBase from "./CollectionBase";
+import IDisposable from "../Disposable/IDisposable";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
 import {ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
-import {IEnumerator} from "./Enumeration/IEnumerator";
+import IEnumerator from "./Enumeration/IEnumerator";
 import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
-import {ISet} from "./ISet";
+import ISet from "./ISet";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

@@ -5,7 +5,7 @@
 
 import {IMap} from "../../../IMap";
 import {ICollection} from "../ICollection";
-import {IKeyValuePair, IStringKeyValuePair} from "../../KeyValuePair";
+import {KeyValuePair, StringKeyValuePair} from "../../KeyValuePair";
 import {Action} from "../../FunctionTypes";
 
 export {IMap};
@@ -24,7 +24,7 @@ export interface ISymbolizable
 	getSymbol():symbol;
 }
 
-export interface IDictionary<TKey, TValue> extends ICollection<IKeyValuePair<TKey, TValue>>
+export interface IDictionary<TKey, TValue> extends ICollection<KeyValuePair<TKey, TValue>>
 {
 	keys:TKey[];
 	values:TValue[];
@@ -43,7 +43,7 @@ export interface IDictionary<TKey, TValue> extends ICollection<IKeyValuePair<TKe
 }
 
 
-export interface IStringKeyDictionary<TValue> extends IDictionary<string, TValue>, ICollection<IStringKeyValuePair<TValue>>
+export interface IStringKeyDictionary<TValue> extends IDictionary<string, TValue>, ICollection<StringKeyValuePair<TValue>>
 {
 	importMap(map:IMap<TValue>):boolean;
 }

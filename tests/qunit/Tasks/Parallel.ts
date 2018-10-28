@@ -1,4 +1,5 @@
-import {Parallel} from "../../../dist/amd/System/Threading/Tasks/Parallel";
+import Parallel from "../../../dist/amd/System/Threading/Tasks/Parallel";
+
 export default function run()
 {
 	Parallel.maxConcurrency(3)

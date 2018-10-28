@@ -6,13 +6,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var IteratorResult_1 = require("./IteratorResult");
 var Functions_1 = require("../../Functions");
-var VOID0 = void 0;
 /**
  * A simplified stripped down enumerable that is always complete and has no results.
  * Frozen and exported as 'empty' to allow for reuse.
  */
 exports.EmptyEnumerator = Object.freeze({
-    current: VOID0,
+    current: void 0,
     moveNext: Functions_1.Functions.False,
     tryMoveNext: Functions_1.Functions.False,
     nextValue: Functions_1.Functions.Blank,

@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {TaskHandlerBase} from "./TaskHandlerBase";
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
+import TaskHandlerBase from "./TaskHandlerBase";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
 import {Closure} from "../../FunctionTypes";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols

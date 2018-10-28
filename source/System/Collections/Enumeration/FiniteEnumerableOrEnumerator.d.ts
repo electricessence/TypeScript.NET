@@ -3,9 +3,9 @@
  * Licensing: MIT
  */
 
-import {FiniteEnumerator} from "./IEnumerator";
+import {FiniteIEnumerator} from "./IEnumerator";
 import FiniteEnumerableOrArrayLike from "../FiniteEnumerableOrArrayLike";
 
-export type FiniteEnumerableOrEnumerator<T> = FiniteEnumerableOrArrayLike<T> | FiniteEnumerator<T>;
+export type FiniteEnumerableOrEnumerator<T> = FiniteEnumerableOrArrayLike<T> | FiniteIEnumerator<T>;
 
 export default FiniteEnumerableOrEnumerator;

@@ -3,11 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {IEnumerable} from "./Enumeration/IEnumerable";
+import {FiniteEnumerable} from "./Enumeration/IEnumerable";
 import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
 
 export interface IReadOnlyCollection<T>
-extends IEnumerable<T>
+extends FiniteEnumerable<T>
 {
 	count:number;
 	isReadOnly:boolean;

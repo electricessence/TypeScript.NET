@@ -69,7 +69,13 @@ var Functions = Object.freeze(new LinqFunctions());
 function getEmptyEnumerator() {
     return EmptyEnumerator_1.EmptyEnumerator;
 }
-// #endregion
+function createEnumerable(enumeratorFactory, finalizer, isEndless) {
+    if (isEndless)
+        return new EndlessLinqEnumerable(enumeratorFactory, finalizer);
+    else if (isEndless === false)
+        return new FiniteLinqEnumerable(enumeratorFactory, finalizer);
+    return new LinqEnumerable(enumeratorFactory, finalizer, isEndless || undefined);
+}
 /*
  * NOTE: About InfiniteEnumerable<T> and Enumerable<T>.
  * There may seem like there's extra overrides here and they may seem unnecessary.
@@ -78,47 +84,32 @@ function getEmptyEnumerator() {
  *
  * I'm not sure if it's the best option to just use overrides, but it honors the typing properly.
  */
-var InfiniteLinqEnumerable = /** @class */ (function (_super) {
-    __extends(InfiniteLinqEnumerable, _super);
-    function InfiniteLinqEnumerable(_enumeratorFactory, finalizer) {
-        var _this = _super.call(this, "InfiniteLinqEnumerable", finalizer) || this;
+var LinqEnumerableBase = /** @class */ (function (_super) {
+    __extends(LinqEnumerableBase, _super);
+    function LinqEnumerableBase(_enumeratorFactory, finalizer) {
+        var _this = _super.call(this, "EndlessLinqEnumerable", finalizer) || this;
         _this._enumeratorFactory = _enumeratorFactory;
-        _this._isEndless = true;
         return _this;
     }
-    Object.defineProperty(InfiniteLinqEnumerable.prototype, "isEndless", {
-        get: function () {
-            return this._isEndless;
-        },
-        enumerable: true,
-        configurable: true
-    });
     // #region IEnumerable<T> Implementation...
-    InfiniteLinqEnumerable.prototype.getEnumerator = function () {
+    LinqEnumerableBase.prototype.getEnumerator = function () {
         this.throwIfDisposed();
         return this._enumeratorFactory();
     };
     // #endregion
     // #region IDisposable override...
-    InfiniteLinqEnumerable.prototype._onDispose = function () {
+    LinqEnumerableBase.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this); // Just in case.
         this._enumeratorFactory = null;
     };
-    // #endregion
-    // Return a default (unfiltered) enumerable.
-    InfiniteLinqEnumerable.prototype.asEnumerable = function () {
-        var _ = this;
-        _.throwIfDisposed();
-        return new InfiniteLinqEnumerable(function () { return _.getEnumerator(); });
-    };
-    InfiniteLinqEnumerable.prototype.doAction = function (action, initializer, isEndless, onComplete) {
+    LinqEnumerableBase.prototype.doAction = function (action, initializer, isEndless, onComplete) {
         if (isEndless === void 0) { isEndless = this.isEndless; }
         var _ = this;
         _.throwIfDisposed();
         var isE = isEndless || undefined; // In case it's null.
         if (!action)
             throw new ArgumentNullException_1.ArgumentNullException("action");
-        return new LinqEnumerable(function () {
+        function enumerableFactory() {
             var enumerator;
             var index = 0;
             return new EnumeratorBase_1.EnumeratorBase(function () {
@@ -146,29 +137,30 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
                 if (enumerator)
                     enumerator.dispose();
             }, isE);
-        }, 
+        }
         // Using a finalizer value reduces the chance of a circular reference
         // since we could simply reference the enumeration and check e.wasDisposed.
-        function () {
+        function finalizer() {
             action = NULL;
-        }, isE);
+        }
+        return createEnumerable(enumerableFactory, finalizer, isEndless);
     };
-    InfiniteLinqEnumerable.prototype.force = function () {
+    LinqEnumerableBase.prototype.force = function () {
         this.throwIfDisposed();
         this.doAction(BREAK)
             .getEnumerator()
             .moveNext();
     };
     // #region Indexing/Paging methods.
-    InfiniteLinqEnumerable.prototype.skip = function (count) {
+    LinqEnumerableBase.prototype.skip = function (count) {
         var _ = this;
         _.throwIfDisposed();
         if (!isFinite(count)) // +Infinity equals skip all so return empty.
-            return new InfiniteLinqEnumerable(getEmptyEnumerator);
+            return new EndlessLinqEnumerable(getEmptyEnumerator);
         Integer_1.Integer.assert(count, "count");
         return this.where(function (element, index) { return index >= count; });
     };
-    InfiniteLinqEnumerable.prototype.take = function (count) {
+    LinqEnumerableBase.prototype.take = function (count) {
         if (!(count > 0)) // Out of bounds? Empty.
             return Enumerable.empty();
         var _ = this;
@@ -180,13 +172,13 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
         return _.doAction(function (element, index) { return index < count; }, null, false);
     };
     // #region Single Value Return...
-    InfiniteLinqEnumerable.prototype.elementAt = function (index) {
+    LinqEnumerableBase.prototype.elementAt = function (index) {
         var v = this.elementAtOrDefault(index, INVALID_DEFAULT);
         if (v === INVALID_DEFAULT)
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index, "is greater than or equal to the number of elements in source");
         return v;
     };
-    InfiniteLinqEnumerable.prototype.elementAtOrDefault = function (index, defaultValue) {
+    LinqEnumerableBase.prototype.elementAtOrDefault = function (index, defaultValue) {
         var _ = this;
         _.throwIfDisposed();
         Integer_1.Integer.assertZeroOrGreater(index, 'index');
@@ -210,18 +202,18 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
      * The end all difference is that the user must declare .where(predicate) before .first(), .single(), or .last().
      * Otherwise there would need to be much more code to handle these cases (.first(predicate), etc);
      * */
-    InfiniteLinqEnumerable.prototype.first = function () {
+    LinqEnumerableBase.prototype.first = function () {
         var v = this.firstOrDefault(INVALID_DEFAULT);
         if (v === INVALID_DEFAULT)
             throw new Error("first:The sequence is empty.");
         return v;
     };
-    InfiniteLinqEnumerable.prototype.firstOrDefault = function (defaultValue) {
+    LinqEnumerableBase.prototype.firstOrDefault = function (defaultValue) {
         var _ = this;
         _.throwIfDisposed();
         return dispose_1.using(this.getEnumerator(), function (e) { return e.moveNext() ? e.current : defaultValue; });
     };
-    InfiniteLinqEnumerable.prototype.single = function () {
+    LinqEnumerableBase.prototype.single = function () {
         var _ = this;
         _.throwIfDisposed();
         return dispose_1.using(this.getEnumerator(), function (e) {
@@ -234,7 +226,7 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             throw new Error("single:The sequence is empty.");
         });
     };
-    InfiniteLinqEnumerable.prototype.singleOrDefault = function (defaultValue) {
+    LinqEnumerableBase.prototype.singleOrDefault = function (defaultValue) {
         var _ = this;
         _.throwIfDisposed();
         return dispose_1.using(this.getEnumerator(), function (e) {
@@ -246,19 +238,19 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             return defaultValue;
         });
     };
-    InfiniteLinqEnumerable.prototype.any = function () {
+    LinqEnumerableBase.prototype.any = function () {
         var _ = this;
         _.throwIfDisposed();
         return dispose_1.using(this.getEnumerator(), function (e) { return e.moveNext(); });
     };
-    InfiniteLinqEnumerable.prototype.isEmpty = function () {
+    LinqEnumerableBase.prototype.isEmpty = function () {
         return !this.any();
     };
-    InfiniteLinqEnumerable.prototype.traverseDepthFirst = function (childrenSelector, resultSelector) {
+    LinqEnumerableBase.prototype.traverseDepthFirst = function (childrenSelector, resultSelector) {
         if (resultSelector === void 0) { resultSelector = Functions.Identity; }
         var _ = this;
         var disposed = !_.throwIfDisposed();
-        var isEndless = _._isEndless; // Is endless is not affirmative if false.
+        var isEndless = _.isEndless; // Is endless is not affirmative if false.
         return new LinqEnumerable(function () {
             // Dev Note: May want to consider using an actual stack and not an array.
             var enumeratorStack;
@@ -303,13 +295,13 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             disposed = true;
         }, isEndless);
     };
-    InfiniteLinqEnumerable.prototype.flatten = function () {
+    LinqEnumerableBase.prototype.flatten = function () {
         return this.selectMany(function (entry) {
             var e = !Types_1.Type.isString(entry) && Enumerable.fromAny(entry);
             return e ? e.flatten() : [entry];
         });
     };
-    InfiniteLinqEnumerable.prototype.pairwise = function (selector) {
+    LinqEnumerableBase.prototype.pairwise = function (selector) {
         var _ = this;
         _.throwIfDisposed();
         if (!selector)
@@ -321,7 +313,7 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             return result;
         }).skip(1);
     };
-    InfiniteLinqEnumerable.prototype.scan = function (func, seed) {
+    LinqEnumerableBase.prototype.scan = function (func, seed) {
         var _ = this;
         _.throwIfDisposed();
         if (!func)
@@ -331,10 +323,10 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             : this.select(function (value, i) { return seed = func(seed, value, i); }));
     };
     // #endregion
-    InfiniteLinqEnumerable.prototype.select = function (selector) {
+    LinqEnumerableBase.prototype.select = function (selector) {
         return this._filterSelected(selector);
     };
-    InfiniteLinqEnumerable.prototype.map = function (selector) {
+    LinqEnumerableBase.prototype.map = function (selector) {
         return this._filterSelected(selector);
     };
     /*
@@ -343,12 +335,12 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
         Func<TSource, IEnumerable<TCollection>> collectionSelector,
         Func<TSource, TCollection, TResult> resultSelector)
      */
-    InfiniteLinqEnumerable.prototype._selectMany = function (collectionSelector, resultSelector) {
+    LinqEnumerableBase.prototype._selectMany = function (collectionSelector, resultSelector) {
         var _ = this;
         _.throwIfDisposed();
         if (!collectionSelector)
             throw new ArgumentNullException_1.ArgumentNullException("collectionSelector");
-        var isEndless = _._isEndless; // Do second enumeration, it will be indeterminate if false.
+        var isEndless = _.isEndless; // Do second enumeration, it will be indeterminate if false.
         if (!resultSelector)
             resultSelector = function (a, b) { return b; };
         return new LinqEnumerable(function () {
@@ -393,16 +385,16 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             collectionSelector = NULL;
         }, isEndless);
     };
-    InfiniteLinqEnumerable.prototype.selectMany = function (collectionSelector, resultSelector) {
+    LinqEnumerableBase.prototype.selectMany = function (collectionSelector, resultSelector) {
         return this._selectMany(collectionSelector, resultSelector);
     };
-    InfiniteLinqEnumerable.prototype._filterSelected = function (selector, filter) {
+    LinqEnumerableBase.prototype._filterSelected = function (selector, filter) {
         if (selector === void 0) { selector = Functions.Identity; }
         var _ = this;
         var disposed = !_.throwIfDisposed();
         if (!selector)
             throw new ArgumentNullException_1.ArgumentNullException("selector");
-        return new LinqEnumerable(function () {
+        return createEnumerable(function () {
             var enumerator;
             var index = 0;
             return new EnumeratorBase_1.EnumeratorBase(function () {
@@ -421,25 +413,25 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             }, function () {
                 if (enumerator)
                     enumerator.dispose();
-            }, _._isEndless);
+            }, _.isEndless);
         }, function () {
             disposed = false;
-        }, _._isEndless);
+        }, _.isEndless);
     };
-    InfiniteLinqEnumerable.prototype.choose = function (selector) {
+    LinqEnumerableBase.prototype.choose = function (selector) {
         if (selector === void 0) { selector = Functions.Identity; }
         return this._filterSelected(selector, isNotNullOrUndefined);
     };
-    InfiniteLinqEnumerable.prototype.where = function (predicate) {
+    LinqEnumerableBase.prototype.where = function (predicate) {
         return this._filterSelected(Functions.Identity, predicate);
     };
-    InfiniteLinqEnumerable.prototype.filter = function (predicate) {
+    LinqEnumerableBase.prototype.filter = function (predicate) {
         return this._filterSelected(Functions.Identity, predicate);
     };
-    InfiniteLinqEnumerable.prototype.nonNull = function () {
+    LinqEnumerableBase.prototype.nonNull = function () {
         return this.where(function (v) { return v != null && v != VOID0; });
     };
-    InfiniteLinqEnumerable.prototype.ofType = function (type) {
+    LinqEnumerableBase.prototype.ofType = function (type) {
         var typeName;
         switch (type) {
             case Number:
@@ -461,11 +453,11 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
         return this
             .where(function (x) { return isNotNullOrUndefined(x) && typeof x === typeName; });
     };
-    InfiniteLinqEnumerable.prototype.except = function (second, compareSelector) {
+    LinqEnumerableBase.prototype.except = function (second, compareSelector) {
         var _ = this;
         var disposed = !_.throwIfDisposed();
-        var isEndless = _._isEndless;
-        return new LinqEnumerable(function () {
+        var isEndless = _.isEndless;
+        return createEnumerable(function () {
             var enumerator;
             var keys;
             return new EnumeratorBase_1.EnumeratorBase(function () {
@@ -493,16 +485,16 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             disposed = true;
         }, isEndless);
     };
-    InfiniteLinqEnumerable.prototype.distinct = function (compareSelector) {
+    LinqEnumerableBase.prototype.distinct = function (compareSelector) {
         return this.except(NULL, compareSelector);
     };
     // [0,0,0,1,1,1,2,2,2,0,0,0,1,1] results in [0,1,2,0,1];
-    InfiniteLinqEnumerable.prototype.distinctUntilChanged = function (compareSelector) {
+    LinqEnumerableBase.prototype.distinctUntilChanged = function (compareSelector) {
         if (compareSelector === void 0) { compareSelector = Functions.Identity; }
         var _ = this;
         var disposed = !_.throwIfDisposed();
-        var isEndless = _._isEndless;
-        return new LinqEnumerable(function () {
+        var isEndless = _.isEndless;
+        return createEnumerable(function () {
             var enumerator;
             var compareKey;
             var initial = true;
@@ -536,11 +528,11 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
      * @param defaultValue
      * @returns {Enumerable}
      */
-    InfiniteLinqEnumerable.prototype.defaultIfEmpty = function (defaultValue) {
+    LinqEnumerableBase.prototype.defaultIfEmpty = function (defaultValue) {
         var _ = this;
         var disposed = !_.throwIfDisposed();
-        var isEndless = _._isEndless;
-        return new LinqEnumerable(function () {
+        var isEndless = _.isEndless;
+        return createEnumerable(function () {
             var enumerator;
             var isFirst;
             return new EnumeratorBase_1.EnumeratorBase(function () {
@@ -565,7 +557,7 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             }, isEndless);
         }, null, isEndless);
     };
-    InfiniteLinqEnumerable.prototype.zip = function (second, resultSelector) {
+    LinqEnumerableBase.prototype.zip = function (second, resultSelector) {
         var _ = this;
         _.throwIfDisposed();
         return new LinqEnumerable(function () {
@@ -588,17 +580,17 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             });
         });
     };
-    InfiniteLinqEnumerable.prototype.zipMultiple = function (second, resultSelector) {
+    LinqEnumerableBase.prototype.zipMultiple = function (second, resultSelector) {
         var _ = this;
         _.throwIfDisposed();
         if (!second.length)
             return Enumerable.empty();
-        return new LinqEnumerable(function () {
+        return new FiniteLinqEnumerable(function () {
             var secondTemp;
             var firstEnumerator;
             var secondEnumerator;
             var index = 0;
-            return new EnumeratorBase_1.EnumeratorBase(function () {
+            return new EnumeratorBase_1.FiniteEnumeratorBase(function () {
                 secondTemp = new Queue_1.Queue(second);
                 index = 0;
                 firstEnumerator = _.getEnumerator();
@@ -636,7 +628,7 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
         });
     };
     // #region Join Methods
-    InfiniteLinqEnumerable.prototype.join = function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector) {
+    LinqEnumerableBase.prototype.join = function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector) {
         if (compareSelector === void 0) { compareSelector = Functions.Identity; }
         var _ = this;
         return new LinqEnumerable(function () {
@@ -674,7 +666,7 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             });
         });
     };
-    InfiniteLinqEnumerable.prototype.groupJoin = function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector) {
+    LinqEnumerableBase.prototype.groupJoin = function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector) {
         if (compareSelector === void 0) { compareSelector = Functions.Identity; }
         var _ = this;
         return new LinqEnumerable(function () {
@@ -695,12 +687,12 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             });
         });
     };
-    InfiniteLinqEnumerable.prototype.merge = function (enumerables) {
+    LinqEnumerableBase.prototype.merge = function (enumerables) {
         var _ = this;
-        var isEndless = _._isEndless;
+        var isEndless = _.isEndless;
         if (!enumerables || enumerables.length == 0)
             return _;
-        return new LinqEnumerable(function () {
+        return createEnumerable(function () {
             var enumerator;
             var queue;
             return new EnumeratorBase_1.EnumeratorBase(function () {
@@ -732,18 +724,18 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             }, isEndless);
         }, null, isEndless);
     };
-    InfiniteLinqEnumerable.prototype.concat = function () {
+    LinqEnumerableBase.prototype.concat = function () {
         var enumerables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             enumerables[_i] = arguments[_i];
         }
         return this.merge(enumerables);
     };
-    InfiniteLinqEnumerable.prototype.union = function (second, compareSelector) {
+    LinqEnumerableBase.prototype.union = function (second, compareSelector) {
         if (compareSelector === void 0) { compareSelector = Functions.Identity; }
         var _ = this;
-        var isEndless = _._isEndless;
-        return new LinqEnumerable(function () {
+        var isEndless = _.isEndless;
+        return createEnumerable(function () {
             var firstEnumerator;
             var secondEnumerator;
             var keys;
@@ -780,13 +772,13 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             }, isEndless);
         }, null, isEndless);
     };
-    InfiniteLinqEnumerable.prototype.insertAt = function (index, other) {
+    LinqEnumerableBase.prototype.insertAt = function (index, other) {
         Integer_1.Integer.assertZeroOrGreater(index, 'index');
         var n = index;
         var _ = this;
         _.throwIfDisposed();
-        var isEndless = _._isEndless;
-        return new LinqEnumerable(function () {
+        var isEndless = _.isEndless;
+        return createEnumerable(function () {
             var firstEnumerator;
             var secondEnumerator;
             var count = 0;
@@ -819,10 +811,10 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             }, isEndless);
         }, null, isEndless);
     };
-    InfiniteLinqEnumerable.prototype.alternateMultiple = function (sequence) {
+    LinqEnumerableBase.prototype.alternateMultiple = function (sequence) {
         var _ = this;
-        var isEndless = _._isEndless;
-        return new LinqEnumerable(function () {
+        var isEndless = _.isEndless;
+        return createEnumerable(function () {
             var buffer, mode, enumerator, alternateEnumerator;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 // Instead of recalling getEnumerator every time, just reset the existing one.
@@ -865,10 +857,10 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             }, isEndless);
         }, null, isEndless);
     };
-    InfiniteLinqEnumerable.prototype.alternateSingle = function (value) {
+    LinqEnumerableBase.prototype.alternateSingle = function (value) {
         return this.alternateMultiple(Enumerable.make(value));
     };
-    InfiniteLinqEnumerable.prototype.alternate = function () {
+    LinqEnumerableBase.prototype.alternate = function () {
         var sequence = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             sequence[_i] = arguments[_i];
@@ -876,10 +868,11 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
         return this.alternateMultiple(sequence);
     };
     // #region Error Handling
-    InfiniteLinqEnumerable.prototype.catchError = function (handler) {
+    LinqEnumerableBase.prototype.catchError = function (handler) {
         var _ = this;
+        var isEndless = _.isEndless;
         var disposed = !_.throwIfDisposed();
-        return new LinqEnumerable(function () {
+        return createEnumerable(function () {
             var enumerator;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 try {
@@ -905,12 +898,12 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
                     enumerator.dispose();
                 enumerator = NULL;
             });
-        });
+        }, null, isEndless);
     };
-    InfiniteLinqEnumerable.prototype.finallyAction = function (action) {
+    LinqEnumerableBase.prototype.finallyAction = function (action) {
         var _ = this;
         var disposed = !_.throwIfDisposed();
-        return new LinqEnumerable(function () {
+        return createEnumerable(function () {
             var enumerator;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 throwIfDisposed(disposed);
@@ -930,17 +923,17 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
                     action();
                 }
             });
-        });
+        }, null, _.isEndless);
     };
     // #endregion
-    InfiniteLinqEnumerable.prototype.buffer = function (size) {
+    LinqEnumerableBase.prototype.buffer = function (size) {
         if (size < 1 || !isFinite(size))
             throw new Error("Invalid buffer size.");
         Integer_1.Integer.assert(size, "size");
         var _ = this;
-        var isEndless = _._isEndless;
+        var isEndless = _.isEndless;
         var len;
-        return new LinqEnumerable(function () {
+        return createEnumerable(function () {
             var enumerator;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 enumerator = _.getEnumerator();
@@ -959,28 +952,48 @@ var InfiniteLinqEnumerable = /** @class */ (function (_super) {
             }, isEndless);
         }, null, isEndless);
     };
-    InfiniteLinqEnumerable.prototype.share = function () {
+    LinqEnumerableBase.prototype.share = function () {
         var _ = this;
         _.throwIfDisposed();
         var sharedEnumerator;
-        return new LinqEnumerable(function () {
+        return createEnumerable(function () {
             return sharedEnumerator || (sharedEnumerator = _.getEnumerator());
         }, function () {
             if (sharedEnumerator)
                 sharedEnumerator.dispose();
             sharedEnumerator = NULL;
-        }, _._isEndless);
+        }, _.isEndless);
     };
-    InfiniteLinqEnumerable.prototype.memoize = function () {
+    LinqEnumerableBase.prototype.memoize = function () {
         var source = new LazyList_1.LazyList(this);
-        return (new InfiniteLinqEnumerable(function () { return source.getEnumerator(); }, function () {
+        return createEnumerable(function () { return source.getEnumerator(); }, function () {
             source.dispose();
             source = null;
-        }));
+        }, this.isEndless);
     };
-    return InfiniteLinqEnumerable;
+    return LinqEnumerableBase;
 }(DisposableBase_1.DisposableBase));
-exports.InfiniteLinqEnumerable = InfiniteLinqEnumerable;
+var EndlessLinqEnumerable = /** @class */ (function (_super) {
+    __extends(EndlessLinqEnumerable, _super);
+    function EndlessLinqEnumerable(enumeratorFactory, finalizer) {
+        var _this = _super.call(this, enumeratorFactory, finalizer) || this;
+        //@ts-ignore;
+        _this._disposableObjectName = "EndlessLinqEnumerable";
+        return _this;
+    }
+    Object.defineProperty(EndlessLinqEnumerable.prototype, "isEndless", {
+        get: function () { return true; },
+        enumerable: true,
+        configurable: true
+    });
+    EndlessLinqEnumerable.prototype.asEnumerable = function () {
+        var _ = this;
+        _.throwIfDisposed();
+        return new EndlessLinqEnumerable(function () { return _.getEnumerator(); });
+    };
+    return EndlessLinqEnumerable;
+}(LinqEnumerableBase));
+exports.EndlessLinqEnumerable = EndlessLinqEnumerable;
 /**
  * Enumerable<T> is a wrapper class that allows more primitive enumerables to exhibit LINQ behavior.
  *
@@ -996,6 +1009,11 @@ var LinqEnumerable = /** @class */ (function (_super) {
         _this._disposableObjectName = "LinqEnumerable";
         return _this;
     }
+    Object.defineProperty(LinqEnumerable.prototype, "isEndless", {
+        get: function () { return this._isEndless; },
+        enumerable: true,
+        configurable: true
+    });
     // Return a default (unfiltered) enumerable.
     LinqEnumerable.prototype.asEnumerable = function () {
         var _ = this;
@@ -1049,7 +1067,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
         if (resultSelector === void 0) { resultSelector = Functions.Identity; }
         var _ = this;
         var disposed = !_.throwIfDisposed();
-        var isEndless = _._isEndless; // Is endless is not affirmative if false.
+        var isEndless = _.isEndless; // Is endless is not affirmative if false.
         return new LinqEnumerable(function () {
             var enumerator;
             var nestLevel = 0;
@@ -1238,7 +1256,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
     LinqEnumerable.prototype.reverse = function () {
         var _ = this;
         var disposed = !_.throwIfDisposed();
-        Enumerator_1.throwIfEndless(_._isEndless); // Cannot reverse an endless collection...
+        Enumerator_1.throwIfEndless(_.isEndless); // Cannot reverse an endless collection...
         return new LinqEnumerable(function () {
             var buffer;
             var index = 0;
@@ -1257,7 +1275,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
     LinqEnumerable.prototype.shuffle = function () {
         var _ = this;
         var disposed = !_.throwIfDisposed();
-        Enumerator_1.throwIfEndless(_._isEndless); // Cannot shuffle an endless collection...
+        Enumerator_1.throwIfEndless(_.isEndless); // Cannot shuffle an endless collection...
         return new LinqEnumerable(function () {
             var buffer;
             var capacity;
@@ -1454,15 +1472,18 @@ var LinqEnumerable = /** @class */ (function (_super) {
          weightedSample(weightSelector) {
          weightSelector = Utils.createLambda(weightSelector);
          var source = this;
+
          return new LinqEnumerable<T>(() => {
          var sortedByBound;
          var totalWeight = 0;
+
          return new EnumeratorBase<T>(
          () => {
          sortedByBound = source
          .choose(function (x) {
          var weight = weightSelector(x);
          if (weight <= 0) return null; // ignore 0
+
          totalWeight += weight;
          return { value: x, bound: totalWeight }
          })
@@ -1471,6 +1492,7 @@ var LinqEnumerable = /** @class */ (function (_super) {
          () => {
          if (sortedByBound.length > 0) {
          var draw = (Math.random() * totalWeight) + 1;
+
          var lower = -1;
          var upper = sortedByBound.length;
          while (upper - lower > 1) {
@@ -1482,8 +1504,10 @@ var LinqEnumerable = /** @class */ (function (_super) {
          lower = index;
          }
          }
+
          return (<any>this).yieldReturn(sortedByBound[upper].value);
          }
+
          return (<any>this).yieldBreak();
          },
          Functions.Blank);
@@ -1725,20 +1749,27 @@ var LinqEnumerable = /** @class */ (function (_super) {
         });
     };
     return LinqEnumerable;
-}(InfiniteLinqEnumerable));
+}(LinqEnumerableBase));
 exports.LinqEnumerable = LinqEnumerable;
 // Provided for type guarding.
-var FiniteEnumerable = /** @class */ (function (_super) {
-    __extends(FiniteEnumerable, _super);
-    function FiniteEnumerable(enumeratorFactory, finalizer) {
+var FiniteLinqEnumerable = /** @class */ (function (_super) {
+    __extends(FiniteLinqEnumerable, _super);
+    function FiniteLinqEnumerable(enumeratorFactory, finalizer) {
         var _this = _super.call(this, enumeratorFactory, finalizer, false) || this;
         // @ts-ignore
-        _this._disposableObjectName = "FiniteEnumerable";
+        _this._disposableObjectName = "FiniteLinqEnumerable";
         return _this;
     }
-    return FiniteEnumerable;
+    Object.defineProperty(FiniteLinqEnumerable.prototype, "isEndless", {
+        get: function () {
+            return false;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return FiniteLinqEnumerable;
 }(LinqEnumerable));
-exports.FiniteEnumerable = FiniteEnumerable;
+exports.FiniteLinqEnumerable = FiniteLinqEnumerable;
 var ArrayEnumerable = /** @class */ (function (_super) {
     __extends(ArrayEnumerable, _super);
     function ArrayEnumerable(source) {
@@ -1886,7 +1917,7 @@ var ArrayEnumerable = /** @class */ (function (_super) {
             : _super.prototype.toJoinedString.call(this, separator, selector);
     };
     return ArrayEnumerable;
-}(FiniteEnumerable));
+}(FiniteLinqEnumerable));
 exports.ArrayEnumerable = ArrayEnumerable;
 var Grouping = /** @class */ (function (_super) {
     __extends(Grouping, _super);
@@ -2071,7 +2102,7 @@ function enumerableFrom(source, additional) {
     Enumerable.from = from;
     function fromAny(source, defaultEnumerable) {
         if (Types_1.Type.isObject(source) || Types_1.Type.isString(source)) {
-            if (source instanceof InfiniteLinqEnumerable)
+            if (source instanceof EndlessLinqEnumerable)
                 return source;
             if (Types_1.Type.isArrayLike(source))
                 return new ArrayEnumerable(source);
@@ -2083,7 +2114,7 @@ function enumerableFrom(source, additional) {
                 return fromAny(new IteratorEnumerator_1.IteratorEnumerator(source));
         }
         else if (Types_1.Type.isFunction(source)) {
-            return new InfiniteLinqEnumerable(function () { return new InfiniteEnumerator_1.InfiniteEnumerator(source); });
+            return new EndlessLinqEnumerable(function () { return new InfiniteEnumerator_1.InfiniteEnumerator(source); });
         }
         return defaultEnumerable;
     }
@@ -2117,7 +2148,7 @@ function enumerableFrom(source, additional) {
     }
     Enumerable.toArray = toArray;
     function _choice(values) {
-        return new InfiniteLinqEnumerable(function () { return new EnumeratorBase_1.EnumeratorBase(null, function (yielder) {
+        return new EndlessLinqEnumerable(function () { return new EnumeratorBase_1.EnumeratorBase(null, function (yielder) {
             throwIfDisposed(!values);
             return yielder.yieldReturn(Random_1.Random.select.one(values));
         }, true // Is endless!
@@ -2149,7 +2180,7 @@ function enumerableFrom(source, additional) {
     }
     Enumerable.chooseFrom = chooseFrom;
     function _cycle(values) {
-        return new InfiniteLinqEnumerable(function () {
+        return new EndlessLinqEnumerable(function () {
             var index = 0;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 index = 0;
@@ -2190,7 +2221,7 @@ function enumerableFrom(source, additional) {
     Enumerable.cycleThrough = cycleThrough;
     function empty() {
         // Could be single export function instance, but for safety, we'll make a new one.
-        return new FiniteEnumerable(getEmptyEnumerator);
+        return new FiniteLinqEnumerable(getEmptyEnumerator);
     }
     Enumerable.empty = empty;
     function repeat(element, count) {
@@ -2198,7 +2229,7 @@ function enumerableFrom(source, additional) {
         if (!(count > 0))
             return Enumerable.empty();
         return isFinite(count) && Integer_1.Integer.assert(count, "count")
-            ? new FiniteEnumerable(function () {
+            ? new FiniteLinqEnumerable(function () {
                 var c = count;
                 var index = 0;
                 return new EnumeratorBase_1.EnumeratorBase(function () { index = 0; }, function (yielder) { return (index++ < c) && yielder.yieldReturn(element); }, null, false);
@@ -2212,7 +2243,7 @@ function enumerableFrom(source, additional) {
     function repeatWithFinalize(initializer, finalizer) {
         if (!initializer)
             throw new ArgumentNullException_1.ArgumentNullException("initializer");
-        return new InfiniteLinqEnumerable(function () {
+        return new EndlessLinqEnumerable(function () {
             var element;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 if (initializer)
@@ -2287,7 +2318,7 @@ function enumerableFrom(source, additional) {
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a valid value");
         if (!isFinite(step))
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a finite number.");
-        return new InfiniteLinqEnumerable(function () {
+        return new EndlessLinqEnumerable(function () {
             var value;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 value = start;
@@ -2380,7 +2411,7 @@ function enumerableFrom(source, additional) {
             }, function () {
                 factory = NULL;
             })
-            : new InfiniteLinqEnumerable(function () {
+            : new EndlessLinqEnumerable(function () {
                 var index = 0;
                 return new EnumeratorBase_1.EnumeratorBase(function () {
                     index = 0;
@@ -2410,7 +2441,7 @@ function enumerableFrom(source, additional) {
         if (skipSeed === void 0) { skipSeed = false; }
         if (!valueFactory)
             throw new ArgumentNullException_1.ArgumentNullException("factory");
-        return new InfiniteLinqEnumerable(function () {
+        return new EndlessLinqEnumerable(function () {
             var index = 0;
             var value;
             var isFirst;

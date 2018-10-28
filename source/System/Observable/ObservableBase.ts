@@ -5,10 +5,10 @@
  * C# Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 
-import {SubscribableBase} from "./SubscribableBase";
-import {IObservable} from "./IObservable";
-import {IObserver} from "./IObserver";
-import {IDisposable} from "../Disposable/IDisposable";
+import SubscribableBase from "./SubscribableBase";
+import IObservable from "./IObservable";
+import IObserver from "./IObserver";
+import IDisposable from "../Disposable/IDisposable";
 import {Action, Closure} from "../FunctionTypes";
 import __extendsImport from "../../extends";
 //noinspection JSUnusedLocalSymbols

@@ -8,10 +8,10 @@ import { ILinkedListNode } from "./ILinkedListNode";
 import { IEnumerator } from "./Enumeration/IEnumerator";
 import { ActionWithIndex, EqualityComparison, PredicateWithIndex } from "../FunctionTypes";
 import { ILinkedList } from "./ILinkedList";
-import { IEnumerableOrArray } from "./IEnumerableOrArray";
+import { FiniteEnumerableOrArrayLike } from "./IEnumerableOrArray";
 export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedList<T> {
     private readonly _listInternal;
-    constructor(source?: IEnumerableOrArray<T>, equalityComparer?: EqualityComparison<T>);
+    constructor(source?: FiniteEnumerableOrArrayLike<T>, equalityComparer?: EqualityComparison<T>);
     protected assertVersion(version: number): true | never;
     protected _onDispose(): void;
     protected getCount(): number;

@@ -5,18 +5,19 @@
 
 import {areEqual} from "../../Compare";
 import {forEach} from "../Enumeration/Enumerator";
-import {CollectionBase} from "../CollectionBase";
-import {EnumeratorBase} from "../Enumeration/EnumeratorBase";
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
-import {InvalidOperationException} from "../../Exceptions/InvalidOperationException";
+import CollectionBase from "../CollectionBase";
+import {FiniteEnumeratorBase} from "../Enumeration/EnumeratorBase";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import InvalidOperationException from "../../Exceptions/InvalidOperationException";
 import {extractKeyValue} from "../../KeyValueExtract";
-import {IKeyValuePair, KeyValuePair} from "../../KeyValuePair";
-import {IDictionary} from "./IDictionary";
-import {IEnumerator} from "../Enumeration/IEnumerator";
-import {FiniteEnumerableOrArrayLike} from "../IEnumerableOrArray";
+import {KeyValuePair, KeyValuePairOrTuple} from "../../KeyValuePair";
+import IDictionary from "./IDictionary";
+import {FiniteIEnumerator, IEnumerator} from "../Enumeration/IEnumerator";
 import __extendsImport from "../../../extends";
-import {KeyNotFoundException} from "../KeyNotFoundException";
+import KeyNotFoundException from "../KeyNotFoundException";
 import {Action} from "../../FunctionTypes";
+import FiniteEnumerableOrArrayLike from "../FiniteEnumerableOrArrayLike";
+import FiniteEnumerableOrEnumerator from "../Enumeration/FiniteEnumerableOrEnumerator";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -24,9 +25,9 @@ const VOID0:undefined = void 0;
 
 // Design Note: Should DictionaryAbstractBase be IDisposable?
 export abstract class DictionaryBase<TKey, TValue>
-extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, TValue>
+extends CollectionBase<KeyValuePair<TKey,TValue>> implements IDictionary<TKey, TValue>
 {
-	protected constructor(source?:FiniteEnumerableOrArrayLike<IKeyValuePair<TKey,TValue>>)
+	protected constructor(source?:FiniteEnumerableOrArrayLike<KeyValuePair<TKey,TValue>>)
 	{
 		super(source);
 	}
@@ -37,7 +38,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 	{
 	}
 
-	protected _addInternal(item:KeyValuePair<TKey, TValue>):boolean
+	protected _addInternal(item:KeyValuePairOrTuple<TKey, TValue>):boolean
 	{
 		if(!item)
 			throw new ArgumentNullException(
@@ -61,7 +62,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		return count;
 	}
 
-	contains(item:KeyValuePair<TKey, TValue>):boolean
+	contains(item:KeyValuePairOrTuple<TKey, TValue>):boolean
 	{
 		// Should never have a null object in the collection.
 		if(!item || !this.getCount()) return false;
@@ -76,7 +77,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 
 	}
 
-	protected _removeInternal(item:IKeyValuePair<TKey, TValue>|[TKey,TValue]):number
+	protected _removeInternal(item:KeyValuePair<TKey, TValue>|[TKey,TValue]):number
 	{
 		if(!item) return 0;
 
@@ -120,7 +121,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		return _.setValue(key, value);
 	}
 
-	protected abstract _getEntry(key:TKey):IKeyValuePair<TKey,TValue>|null;
+	protected abstract _getEntry(key:TKey):KeyValuePair<TKey,TValue>|null;
 
 	abstract getValue(key:TKey):TValue|undefined;
 
@@ -209,13 +210,13 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		return count;
 	}
 
-	importEntries(pairs:FiniteEnumerableOrArrayLike<KeyValuePair<TKey, TValue>>|IEnumerator<KeyValuePair<TKey, TValue>>|null|undefined):number
+	importEntries(pairs:FiniteEnumerableOrArrayLike<KeyValuePairOrTuple<TKey, TValue>>|IEnumerator<KeyValuePairOrTuple<TKey, TValue>>|null|undefined):number
 	{
 		// Allow piping through to trigger onModified properly.
 		return super.importEntries(<any>pairs);
 	}
 
-	protected _importEntries(pairs:FiniteEnumerableOrArrayLike<KeyValuePair<TKey, TValue>>|IEnumerator<KeyValuePair<TKey, TValue>>|null|undefined):number
+	protected _importEntries(pairs:FiniteEnumerableOrEnumerator<KeyValuePairOrTuple<TKey, TValue>>|null|undefined):number
 	{
 		const _ = this;
 		if(!pairs) return 0;
@@ -230,13 +231,13 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		return changed;
 	}
 
-	getEnumerator():IEnumerator<IKeyValuePair<TKey, TValue>>
+	getEnumerator():FiniteIEnumerator<KeyValuePair<TKey, TValue>>
 	{
 		const _ = this;
 		_.throwIfDisposed();
 
 		let ver:number, keys:TKey[], len:number, index = 0;
-		return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
+		return new FiniteEnumeratorBase<KeyValuePair<TKey, TValue>>(
 			() =>
 			{
 				_.throwIfDisposed();

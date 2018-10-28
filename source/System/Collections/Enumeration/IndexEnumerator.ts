@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {EnumeratorBase} from "./EnumeratorBase";
+import {FiniteEnumeratorBase} from "./EnumeratorBase";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -16,7 +16,7 @@ export interface IndexEnumeratorSource<T> {
 	pointer?:number;
 }
 
-export class IndexEnumerator<T> extends EnumeratorBase<T>
+export class IndexEnumerator<T> extends FiniteEnumeratorBase<T>
 {
 
 	constructor(
@@ -39,6 +39,7 @@ export class IndexEnumerator<T> extends EnumeratorBase<T>
 
 					if(len && source.step===0)
 						throw new Error("Invalid IndexEnumerator step value (0).");
+
 					let pointer = source.pointer;
 					if(!pointer)
 						pointer = 0;

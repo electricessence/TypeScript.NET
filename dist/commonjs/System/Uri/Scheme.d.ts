@@ -61,7 +61,7 @@ export declare module Scheme {
      * An index of possible values to validate against.
      * @type {Array}
      */
-    const All: ReadonlyArray<SchemeValue.Any>;
+    const All: ReadonlyArray<"file" | "gopher" | "ftp" | "http" | "https" | "ldap" | "mailto" | "net.pipe" | "net.tcp" | "nntp" | "news" | "telnet" | "uuid">;
     function isValid(scheme: string): scheme is SchemeValue.Any;
 }
 export default Scheme;

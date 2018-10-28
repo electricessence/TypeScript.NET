@@ -8,10 +8,10 @@ import {ArrayPromise, PromiseBase, PromiseCollection, TSDNPromise} from "../../P
 import {Type} from "../../Types";
 import Worker from "../Worker";
 import {WorkerLike} from "../WorkerType";
-import {deferImmediate} from "../deferImmediate";
+import deferImmediate from "../deferImmediate";
 import {isNodeJS} from "../../Environment";
-import {ObjectPool} from "../../Disposable/ObjectPool";
-import {IMap} from "../../../IMap";
+import ObjectPool from "../../Disposable/ObjectPool";
+import IMap from "../../../IMap";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

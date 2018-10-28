@@ -1,22 +1,18 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "module": "umd",
+    "module": "commonjs",
     "target": "es5",
     "strict": true,
     "sourceMap": true,
+    "declaration": true,
     "removeComments": false,
     "moduleResolution": "node",
     "noEmitHelpers": true,
-    "noEmit": true
+    "rootDir": "../../source",
+    "outDir": "../../dist/commonjs"
   },
-  "exclude": [
-    "typings",
-    "tests",
-    "node_modules",
-    "bower_components",
-    "dist",
-    ".nuget",
-    "documentation"
+  "include": [
+    "../../source"
   ]
 }

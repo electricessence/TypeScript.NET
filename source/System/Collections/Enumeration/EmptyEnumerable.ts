@@ -3,21 +3,26 @@
  * Licensing: MIT
  */
 
-import {IEnumerable} from "./IEnumerable";
-import {IEnumerator} from "./IEnumerator";
-import {EmptyEnumerator} from "./EmptyEnumerator";
-export class EmptyEnumerable implements IEnumerable<any>{
+import {FiniteIEnumerable} from "./IEnumerable";
+import {FiniteIEnumerator} from "./IEnumerator";
+import EmptyEnumerator from "./EmptyEnumerator";
 
-	constructor() {
+export default class EmptyEnumerable
+	implements FiniteIEnumerable<any>
+{
+
+	constructor()
+	{
 		this.isEndless = false;
 	}
 
-	getEnumerator():IEnumerator<any> {
+	getEnumerator():FiniteIEnumerator<any>
+	{
 		return EmptyEnumerator;
 	}
 
 	/**
 	 * Provides a way of flagging endless enumerations that may cause issues.
 	 */
-	readonly isEndless:boolean;
+	readonly isEndless:false;
 }

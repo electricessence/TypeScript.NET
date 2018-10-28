@@ -4,12 +4,12 @@
  */
 
 import {Type} from "../Types";
-import {SetBase} from "./SetBase";
-import {IMap} from "../../IMap";
+import SetBase from "./SetBase";
+import IMap from "../../IMap";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
-import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
 import {Selector} from "../FunctionTypes";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import FiniteEnumerableOrArrayLike from "./FiniteEnumerableOrArrayLike";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

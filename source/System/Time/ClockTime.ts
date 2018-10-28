@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {TimeQuantity} from "./TimeQuantity";
+import TimeQuantity from "./TimeQuantity";
 import {IClockTime} from "./ITimeStamp";
 import {Milliseconds, Minutes, Seconds, Ticks} from "./HowMany";
 import __extendsImport from "../../extends";

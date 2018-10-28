@@ -3,9 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {DisposableBase} from "./Disposable/DisposableBase";
+import DisposableBase from "./Disposable/DisposableBase";
 import {Func} from "./FunctionTypes";
-import {ArgumentNullException} from "./Exceptions/ArgumentNullException";
+import ArgumentNullException from "./Exceptions/ArgumentNullException";
 import __extendsImport from "../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

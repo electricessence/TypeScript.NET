@@ -4,9 +4,9 @@
  */
 
 import {Type} from "./Types";
-import {Primitive} from "./Primitive";
-import {IComparable} from "./IComparable";
-import {CompareResult} from "./CompareResult";
+import Primitive from "./Primitive";
+import IComparable from "./IComparable";
+import CompareResult from "./CompareResult";
 import isTrueNaN = Type.isTrueNaN;
 
 const VOID0:undefined = void 0;

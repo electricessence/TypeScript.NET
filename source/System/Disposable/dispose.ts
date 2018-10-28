@@ -4,7 +4,7 @@
  */
 
 import {Type} from "../Types";
-import {IDisposable} from "./IDisposable";
+import IDisposable from "./IDisposable";
 
 // Allows for more flexible parameters.
 export type DisposableItem = IDisposable|null|undefined;

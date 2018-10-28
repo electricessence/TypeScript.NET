@@ -3,9 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {IIterator} from "./IIterator";
-import {SimpleEnumerableBase} from "./SimpleEnumerableBase";
+import IIterator from "./IIterator";
+import SimpleEnumeratorBase from "./SimpleEnumeratorBase";
 import __extendsImport from "../../../extends";
+import {EndlessIEnumerator, FiniteIEnumerator} from "./IEnumerator";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -15,7 +16,8 @@ const __extends = __extendsImport;
  *
  *
  */
-export class IteratorEnumerator<T> extends SimpleEnumerableBase<T>
+export class IteratorEnumerator<T>
+	extends SimpleEnumeratorBase<T>
 {
 	/**
 	 * @param _iterator
@@ -57,6 +59,48 @@ export class IteratorEnumerator<T> extends SimpleEnumerableBase<T>
 	{
 		return Boolean(this._isEndless) && super.getIsEndless();
 	}
+
+	static finite<T>(iterator:IIterator<T>):FiniteIteratorEnumerator<T>
+	{
+		return new FiniteIteratorEnumerator<T>(iterator);
+	}
+
+	static endless<T>(iterator:IIterator<T>):EndlessIteratorEnumerator<T>
+	{
+		return new EndlessIteratorEnumerator<T>(iterator);
+	}
+}
+
+export class FiniteIteratorEnumerator<T>
+	extends IteratorEnumerator<T>
+	implements FiniteIEnumerator<T>
+{
+	/**
+	 * @param iterator
+	 */
+	constructor(
+		iterator:IIterator<T>)
+	{
+		super(iterator);
+	}
+
+	get isEndless():false { return false; }
+}
+
+export class EndlessIteratorEnumerator<T>
+	extends IteratorEnumerator<T>
+	implements EndlessIEnumerator<T>
+{
+	/**
+	 * @param iterator
+	 */
+	constructor(
+		iterator:IIterator<T>)
+	{
+		super(iterator);
+	}
+
+	get isEndless():true { return true; }
 }
 
 export default IteratorEnumerator;

@@ -4,7 +4,7 @@
  * Based on: https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
  */
 
-import {HttpMethodValue} from "./HttpMethodValue";
+import HttpMethodValue from "./HttpMethodValue";
 
 export module HttpMethod {
 

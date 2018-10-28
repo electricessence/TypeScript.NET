@@ -4,9 +4,9 @@
  */
 
 import {Match, Regex} from "./RegularExpressions";
-import {EmptyEnumerator} from "../Collections/Enumeration/EmptyEnumerator";
-import {EnumeratorBase} from "../Collections/Enumeration/EnumeratorBase";
-import {IEnumerator} from "../Collections/Enumeration/IEnumerator";
+import EmptyEnumerator from "../Collections/Enumeration/EmptyEnumerator";
+import EnumeratorBase from "../Collections/Enumeration/EnumeratorBase";
+import IEnumerator from "../Collections/Enumeration/IEnumerator";
 
 export class RegexMatchEnumerator
 {

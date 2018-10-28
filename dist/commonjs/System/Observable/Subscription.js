@@ -26,11 +26,16 @@ var Subscription = /** @class */ (function () {
     Object.defineProperty(Subscription.prototype, "wasDisposed", {
         /*
          In the case where we could possibly have the following happen:
+    
          var u = observable.subscribe(observer);
+    
          ...
+    
          u.dispose(); // Should only be allowed to unsubscribe once and then it's useless.
+    
          // Resubscribing creates a new instance.
          var x = observable.subscribe(observer);
+    
          u.dispose(); // Calling this again should do nothing and 'x' should still work.
          */
         get: function () {

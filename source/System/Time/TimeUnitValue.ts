@@ -3,9 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {TimeUnit} from "./TimeUnit";
-import {TimeQuantity} from "./TimeQuantity";
-import {ITimeQuantity} from "./ITimeQuantity";
+import TimeUnit from "./TimeUnit";
+import TimeQuantity from "./TimeQuantity";
+import ITimeQuantity from "./ITimeQuantity";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

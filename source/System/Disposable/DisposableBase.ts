@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {ObjectDisposedException} from "./ObjectDisposedException";
-import {IDisposableAware} from "./IDisposableAware";
+import ObjectDisposedException from "./ObjectDisposedException";
+import IDisposableAware from "./IDisposableAware";
 import {Closure} from "../FunctionTypes";
 
 export abstract class DisposableBase implements IDisposableAware

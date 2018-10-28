@@ -3,12 +3,12 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { IKeyValuePair } from "../../KeyValuePair";
+import { KeyValuePair } from "../../KeyValuePair";
 import { IEnumerator } from "../Enumeration/IEnumerator";
 import { ILinkedNode } from "../ILinkedListNode";
 import { HashSelector } from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
-export interface IHashEntry<TKey, TValue> extends ILinkedNode<IHashEntry<TKey, TValue>>, IKeyValuePair<TKey, TValue> {
+export interface IHashEntry<TKey, TValue> extends ILinkedNode<IHashEntry<TKey, TValue>>, KeyValuePair<TKey, TValue> {
 }
 export declare class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue> {
     private readonly _keyGenerator?;
@@ -23,7 +23,7 @@ export declare class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValu
     getValue(key: TKey): TValue | undefined;
     protected _setValueInternal(key: TKey, value: TValue | undefined): boolean;
     protected _clearInternal(): number;
-    getEnumerator(): IEnumerator<IKeyValuePair<TKey, TValue>>;
+    getEnumerator(): IEnumerator<KeyValuePair<TKey, TValue>>;
     protected getKeys(): TKey[];
     protected getValues(): TValue[];
 }

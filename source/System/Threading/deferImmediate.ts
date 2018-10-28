@@ -5,12 +5,12 @@
  */
 
 import {Type} from "../Types";
-import {LinkedNodeList} from "../Collections/LinkedNodeList";
-import {Queue} from "../Collections/Queue";
+import LinkedNodeList from "../Collections/LinkedNodeList";
+import Queue from "../Collections/Queue";
 import {Closure} from "../FunctionTypes";
 import {ILinkedNode} from "../Collections/ILinkedListNode";
-import {ICancellable} from "./ICancellable";
-import {ObjectPool} from "../Disposable/ObjectPool";
+import ICancellable from "./ICancellable";
+import ObjectPool from "../Disposable/ObjectPool";
 import {isNodeJS} from "../Environment";
 
 declare module process

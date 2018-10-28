@@ -3,10 +3,10 @@
  * Licensing: MIT
  */
 
-import {Integer} from "./Integer";
-import {initialize} from "./Collections/Array/initialize";
+import Integer from "./Integer";
+import initialize from "./Collections/Array/initialize";
 import {shuffle as arrayShuffle} from "./Collections/Array/shuffle";
-import {ArrayLikeWritable} from "./Collections/Array/ArrayLikeWritable";
+import ArrayLikeWritable from "./Collections/Array/ArrayLikeWritable";
 import assert = Integer.assert;
 
 /**

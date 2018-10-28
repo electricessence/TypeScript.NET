@@ -5,8 +5,8 @@
 
 import * as Values from "../../Compare";
 import {Comparison} from "../../FunctionTypes";
-import {IComparer} from "../../IComparer";
-import {Order} from "./Order";
+import IComparer from "../../IComparer";
+import Order from "./Order";
 
 export class SortContext<T> implements IComparer<T>
 {

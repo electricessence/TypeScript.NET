@@ -3,9 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {ArgumentException} from "./Exceptions/ArgumentException";
-import {ArgumentOutOfRangeException} from "./Exceptions/ArgumentOutOfRangeException";
-import {TypeValue} from "./TypeValue";
+import ArgumentException from "./Exceptions/ArgumentException";
+import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeException";
+import TypeValue from "./TypeValue";
 
 export function Integer(n:number):number
 {

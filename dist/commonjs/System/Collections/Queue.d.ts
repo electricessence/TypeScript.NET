@@ -1,14 +1,14 @@
 import { CollectionBase } from "./CollectionBase";
 import { Action, ActionWithIndex, EqualityComparison, PredicateWithIndex } from "../FunctionTypes";
 import { IEnumerator } from "./Enumeration/IEnumerator";
-import { IEnumerableOrArray } from "./IEnumerableOrArray";
+import { FiniteEnumerableOrArrayLike } from "./IEnumerableOrArray";
 export declare class Queue<T> extends CollectionBase<T> {
     private _array;
     private _head;
     private _tail;
     private _size;
     private _capacity;
-    constructor(source?: IEnumerableOrArray<T> | number, equalityComparer?: EqualityComparison<T>);
+    constructor(source?: FiniteEnumerableOrArrayLike<T> | number, equalityComparer?: EqualityComparison<T>);
     protected getCount(): number;
     protected _addInternal(item: T): boolean;
     protected _removeInternal(item: T, max?: number): number;

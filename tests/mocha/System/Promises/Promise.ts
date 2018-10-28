@@ -8,9 +8,10 @@ import {
 } from "../../../../dist/commonjs/System/Promises/Promise";
 import * as AU from "../../../../dist/commonjs/System/Collections/Array/Utility";
 import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
-import {defer} from "../../../../dist/commonjs/System/Threading/defer";
-import {LazyPromise} from "../../../../dist/commonjs/System/Promises/LazyPromise";
-import {ObjectDisposedException} from "../../../../dist/commonjs/System/Disposable/ObjectDisposedException";
+import defer from "../../../../dist/commonjs/System/Threading/defer";
+import LazyPromise from "../../../../dist/commonjs/System/Promises/LazyPromise";
+import ObjectDisposedException
+	from "../../../../dist/commonjs/System/Disposable/ObjectDisposedException";
 
 
 const REASON = "this is not an error, but it might show up in the console";

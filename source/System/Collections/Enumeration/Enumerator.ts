@@ -5,18 +5,18 @@
 
 import {using} from "../../Disposable/dispose";
 import {Type} from "../../Types";
-import {ArrayEnumerator} from "./ArrayEnumerator";
-import {IndexEnumerator} from "./IndexEnumerator";
-import {UnsupportedEnumerableException} from "./UnsupportedEnumerableException";
+import ArrayEnumerator from "./ArrayEnumerator";
+import IndexEnumerator from "./IndexEnumerator";
+import UnsupportedEnumerableException from "./UnsupportedEnumerableException";
 import {ActionWithIndex, PredicateWithIndex, SelectorWithIndex} from "../../FunctionTypes";
-import {IEnumerator} from "./IEnumerator";
-import {FiniteEnumerable, IEnumerable} from "./IEnumerable";
-import {FiniteEnumerableOrArrayLike} from "../FiniteEnumerableOrArrayLike";
-import {InfiniteEnumerator, InfiniteValueFactory} from "./InfiniteEnumerator";
-import {EmptyEnumerator as Empty} from "./EmptyEnumerator";
-import {IIterator} from "./IIterator";
-import {IteratorEnumerator} from "./IteratorEnumerator";
-import {FiniteEnumerableOrEnumerator} from "./FiniteEnumerableOrEnumerator";
+import IEnumerator from "./IEnumerator";
+import {FiniteIEnumerable, IEnumerable} from "./IEnumerable";
+import FiniteEnumerableOrArrayLike from "../FiniteEnumerableOrArrayLike";
+import {EndlessEnumerator, InfiniteValueFactory} from "./EndlessEnumerator";
+import Empty from "./EmptyEnumerator";
+import IIterator from "./IIterator";
+import IteratorEnumerator from "./IteratorEnumerator";
+import FiniteEnumerableOrEnumerator from "./FiniteEnumerableOrEnumerator";
 
 
 const
@@ -92,7 +92,7 @@ export function from<T>(source:FiniteEnumerableOrEnumerator<T>|InfiniteValueFact
 			return source.getEnumerator();
 
 		if(Type.isFunction(source))
-			return new InfiniteEnumerator(source);
+			return new EndlessEnumerator(source);
 
 		if(isEnumerator<T>(source))
 			return source;
@@ -186,7 +186,7 @@ export function forEach<T>(
 
 			// For enumerators that aren't EnumerableBase, ensure dispose is called.
 			return using(
-				(<FiniteEnumerable<T>>e).getEnumerator(),
+				(<FiniteIEnumerable<T>>e).getEnumerator(),
 				f=>forEach(f, action, max)
 			);
 		}

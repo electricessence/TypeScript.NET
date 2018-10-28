@@ -4,19 +4,19 @@
  */
 
 import {Type} from "../../Types";
-import {Integer} from "../../Integer";
+import Integer from "../../Integer";
 import {areEqual} from "../../Compare";
-import {ArgumentException} from "../../Exceptions/ArgumentException";
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
-import {ArgumentOutOfRangeException} from "../../Exceptions/ArgumentOutOfRangeException";
+import ArgumentException from "../../Exceptions/ArgumentException";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import ArgumentOutOfRangeException from "../../Exceptions/ArgumentOutOfRangeException";
 import {
 	ActionWithIndex,
 	EqualityComparison,
 	PredicateWithIndex,
 	SelectorWithIndex
 } from "../../FunctionTypes";
-import {ArrayLikeWritable} from "./ArrayLikeWritable";
-import {initialize} from "./initialize";
+import ArrayLikeWritable from "./ArrayLikeWritable";
+import initialize from "./initialize";
 import {copy, copyTo} from "./copy";
 
 export {initialize, copy, copyTo};

@@ -245,5 +245,31 @@ var EnumeratorBase = /** @class */ (function (_super) {
     return EnumeratorBase;
 }(DisposableBase_1.DisposableBase));
 exports.EnumeratorBase = EnumeratorBase;
+var EndlessEnumeratorBase = /** @class */ (function (_super) {
+    __extends(EndlessEnumeratorBase, _super);
+    function EndlessEnumeratorBase(initializer, tryGetNext, disposer) {
+        return _super.call(this, initializer, tryGetNext, disposer, true) || this;
+    }
+    Object.defineProperty(EndlessEnumeratorBase.prototype, "isEndless", {
+        get: function () { return true; },
+        enumerable: true,
+        configurable: true
+    });
+    return EndlessEnumeratorBase;
+}(EnumeratorBase));
+exports.EndlessEnumeratorBase = EndlessEnumeratorBase;
+var FiniteEnumeratorBase = /** @class */ (function (_super) {
+    __extends(FiniteEnumeratorBase, _super);
+    function FiniteEnumeratorBase(initializer, tryGetNext, disposer) {
+        return _super.call(this, initializer, tryGetNext, disposer, false) || this;
+    }
+    Object.defineProperty(FiniteEnumeratorBase.prototype, "isEndless", {
+        get: function () { return false; },
+        enumerable: true,
+        configurable: true
+    });
+    return FiniteEnumeratorBase;
+}(EnumeratorBase));
+exports.FiniteEnumeratorBase = FiniteEnumeratorBase;
 exports.default = EnumeratorBase;
 //# sourceMappingURL=EnumeratorBase.js.map

@@ -5,16 +5,16 @@
  */
 
 import {ICalendarDate, ITimeStamp} from "./ITimeStamp";
-import {TimeSpan} from "./TimeSpan";
-import {ClockTime} from "./ClockTime";
+import TimeSpan from "./TimeSpan";
+import ClockTime from "./ClockTime";
 import {Milliseconds} from "./HowMany";
-import {TimeStamp} from "./TimeStamp";
-import {IDateTime} from "./IDateTime";
+import TimeStamp from "./TimeStamp";
+import IDateTime from "./IDateTime";
 import {Gregorian} from "./Calendars";
-import {ITimeQuantity} from "./ITimeQuantity";
-import {IEquatable} from "../IEquatable";
-import {IComparable} from "../IComparable";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
+import ITimeQuantity from "./ITimeQuantity";
+import IEquatable from "../IEquatable";
+import IComparable from "../IComparable";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
 
 const VOID0:undefined = void 0;
 

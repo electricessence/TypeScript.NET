@@ -3,10 +3,11 @@ import * as assert from "assert";
 import {Selector} from "../../../../../dist/commonjs/System/FunctionTypes";
 import {areEqual} from "../../../../../dist/commonjs/System/Collections/Array/Compare";
 import {compare} from "../../../../../dist/commonjs/System/Compare";
-import {quickSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/quickSort";
-import {mergeSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/mergeSort";
-import {insertionSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/insertionSort";
-import {Random} from "../../../../../dist/commonjs/System/Random";
+import quickSort from "../../../../../dist/commonjs/System/Collections/Array/Sorting/quickSort";
+import mergeSort from "../../../../../dist/commonjs/System/Collections/Array/Sorting/mergeSort";
+import insertionSort
+	from "../../../../../dist/commonjs/System/Collections/Array/Sorting/insertionSort";
+import Random from "../../../../../dist/commonjs/System/Random";
 import {ArraySort} from "../../../../../dist/commonjs/System/Collections/Array/Sort";
 
 const performanceCheck = false;  // Change to true to performance test/log

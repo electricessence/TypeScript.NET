@@ -4,18 +4,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {areEqual} from "../Compare";
 import * as AU from "./Array/Utility";
+import {areEqual} from "../Compare";
 import {Type} from "../Types";
-import {Integer} from "../Integer";
-import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
-import {NotImplementedException} from "../Exceptions/NotImplementedException";
-import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
-import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
-import {CollectionBase} from "./CollectionBase";
+import Integer from "../Integer";
+import {FiniteEnumeratorBase} from "./Enumeration/EnumeratorBase";
+import NotImplementedException from "../Exceptions/NotImplementedException";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import CollectionBase from "./CollectionBase";
 import {Action, ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
-import {IEnumerator} from "./Enumeration/IEnumerator";
-import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
+import {FiniteIEnumerator} from "./Enumeration/IEnumerator";
+import FiniteEnumerableOrArrayLike from "./FiniteEnumerableOrArrayLike";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -258,6 +258,7 @@ extends CollectionBase<T>
 	 */
 	dequeue():T|undefined
 
+	// noinspection JSUnusedGlobalSymbols
 	/**
 	 * Pulls an entry from the head of the queue and returns it.
 	 * Returns undefined if the queue is already empty and throwIfEmpty is false.
@@ -266,6 +267,7 @@ extends CollectionBase<T>
 	 */
 	dequeue(throwIfEmpty:true):T
 
+	// noinspection JSUnusedGlobalSymbols
 	/**
 	 * Pulls an entry from the head of the queue and returns it.
 	 * Returns undefined if the queue is already empty and throwIfEmpty is false.
@@ -316,12 +318,14 @@ extends CollectionBase<T>
 		return _._array[(_._head + index)%_._capacity];
 	}
 
+	// noinspection JSUnusedGlobalSymbols
 	/**
 	 * Returns the entry at the head of the queue.
 	 * Returns undefined if the queue is already empty.
 	 */
 	peek():T|undefined
 
+	// noinspection JSUnusedGlobalSymbols
 	/**
 	 * Returns the entry at the head of the queue.
 	 * Returns undefined if the queue is already empty and throwIfEmpty is false.
@@ -330,6 +334,7 @@ extends CollectionBase<T>
 	 */
 	peek(throwIfEmpty:true):T
 
+	// noinspection JSUnusedGlobalSymbols
 	/**
 	 * Returns the entry at the head of the queue.
 	 * Returns undefined if the queue is already empty and throwIfEmpty is false.
@@ -337,6 +342,7 @@ extends CollectionBase<T>
 	 * @param throwIfEmpty
 	 */
 	peek(throwIfEmpty:boolean):T|undefined
+	// noinspection JSUnusedGlobalSymbols
 	peek(throwIfEmpty:boolean = false):T|undefined
 	{
 		if(this._size==0) {
@@ -357,13 +363,13 @@ extends CollectionBase<T>
 			_.setCapacity(size);
 	}
 
-	getEnumerator():IEnumerator<T>
+	getEnumerator():FiniteIEnumerator<T>
 	{
 		const _ = this;
 		_.throwIfDisposed();
 
 		let index:number, version:number, size:number;
-		return new EnumeratorBase<T>(
+		return new FiniteEnumeratorBase<T>(
 			() =>
 			{
 				version = _._version;
@@ -398,4 +404,5 @@ function assertIntegerZeroOrGreater(value:number, property:string):true|never
 	return assertZeroOrGreater(value, property);
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default Queue;

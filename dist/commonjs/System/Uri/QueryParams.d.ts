@@ -6,7 +6,7 @@ import { UriComponent } from "./UriComponent";
 import { QueryParam } from "./QueryParam";
 import { IMap } from "../../IMap";
 import { Primitive } from "../Primitive";
-import { IStringKeyValuePair } from "../KeyValuePair";
+import { StringKeyValuePair } from "../KeyValuePair";
 /**
  * Returns the encoded URI string
  * @param values
@@ -49,7 +49,7 @@ export declare function parseToMap(query: string, deserialize?: boolean, decodeV
  * @param decodeValues Default is true.
  * @returns {IKeyValuePair<string, Primitive>[]}
  */
-export declare function parseToArray(query: string, deserialize?: boolean, decodeValues?: boolean): IStringKeyValuePair<Primitive>[];
+export declare function parseToArray(query: string, deserialize?: boolean, decodeValues?: boolean): StringKeyValuePair<Primitive>[];
 export declare module Separator {
     const Query: string;
     const Entry: string;

@@ -4,13 +4,13 @@
  */
 
 import {Type} from "../../Types";
-import {DisposableBase} from "../../Disposable/DisposableBase";
-import {ObjectPool} from "../../Disposable/ObjectPool";
-import {IDisposable} from "../../Disposable/IDisposable";
-import {EndlessEnumerator, FiniteEnumerator, IEnumerator} from "./IEnumerator";
+import DisposableBase from "../../Disposable/DisposableBase";
+import ObjectPool from "../../Disposable/ObjectPool";
+import IDisposable from "../../Disposable/IDisposable";
+import {EndlessIEnumerator, FiniteIEnumerator, IEnumerator} from "./IEnumerator";
 import {IIteratorResult} from "./IIterator";
-import {IYield} from "./IYield";
-import {IteratorResult} from "./IteratorResult";
+import IYield from "./IYield";
+import IteratorResult from "./IteratorResult";
 import __extendsImport from "../../../extends";
 import {Action, Closure} from "../../FunctionTypes";
 // noinspection JSUnusedLocalSymbols
@@ -301,7 +301,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 
 }
 
-export class EndlessEnumeratorBase<T> extends EnumeratorBase<T> implements EndlessEnumerator<T>
+export class EndlessEnumeratorBase<T> extends EnumeratorBase<T> implements EndlessIEnumerator<T>
 {
 	constructor(
 		initializer:Closure|null,
@@ -313,7 +313,7 @@ export class EndlessEnumeratorBase<T> extends EnumeratorBase<T> implements Endle
 	get isEndless():true { return true; }
 }
 
-export class FiniteEnumeratorBase<T> extends EnumeratorBase<T> implements FiniteEnumerator<T>
+export class FiniteEnumeratorBase<T> extends EnumeratorBase<T> implements FiniteIEnumerator<T>
 {
 	constructor(
 		initializer:Closure|null,

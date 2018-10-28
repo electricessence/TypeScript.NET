@@ -4,17 +4,17 @@
  */
 
 import {format} from "../Text/Utility";
-import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
-import {ArgumentException} from "../Exceptions/ArgumentException";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentException from "../Exceptions/ArgumentException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import {FiniteEnumeratorBase} from "./Enumeration/EnumeratorBase";
 import {ILinkedNode, ILinkedNodeWithValue} from "./ILinkedListNode";
-import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
-import {IDisposable} from "../Disposable/IDisposable";
+import IEnumerateEach from "./Enumeration/IEnumerateEach";
+import IDisposable from "../Disposable/IDisposable";
 import {ILinkedNodeList} from "./ILinkedList";
-import {IEnumerator} from "./Enumeration/IEnumerator";
+import {FiniteIEnumerator} from "./Enumeration/IEnumerator";
 import {ActionWithIndex, PredicateWithIndex, Selector, SelectorWithIndex} from "../FunctionTypes";
-import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
+import ArrayLikeWritable from "./Array/ArrayLikeWritable";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -145,12 +145,11 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	 */
 	clear():number
 	{
-		const _ = this;
 		let n:TNode|null|undefined, cF:number = 0, cL:number = 0;
 
 		// First, clear in the forward direction.
-		n = _._first;
-		_._first = null;
+		n = this._first;
+		this._first = null;
 
 		while(n)
 		{
@@ -161,8 +160,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		}
 
 		// Last, clear in the reverse direction.
-		n = _._last;
-		_._last = null;
+		n = this._last;
+		this._last = null;
 
 		while(n)
 		{
@@ -174,8 +173,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 		if(cF!==cL) console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing. Forward: ' + cF + ", Reverse: " + cL);
 
-		_._version++;
-		_.unsafeCount = 0;
+		this._version++;
+		this.unsafeCount = 0;
 
 		return cF;
 	}
@@ -445,7 +444,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		return _;
 	}
 
-	static valueEnumeratorFrom<T>(list:LinkedNodeList<ILinkedNodeWithValue<T>>):IEnumerator<T>
+	static valueEnumeratorFrom<T>(list:LinkedNodeList<ILinkedNodeWithValue<T>>):FiniteIEnumerator<T>
 	{
 
 		if(!list) throw new ArgumentNullException('list');
@@ -454,7 +453,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		    next:ILinkedNodeWithValue<T>|null|undefined,
 		    version:number;
 
-		return new EnumeratorBase<T>(
+		return new FiniteEnumeratorBase<T>(
 			() =>
 			{
 				// Initialize anchor...

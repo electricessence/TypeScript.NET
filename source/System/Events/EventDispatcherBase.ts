@@ -4,12 +4,12 @@
  */
 
 import * as AU from "../Collections/Array/Utility";
-import {shallowCopy} from "../Utility/shallowCopy";
-import {DisposableBase} from "../Disposable/DisposableBase";
-import {dispose} from "../Disposable/dispose";
-import {IEventListener} from "./IEventListener";
-import {EventDispatcherEntry} from "./EventDispatcherEntry";
-import {IEventDispatcher} from "./IEventDispatcher";
+import shallowCopy from "../Utility/shallowCopy";
+import DisposableBase from "../Disposable/DisposableBase";
+import dispose from "../Disposable/dispose";
+import IEventListener from "./IEventListener";
+import EventDispatcherEntry from "./EventDispatcherEntry";
+import IEventDispatcher from "./IEventDispatcher";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

@@ -5,7 +5,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
-import {LazyList} from "../../../../dist/commonjs/System/Collections/LazyList";
+import LazyList from "../../../../dist/commonjs/System/Collections/LazyList";
 import {Enumerable} from "../../../../dist/commonjs/System.Linq/Linq";
 
 const LENGTH = 10;

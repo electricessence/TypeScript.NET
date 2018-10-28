@@ -9,8 +9,8 @@ import {
 	LinqEnumerable
 } from "../../../dist/commonjs/System.Linq/Linq";
 import Functions from "../../../dist/commonjs/System/Functions";
-import {EmptyEnumerator} from "../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator";
-import {List} from "../../../dist/commonjs/System/Collections/List";
+import EmptyEnumerator from "../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator";
+import List from "../../../dist/commonjs/System/Collections/List";
 
 
 interface TestItem

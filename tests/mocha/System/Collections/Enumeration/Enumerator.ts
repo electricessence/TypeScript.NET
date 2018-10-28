@@ -3,8 +3,9 @@ import * as assert from "assert";
 import "mocha";
 import {TypeInfo} from "../../../../../dist/commonjs/System/Types";
 import Queue from "../../../../../dist/commonjs/System/Collections/Queue";
-import * as Enumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/Enumerator";
-import {IEnumerator} from "../../../../../dist/commonjs/System/Collections/Enumeration/IEnumerator";
+import * as Enumerator
+	from "../../../../../dist/commonjs/System/Collections/Enumeration/Enumerator";
+import IEnumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/IEnumerator";
 
 const VOID0:undefined = void 0;
 

@@ -5,8 +5,8 @@
 
 import {areEqual} from "../../Compare";
 import {IMap, IStringKeyDictionary} from "./IDictionary";
-import {IKeyValuePair} from "../../KeyValuePair";
-import {DictionaryBase} from "./DictionaryBase";
+import KeyValuePair from "../../KeyValuePair";
+import DictionaryBase from "./DictionaryBase";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -25,7 +25,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	private _count:number = 0;
 	private readonly _map:IMap<TValue> = {};
 
-	protected _getEntry(key:string):IKeyValuePair<string,TValue>|null
+	protected _getEntry(key:string):KeyValuePair<string,TValue>|null
 	{
 		return !this.containsKey(key)
 			? null : {

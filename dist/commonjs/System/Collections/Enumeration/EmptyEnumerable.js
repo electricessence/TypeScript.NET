@@ -14,5 +14,5 @@ var EmptyEnumerable = /** @class */ (function () {
     };
     return EmptyEnumerable;
 }());
-exports.EmptyEnumerable = EmptyEnumerable;
+exports.default = EmptyEnumerable;
 //# sourceMappingURL=EmptyEnumerable.js.map

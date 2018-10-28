@@ -4,10 +4,10 @@
  */
 
 import {Type} from "../Types";
-import {getIdentifier} from "./Dictionaries/getIdentifier";
+import getIdentifier from "./Dictionaries/getIdentifier";
 import {ISymbolizable} from "./Dictionaries/IDictionary";
-import {HashSet} from "./HashSet";
-import {Primitive} from "../Primitive";
+import HashSet from "./HashSet";
+import Primitive from "../Primitive";
 import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols

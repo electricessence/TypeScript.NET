@@ -3,24 +3,25 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { CollectionBase } from "../CollectionBase";
-import { IKeyValuePair, KeyValuePair } from "../../KeyValuePair";
+import { KeyValuePair, KeyValuePairOrTuple } from "../../KeyValuePair";
 import { IDictionary } from "./IDictionary";
-import { IEnumerator } from "../Enumeration/IEnumerator";
-import { IEnumerableOrArray } from "../IEnumerableOrArray";
+import { IEnumerator, FiniteEnumerator } from "../Enumeration/IEnumerator";
 import { Action } from "../../FunctionTypes";
-export declare abstract class DictionaryBase<TKey, TValue> extends CollectionBase<IKeyValuePair<TKey, TValue>> implements IDictionary<TKey, TValue> {
-    protected constructor(source?: IEnumerableOrArray<IKeyValuePair<TKey, TValue>>);
+import FiniteEnumerableOrArrayLike from "../FiniteEnumerableOrArrayLike";
+import { FiniteEnumerableOrEnumerator } from "../Enumeration/FiniteEnumerableOrEnumerator";
+export declare abstract class DictionaryBase<TKey, TValue> extends CollectionBase<KeyValuePair<TKey, TValue>> implements IDictionary<TKey, TValue> {
+    protected constructor(source?: FiniteEnumerableOrArrayLike<KeyValuePair<TKey, TValue>>);
     protected _onValueModified(key: TKey, value: TValue | undefined, old: TValue | undefined): void;
-    protected _addInternal(item: KeyValuePair<TKey, TValue>): boolean;
+    protected _addInternal(item: KeyValuePairOrTuple<TKey, TValue>): boolean;
     protected _clearInternal(): number;
-    contains(item: KeyValuePair<TKey, TValue>): boolean;
-    protected _removeInternal(item: IKeyValuePair<TKey, TValue> | [TKey, TValue]): number;
+    contains(item: KeyValuePairOrTuple<TKey, TValue>): boolean;
+    protected _removeInternal(item: KeyValuePair<TKey, TValue> | [TKey, TValue]): number;
     protected abstract getKeys(): TKey[];
     readonly keys: TKey[];
     protected abstract getValues(): TValue[];
     readonly values: TValue[];
     addByKeyValue(key: TKey, value: TValue): boolean;
-    protected abstract _getEntry(key: TKey): IKeyValuePair<TKey, TValue> | null;
+    protected abstract _getEntry(key: TKey): KeyValuePair<TKey, TValue> | null;
     abstract getValue(key: TKey): TValue | undefined;
     getAssuredValue(key: TKey): TValue;
     tryGetValue(key: TKey, out: Action<TValue>): boolean;
@@ -37,8 +38,8 @@ export declare abstract class DictionaryBase<TKey, TValue> extends CollectionBas
     containsValue(value: TValue): boolean;
     removeByKey(key: TKey): boolean;
     removeByValue(value: TValue): number;
-    importEntries(pairs: IEnumerableOrArray<KeyValuePair<TKey, TValue>> | IEnumerator<KeyValuePair<TKey, TValue>> | null | undefined): number;
-    protected _importEntries(pairs: IEnumerableOrArray<KeyValuePair<TKey, TValue>> | IEnumerator<KeyValuePair<TKey, TValue>> | null | undefined): number;
-    getEnumerator(): IEnumerator<IKeyValuePair<TKey, TValue>>;
+    importEntries(pairs: FiniteEnumerableOrArrayLike<KeyValuePairOrTuple<TKey, TValue>> | IEnumerator<KeyValuePairOrTuple<TKey, TValue>> | null | undefined): number;
+    protected _importEntries(pairs: FiniteEnumerableOrEnumerator<KeyValuePairOrTuple<TKey, TValue>> | null | undefined): number;
+    getEnumerator(): FiniteEnumerator<KeyValuePair<TKey, TValue>>;
 }
 export default DictionaryBase;

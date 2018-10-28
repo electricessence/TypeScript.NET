@@ -5,7 +5,7 @@
  */
 
 import {ArgumentException, Error} from "./ArgumentException";
-import {Primitive} from "../Primitive";
+import Primitive from "../Primitive";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

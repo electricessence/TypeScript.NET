@@ -6,13 +6,13 @@
 
 import {areEqual} from "../../Compare";
 import {Type} from "../../Types";
-import {EnumeratorBase} from "../Enumeration/EnumeratorBase";
-import {LinkedNodeList} from "../LinkedNodeList";
-import {ObjectPool} from "../../Disposable/ObjectPool";
+import EnumeratorBase from "../Enumeration/EnumeratorBase";
+import LinkedNodeList from "../LinkedNodeList";
+import ObjectPool from "../../Disposable/ObjectPool";
 import {IMap} from "./IDictionary";
-import {IKeyValuePair} from "../../KeyValuePair";
-import {getIdentifier} from "./getIdentifier";
-import {IEnumerator} from "../Enumeration/IEnumerator";
+import KeyValuePair from "../../KeyValuePair";
+import getIdentifier from "./getIdentifier";
+import IEnumerator from "../Enumeration/IEnumerator";
 import {ILinkedNode} from "../ILinkedListNode";
 import {HashSelector} from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
@@ -24,7 +24,7 @@ const VOID0:undefined = void 0;
 
 
 export interface IHashEntry<TKey, TValue>
-extends ILinkedNode<IHashEntry<TKey, TValue>>, IKeyValuePair<TKey,TValue>
+extends ILinkedNode<IHashEntry<TKey, TValue>>, KeyValuePair<TKey,TValue>
 {
 
 }
@@ -216,13 +216,13 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	 * Note: super.getEnumerator() works perfectly well,
 	 * but enumerating the internal linked node list is much more efficient.
 	 */
-	getEnumerator():IEnumerator<IKeyValuePair<TKey, TValue>>
+	getEnumerator():IEnumerator<KeyValuePair<TKey, TValue>>
 	{
 		const _ = this;
 		_.throwIfDisposed();
 
 		let ver:number, currentEntry:IHashEntry<TKey, TValue>|null;
-		return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
+		return new EnumeratorBase<KeyValuePair<TKey, TValue>>(
 			() =>
 			{
 				_.throwIfDisposed();

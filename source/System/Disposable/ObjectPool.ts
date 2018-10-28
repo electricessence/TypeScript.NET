@@ -5,11 +5,11 @@
  * Uses .add(T) and .take():T
  */
 
-import {dispose} from "./dispose";
-import {DisposableBase} from "./DisposableBase";
-import {TaskHandler} from "../Threading/Tasks/TaskHandler";
-import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
-import {ArgumentException} from "../Exceptions/ArgumentException";
+import dispose from "./dispose";
+import DisposableBase from "./DisposableBase";
+import TaskHandler from "../Threading/Tasks/TaskHandler";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import ArgumentException from "../Exceptions/ArgumentException";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

@@ -4,9 +4,9 @@
  */
 
 import {Type} from "../Types";
-import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
-import {ISerializable} from "./ISerializable";
-import {Primitive} from "../Primitive";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ISerializable from "./ISerializable";
+import Primitive from "../Primitive";
 
 
 const EMPTY = '', TRUE = 'true', FALSE = 'false';

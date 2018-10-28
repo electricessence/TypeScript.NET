@@ -7,15 +7,15 @@ import {areEqual} from "../Compare";
 import {contains, copyTo, indexOf, remove, removeIndex} from "./Array/Utility";
 import {forEach} from "./Enumeration/Enumerator";
 import {Type} from "../Types";
-import {CollectionBase} from "./CollectionBase";
+import CollectionBase from "./CollectionBase";
 import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
-import {IEnumerator} from "./Enumeration/IEnumerator";
-import {IList} from "./IList";
-import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
+import IEnumerator from "./Enumeration/IEnumerator";
+import IList from "./IList";
+import IEnumerateEach from "./Enumeration/IEnumerateEach";
 import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
-import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
+import ArrayLikeWritable from "./Array/ArrayLikeWritable";
 import __extendsImport from "../../extends";
-import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 

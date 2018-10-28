@@ -36,7 +36,6 @@ dlldata.c
 *.tlh
 *.tmp
 *.tmp_proj
-*.log
 *.vspscc
 *.vssscc
 .builds
@@ -168,9 +167,6 @@ build/build.json
 Thumbs.db
 Desktop.ini
 
-# Mac
-.DS_Store
-
 # Nodejs
 node_modules
 bower_components
@@ -188,19 +184,16 @@ coverage
 .idea/typescript-compiler.xml
 
 # TypeScript
-typings
-
 # TypeDoc
 documentation
 .nuget/
 .idea/shelf/*
-.idea/codeStyles/codeStyleConfig.xml
-.idea/codeStyles/codeStyleConfig.xml
 
 gulpfile.js.map
 
-
+_gulp/**/*.js
 _gulp/**/*.js.map
+_utility/**/*.js
 _utility/**/*.js.map
 
 source/**/*.js

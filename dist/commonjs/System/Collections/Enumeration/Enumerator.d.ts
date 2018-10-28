@@ -5,10 +5,10 @@
 import { ActionWithIndex, PredicateWithIndex, SelectorWithIndex } from "../../FunctionTypes";
 import { IEnumerator } from "./IEnumerator";
 import { IEnumerable } from "./IEnumerable";
-import { IEnumerableOrArray } from "../IEnumerableOrArray";
+import { FiniteEnumerableOrArrayLike } from "../FiniteEnumerableOrArrayLike";
 import { InfiniteValueFactory } from "./InfiniteEnumerator";
 import { IIterator } from "./IIterator";
-import { ForEachEnumerable } from "./ForEachEnumerable";
+import { FiniteEnumerableOrEnumerator } from "./FiniteEnumerableOrEnumerator";
 export declare function throwIfEndless(isEndless: false): true;
 export declare function throwIfEndless(isEndless: true): never;
 export declare function throwIfEndless(isEndless: boolean | undefined): true | never;
@@ -18,9 +18,9 @@ export declare function throwIfEndless(isEndless: boolean | undefined): true | n
  * @param source
  * @returns {any}
  */
-export declare function from<T>(source: ForEachEnumerable<T> | InfiniteValueFactory<T>): IEnumerator<T>;
+export declare function from<T>(source: FiniteEnumerableOrEnumerator<T> | InfiniteValueFactory<T>): IEnumerator<T>;
 export declare function isEnumerable<T>(instance: any): instance is IEnumerable<T>;
-export declare function isEnumerableOrArrayLike<T>(instance: any): instance is IEnumerableOrArray<T>;
+export declare function isFiniteEnumerableOrArrayLike<T>(instance: any): instance is FiniteEnumerableOrArrayLike<T>;
 export declare function isEnumerator<T>(instance: any): instance is IEnumerator<T>;
 export declare function isIterator<T>(instance: any): instance is IIterator<T>;
 /**
@@ -30,15 +30,15 @@ export declare function isIterator<T>(instance: any): instance is IIterator<T>;
  * @param max Stops after max is reached.  Allows for forEach to be called on infinite enumerations.
  * @returns the total times iterated.  If the enumerable is unrecognized then -1.
  */
-export declare function forEach<T>(e: ForEachEnumerable<T>, action: ActionWithIndex<T>, max?: number): number;
-export declare function forEach<T>(e: ForEachEnumerable<T>, action: PredicateWithIndex<T>, max?: number): number;
+export declare function forEach<T>(e: FiniteEnumerableOrEnumerator<T>, action: ActionWithIndex<T>, max?: number): number;
+export declare function forEach<T>(e: FiniteEnumerableOrEnumerator<T>, action: PredicateWithIndex<T>, max?: number): number;
 /**
  * Converts any enumerable to an array.
  * @param source
  * @param max Stops after max is reached.  Allows for forEach to be called on infinite enumerations.
  * @returns {any}
  */
-export declare function toArray<T>(source: ForEachEnumerable<T>, max?: number): T[];
+export declare function toArray<T>(source: FiniteEnumerableOrEnumerator<T>, max?: number): T[];
 /**
  * Converts any enumerable to an array of selected values.
  * @param source
@@ -46,4 +46,4 @@ export declare function toArray<T>(source: ForEachEnumerable<T>, max?: number): 
  * @param max Stops after max is reached.  Allows for forEach to be called on infinite enumerations.
  * @returns {TResult[]}
  */
-export declare function map<T, TResult>(source: ForEachEnumerable<T>, selector: SelectorWithIndex<T, TResult>, max?: number): TResult[];
+export declare function map<T, TResult>(source: FiniteEnumerableOrEnumerator<T>, selector: SelectorWithIndex<T, TResult>, max?: number): TResult[];

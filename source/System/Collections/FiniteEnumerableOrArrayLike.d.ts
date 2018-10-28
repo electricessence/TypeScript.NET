@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {FiniteEnumerable} from "./Enumeration/IEnumerable";
+import {FiniteIEnumerable} from "./Enumeration/IEnumerable";
 
-export declare type FiniteEnumerableOrArrayLike<T> = FiniteEnumerable<T> | ArrayLike<T>;
+export declare type FiniteEnumerableOrArrayLike<T> = FiniteIEnumerable<T> | ArrayLike<T>;
 
 export default FiniteEnumerableOrArrayLike;

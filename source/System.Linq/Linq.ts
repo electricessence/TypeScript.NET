@@ -5,7 +5,7 @@
  */
 
 import {areEqual as areEqualValues, compare as compareValues} from "../System/Compare";
-import {copy} from "../System/Collections/Array/copy";
+import copy from "../System/Collections/Array/copy";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as enumUtil from "../System/Collections/Enumeration/Enumerator";
 import {
@@ -14,28 +14,29 @@ import {
 	isIterator,
 	throwIfEndless
 } from "../System/Collections/Enumeration/Enumerator";
-import {EmptyEnumerator} from "../System/Collections/Enumeration/EmptyEnumerator";
+import EmptyEnumerator from "../System/Collections/Enumeration/EmptyEnumerator";
 import {Type} from "../System/Types";
-import {Integer} from "../System/Integer";
+import Integer from "../System/Integer";
 import {Functions as BaseFunctions} from "../System/Functions";
-import {ArrayEnumerator} from "../System/Collections/Enumeration/ArrayEnumerator";
+import ArrayEnumerator from "../System/Collections/Enumeration/ArrayEnumerator";
 import {
 	EnumeratorBase,
 	FiniteEnumeratorBase
 } from "../System/Collections/Enumeration/EnumeratorBase";
-import {Dictionary} from "../System/Collections/Dictionaries/Dictionary";
-import {Queue} from "../System/Collections/Queue";
+import Dictionary from "../System/Collections/Dictionaries/Dictionary";
+import Queue from "../System/Collections/Queue";
 import {dispose, using} from "../System/Disposable/dispose";
-import {DisposableBase} from "../System/Disposable/DisposableBase";
-import {UnsupportedEnumerableException} from "../System/Collections/Enumeration/UnsupportedEnumerableException";
-import {ObjectDisposedException} from "../System/Disposable/ObjectDisposedException";
-import {KeySortedContext} from "../System/Collections/Sorting/KeySortedContext";
-import {ArgumentNullException} from "../System/Exceptions/ArgumentNullException";
-import {ArgumentOutOfRangeException} from "../System/Exceptions/ArgumentOutOfRangeException";
-import {FiniteEnumerator, IEnumerator} from "../System/Collections/Enumeration/IEnumerator";
+import DisposableBase from "../System/Disposable/DisposableBase";
+import UnsupportedEnumerableException
+	from "../System/Collections/Enumeration/UnsupportedEnumerableException";
+import ObjectDisposedException from "../System/Disposable/ObjectDisposedException";
+import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
+import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
+import ArgumentOutOfRangeException from "../System/Exceptions/ArgumentOutOfRangeException";
+import {FiniteIEnumerator, IEnumerator} from "../System/Collections/Enumeration/IEnumerator";
 import {
-	EndlessEnumerable,
-	FiniteEnumerable,
+	EndlessIEnumerable,
+	FiniteIEnumerable,
 	IEnumerable
 } from "../System/Collections/Enumeration/IEnumerable";
 import {
@@ -51,21 +52,21 @@ import {
 } from "../System/FunctionTypes";
 import {IDictionary, IMap} from "../System/Collections/Dictionaries/IDictionary";
 import {Comparable} from "../System/IComparable";
-import {IComparer} from "../System/IComparer";
-import {IKeyValuePair} from "../System/KeyValuePair";
-import {Order} from "../System/Collections/Sorting/Order";
-import {EnumerableAction} from "./EnumerableAction";
-import {IndexEnumerator} from "../System/Collections/Enumeration/IndexEnumerator";
-import {Primitive} from "../System/Primitive";
-import {IteratorEnumerator} from "../System/Collections/Enumeration/IteratorEnumerator";
-import {initialize} from "../System/Collections/Array/initialize";
-import {Random} from "../System/Random";
+import IComparer from "../System/IComparer";
+import KeyValuePair from "../System/KeyValuePair";
+import Order from "../System/Collections/Sorting/Order";
+import EnumerableAction from "./EnumerableAction";
+import IndexEnumerator from "../System/Collections/Enumeration/IndexEnumerator";
+import Primitive from "../System/Primitive";
+import IteratorEnumerator from "../System/Collections/Enumeration/IteratorEnumerator";
+import initialize from "../System/Collections/Array/initialize";
+import Random from "../System/Random";
 import {
-	InfiniteEnumerator,
+	EndlessEnumerator,
 	InfiniteValueFactory
-} from "../System/Collections/Enumeration/InfiniteEnumerator";
+} from "../System/Collections/Enumeration/EndlessEnumerator";
 import __extendsImport from "../extends";
-import {LazyList} from "../System/Collections/LazyList";
+import LazyList from "../System/Collections/LazyList";
 import disposeSingle = dispose.single;
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -114,7 +115,7 @@ class LinqFunctions
 const Functions = Object.freeze(new LinqFunctions());
 
 // For re-use as a factory.
-function getEmptyEnumerator():FiniteEnumerator<any>
+function getEmptyEnumerator():FiniteIEnumerator<any>
 {
 	return EmptyEnumerator;
 }
@@ -126,7 +127,7 @@ function createEnumerable<T>(
 	finalizer:Closure | null | undefined,
 	isEndless:true):EndlessLinqEnumerable<T>;
 function createEnumerable<T>(
-	enumeratorFactory:Action<FiniteEnumerable<T>>,
+	enumeratorFactory:Action<FiniteIEnumerable<T>>,
 	finalizer:Closure | null | undefined,
 	isEndless:false):FiniteLinqEnumerable<T>;
 function createEnumerable<T>(
@@ -456,21 +457,21 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 
 
 	traverseDepthFirst(
-		childrenSelector:(element:T) => FiniteEnumerable<T> | null | undefined):LinqEnumerable<T>;
+		childrenSelector:(element:T) => FiniteIEnumerable<T> | null | undefined):LinqEnumerable<T>;
 
 	traverseDepthFirst<TNode>(
-		childrenSelector:(element:T | TNode) => FiniteEnumerable<TNode> | null | undefined):LinqEnumerable<TNode>;
+		childrenSelector:(element:T | TNode) => FiniteIEnumerable<TNode> | null | undefined):LinqEnumerable<TNode>;
 
 	traverseDepthFirst<TResult>(
-		childrenSelector:(element:T) => FiniteEnumerable<T> | null | undefined,
+		childrenSelector:(element:T) => FiniteIEnumerable<T> | null | undefined,
 		resultSelector:SelectorWithIndex<T, TResult>):LinqEnumerable<TResult>;
 
 	traverseDepthFirst<TNode, TResult>(
-		childrenSelector:(element:T | TNode) => FiniteEnumerable<TNode> | null | undefined,
+		childrenSelector:(element:T | TNode) => FiniteIEnumerable<TNode> | null | undefined,
 		resultSelector:SelectorWithIndex<T, TResult>):LinqEnumerable<TResult>;
 
 	traverseDepthFirst<TNode>(
-		childrenSelector:(element:T | TNode) => FiniteEnumerable<TNode> | null | undefined,
+		childrenSelector:(element:T | TNode) => FiniteIEnumerable<TNode> | null | undefined,
 		resultSelector:(
 			element:TNode,
 			nestLevel:number) => any = <any>Functions.Identity):LinqEnumerable<any>
@@ -609,7 +610,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 	 */
 
 	protected _selectMany<TElement, TResult>(
-		collectionSelector:SelectorWithIndex<T, FiniteEnumerable<TElement> | null | undefined>,
+		collectionSelector:SelectorWithIndex<T, FiniteIEnumerable<TElement> | null | undefined>,
 		resultSelector?:(collection:T, element:TElement) => TResult):any
 	{
 		const _ = this;
@@ -696,14 +697,14 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 
 
 	selectMany<TResult>(
-		collectionSelector:SelectorWithIndex<T, FiniteEnumerable<TResult> | null | undefined>):EndlessLinqEnumerable<TResult>;
+		collectionSelector:SelectorWithIndex<T, FiniteIEnumerable<TResult> | null | undefined>):EndlessLinqEnumerable<TResult>;
 
 	selectMany<TElement, TResult>(
-		collectionSelector:SelectorWithIndex<T, FiniteEnumerable<TElement> | null | undefined>,
+		collectionSelector:SelectorWithIndex<T, FiniteIEnumerable<TElement> | null | undefined>,
 		resultSelector:(collection:T, element:TElement) => TResult):EndlessLinqEnumerable<TResult>;
 
 	selectMany<TResult>(
-		collectionSelector:SelectorWithIndex<T, FiniteEnumerable<any> | null | undefined>,
+		collectionSelector:SelectorWithIndex<T, FiniteIEnumerable<any> | null | undefined>,
 		resultSelector?:(collection:T, element:any) => TResult):EndlessLinqEnumerable<TResult>
 	{
 		return this._selectMany(collectionSelector, resultSelector);
@@ -814,7 +815,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 	}
 
 	except(
-		second:FiniteEnumerable<T>,
+		second:FiniteIEnumerable<T>,
 		compareSelector?:HashSelector<T>):this
 	{
 		const _ = this;
@@ -984,7 +985,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 
 
 	zip<TSecond, TResult>(
-		second:FiniteEnumerable<TSecond>,
+		second:FiniteIEnumerable<TSecond>,
 		resultSelector:(first:T, second:TSecond, index:number) => TResult):LinqEnumerable<TResult>
 	{
 		const _ = this;
@@ -1095,7 +1096,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 	// #region Join Methods
 
 	join<TInner, TKey, TResult>(
-		inner:FiniteEnumerable<TInner>,
+		inner:FiniteIEnumerable<TInner>,
 		outerKeySelector:Selector<T, TKey>,
 		innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner) => TResult,
@@ -1154,7 +1155,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 	}
 
 	groupJoin<TInner, TKey, TResult>(
-		inner:FiniteEnumerable<TInner>,
+		inner:FiniteIEnumerable<TInner>,
 		outerKeySelector:Selector<T, TKey>,
 		innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner[] | null) => TResult,
@@ -1194,7 +1195,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 	}
 
 
-	merge(enumerables:ArrayLike<FiniteEnumerable<T>>):this
+	merge(enumerables:ArrayLike<FiniteIEnumerable<T>>):this
 	{
 		const _ = this;
 		const isEndless = _.isEndless;
@@ -1205,13 +1206,13 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 		return <any>createEnumerable(
 			() => {
 				let enumerator:IEnumerator<T>;
-				let queue:Queue<FiniteEnumerable<T>>;
+				let queue:Queue<FiniteIEnumerable<T>>;
 
 				return new EnumeratorBase<T>(
 					() => {
 						// 1) First get our values...
 						enumerator = _.getEnumerator();
-						queue = new Queue<FiniteEnumerable<T>>(enumerables);
+						queue = new Queue<FiniteIEnumerable<T>>(enumerables);
 					},
 
 					(yielder) => {
@@ -1252,14 +1253,14 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 		);
 	}
 
-	concat(...enumerables:Array<FiniteEnumerable<T>>):this
+	concat(...enumerables:Array<FiniteIEnumerable<T>>):this
 	{
 		return this.merge(enumerables);
 	}
 
 
 	union(
-		second:FiniteEnumerable<T>,
+		second:FiniteIEnumerable<T>,
 		compareSelector:HashSelector<T> = <any>Functions.Identity):this
 	{
 		const _ = this;
@@ -1320,7 +1321,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 		);
 	}
 
-	insertAt(index:number, other:FiniteEnumerable<T>):this
+	insertAt(index:number, other:FiniteIEnumerable<T>):this
 	{
 		Integer.assertZeroOrGreater(index, 'index');
 		const n:number = index;
@@ -1382,7 +1383,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 	}
 
 
-	alternateMultiple(sequence:FiniteEnumerable<T>):this
+	alternateMultiple(sequence:FiniteIEnumerable<T>):this
 	{
 		const _ = this;
 		const isEndless = _.isEndless;
@@ -1637,7 +1638,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 
 export class EndlessLinqEnumerable<T>
 	extends LinqEnumerableBase<T, EndlessLinqEnumerable<T>, >
-	implements EndlessEnumerable<T>
+	implements EndlessIEnumerable<T>
 {
 	constructor(
 		enumeratorFactory:() => IEnumerator<T>,
@@ -1757,21 +1758,21 @@ export class LinqEnumerable<T>
 
 	// Since an infinite enumerable will always end up traversing breadth first, we have this only here for regular enumerable.
 	traverseBreadthFirst(
-		childrenSelector:(element:T) => FiniteEnumerable<T> | null | undefined):LinqEnumerable<T>;
+		childrenSelector:(element:T) => FiniteIEnumerable<T> | null | undefined):LinqEnumerable<T>;
 
 	traverseBreadthFirst<TNode>(
-		childrenSelector:(element:T | TNode) => FiniteEnumerable<TNode> | null | undefined):LinqEnumerable<TNode>;
+		childrenSelector:(element:T | TNode) => FiniteIEnumerable<TNode> | null | undefined):LinqEnumerable<TNode>;
 
 	traverseBreadthFirst<TResult>(
-		childrenSelector:(element:T) => FiniteEnumerable<T> | null | undefined,
+		childrenSelector:(element:T) => FiniteIEnumerable<T> | null | undefined,
 		resultSelector:SelectorWithIndex<T, TResult>):LinqEnumerable<TResult>;
 
 	traverseBreadthFirst<TNode, TResult>(
-		childrenSelector:(element:T | TNode) => FiniteEnumerable<TNode> | null | undefined,
+		childrenSelector:(element:T | TNode) => FiniteIEnumerable<TNode> | null | undefined,
 		resultSelector:SelectorWithIndex<T, TResult>):LinqEnumerable<TResult>;
 
 	traverseBreadthFirst<TNode>(
-		childrenSelector:(element:T | TNode) => FiniteEnumerable<TNode> | null | undefined,
+		childrenSelector:(element:T | TNode) => FiniteIEnumerable<TNode> | null | undefined,
 		resultSelector:(
 			element:TNode,
 			nestLevel:number) => any = Functions.Identity):LinqEnumerable<any>
@@ -2040,14 +2041,14 @@ export class LinqEnumerable<T>
 	}
 
 	selectMany<TResult>(
-		collectionSelector:SelectorWithIndex<T, FiniteEnumerable<TResult> | null | undefined>):LinqEnumerable<TResult>;
+		collectionSelector:SelectorWithIndex<T, FiniteIEnumerable<TResult> | null | undefined>):LinqEnumerable<TResult>;
 
 	selectMany<TElement, TResult>(
-		collectionSelector:SelectorWithIndex<T, FiniteEnumerable<TElement> | null | undefined>,
+		collectionSelector:SelectorWithIndex<T, FiniteIEnumerable<TElement> | null | undefined>,
 		resultSelector:(collection:T, element:TElement) => TResult):LinqEnumerable<TResult>;
 
 	selectMany<TResult>(
-		collectionSelector:SelectorWithIndex<T, FiniteEnumerable<any> | null | undefined>,
+		collectionSelector:SelectorWithIndex<T, FiniteIEnumerable<any> | null | undefined>,
 		resultSelector?:(collection:T, element:any) => TResult):LinqEnumerable<TResult>
 	{
 		return this._selectMany(collectionSelector, resultSelector);
@@ -2264,7 +2265,7 @@ export class LinqEnumerable<T>
 
 
 	intersect(
-		second:FiniteEnumerable<T>,
+		second:FiniteIEnumerable<T>,
 		compareSelector?:HashSelector<T>):this
 	{
 		const _ = this;
@@ -2326,7 +2327,7 @@ export class LinqEnumerable<T>
 	}
 
 	sequenceEqual(
-		second:FiniteEnumerable<T>,
+		second:FiniteIEnumerable<T>,
 		equalityComparer:EqualityComparison<T> = areEqualValues):boolean
 	{
 		this.throwIfDisposed();
@@ -2848,10 +2849,10 @@ export interface NotEmptyEnumerable<T>
 // Provided for type guarding.
 export class FiniteLinqEnumerable<T>
 	extends LinqEnumerable<T>
-	implements FiniteEnumerable<T>
+	implements FiniteIEnumerable<T>
 {
 	constructor(
-		enumeratorFactory:() => FiniteEnumerator<T>,
+		enumeratorFactory:() => FiniteIEnumerator<T>,
 		finalizer?:Closure | null)
 	{
 		super(enumeratorFactory, finalizer, false);
@@ -2866,7 +2867,7 @@ export class FiniteLinqEnumerable<T>
 }
 
 export interface IOrderedEnumerable<T>
-	extends FiniteEnumerable<T>
+	extends FiniteIEnumerable<T>
 {
 	thenBy(keySelector:(value:T) => any):IOrderedEnumerable<T>;
 
@@ -3070,7 +3071,7 @@ export class ArrayEnumerable<T>
 	}
 
 	sequenceEqual(
-		second:FiniteEnumerable<T>,
+		second:FiniteIEnumerable<T>,
 		equalityComparer:EqualityComparison<T> = areEqualValues):boolean
 	{
 		if(Type.isArrayLike(second))
@@ -3138,7 +3139,7 @@ export class Lookup<TKey, TElement>
 	{
 
 		const _ = this;
-		let enumerator:IEnumerator<IKeyValuePair<TKey, TElement[]>>;
+		let enumerator:IEnumerator<KeyValuePair<TKey, TElement[]>>;
 
 		return new EnumeratorBase<Grouping<TKey, TElement>>(
 			() => {
@@ -3149,7 +3150,7 @@ export class Lookup<TKey, TElement>
 				if(!enumerator.moveNext())
 					return false;
 
-				let current = <IKeyValuePair<TKey, TElement[]>>enumerator.current;
+				let current = <KeyValuePair<TKey, TElement[]>>enumerator.current;
 				return yielder.yieldReturn(new Grouping<TKey, TElement>(current.key, current.value));
 			},
 			() => {
@@ -3163,7 +3164,7 @@ export class Lookup<TKey, TElement>
 
 
 export class OrderedEnumerable<T, TOrderBy extends Comparable>
-	extends FiniteEnumerable<T>
+	extends FiniteIEnumerable<T>
 {
 
 	constructor(
@@ -3319,18 +3320,18 @@ function throwIfDisposed(disposed:boolean):true | never
 export function Enumerable<T>(
 	source:InfiniteValueFactory<T>):EndlessLinqEnumerable<T>
 export function Enumerable<T>(
-	source:FiniteEnumerable<T>,
-	...additional:Array<FiniteEnumerable<T>>):LinqEnumerable<T>
+	source:FiniteIEnumerable<T>,
+	...additional:Array<FiniteIEnumerable<T>>):LinqEnumerable<T>
 export function Enumerable<T>(
-	source:FiniteEnumerable<T> | InfiniteValueFactory<T>,
-	...additional:Array<FiniteEnumerable<T>>):LinqEnumerable<T>
+	source:FiniteIEnumerable<T> | InfiniteValueFactory<T>,
+	...additional:Array<FiniteIEnumerable<T>>):LinqEnumerable<T>
 {
 	return enumerableFrom(source, additional);
 }
 
 function enumerableFrom<T>(
-	source:FiniteEnumerable<T> | InfiniteValueFactory<T>,
-	additional?:Array<FiniteEnumerable<T>>):LinqEnumerable<T>
+	source:FiniteIEnumerable<T> | InfiniteValueFactory<T>,
+	additional?:Array<FiniteIEnumerable<T>>):LinqEnumerable<T>
 {
 	let e = Enumerable.fromAny<T>(<any>source);
 	if(!e) throw new UnsupportedEnumerableException();
@@ -3349,11 +3350,11 @@ export module Enumerable
 	 */
 	export function from<T>(source:InfiniteValueFactory<T>):EndlessLinqEnumerable<T>
 	export function from<T>(
-		source:FiniteEnumerable<T>,
-		...additional:Array<FiniteEnumerable<T>>):LinqEnumerable<T>
+		source:FiniteIEnumerable<T>,
+		...additional:Array<FiniteIEnumerable<T>>):LinqEnumerable<T>
 	export function from<T>(
-		source:FiniteEnumerable<T> | InfiniteValueFactory<T>,
-		...additional:Array<FiniteEnumerable<T>>):LinqEnumerable<T>
+		source:FiniteIEnumerable<T> | InfiniteValueFactory<T>,
+		...additional:Array<FiniteIEnumerable<T>>):LinqEnumerable<T>
 	{
 		return enumerableFrom(source, additional);
 	}
@@ -3362,13 +3363,13 @@ export module Enumerable
 		source:InfiniteValueFactory<T>):EndlessLinqEnumerable<T>
 
 	export function fromAny<T>(
-		source:FiniteEnumerable<T>):LinqEnumerable<T>
+		source:FiniteIEnumerable<T>):LinqEnumerable<T>
 
 	export function fromAny(
 		source:any):LinqEnumerable<any> | undefined
 
 	export function fromAny<T>(
-		source:FiniteEnumerable<T>,
+		source:FiniteIEnumerable<T>,
 		defaultEnumerable:LinqEnumerable<T>):LinqEnumerable<T>
 
 	export function fromAny<T>(
@@ -3398,13 +3399,13 @@ export module Enumerable
 		else if(Type.isFunction(source))
 		{
 			return new EndlessLinqEnumerable<T>(
-				() => new InfiniteEnumerator<T>(source));
+				() => new EndlessEnumerator<T>(source));
 		}
 
 		return defaultEnumerable;
 	}
 
-	export function fromThese<T>(sources:FiniteEnumerable<T>[]):LinqEnumerable<T>
+	export function fromThese<T>(sources:FiniteIEnumerable<T>[]):LinqEnumerable<T>
 	{
 		switch(sources ? sources.length : 0)
 		{
@@ -3418,7 +3419,7 @@ export module Enumerable
 		}
 	}
 
-	export function fromOrEmpty<T>(source:FiniteEnumerable<T>):LinqEnumerable<T>
+	export function fromOrEmpty<T>(source:FiniteIEnumerable<T>):LinqEnumerable<T>
 	{
 		return fromAny(source) || empty<T>();
 	}
@@ -3428,7 +3429,7 @@ export module Enumerable
 	 * @param source
 	 * @returns {any}
 	 */
-	export function toArray<T>(source:FiniteEnumerable<T>):T[]
+	export function toArray<T>(source:FiniteIEnumerable<T>):T[]
 	{
 		// noinspection SuspiciousInstanceOfGuard
 		if(source instanceof LinqEnumerable)
@@ -3616,9 +3617,9 @@ export module Enumerable
 	/**
 	 * Creates an enumerable of one element.
 	 * @param element
-	 * @returns {FiniteEnumerable<T>}
+	 * @returns {FiniteIEnumerable<T>}
 	 */
-	export function make<T>(element:T):FiniteEnumerable<T>
+	export function make<T>(element:T):FiniteIEnumerable<T>
 	{
 		return repeat<T>(element, 1);
 	}
@@ -3628,7 +3629,7 @@ export module Enumerable
 	export function range(
 		start:number,
 		count:number,
-		step:number = 1):FiniteEnumerable<number>
+		step:number = 1):FiniteIEnumerable<number>
 	{
 		if(!isFinite(start))
 			throw new ArgumentOutOfRangeException("start", start, "Must be a finite number.");
@@ -3644,7 +3645,7 @@ export module Enumerable
 
 		Integer.assert(count, "count");
 
-		return new FiniteEnumerable<number>(
+		return new FiniteIEnumerable<number>(
 			() => {
 				let value:number;
 				let c:number = count; // Force integer evaluation.
@@ -3675,7 +3676,7 @@ export module Enumerable
 	export function rangeDown(
 		start:number,
 		count:number,
-		step:number = 1):FiniteEnumerable<number>
+		step:number = 1):FiniteIEnumerable<number>
 	{
 		step = Math.abs(step)* -1;
 
@@ -3727,7 +3728,7 @@ export module Enumerable
 	export function rangeTo(
 		start:number,
 		to:number,
-		step:number = 1):FiniteEnumerable<number>
+		step:number = 1):FiniteIEnumerable<number>
 	{
 		if(isNaN(to) || !isFinite(to))
 			throw new ArgumentOutOfRangeException("to", to, "Must be a finite number.");
@@ -3738,7 +3739,7 @@ export module Enumerable
 // This way we adjust for the delta from start and to so the user can say +/- step and it will work as expected.
 		step = Math.abs(step);
 
-		return new FiniteEnumerable<number>(
+		return new FiniteIEnumerable<number>(
 			() => {
 				let value:number;
 
@@ -3767,7 +3768,7 @@ export module Enumerable
 
 	export function matches(
 		input:string, pattern:any,
-		flags:string = ""):FiniteEnumerable<RegExpExecArray>
+		flags:string = ""):FiniteIEnumerable<RegExpExecArray>
 	{
 		if(input==null)
 			throw new ArgumentNullException("input");
@@ -3784,7 +3785,7 @@ export module Enumerable
 
 		if(flags.indexOf("g")=== -1) flags += "g";
 
-		return new FiniteEnumerable<RegExpExecArray>(
+		return new FiniteIEnumerable<RegExpExecArray>(
 			() => {
 				let regex:RegExp;
 				return new EnumeratorBase<RegExpExecArray>(
@@ -3805,9 +3806,9 @@ export module Enumerable
 	}
 
 	export function generate<T>(factory:() => T):EndlessLinqEnumerable<T>;
-	export function generate<T>(factory:() => T, count:number):FiniteEnumerable<T>;
+	export function generate<T>(factory:() => T, count:number):FiniteIEnumerable<T>;
 	export function generate<T>(factory:(index:number) => T):EndlessLinqEnumerable<T>;
-	export function generate<T>(factory:(index:number) => T, count:number):FiniteEnumerable<T>;
+	export function generate<T>(factory:(index:number) => T, count:number):FiniteIEnumerable<T>;
 	export function generate<T>(
 		factory:Function,
 		count:number = Infinity):EndlessLinqEnumerable<T>
@@ -3819,7 +3820,7 @@ export module Enumerable
 			return Enumerable.empty<T>();
 
 		return isFinite(count) && Integer.assert(count, "count")
-			? new FiniteEnumerable<T>(
+			? new FiniteIEnumerable<T>(
 				() => {
 					let c:number = count;
 					let index:number = 0;
@@ -3916,17 +3917,17 @@ export module Enumerable
 	}
 
 	export function forEach<T>(
-		e:FiniteEnumerable<T>,
+		e:FiniteIEnumerable<T>,
 		action:ActionWithIndex<T>,
 		max?:number):number
 
 	export function forEach<T>(
-		e:FiniteEnumerable<T>,
+		e:FiniteIEnumerable<T>,
 		action:PredicateWithIndex<T>,
 		max?:number):number
 
 	export function forEach<T>(
-		enumerable:FiniteEnumerable<T>,
+		enumerable:FiniteIEnumerable<T>,
 		action:ActionWithIndex<T> | PredicateWithIndex<T>,
 		max:number = Infinity):number
 	{
@@ -3936,7 +3937,7 @@ export module Enumerable
 	}
 
 	export function map<T, TResult>(
-		enumerable:FiniteEnumerable<T>,
+		enumerable:FiniteIEnumerable<T>,
 		selector:SelectorWithIndex<T, TResult>):TResult[]
 	{
 		// Will properly dispose created enumerable.
@@ -3945,7 +3946,7 @@ export module Enumerable
 	}
 
 // Slightly optimized versions for numbers.
-	export function max(values:FiniteEnumerable<number>):number
+	export function max(values:FiniteIEnumerable<number>):number
 	{
 		const v = values
 			.takeUntil(v => v== +Infinity, true)
@@ -3954,7 +3955,7 @@ export module Enumerable
 		return v===VOID0 ? NaN : v;
 	}
 
-	export function min(values:FiniteEnumerable<number>):number
+	export function min(values:FiniteIEnumerable<number>):number
 	{
 		const v = values
 			.takeUntil(v => v== -Infinity, true)
@@ -3970,7 +3971,7 @@ export module Enumerable
 	 * @returns {Enumerable<T>}
 	 */
 	export function weave<T>(
-		enumerables:FiniteEnumerable<FiniteEnumerable<T>>):LinqEnumerable<T>
+		enumerables:FiniteIEnumerable<FiniteIEnumerable<T>>):LinqEnumerable<T>
 	{
 		if(!enumerables)
 			throw new ArgumentNullException('enumerables');
@@ -3979,7 +3980,7 @@ export module Enumerable
 		return new LinqEnumerable<T>(
 			() => {
 				let queue:Queue<IEnumerator<T>>;
-				let mainEnumerator:IEnumerator<FiniteEnumerable<T>> | null;
+				let mainEnumerator:IEnumerator<FiniteIEnumerable<T>> | null;
 				let index:number;
 
 				return new EnumeratorBase<T>(

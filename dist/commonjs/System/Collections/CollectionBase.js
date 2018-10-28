@@ -28,6 +28,11 @@ var CollectionBase = /** @class */ (function (_super) {
         _this._version = 0;
         return _this;
     }
+    Object.defineProperty(CollectionBase.prototype, "isEndless", {
+        get: function () { return false; },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(CollectionBase.prototype, "count", {
         get: function () {
             return this.getCount();

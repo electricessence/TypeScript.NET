@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {IMap} from "../../IMap";
+import IMap from "../../IMap";
 
 /**
  * Takes a target object and applies all source values to it.

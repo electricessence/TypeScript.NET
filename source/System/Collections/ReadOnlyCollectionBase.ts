@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {CollectionBase} from "./CollectionBase";
-import {IEnumerator} from "./Enumeration/IEnumerator";
+import CollectionBase from "./CollectionBase";
+import IEnumerator from "./Enumeration/IEnumerator";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

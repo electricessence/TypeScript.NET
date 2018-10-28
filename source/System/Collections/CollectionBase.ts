@@ -5,18 +5,18 @@
 
 import {forEach} from "./Enumeration/Enumerator";
 import {areEqual} from "../Compare";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
-import {DisposableBase} from "../Disposable/DisposableBase";
-import {ICollection} from "./ICollection";
-import {IEnumerator} from "./Enumeration/IEnumerator";
-import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import DisposableBase from "../Disposable/DisposableBase";
+import ICollection from "./ICollection";
+import {FiniteIEnumerator} from "./Enumeration/IEnumerator";
+import IEnumerateEach from "./Enumeration/IEnumerateEach";
 import {Action, ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
-import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
-import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
+import ArrayLikeWritable from "./Array/ArrayLikeWritable";
 import {LinqEnumerable} from "../../System.Linq/Linq";
 import {isCommonJS, isNodeJS, isRequireJS} from "../Environment";
 import __extendsImport from "../../extends";
+import FiniteEnumerableOrEnumerator from "./Enumeration/FiniteEnumerableOrEnumerator";
 //noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -33,7 +33,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 {
 
 	protected constructor(
-		source?:FiniteEnumerableOrArrayLike<T>|IEnumerator<T>,
+		source?:FiniteEnumerableOrEnumerator<T>,
 		protected _equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super(NAME);
@@ -43,6 +43,8 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		this._version = 0;
 	}
 
+	// noinspection JSMethodCanBeStatic
+	get isEndless():false { return false; }
 
 	protected abstract getCount():number;
 
@@ -56,7 +58,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		return false;
 	}
 
-	//noinspection JSUnusedGlobalSymbols
+
 	get isReadOnly():boolean
 	{
 		return this.getIsReadOnly();
@@ -114,7 +116,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	protected _incrementModified():void { this._modifiedCount++; }
 
-	//noinspection JSUnusedGlobalSymbols
+
 	get isUpdating():boolean { return this._updateRecursion!=0; }
 
 	/**
@@ -228,12 +230,12 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		this._version = 0;
 		this._updateRecursion = 0;
 		this._modifiedCount = 0;
-		const l = this._linq;
+		const l:any = this._linq; // TODO: undo any
 		this._linq = void 0;
 		if(l) l.dispose();
 	}
 
-	protected _importEntries(entries:FiniteEnumerableOrArrayLike<T>|IEnumerator<T>|null|undefined):number
+	protected _importEntries(entries:FiniteEnumerableOrEnumerator<T>|null|undefined):number
 	{
 		let added = 0;
 		if(entries)
@@ -262,7 +264,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	 * @param entries
 	 * @returns {number}
 	 */
-	importEntries(entries:FiniteEnumerableOrArrayLike<T>|IEnumerator<T>):number
+	importEntries(entries:FiniteEnumerableOrEnumerator<T>):number
 	{
 		const _ = this;
 		if(!entries) return 0;
@@ -284,7 +286,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	/**
 	 * Returns a enumerator for this collection.
 	 */
-	abstract getEnumerator():IEnumerator<T>;
+	abstract getEnumerator():FiniteIEnumerator<T>;
 
 	/**
 	 * Returns an array filtered by the provided predicate.
@@ -449,6 +451,7 @@ You can also preload the Linq module as a dependency or use .linqAsync(callback)
 		return e;
 	}
 
+	// noinspection JSUnusedGlobalSymbols
 	/**
 	 * .linqAsync() is for use with deferred loading.
 	 * Ensures an instance of the Linq extensions is available and then passes it to the callback.
@@ -492,3 +495,5 @@ You can also preload the Linq module as a dependency or use .linqAsync(callback)
 		return e;
 	}
 }
+
+export default CollectionBase

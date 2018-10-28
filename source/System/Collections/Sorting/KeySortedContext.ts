@@ -4,12 +4,12 @@
  */
 
 import * as Values from "../../Compare";
-import {SortContext} from "./SortContext";
-import {Functions} from "../../Functions";
+import SortContext from "./SortContext";
+import Functions from "../../Functions";
 import {Comparison, Selector} from "../../FunctionTypes";
 import {Comparable} from "../../IComparable";
-import {IComparer} from "../../IComparer";
-import {Order} from "./Order";
+import IComparer from "../../IComparer";
+import Order from "./Order";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

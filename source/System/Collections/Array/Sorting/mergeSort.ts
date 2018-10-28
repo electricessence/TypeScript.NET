@@ -5,10 +5,10 @@
  * https://en.wikipedia.org/wiki/Merge_sort
  */
 
-import {Primitive} from "../../../Primitive";
-import {ArgumentNullException} from "../../../Exceptions/ArgumentNullException";
+import Primitive from "../../../Primitive";
+import ArgumentNullException from "../../../Exceptions/ArgumentNullException";
 import {initialize} from "../Utility";
-import {ArrayLikeWritable} from "../ArrayLikeWritable";
+import ArrayLikeWritable from "../ArrayLikeWritable";
 
 /**
  * Merge internalSort O(n log (n))

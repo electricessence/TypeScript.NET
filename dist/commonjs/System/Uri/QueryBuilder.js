@@ -33,7 +33,7 @@ var QueryBuilder = /** @class */ (function (_super) {
         if (Types_1.Type.isString(query)) {
             this.importFromString(query, decodeValues);
         }
-        else if (Enumerator_1.isEnumerableOrArrayLike(query)) {
+        else if (Enumerator_1.isFiniteEnumerableOrArrayLike(query)) {
             this.importEntries(query);
         }
         else {

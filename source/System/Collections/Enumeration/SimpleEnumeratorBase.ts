@@ -4,16 +4,17 @@
  */
 
 import {IIteratorResult} from "./IIterator";
-import {IteratorResult} from "./IteratorResult";
-import {IEnumerator} from "./IEnumerator";
+import IteratorResult from "./IteratorResult";
+import IEnumerator from "./IEnumerator";
 import {Action} from "../../FunctionTypes";
 
 const VOID0:undefined = void 0;
 
-export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
+export abstract class SimpleEnumeratorBase<T>
+	implements IEnumerator<T>
 {
 
-	protected _current:T|undefined;
+	protected _current:T | undefined;
 	// @ts-ignore
 	protected _index:number;
 
@@ -22,21 +23,24 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 		this.reset();
 	}
 
-	get current():T|undefined
+	get current():T | undefined
 	{
 		return this._current;
 	}
 
 	protected abstract _canMoveNext():boolean;
 
-	get canMoveNext():boolean {
+	get canMoveNext():boolean
+	{
 		return this._canMoveNext();
 	}
 
 	abstract moveNext():boolean;
 
-	tryMoveNext(out:Action<T>):boolean {
-		if(this.moveNext()) {
+	tryMoveNext(out:Action<T>):boolean
+	{
+		if(this.moveNext())
+		{
 			out(<T>this._current);
 			return true;
 		}
@@ -49,7 +53,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 		return ++this._index;
 	}
 
-	nextValue():T|undefined
+	nextValue():T | undefined
 	{
 		this.moveNext();
 		return this._current;
@@ -62,7 +66,8 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 			: IteratorResult.Done;
 	}
 
-	end():void {
+	end():void
+	{
 		this.dispose();
 	}
 
@@ -98,10 +103,10 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 		return this._canMoveNext();
 	}
 
-	get isEndless():boolean|undefined
+	get isEndless():boolean | undefined
 	{
 		return this.getIsEndless();
 	}
 }
 
-export default SimpleEnumerableBase;
+export default SimpleEnumeratorBase;

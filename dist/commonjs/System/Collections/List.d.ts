@@ -7,17 +7,17 @@ import { ActionWithIndex, EqualityComparison, PredicateWithIndex } from "../Func
 import { IEnumerator } from "./Enumeration/IEnumerator";
 import { IList } from "./IList";
 import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
-import { IEnumerableOrArray } from "./IEnumerableOrArray";
+import { FiniteEnumerableOrArrayLike } from "./IEnumerableOrArray";
 import { ArrayLikeWritable } from "./Array/ArrayLikeWritable";
 export declare class List<T> extends CollectionBase<T> implements IList<T>, IEnumerateEach<T> {
     protected readonly _source: T[];
-    constructor(source?: IEnumerableOrArray<T>, equalityComparer?: EqualityComparison<T>);
+    constructor(source?: FiniteEnumerableOrArrayLike<T>, equalityComparer?: EqualityComparison<T>);
     protected _onDispose(): void;
     protected getCount(): number;
     protected _addInternal(entry: T): boolean;
     protected _removeInternal(entry: T, max?: number): number;
     protected _clearInternal(): number;
-    protected _importEntries(entries: IEnumerableOrArray<T> | null | undefined): number;
+    protected _importEntries(entries: FiniteEnumerableOrArrayLike<T> | null | undefined): number;
     get(index: number): T;
     set(index: number, value: T): boolean;
     indexOf(item: T): number;

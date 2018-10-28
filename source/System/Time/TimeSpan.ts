@@ -5,14 +5,14 @@
  */
 
 import {Type} from "../Types";
-import {TimeUnit} from "./TimeUnit";
-import {ClockTime} from "./ClockTime";
-import {TimeQuantity} from "./TimeQuantity";
+import TimeUnit from "./TimeUnit";
+import ClockTime from "./ClockTime";
+import TimeQuantity from "./TimeQuantity";
 import {Milliseconds, Ticks} from "./HowMany";
-import {ITimeMeasurement} from "./ITimeMeasurement";
-import {ITimeQuantity} from "./ITimeQuantity";
+import ITimeMeasurement from "./ITimeMeasurement";
+import ITimeQuantity from "./ITimeQuantity";
 import __extendsImport from "../../extends";
-import {Lazy} from "../Lazy";
+import Lazy from "../Lazy";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 

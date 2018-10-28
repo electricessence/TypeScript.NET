@@ -4,9 +4,9 @@
  */
 
 import {Type} from "../Types";
-import {ITimeStamp} from "./ITimeStamp";
+import ITimeStamp from "./ITimeStamp";
 import {Ticks} from "./HowMany";
-import {IDateTime} from "./IDateTime";
+import IDateTime from "./IDateTime";
 import {Gregorian} from "./Calendars";
 
 /**

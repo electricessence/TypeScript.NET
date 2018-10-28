@@ -29,15 +29,15 @@ var StringBuilder = /** @class */ (function () {
     }
     StringBuilder.prototype.appendSingle = function (item) {
         if (item != null) {
-            var _ = this;
-            _._latest = null;
+            var _1 = this;
+            _1._latest = null;
             switch (typeof item) {
                 case Types_1.Type.OBJECT:
                 case Types_1.Type.FUNCTION:
                     item = item.toString();
                     break;
             }
-            _._partArray.push(item); // Other primitive types can keep their format since a number or boolean is a smaller footprint than a string.
+            _1._partArray.push(item); // Other primitive types can keep their format since a number or boolean is a smaller footprint than a string.
         }
     };
     StringBuilder.prototype.appendThese = function (items) {
@@ -75,9 +75,12 @@ var StringBuilder = /** @class */ (function () {
         /** /// These methods can only efficiently be added if not using a single array.
          insert(index: number, value: string, count: number = 1): StringBuilder
          {
+    
         }
+    
          remove(startIndex:number, length:number): StringBuilder
          {
+    
         }
          /**/
         get: function () {

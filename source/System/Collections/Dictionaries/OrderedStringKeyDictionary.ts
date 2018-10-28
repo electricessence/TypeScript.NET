@@ -3,12 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {StringKeyDictionary} from "./StringKeyDictionary";
-import {ArgumentOutOfRangeException} from "../../Exceptions/ArgumentOutOfRangeException";
+import StringKeyDictionary from "./StringKeyDictionary";
+import ArgumentOutOfRangeException from "../../Exceptions/ArgumentOutOfRangeException";
 import {IOrderedDictionary} from "./IDictionary";
 import {remove} from "../Array/Utility";
 import __extendsImport from "../../../extends";
-import {Integer} from "../../Integer";
+import Integer from "../../Integer";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 

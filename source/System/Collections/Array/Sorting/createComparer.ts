@@ -5,10 +5,10 @@
 
 import {Type} from "../../../Types";
 import {compare} from "../../../Compare";
-import {Primitive} from "../../../Primitive";
+import Primitive from "../../../Primitive";
 import {Comparison, Selector} from "../../../FunctionTypes";
-import {CompareResult} from "../../../CompareResult";
-import {Order} from "../../Sorting/Order";
+import CompareResult from "../../../CompareResult";
+import Order from "../../Sorting/Order";
 
 function ensureArray<T>(value:T|T[]):T[]
 {

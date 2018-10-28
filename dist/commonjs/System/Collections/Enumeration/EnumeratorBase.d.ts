@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { DisposableBase } from "../../Disposable/DisposableBase";
-import { IEnumerator } from "./IEnumerator";
+import { EndlessEnumerator, FiniteEnumerator, IEnumerator } from "./IEnumerator";
 import { IIteratorResult } from "./IIterator";
 import { IYield } from "./IYield";
 import { Action, Closure } from "../../FunctionTypes";
@@ -50,5 +50,13 @@ export declare class EnumeratorBase<T> extends DisposableBase implements IEnumer
     'return'<TReturn>(value: TReturn): IIteratorResult<TReturn>;
     private _ensureDisposeState;
     protected _onDispose(): void;
+}
+export declare class EndlessEnumeratorBase<T> extends EnumeratorBase<T> implements EndlessEnumerator<T> {
+    constructor(initializer: Closure | null, tryGetNext: (yielder: IYield<T>) => boolean, disposer?: Closure | null);
+    readonly isEndless: true;
+}
+export declare class FiniteEnumeratorBase<T> extends EnumeratorBase<T> implements FiniteEnumerator<T> {
+    constructor(initializer: Closure | null, tryGetNext: (yielder: IYield<T>) => boolean, disposer?: Closure | null);
+    readonly isEndless: false;
 }
 export default EnumeratorBase;

@@ -10,6 +10,7 @@ var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeExc
 var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
 var extends_1 = require("../../extends");
 var Integer_1 = require("../Integer");
+var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var LazyList = /** @class */ (function (_super) {
@@ -32,7 +33,10 @@ var LazyList = /** @class */ (function (_super) {
             c.length = 0;
     };
     LazyList.prototype._getCount = function () {
-        this.finish();
+        var e = this._enumerator;
+        if (e && e.isEndless)
+            throw new InvalidOperationException_1.default("Cannot count an endless enumerable.");
+        while (this.getNext()) { }
         var c = this._cached;
         return c ? c.length : 0;
     };
@@ -87,9 +91,6 @@ var LazyList = /** @class */ (function (_super) {
             this._enumerator = null;
         }
         return false;
-    };
-    LazyList.prototype.finish = function () {
-        while (this.getNext()) { }
     };
     return LazyList;
 }(ReadOnlyCollectionBase_1.ReadOnlyCollectionBase));

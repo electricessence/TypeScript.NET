@@ -18,5 +18,4 @@ export declare class LazyList<T> extends ReadOnlyCollectionBase<T> implements IR
     indexOf(item: T): number;
     contains(item: T): boolean;
     private getNext;
-    private finish;
 }

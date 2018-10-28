@@ -4,13 +4,13 @@
  */
 import { SetBase } from "./SetBase";
 import { ILinkedNodeWithValue } from "./ILinkedListNode";
-import { IEnumerableOrArray } from "./IEnumerableOrArray";
+import { FiniteEnumerableOrArrayLike } from "./IEnumerableOrArray";
 import { Selector } from "../FunctionTypes";
 export declare class HashSet<T> extends SetBase<T> {
     private readonly _keyGenerator;
     constructor(keyGenerator: Selector<T, string | number | symbol>);
-    constructor(source: IEnumerableOrArray<T> | undefined, keyGenerator: Selector<T, string | number | symbol>);
-    protected newUsing(source?: IEnumerableOrArray<T>): HashSet<T>;
+    constructor(source: FiniteEnumerableOrArrayLike<T> | undefined, keyGenerator: Selector<T, string | number | symbol>);
+    protected newUsing(source?: FiniteEnumerableOrArrayLike<T>): HashSet<T>;
     private _registry;
     protected _addInternal(item: T): boolean;
     protected _clearInternal(): number;

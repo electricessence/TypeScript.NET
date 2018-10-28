@@ -4,13 +4,13 @@
  */
 
 import {areEqual, compare} from "../Compare";
-import {TimeUnit} from "./TimeUnit";
+import TimeUnit from "./TimeUnit";
 import {Milliseconds, Ticks} from "./HowMany";
-import {IEquatable} from "../IEquatable";
-import {IComparable} from "../IComparable";
-import {ITimeQuantity} from "./ITimeQuantity";
-import {ITimeMeasurement} from "./ITimeMeasurement";
-import {Lazy} from "../Lazy";
+import IEquatable from "../IEquatable";
+import IComparable from "../IComparable";
+import ITimeQuantity from "./ITimeQuantity";
+import ITimeMeasurement from "./ITimeMeasurement";
+import Lazy from "../Lazy";
 
 /**
  * This class provides a simple means for storing and calculating time quantities.

@@ -3,7 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {SimpleEnumerableBase} from "./SimpleEnumerableBase";
+import SimpleEnumeratorBase from "./SimpleEnumeratorBase";
+import {EndlessIEnumerator} from "./IEnumerator";
+
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -13,14 +15,16 @@ const __extends = __extendsImport;
  */
 export interface InfiniteValueFactory<T>
 {
-	(previous:T|undefined, index:number):T;
+	(previous:T | undefined, index:number):T;
 }
 
 /**
  * A simplified stripped down enumerator that until disposed will infinitely return the provided factory.
  * This is analogous to a 'generator' and has a compatible interface.
  */
-export class InfiniteEnumerator<T> extends SimpleEnumerableBase<T>
+export class EndlessEnumerator<T>
+	extends SimpleEnumeratorBase<T>
+	implements EndlessIEnumerator<T>
 {
 	/**
 	 * See InfiniteValueFactory
@@ -40,7 +44,8 @@ export class InfiniteEnumerator<T> extends SimpleEnumerableBase<T>
 	{
 		const _ = this;
 		const f = _._factory;
-		if(f) {
+		if(f)
+		{
 			_._current = f(_._current, _.incrementIndex());
 			return true;
 		}
@@ -53,6 +58,8 @@ export class InfiniteEnumerator<T> extends SimpleEnumerableBase<T>
 		(<any>this)._factory = null;
 	}
 
+	get isEndless():true { return true; }
+
 }
 
-export default InfiniteEnumerator;
+export default EndlessEnumerator;

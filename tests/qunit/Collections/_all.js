@@ -18,7 +18,7 @@
         LinkedList_1.default();
         Queue_1.default();
         OrderedStringKeyDictionary_1.default();
-        var s = new Set_1.Set([1, 2, 3]);
+        var s = new Set_1.default([1, 2, 3]);
         Linq_1.Enumerable([1, 2, 3]);
         if (s.linq.any(function (v) { return v == 1; }))
             console.log(".linq preload working");

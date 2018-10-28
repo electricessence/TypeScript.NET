@@ -5,16 +5,16 @@
  */
 
 import {areEqual} from "../Compare";
-import {LinkedNodeList} from "./LinkedNodeList";
-import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {CollectionBase} from "./CollectionBase";
+import LinkedNodeList from "./LinkedNodeList";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import CollectionBase from "./CollectionBase";
 import {ILinkedListNode, ILinkedNode, INodeWithValue} from "./ILinkedListNode";
-import {IEnumerator} from "./Enumeration/IEnumerator";
+import {FiniteIEnumerator} from "./Enumeration/IEnumerator";
 import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
-import {ILinkedList} from "./ILinkedList";
-import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
-import {IDisposable} from "../Disposable/IDisposable";
+import ILinkedList from "./ILinkedList";
+import IDisposable from "../Disposable/IDisposable";
+import FiniteEnumerableOrArrayLike from "./FiniteEnumerableOrArrayLike";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -185,7 +185,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 	// #endregion
 
 	// #region IEnumerable<T>
-	getEnumerator():IEnumerator<T>
+	getEnumerator():FiniteIEnumerator<T>
 	{
 		this.throwIfDisposed();
 		return LinkedNodeList.valueEnumeratorFrom<T>(<any>this._listInternal);

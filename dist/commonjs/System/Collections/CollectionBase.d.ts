@@ -4,15 +4,16 @@
  */
 import { DisposableBase } from "../Disposable/DisposableBase";
 import { ICollection } from "./ICollection";
-import { IEnumerator } from "./Enumeration/IEnumerator";
+import { FiniteEnumerator } from "./Enumeration/IEnumerator";
 import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
 import { Action, ActionWithIndex, EqualityComparison, PredicateWithIndex } from "../FunctionTypes";
-import { IEnumerableOrArray } from "./IEnumerableOrArray";
 import { ArrayLikeWritable } from "./Array/ArrayLikeWritable";
 import { LinqEnumerable } from "../../System.Linq/Linq";
+import FiniteEnumerableOrEnumerator from "./Enumeration/FiniteEnumerableOrEnumerator";
 export declare abstract class CollectionBase<T> extends DisposableBase implements ICollection<T>, IEnumerateEach<T> {
     protected _equalityComparer: EqualityComparison<T>;
-    protected constructor(source?: IEnumerableOrArray<T> | IEnumerator<T>, _equalityComparer?: EqualityComparison<T>);
+    protected constructor(source?: FiniteEnumerableOrEnumerator<T>, _equalityComparer?: EqualityComparison<T>);
+    readonly isEndless: false;
     protected abstract getCount(): number;
     readonly count: number;
     protected getIsReadOnly(): boolean;
@@ -55,17 +56,17 @@ export declare abstract class CollectionBase<T> extends DisposableBase implement
      */
     clear(): number;
     protected _onDispose(): void;
-    protected _importEntries(entries: IEnumerableOrArray<T> | IEnumerator<T> | null | undefined): number;
+    protected _importEntries(entries: FiniteEnumerableOrEnumerator<T> | null | undefined): number;
     /**
      * Safely imports any array enumerator, or enumerable.
      * @param entries
      * @returns {number}
      */
-    importEntries(entries: IEnumerableOrArray<T> | IEnumerator<T>): number;
+    importEntries(entries: FiniteEnumerableOrEnumerator<T>): number;
     /**
      * Returns a enumerator for this collection.
      */
-    abstract getEnumerator(): IEnumerator<T>;
+    abstract getEnumerator(): FiniteEnumerator<T>;
     /**
      * Returns an array filtered by the provided predicate.
      * Provided for similarity to JS Array.

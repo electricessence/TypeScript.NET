@@ -3,19 +3,15 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {QueryParam} from "../../Uri/QueryParam";
-import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
-import {DisposableBase} from "../../Disposable/DisposableBase";
-import {HttpMethodValue} from "./HttpMethodValue";
-import {HttpMethod} from "./HttpMethod";
-import {Uri} from "../../Uri/Uri";
-import {IUri} from "../../Uri/IUri";
-import {IHttpRequestAdapter} from "./IHttpRequestAdapter";
+import QueryParam from "../../Uri/QueryParam";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import DisposableBase from "../../Disposable/DisposableBase";
+import HttpMethodValue from "./HttpMethodValue";
+import HttpMethod from "./HttpMethod";
+import Uri from "../../Uri/Uri";
+import IUri from "../../Uri/IUri";
+import IHttpRequestAdapter from "./IHttpRequestAdapter";
 import __extendsImport from "../../../extends";
-import GET = HttpMethod.GET;
-import PUT = HttpMethod.PUT;
-import POST = HttpMethod.POST;
-import DELETE = HttpMethod.DELETE;
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 const NAME = 'HttpRequestFactory';
