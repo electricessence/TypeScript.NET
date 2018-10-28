@@ -5,6 +5,6 @@
 
 import {FiniteIEnumerable} from "./Enumeration/IEnumerable";
 
-export declare type FiniteEnumerableOrArrayLike<T> = FiniteIEnumerable<T> | ArrayLike<T>;
+declare type FiniteEnumerableOrArrayLike<T> = FiniteIEnumerable<T> | ArrayLike<T>;
 
 export default FiniteEnumerableOrArrayLike;

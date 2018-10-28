@@ -183,7 +183,7 @@ export function parseToMap(
  * @param query
  * @param deserialize Default is true.
  * @param decodeValues Default is true.
- * @returns {IKeyValuePair<string, Primitive>[]}
+ * @returns {StringKeyValuePair<string, Primitive>[]}
  */
 export function parseToArray(
 	query:string,

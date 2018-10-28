@@ -14,7 +14,7 @@ import assert = Integer.assert;
  * If you need repeatable seeded random numbers then you'll need a separate utility.
  * Highly recommended: https://github.com/ckknight/random-js which has typings under @types/random-js.
  */
-export module Random
+module Random
 {
 
 	function r(maxExclusive:number = 1):number
@@ -215,6 +215,6 @@ export module Random
 				throw "Cannot select from an empty set.";
 		}
 	}
-
-
 }
+
+export default Random;

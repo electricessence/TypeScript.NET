@@ -17,7 +17,6 @@ import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeExcepti
 import IUri from "./IUri";
 import IMap from "../../IMap";
 import Primitive from "../Primitive";
-import {StringKeyValuePairOrTuple} from "../KeyValuePair";
 import IEquatable from "../IEquatable";
 import {Action} from "../FunctionTypes";
 
@@ -73,7 +72,7 @@ export class Uri implements IUri, IEquatable<IUri>
 
 
 		if(!Type.isString(query))
-			query = encode(<UriComponent.Map|StringKeyValuePairOrTuple<Primitive>[]>query);
+			query = encode(<UriComponent.Map|QueryParam.EnumerableOrArray>query);
 
 		this.query = formatQuery(<string>query) || null;
 		Object.freeze(this.queryParams

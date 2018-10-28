@@ -13,9 +13,10 @@ import CollectionBase from "./CollectionBase";
 import IDisposable from "../Disposable/IDisposable";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
 import {ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
-import IEnumerator from "./Enumeration/IEnumerator";
-import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
+import {FiniteIEnumerator} from "./Enumeration/IEnumerator";
+import FiniteEnumerableOrArrayLike from "./FiniteEnumerableOrArrayLike";
 import ISet from "./ISet";
+
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -222,7 +223,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		return !(!this.getCount() || !this._getNode(item));
 	}
 
-	getEnumerator():IEnumerator<T>
+	getEnumerator():FiniteIEnumerator<T>
 	{
 		const _ = this;
 		_.throwIfDisposed();

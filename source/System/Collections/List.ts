@@ -9,20 +9,20 @@ import {forEach} from "./Enumeration/Enumerator";
 import {Type} from "../Types";
 import CollectionBase from "./CollectionBase";
 import {ActionWithIndex, EqualityComparison, PredicateWithIndex} from "../FunctionTypes";
-import IEnumerator from "./Enumeration/IEnumerator";
+import {FiniteIEnumerator} from "./Enumeration/IEnumerator";
+import FiniteEnumerableOrArrayLike from "./FiniteEnumerableOrArrayLike";
 import IList from "./IList";
-import IEnumerateEach from "./Enumeration/IEnumerateEach";
-import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
 import ArrayLikeWritable from "./Array/ArrayLikeWritable";
+
 import __extendsImport from "../../extends";
-import EnumeratorBase from "./Enumeration/EnumeratorBase";
+import {FiniteEnumeratorBase} from "./Enumeration/EnumeratorBase";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const VOID0:undefined = void 0;
 export class List<T>
 	extends CollectionBase<T>
-	implements IList<T>, IEnumerateEach<T>
+	implements IList<T>
 {
 
 	protected readonly _source:T[];
@@ -157,13 +157,13 @@ export class List<T>
 		return copyTo(this._source, target, 0, index);
 	}
 
-	getEnumerator():IEnumerator<T>
+	getEnumerator():FiniteIEnumerator<T>
 	{
 		const _ = this;
 		_.throwIfDisposed();
 
 		let source:T[], index:number, version:number;
-		return new EnumeratorBase<T>(
+		return new FiniteEnumeratorBase<T>(
 			() =>
 			{
 				source = _._source;

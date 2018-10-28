@@ -5,10 +5,11 @@
 
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import ReadOnlyCollectionBase from "./ReadOnlyCollectionBase";
-import ICollection from "./ICollection";
-import IEnumerator from "./Enumeration/IEnumerator";
+import {FiniteIEnumerator} from "./Enumeration/IEnumerator";
 import {from as enumeratorFrom} from "./Enumeration/Enumerator";
 import {Type} from "../Types";
+import IReadOnlyCollection from "./IReadOnlyCollection";
+
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -16,7 +17,7 @@ const __extends = __extendsImport;
 export default class ReadOnlyCollectionWrapper<T>
 	extends ReadOnlyCollectionBase<T>
 {
-	constructor(collection:ICollection<T> | ArrayLike<T>)
+	constructor(collection:IReadOnlyCollection<T> | ArrayLike<T>)
 	{
 		super();
 
@@ -38,7 +39,7 @@ export default class ReadOnlyCollectionWrapper<T>
 	}
 
 	private __getCount:() => number;
-	private __getEnumerator:() => IEnumerator<T>;
+	private __getEnumerator:() => FiniteIEnumerator<T>;
 
 	protected _getCount():number
 	{
@@ -46,7 +47,7 @@ export default class ReadOnlyCollectionWrapper<T>
 		return this.__getCount();
 	}
 
-	protected _getEnumerator():IEnumerator<T>
+	protected _getEnumerator():FiniteIEnumerator<T>
 	{
 		this.throwIfDisposed();
 		return this.__getEnumerator();

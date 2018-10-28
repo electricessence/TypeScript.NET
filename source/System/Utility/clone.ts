@@ -41,6 +41,4 @@ export default function clone(source:Primitive | JsonMap | JsonArray, depth:numb
 		}
 		return result;
 	}
-
-
 }

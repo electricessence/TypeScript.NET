@@ -18,7 +18,7 @@ import ArgumentOutOfRangeException from "../../Exceptions/ArgumentOutOfRangeExce
 export function copy<T>(
 	source:ArrayLike<T>,
 	sourceIndex:number = 0,
-	length:number = Infinity):T[]
+	length:number      = Infinity):T[]
 {
 	if(!source) return <any>source; // may have passed zero? undefined? or null?
 	return copyTo(
@@ -31,6 +31,29 @@ const
 	CBN  = 'Cannot be null.',
 	CBL0 = 'Cannot be less than zero.';
 
+
+export module copy
+{
+	/**
+	 * Copies one array to another.
+	 * @param source
+	 * @param destination
+	 * @param sourceIndex
+	 * @param destinationIndex
+	 * @param length An optional limit to stop copying.
+	 * @returns The destination array.
+	 */
+	export function to<T, TDestination extends ArrayLikeWritable<T>>(
+		source:ArrayLike<T>,
+		destination:TDestination,
+		sourceIndex:number      = 0,
+		destinationIndex:number = 0,
+		length:number           = Infinity):TDestination
+	{
+		return copy.to(source, destination, sourceIndex, destinationIndex, length);
+	}
+}
+
 /**
  * Copies one array to another.
  * @param source
@@ -40,12 +63,12 @@ const
  * @param length An optional limit to stop copying.
  * @returns The destination array.
  */
-export function copyTo<T,TDestination extends ArrayLikeWritable<T>>(
+export function copyTo<T, TDestination extends ArrayLikeWritable<T>>(
 	source:ArrayLike<T>,
 	destination:TDestination,
-	sourceIndex:number = 0,
+	sourceIndex:number      = 0,
 	destinationIndex:number = 0,
-	length:number = Infinity):TDestination
+	length:number           = Infinity):TDestination
 {
 	if(!source)
 		throw new ArgumentNullException('source', CBN);
@@ -80,3 +103,5 @@ export function copyTo<T,TDestination extends ArrayLikeWritable<T>>(
 
 	return destination;
 }
+
+export default copy;

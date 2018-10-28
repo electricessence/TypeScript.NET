@@ -3,10 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-export const enum EnumerableAction
+declare const enum EnumerableAction
 {
 	Break  = 0,
 	Return = 1,
 	Skip   = 2
 }
+
+export default EnumerableAction;
 

@@ -4,20 +4,21 @@
  * Licensing: MIT
  */
 
-import IEnumerator from "./Enumeration/IEnumerator";
-import ReadOnlyCollectionBase from "./ReadOnlyCollectionBase";
-import IEnumerable from "./Enumeration/IEnumerable";
 import {Action} from "../FunctionTypes";
 import {IReadOnlyList} from "./IList";
+import IEnumerator, {FiniteIEnumerator} from "./Enumeration/IEnumerator";
+import IEnumerable from "./Enumeration/IEnumerable";
+import ReadOnlyCollectionBase from "./ReadOnlyCollectionBase";
 import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
-import EnumeratorBase from "./Enumeration/EnumeratorBase";
-import __extendsImport from "../../extends";
-import Integer from "../Integer";
+import {FiniteEnumeratorBase} from "./Enumeration/EnumeratorBase";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import Integer from "../Integer";
+
+import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-export class LazyList<T> extends ReadOnlyCollectionBase<T> implements IReadOnlyList<T>
+export default class LazyList<T> extends ReadOnlyCollectionBase<T> implements IReadOnlyList<T>
 {
 
 	private _enumerator:IEnumerator<T>|null;
@@ -54,10 +55,10 @@ export class LazyList<T> extends ReadOnlyCollectionBase<T> implements IReadOnlyL
 		return c ? c.length : 0;
 	}
 
-	protected _getEnumerator():IEnumerator<T>
+	protected _getEnumerator():FiniteIEnumerator<T>
 	{
 		let current:number;
-		return new EnumeratorBase<T>(
+		return new FiniteEnumeratorBase<T>(
 			()=>{
 				current = 0;
 			},

@@ -6,13 +6,13 @@
 
 import {areEqual} from "../../Compare";
 import {Type} from "../../Types";
-import EnumeratorBase from "../Enumeration/EnumeratorBase";
+import {FiniteEnumeratorBase} from "../Enumeration/EnumeratorBase";
 import LinkedNodeList from "../LinkedNodeList";
 import ObjectPool from "../../Disposable/ObjectPool";
 import {IMap} from "./IDictionary";
 import KeyValuePair from "../../KeyValuePair";
 import getIdentifier from "./getIdentifier";
-import IEnumerator from "../Enumeration/IEnumerator";
+import {FiniteIEnumerator} from "../Enumeration/IEnumerator";
 import {ILinkedNode} from "../ILinkedListNode";
 import {HashSelector} from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
@@ -24,42 +24,45 @@ const VOID0:undefined = void 0;
 
 
 export interface IHashEntry<TKey, TValue>
-extends ILinkedNode<IHashEntry<TKey, TValue>>, KeyValuePair<TKey,TValue>
+	extends ILinkedNode<IHashEntry<TKey, TValue>>, KeyValuePair<TKey, TValue>
 {
 
 }
+
 // LinkedList for Dictionary
 class HashEntry<TKey, TValue>
-implements IHashEntry<TKey, TValue>
+	implements IHashEntry<TKey, TValue>
 {
 	constructor(
 		public key:TKey,
 		public value:TValue,
-		public previous?:IHashEntry<TKey, TValue>|null,
-		public next?:IHashEntry<TKey, TValue>|null)
+		public previous?:IHashEntry<TKey, TValue> | null,
+		public next?:IHashEntry<TKey, TValue> | null)
 	{
 
 	}
 }
 
-type HashEntryLinkedList<TKey,TValue> = LinkedNodeList<IHashEntry<TKey,IHashEntry<TKey,TValue>>>;
+type HashEntryLinkedList<TKey, TValue> = LinkedNodeList<IHashEntry<TKey, IHashEntry<TKey, TValue>>>;
 
 let linkedListPool:ObjectPool<LinkedNodeList<any>>;
+
 function linkedNodeList():LinkedNodeList<any>;
 function linkedNodeList(recycle?:LinkedNodeList<any>):void;
 //noinspection JSUnusedLocalSymbols
-function linkedNodeList(recycle?:LinkedNodeList<any>):LinkedNodeList<any>|void
+function linkedNodeList(recycle?:LinkedNodeList<any>):LinkedNodeList<any> | void
 {
 	if(!linkedListPool)
 		linkedListPool
-			= new ObjectPool<LinkedNodeList<any>>(20, ()=>new LinkedNodeList<any>(), r=>r.clear());
+			= new ObjectPool<LinkedNodeList<any>>(20, () => new LinkedNodeList<any>(),
+			r => r.clear());
 	if(!recycle) return linkedListPool.take();
 	linkedListPool.add(recycle);
 }
 
 
-
-export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
+export class Dictionary<TKey, TValue>
+	extends DictionaryBase<TKey, TValue>
 {
 	// Retains the order...
 	private readonly _entries:LinkedNodeList<IHashEntry<TKey, TValue>>;
@@ -88,8 +91,8 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	}
 
 	private _getBucket(
-		hash:string|number|symbol,
-		createIfMissing?:boolean):HashEntryLinkedList<TKey,TValue>|null
+		hash:string | number | symbol,
+		createIfMissing?:boolean):HashEntryLinkedList<TKey, TValue> | null
 	{
 		if(hash==null || !createIfMissing && !this.getCount())
 			return null;
@@ -110,8 +113,8 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 
 	private _getBucketEntry(
 		key:TKey,
-		hash?:string|number|symbol,
-		bucket?:HashEntryLinkedList<TKey,TValue>|null):IHashEntry<TKey,IHashEntry<TKey,TValue>>|null
+		hash?:string | number | symbol,
+		bucket?:HashEntryLinkedList<TKey, TValue> | null):IHashEntry<TKey, IHashEntry<TKey, TValue>> | null
 	{
 		if(key==null || !this.getCount())
 			return null;
@@ -124,37 +127,37 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 
 		return bucket
 			&& (comparer
-				? bucket.find(e=>comparer!(e.key)===compareKey)
-				: bucket.find(e=>e.key===compareKey)
+					? bucket.find(e => comparer!(e.key)===compareKey)
+					: bucket.find(e => e.key===compareKey)
 			);
 	}
 
-	protected _getEntry(key:TKey):IHashEntry<TKey,TValue>|null
+	protected _getEntry(key:TKey):IHashEntry<TKey, TValue> | null
 	{
 		const e = this._getBucketEntry(key);
 		return e && e.value;
 	}
 
-	getValue(key:TKey):TValue|undefined
+	getValue(key:TKey):TValue | undefined
 	{
 		const e = this._getEntry(key);
 		return e ? e.value : VOID0;
 	}
 
-	protected _setValueInternal(key:TKey, value:TValue|undefined):boolean
+	protected _setValueInternal(key:TKey, value:TValue | undefined):boolean
 	{
 		const _ = this;
-		const buckets:any    = _._buckets,
-		      entries    = _._entries,
-		      compareKey = _._keyGenerator ? _._keyGenerator(key) : key,
-		      hash       = getIdentifier(compareKey);
+		const buckets:any = _._buckets,
+		      entries     = _._entries,
+		      compareKey  = _._keyGenerator ? _._keyGenerator(key) : key,
+		      hash        = getIdentifier(compareKey);
 		let bucket = _._getBucket(hash);
 		const bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
 
 		// Entry exits? Delete or update
 		if(bucketEntry)
 		{
-			const b = <HashEntryLinkedList<TKey,TValue>>bucket;
+			const b = <HashEntryLinkedList<TKey, TValue>>bucket;
 			if(value===VOID0)
 			{
 				let x = b.removeNode(bucketEntry),
@@ -216,21 +219,19 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	 * Note: super.getEnumerator() works perfectly well,
 	 * but enumerating the internal linked node list is much more efficient.
 	 */
-	getEnumerator():IEnumerator<KeyValuePair<TKey, TValue>>
+	getEnumerator():FiniteIEnumerator<KeyValuePair<TKey, TValue>>
 	{
 		const _ = this;
 		_.throwIfDisposed();
 
-		let ver:number, currentEntry:IHashEntry<TKey, TValue>|null;
-		return new EnumeratorBase<KeyValuePair<TKey, TValue>>(
-			() =>
-			{
+		let ver:number, currentEntry:IHashEntry<TKey, TValue> | null;
+		return new FiniteEnumeratorBase<KeyValuePair<TKey, TValue>>(
+			() => {
 				_.throwIfDisposed();
 				ver = _._version;
 				currentEntry = _._entries.first;
 			},
-			(yielder) =>
-			{
+			(yielder) => {
 				if(currentEntry)
 				{
 					_.throwIfDisposed();

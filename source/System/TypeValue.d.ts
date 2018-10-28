@@ -8,3 +8,5 @@ export const enum TypeValue
 	Undefined = 'undefined',
 	Function = 'function'
 }
+
+export default TypeValue;

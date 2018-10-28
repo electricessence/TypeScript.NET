@@ -6,8 +6,8 @@
 
 import HttpMethodValue from "./HttpMethodValue";
 
-export module HttpMethod {
-
+namespace HttpMethod
+{
 	export const
 		OPTIONS:HttpMethodValue.Options = 'OPTIONS',
 		HEAD:HttpMethodValue.Head       = 'HEAD',
@@ -17,5 +17,6 @@ export module HttpMethod {
 		DELETE:HttpMethodValue.Delete   = 'DELETE',
 		TRACE:HttpMethodValue.Trace     = 'TRACE',
 		CONNECT:HttpMethodValue.Connect = 'CONNECT';
-
 }
+
+export default HttpMethod;

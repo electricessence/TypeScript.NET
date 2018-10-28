@@ -6,9 +6,10 @@
 import {Type} from "../Types";
 import getIdentifier from "./Dictionaries/getIdentifier";
 import {ISymbolizable} from "./Dictionaries/IDictionary";
-import HashSet from "./HashSet";
 import Primitive from "../Primitive";
-import {FiniteEnumerableOrArrayLike} from "./IEnumerableOrArray";
+import FiniteEnumerableOrArrayLike from "./FiniteEnumerableOrArrayLike";
+import HashSet from "./HashSet";
+
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;

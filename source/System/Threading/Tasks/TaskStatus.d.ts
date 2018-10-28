@@ -9,7 +9,7 @@
 /**
  *  Represents the current stage in the lifecycle of a Task.
  */
-export declare const enum TaskStatus
+export const enum TaskStatus
 {
 	/**
 	 *  The task has been initialized but has not yet been scheduled.
@@ -52,3 +52,5 @@ export declare const enum TaskStatus
 	 */
 	Faulted
 }
+
+export default TaskStatus;

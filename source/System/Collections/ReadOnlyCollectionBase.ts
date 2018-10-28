@@ -4,7 +4,7 @@
  */
 
 import CollectionBase from "./CollectionBase";
-import IEnumerator from "./Enumeration/IEnumerator";
+import {FiniteIEnumerator} from "./Enumeration/IEnumerator";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -42,9 +42,9 @@ extends CollectionBase<T>
 		return 0;
 	}
 
-	protected abstract _getEnumerator():IEnumerator<T>;
+	protected abstract _getEnumerator():FiniteIEnumerator<T>;
 
-	getEnumerator():IEnumerator<T>
+	getEnumerator():FiniteIEnumerator<T>
 	{
 		return this._getEnumerator();
 	}

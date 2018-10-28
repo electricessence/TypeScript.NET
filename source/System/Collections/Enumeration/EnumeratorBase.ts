@@ -118,7 +118,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 			this._disposer = disposer;
 	}
 
-	protected _isEndless:boolean;
+	protected readonly _isEndless:boolean;
 	/*
 	 * Provides a mechanism to indicate if this enumerable never ends.
 	 * If set to true, some operations that expect a finite result may throw.
@@ -282,7 +282,6 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	protected _onDispose():void
 	{
 		const _ = this;
-		_._isEndless = false;
 		const disposer = _._disposer;
 
 		_._initializer = <any>null;

@@ -5,7 +5,7 @@
 
 import {TaskStatus} from "./TaskStatus";
 
-export interface ITaskState<T>
+export default interface ITaskState<T>
 {
 	status:TaskStatus;
 	result?:T;

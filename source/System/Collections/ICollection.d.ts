@@ -4,8 +4,8 @@
  */
 
 import IReadOnlyCollection from "./IReadOnlyCollection";
-import {FiniteEnumerator} from "./Enumeration/IEnumerator";
-import {FiniteEnumerable} from "./Enumeration/IEnumerable";
+import {FiniteIEnumerator} from "./Enumeration/IEnumerator";
+import {FiniteIEnumerable} from "./Enumeration/IEnumerable";
 
 export interface ICollection<T>
 	extends IReadOnlyCollection<T>
@@ -15,7 +15,7 @@ export interface ICollection<T>
 	remove(entry:T, max?:number):number;  // Number of times removed.
 	clear():number;
 
-	importEntries(entries:FiniteEnumerable<T> | ArrayLike<T> | FiniteEnumerator<T>):number;
+	importEntries(entries:FiniteIEnumerable<T> | ArrayLike<T> | FiniteIEnumerator<T>):number;
 
 	toArray():T[];
 }

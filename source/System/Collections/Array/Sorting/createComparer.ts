@@ -40,7 +40,7 @@ function ensureArray<T>(value:T|T[]):T[]
  * @param equivalentToNaN
  * @returns {(a:TSource, b:TSource)=>CompareResult}
  */
-export function createComparer<TSource,TSelect extends Primitive>(
+export default function createComparer<TSource,TSelect extends Primitive>(
 	selector:Selector<TSource,TSelect|TSelect[]>,
 	order:Order | Order[] = Order.Ascending,
 	equivalentToNaN:any = NaN):Comparison<TSource>

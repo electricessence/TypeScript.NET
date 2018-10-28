@@ -7,12 +7,12 @@ import ArgumentException from "./Exceptions/ArgumentException";
 import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeException";
 import TypeValue from "./TypeValue";
 
-export function Integer(n:number):number
+function Integer(n:number):number
 {
 	return Math.floor(n);
 }
 
-export module Integer
+module Integer
 {
 	export const MAX_32_BIT:number = 2147483647;
 	export const MAX_VALUE:number = 9007199254740991;

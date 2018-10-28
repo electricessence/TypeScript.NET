@@ -11,7 +11,8 @@ import {FiniteIEnumerable} from "./IEnumerable";
  * Creates a randomized version of the source.
  * Note: An iterator will always require a arrayCopy (buffer) to pull random results one by one.
  */
-export class Randomizer<T> extends SimpleEnumeratorBase<T>
+export class Randomizer<T>
+	extends SimpleEnumeratorBase<T>
 {
 	private readonly _buffer:T[];
 	private _pointer:number;
@@ -37,11 +38,11 @@ export class Randomizer<T> extends SimpleEnumeratorBase<T>
 		if(_._canMoveNext())
 		{
 			const
-				p = this._pointer, // Where were we?
-				i = Math.floor(Math.random()*p), // Pick one.
-				b = this._buffer,
+				p     = this._pointer, // Where were we?
+				i     = Math.floor(Math.random()*p), // Pick one.
+				b     = this._buffer,
 				value = b[i],
-				last = p - 1;
+				last  = p - 1;
 
 
 			b[i] = b[last]; // Take the last one and put it here.

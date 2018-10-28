@@ -16,7 +16,7 @@ import ArrayLikeWritable from "../ArrayLikeWritable";
  * @param target
  * @returns {number[]}
  */
-export function mergeSort<T extends Primitive, TArray extends ArrayLikeWritable<T>>(target:TArray):TArray
+export default function mergeSort<T extends Primitive, TArray extends ArrayLikeWritable<T>>(target:TArray):TArray
 {
 	if(!target) throw new ArgumentNullException("target");
 	const len = target.length;

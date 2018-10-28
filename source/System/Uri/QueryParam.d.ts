@@ -5,8 +5,8 @@
 
 import {UriComponent} from "./UriComponent";
 import {StringKeyValuePair} from "../KeyValuePair";
-import {IEnumerable} from "../Collections/Enumeration/IEnumerable";
-import {IEnumerableOrArray} from "../Collections/IEnumerableOrArray";
+import {FiniteIEnumerable} from "../Collections/Enumeration/IEnumerable";
+import FiniteEnumerableOrArrayLike from "../Collections/FiniteEnumerableOrArrayLike";
 
 export module QueryParam
 {
@@ -14,10 +14,10 @@ export module QueryParam
 		= ArrayLike<StringKeyValuePair<UriComponent.Value|UriComponent.Value[]>>;
 
 	export type Enumerable
-		= IEnumerable<StringKeyValuePair<UriComponent.Value|UriComponent.Value[]>>;
+		= FiniteIEnumerable<StringKeyValuePair<UriComponent.Value|UriComponent.Value[]>>;
 
 	export type EnumerableOrArray
-		= IEnumerableOrArray<StringKeyValuePair<UriComponent.Value|UriComponent.Value[]>>;
+		= FiniteEnumerableOrArrayLike<StringKeyValuePair<UriComponent.Value|UriComponent.Value[]>>;
 
 	export type Convertible
 		= string | UriComponent.Map | EnumerableOrArray;
