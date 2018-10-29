@@ -50,6 +50,7 @@ import {
 	Closure,
 	Comparison,
 	EqualityComparison,
+	Func,
 	HashSelector,
 	PredicateWithIndex,
 	Selector,
@@ -70,9 +71,12 @@ import {
 	EndlessEnumerator,
 	InfiniteValueFactory
 } from "../System/Collections/Enumeration/EndlessEnumerator";
-import __extendsImport from "../extends";
 import LazyList from "../System/Collections/LazyList";
 import FiniteEnumerableOrArrayLike from "../System/Collections/FiniteEnumerableOrArrayLike";
+
+import __extendsImport from "../extends";
+import EnumerableOrArrayLike from "../System/Collections/EnumerableOrArrayLike";
+import IEnumerateEach from "../System/Collections/Enumeration/IEnumerateEach";
 import disposeSingle = dispose.single;
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -129,51 +133,50 @@ function getEmptyEnumerator():FiniteIEnumerator<any>
 // #endregion
 
 function createEnumerable<T>(
-	enumeratorFactory:Action<IEnumerator<T>>,
+	enumeratorFactory:Func<IEnumerator<T>>,
 	finalizer:Closure | null | undefined,
 	isEndless:true):EndlessLinqEnumerable<T>;
 function createEnumerable<T>(
-	enumeratorFactory:Action<FiniteIEnumerable<T>>,
+	enumeratorFactory:Func<IEnumerable<T>>,
 	finalizer:Closure | null | undefined,
 	isEndless:false):FiniteLinqEnumerable<T>;
 function createEnumerable<T>(
-	enumeratorFactory:Action<IEnumerable<T>>,
+	enumeratorFactory:Func<IEnumerator<T>>,
 	finalizer:Closure | null | undefined,
-	isEndless:boolean | null | undefined):FiniteLinqEnumerable<T>;
+	isEndless:boolean | null | undefined):LinqEnumerable<T> | FiniteLinqEnumerable<T> | EndlessLinqEnumerable<T>;
 function createEnumerable<T>(
-	enumeratorFactory:Action<any>,
+	enumeratorFactory:Func<any>,
 	finalizer:Closure | null | undefined,
 	isEndless:boolean | null | undefined):any
 {
 	if(isEndless)
-		return new EndlessLinqEnumerable(<any>enumeratorFactory, finalizer);
+		return new EndlessLinqEnumerable(enumeratorFactory, finalizer);
 	else if(isEndless===false)
-		return new FiniteLinqEnumerable(<any>enumeratorFactory, finalizer);
+		return new FiniteLinqEnumerable(enumeratorFactory, finalizer);
 
-	return new LinqEnumerable(<any>enumeratorFactory, finalizer, isEndless || undefined);
+	return new LinqEnumerable(enumeratorFactory, finalizer, isEndless || undefined);
 }
 
-/*
- * NOTE: About InfiniteEnumerable<T> and Enumerable<T>.
- * There may seem like there's extra overrides here and they may seem unnecessary.
- * But after closer inspection you'll see the type chain is retained and
- * infinite enumerables are prevented from having features that finite ones have.
- *
- * I'm not sure if it's the best option to just use overrides, but it honors the typing properly.
- */
 
-abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
+
+
+/**
+ * This base class allows for reducing the method signature
+ * to only ones that don't require specific enumerable types,
+ * or methods that use LinqEnumerable<T> as a return type.
+ */
+abstract class IndeterminateLinqEnumerableBase<T>
 	extends DisposableBase
 	implements IEnumerable<T>
 {
 	protected constructor(
-		protected _enumeratorFactory:() => IEnumerator<T>,
+		protected _enumeratorFactory:Func<IEnumerator<T>>,
 		finalizer?:Closure | null)
 	{
-		super("EndlessLinqEnumerable", finalizer);
+		super("IndeterminateLinqEnumerableBase", finalizer);
 	}
 
-	abstract isEndless?:boolean;
+	abstract readonly isEndless?:boolean;
 
 	// #region IEnumerable<T> Implementation...
 	getEnumerator():IEnumerator<T>
@@ -188,13 +191,151 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 	protected _onDispose():void
 	{
 		super._onDispose(); // Just in case.
-		(<any>this)._enumeratorFactory = null;
+		// @ts-ignore
+		this._enumeratorFactory = null;
 	}
 
-	// #endregion
+	protected _createEnumerable<T>(
+		enumeratorFactory:Func<IEnumerator<T>>,
+		finalizer?:Closure | null):any
+	{
+		return new LinqEnumerable<T>(enumeratorFactory, finalizer, this.isEndless || undefined);
+	}
 
-	// Return a default (unfiltered) enumerable.
-	abstract asEnumerable():TThis;
+	protected _filterSelected(
+		selector:SelectorWithIndex<T, any> = <any>Functions.Identity,
+		filter?:PredicateWithIndex<any>):any
+	{
+		const _ = this;
+		let disposed = !_.throwIfDisposed();
+		if(!selector)
+			throw new ArgumentNullException("selector");
+
+		return _._createEnumerable(
+			() => {
+				let enumerator:IEnumerator<T>;
+				let index:number = 0;
+
+
+				return new EnumeratorBase<any>(
+					() => {
+						throwIfDisposed(!selector);
+
+						index = 0;
+						enumerator = _.getEnumerator();
+					},
+
+					(yielder) => {
+						throwIfDisposed(disposed);
+
+						while(enumerator.moveNext())
+						{
+							let i = index++;
+							let result = selector(enumerator.current!, i);
+							if(!filter || filter(result, i++))
+								return yielder.yieldReturn(result);
+						}
+
+						return false;
+					},
+
+					() => {
+						if(enumerator) enumerator.dispose();
+					},
+
+					_.isEndless
+				);
+			},
+
+			() => {
+				disposed = false;
+			}
+		);
+	}
+
+	protected _selectMany<TElement, TResult>(
+		collectionSelector:SelectorWithIndex<T, EnumerableOrArrayLike<TElement> | null | undefined>,
+		resultSelector?:(collection:T, element:TElement) => TResult):any
+	{
+		const _ = this;
+		_.throwIfDisposed();
+
+		if(!collectionSelector)
+			throw new ArgumentNullException("collectionSelector");
+
+		const isEndless = _.isEndless; // Do second enumeration, it will be indeterminate if false.
+		if(!resultSelector)
+			resultSelector = (a:T, b:any) => <TResult>b;
+
+		return _._createEnumerable(
+			() => {
+				let enumerator:IEnumerator<T>;
+				let middleEnumerator:IEnumerator<any> | null | undefined;
+				let index:number = 0;
+
+				return new EnumeratorBase<TResult>(
+					() => {
+						throwIfDisposed(!collectionSelector);
+						enumerator = _.getEnumerator();
+						middleEnumerator = VOID0;
+						index = 0;
+					},
+
+					(yielder) => {
+						throwIfDisposed(!collectionSelector);
+						// Just started, and nothing to enumerate? End.
+						if(middleEnumerator===VOID0 && !enumerator.moveNext())
+							return false;
+
+						// moveNext has been called at least once...
+						do
+						{
+
+							// Initialize middle if there isn't one.
+							if(!middleEnumerator)
+							{
+								let middleSeq = collectionSelector(<T>enumerator.current, index++);
+
+								// Collection is null?  Skip it...
+								if(!middleSeq)
+									continue;
+
+								middleEnumerator = enumUtil.from(middleSeq);
+							}
+
+							if(middleEnumerator.moveNext())
+								return yielder.yieldReturn(
+									resultSelector!(
+										<T>enumerator.current, <TElement>middleEnumerator.current
+									)
+								);
+
+							// else no more in this middle?  Then clear and reset for next...
+
+							middleEnumerator.dispose();
+							middleEnumerator = null;
+
+						}
+						while(enumerator.moveNext());
+
+						return false;
+					},
+
+					() => {
+						if(enumerator) enumerator.dispose();
+						disposeSingle(middleEnumerator);
+						enumerator = NULL;
+						middleEnumerator = null;
+					},
+
+					isEndless
+				);
+			},
+			() => {
+				collectionSelector = NULL;
+			}
+		);
+	}
 
 	/**
 	 * Similar to forEach, but executes an action for each time a value is enumerated.
@@ -224,7 +365,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
 		initializer?:Closure | null,
 		isEndless?:boolean | null,
-		onComplete?:Action<number>):TThis
+		onComplete?:Action<number>):EndlessLinqEnumerable<T> | FiniteLinqEnumerable<T> | LinqEnumerable<T>
 
 	doAction(
 		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
@@ -235,7 +376,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 
 		const _ = this;
 		_.throwIfDisposed();
-		const isE:boolean | undefined = isEndless || undefined; // In case it's null.
+		isEndless = isEndless || undefined; // In case it's null.
 		if(!action) throw new ArgumentNullException("action");
 
 		function enumerableFactory()
@@ -277,7 +418,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 					if(enumerator) enumerator.dispose();
 				},
 
-				isE
+				<boolean | undefined>isEndless
 			);
 
 		}
@@ -289,7 +430,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 			action = NULL;
 		}
 
-		return createEnumerable(enumerableFactory, finalizer, isEndless);
+		return _._createEnumerable(enumerableFactory, finalizer);
 	}
 
 
@@ -300,20 +441,6 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 			.getEnumerator()
 			.moveNext();
 
-	}
-
-	// #region Indexing/Paging methods.
-	skip(count:number):TThis
-	{
-		const _ = this;
-		_.throwIfDisposed();
-
-		if(!isFinite(count)) // +Infinity equals skip all so return empty.
-			return <any> new EndlessLinqEnumerable<T>(getEmptyEnumerator);
-
-		Integer.assert(count, "count");
-
-		return this.where((element, index) => index>=count);
 	}
 
 
@@ -331,8 +458,9 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 		Integer.assert(count, "count");
 
 		// Once action returns false, the enumeration will stop.
-		return <any> _.doAction((element, index) => index<count, null, false);
+		return _.doAction((element, index) => index<count, null, false);
 	}
+
 
 	// #region Single Value Return...
 
@@ -458,24 +586,22 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 
 
 	// #region Projection and Filtering Methods
-
-
 	traverseDepthFirst(
-		childrenSelector:(element:T) => FiniteIEnumerable<T> | null | undefined):LinqEnumerable<T>;
+		childrenSelector:(element:T) => EnumerableOrArrayLike<T> | null | undefined):LinqEnumerable<T>;
 
 	traverseDepthFirst<TNode>(
-		childrenSelector:(element:T | TNode) => FiniteIEnumerable<TNode> | null | undefined):LinqEnumerable<TNode>;
+		childrenSelector:(element:T | TNode) => EnumerableOrArrayLike<TNode> | null | undefined):LinqEnumerable<TNode>;
 
 	traverseDepthFirst<TResult>(
-		childrenSelector:(element:T) => FiniteIEnumerable<T> | null | undefined,
+		childrenSelector:(element:T) => EnumerableOrArrayLike<T> | null | undefined,
 		resultSelector:SelectorWithIndex<T, TResult>):LinqEnumerable<TResult>;
 
 	traverseDepthFirst<TNode, TResult>(
-		childrenSelector:(element:T | TNode) => FiniteIEnumerable<TNode> | null | undefined,
+		childrenSelector:(element:T | TNode) => EnumerableOrArrayLike<TNode> | null | undefined,
 		resultSelector:SelectorWithIndex<T, TResult>):LinqEnumerable<TResult>;
 
 	traverseDepthFirst<TNode>(
-		childrenSelector:(element:T | TNode) => FiniteIEnumerable<TNode> | null | undefined,
+		childrenSelector:(element:T | TNode) => EnumerableOrArrayLike<TNode> | null | undefined,
 		resultSelector:(
 			element:TNode,
 			nestLevel:number) => any = <any>Functions.Identity):LinqEnumerable<any>
@@ -549,11 +675,11 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 	}
 
 
-	flatten<TFlat>():EndlessLinqEnumerable<TFlat>
-	flatten():EndlessLinqEnumerable<any>
-	flatten():EndlessLinqEnumerable<any>
+	flatten<TFlat>():LinqEnumerable<TFlat>
+	flatten():LinqEnumerable<any>
+	flatten():LinqEnumerable<any>
 	{
-		return this.selectMany(entry => {
+		return this._selectMany(entry => {
 			let e = !Type.isString(entry) && Enumerable.fromAny(entry);
 			return e ? e.flatten() : [entry];
 		});
@@ -563,7 +689,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 	pairwise<TSelect>(
 		selector:(
 			previous:T, current:T,
-			index:number) => TSelect):EndlessLinqEnumerable<TSelect>
+			index:number) => TSelect):LinqEnumerable<TSelect>
 	{
 		const _ = this;
 		_.throwIfDisposed();
@@ -572,228 +698,40 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 			throw new ArgumentNullException("selector");
 
 		let previous:T;
-		return this.select<TSelect>((value, i) => {
+		return this._filterSelected((value, i) => {
 			const result:any = i ? selector(previous!, value, i) : NULL;
 			previous = value;
 			return result;
 		}).skip(1);
 	}
-
-	scan(func:(previous:T, current:T, index:number) => T, seed?:T):this
-	{
-		const _ = this;
-		_.throwIfDisposed();
-
-		if(!func)
-			throw new ArgumentNullException("func");
-
-		return <this>(
-			seed===VOID0
-				? this.select((value, i) => seed = i ? func(seed!, value, i) : value)
-				: this.select((value, i) => seed = func(seed!, value, i))
-		);
-	}
-
 	// #endregion
 
-	select<TResult>(selector:SelectorWithIndex<T, TResult>):EndlessLinqEnumerable<TResult>
+	select<TResult>(selector:SelectorWithIndex<T, TResult>):LinqEnumerable<TResult>
 	{
 		return this._filterSelected(selector);
 	}
 
-	map<TResult>(selector:SelectorWithIndex<T, TResult>):EndlessLinqEnumerable<TResult>
+	map<TResult>(selector:SelectorWithIndex<T, TResult>):LinqEnumerable<TResult>
 	{
 		return this._filterSelected(selector);
 	}
-
-	/*
-	public static IEnumerable<TResult> SelectMany<TSource, TCollection, TResult>(
-		this IEnumerable<TSource> source,
-		Func<TSource, IEnumerable<TCollection>> collectionSelector,
-		Func<TSource, TCollection, TResult> resultSelector)
-	 */
-
-	protected _selectMany<TElement, TResult>(
-		collectionSelector:SelectorWithIndex<T, FiniteIEnumerable<TElement> | null | undefined>,
-		resultSelector?:(collection:T, element:TElement) => TResult):any
-	{
-		const _ = this;
-		_.throwIfDisposed();
-
-		if(!collectionSelector)
-			throw new ArgumentNullException("collectionSelector");
-
-		const isEndless = _.isEndless; // Do second enumeration, it will be indeterminate if false.
-		if(!resultSelector)
-			resultSelector = (a:T, b:any) => <TResult>b;
-
-		return new LinqEnumerable<TResult>(
-			() => {
-				let enumerator:IEnumerator<T>;
-				let middleEnumerator:IEnumerator<any> | null | undefined;
-				let index:number = 0;
-
-				return new EnumeratorBase<TResult>(
-					() => {
-						throwIfDisposed(!collectionSelector);
-						enumerator = _.getEnumerator();
-						middleEnumerator = VOID0;
-						index = 0;
-					},
-
-					(yielder) => {
-						throwIfDisposed(!collectionSelector);
-						// Just started, and nothing to enumerate? End.
-						if(middleEnumerator===VOID0 && !enumerator.moveNext())
-							return false;
-
-						// moveNext has been called at least once...
-						do
-						{
-
-							// Initialize middle if there isn't one.
-							if(!middleEnumerator)
-							{
-								let middleSeq = collectionSelector(<T>enumerator.current, index++);
-
-								// Collection is null?  Skip it...
-								if(!middleSeq)
-									continue;
-
-								middleEnumerator = enumUtil.from(middleSeq);
-							}
-
-							if(middleEnumerator.moveNext())
-								return yielder.yieldReturn(
-									resultSelector!(
-										<T>enumerator.current, <TElement>middleEnumerator.current
-									)
-								);
-
-							// else no more in this middle?  Then clear and reset for next...
-
-							middleEnumerator.dispose();
-							middleEnumerator = null;
-
-						}
-						while(enumerator.moveNext());
-
-						return false;
-					},
-
-					() => {
-						if(enumerator) enumerator.dispose();
-						disposeSingle(middleEnumerator);
-						enumerator = NULL;
-						middleEnumerator = null;
-					},
-
-					isEndless
-				);
-			},
-			() => {
-				collectionSelector = NULL;
-			},
-
-			isEndless
-		);
-	}
-
 
 	selectMany<TResult>(
-		collectionSelector:SelectorWithIndex<T, FiniteIEnumerable<TResult> | null | undefined>):EndlessLinqEnumerable<TResult>;
+		collectionSelector:SelectorWithIndex<T, EnumerableOrArrayLike<TResult> | null | undefined>):LinqEnumerable<TResult>;
 
 	selectMany<TElement, TResult>(
-		collectionSelector:SelectorWithIndex<T, FiniteIEnumerable<TElement> | null | undefined>,
-		resultSelector:(collection:T, element:TElement) => TResult):EndlessLinqEnumerable<TResult>;
+		collectionSelector:SelectorWithIndex<T, EnumerableOrArrayLike<TElement> | null | undefined>,
+		resultSelector:(collection:T, element:TElement) => TResult):LinqEnumerable<TResult>;
 
 	selectMany<TResult>(
-		collectionSelector:SelectorWithIndex<T, FiniteIEnumerable<any> | null | undefined>,
-		resultSelector?:(collection:T, element:any) => TResult):EndlessLinqEnumerable<TResult>
+		collectionSelector:SelectorWithIndex<T, EnumerableOrArrayLike<any> | null | undefined>,
+		resultSelector?:(collection:T, element:any) => TResult):LinqEnumerable<TResult>
 	{
 		return this._selectMany(collectionSelector, resultSelector);
 	}
 
-	protected _filterSelected(
-		selector:SelectorWithIndex<T, any> = <any>Functions.Identity,
-		filter?:PredicateWithIndex<any>):any
-	{
-		const _ = this;
-		let disposed = !_.throwIfDisposed();
-		if(!selector)
-			throw new ArgumentNullException("selector");
-
-		return createEnumerable(
-			() => {
-				let enumerator:IEnumerator<T>;
-				let index:number = 0;
-
-
-				return new EnumeratorBase<any>(
-					() => {
-						throwIfDisposed(!selector);
-
-						index = 0;
-						enumerator = _.getEnumerator();
-					},
-
-					(yielder) => {
-						throwIfDisposed(disposed);
-
-						while(enumerator.moveNext())
-						{
-							let i = index++;
-							let result = selector(enumerator.current!, i);
-							if(!filter || filter(result, i++))
-								return yielder.yieldReturn(result);
-						}
-
-						return false;
-					},
-
-					() => {
-						if(enumerator) enumerator.dispose();
-					},
-
-					_.isEndless
-				);
-			},
-
-			() => {
-				disposed = false;
-			},
-
-			_.isEndless
-		);
-	}
-
-	/**
-	 * Returns selected values that are not null or undefined.
-	 */
-	choose():EndlessLinqEnumerable<T>;
-	choose<TResult>(selector?:Selector<T, TResult>):EndlessLinqEnumerable<TResult>
-	choose(selector:Selector<T, any> = Functions.Identity):EndlessLinqEnumerable<any>
-	{
-		return this._filterSelected(selector, isNotNullOrUndefined);
-	}
-
-	where(predicate:PredicateWithIndex<T>):TThis
-	{
-		return <any>this._filterSelected(Functions.Identity, predicate);
-	}
-
-	filter(predicate:PredicateWithIndex<T>):TThis
-	{
-		return <any>this._filterSelected(Functions.Identity, predicate);
-	}
-
-	nonNull():TThis
-	{
-		return this.where(v => v!=null && v!=VOID0);
-	}
-
-	ofType<TType>(type:{ new(...params:any[]):TType }):EndlessLinqEnumerable<TType>;
-	ofType<TType>(type:any):EndlessLinqEnumerable<TType>
+	ofType<TType>(type:{ new(...params:any[]):TType }):LinqEnumerable<TType>;
+	ofType<TType>(type:any):LinqEnumerable<TType>
 	{
 		let typeName:string;
 		switch(<any>type)
@@ -811,202 +749,36 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 				typeName = Type.FUNCTION;
 				break;
 			default:
-				return <any> this
-					.where(x => x instanceof type);
+				return this
+					._filterSelected(x => x instanceof type);
 		}
-		return <any>this
-			.where(x => isNotNullOrUndefined(x) && typeof x===typeName);
-	}
-
-	except(
-		second:FiniteEnumerableOrArrayLike<T>,
-		compareSelector?:HashSelector<T>):TThis
-	{
-		const _ = this;
-		let disposed = !_.throwIfDisposed();
-		const isEndless = _.isEndless;
-
-		return <any> createEnumerable(
-			() => {
-				let enumerator:IEnumerator<T>;
-				let keys:Dictionary<T, boolean>;
-
-				return new EnumeratorBase<T>(
-					() => {
-						throwIfDisposed(disposed);
-						enumerator = _.getEnumerator();
-						keys = new Dictionary<T, boolean>(compareSelector);
-						if(second)
-							enumUtil.forEach(second, key => { keys.addByKeyValue(key, true) });
-					},
-
-					(yielder) => {
-						throwIfDisposed(disposed);
-						while(enumerator.moveNext())
-						{
-							let current = <T>enumerator.current;
-							if(!keys.containsKey(current))
-							{
-								keys.addByKeyValue(current, true);
-								return yielder.yieldReturn(current);
-							}
-						}
-						return false;
-					},
-
-					() => {
-						if(enumerator) enumerator.dispose();
-						keys.clear();
-					},
-
-					isEndless
-				);
-			},
-
-			() => {
-				disposed = true;
-			},
-
-			isEndless
-		);
-	}
-
-
-	distinct(compareSelector?:HashSelector<T>):TThis
-	{
-		return this.except(NULL, compareSelector);
-	}
-
-	// [0,0,0,1,1,1,2,2,2,0,0,0,1,1] results in [0,1,2,0,1];
-	distinctUntilChanged(compareSelector:HashSelector<T> = <any>Functions.Identity):TThis
-	{
-
-		const _ = this;
-		let disposed = !_.throwIfDisposed();
-		const isEndless = _.isEndless;
-
-		return <any> createEnumerable(
-			() => {
-				let enumerator:IEnumerator<T>;
-				let compareKey:any;
-				let initial:boolean = true;
-
-				return new EnumeratorBase<T>(
-					() => {
-						throwIfDisposed(disposed);
-						enumerator = _.getEnumerator();
-					},
-
-					(yielder) => {
-						throwIfDisposed(disposed);
-						while(enumerator.moveNext())
-						{
-							let key = compareSelector(<T>enumerator.current);
-
-							if(initial)
-							{
-								initial = false;
-							}
-							else if(areEqualValues(compareKey, key))
-							{
-								continue;
-							}
-
-							compareKey = key;
-							return yielder.yieldReturn(enumerator.current);
-						}
-						return false;
-					},
-
-					() => {
-						if(enumerator) enumerator.dispose();
-					},
-
-					isEndless
-				);
-			},
-
-			() => {
-				disposed = true;
-			},
-
-			isEndless
-		);
+		return this
+			._filterSelected(x => isNotNullOrUndefined(x) && typeof x===typeName);
 	}
 
 	/**
-	 * Returns a single default value if empty.
-	 * @param defaultValue
-	 * @returns {Enumerable}
+	 * Alternates values between this and the second set until either runs out.
+	 * @param second
+	 * @param resultSelector
 	 */
-	defaultIfEmpty(defaultValue?:T):this
-	{
-		const _ = this;
-		const disposed:boolean = !_.throwIfDisposed();
-		const isEndless = _.isEndless;
-
-		return <any>createEnumerable(
-			() => {
-				let enumerator:IEnumerator<T>;
-				let isFirst:boolean;
-
-				return new EnumeratorBase<T>(
-					() => {
-						isFirst = true;
-						throwIfDisposed(disposed);
-						enumerator = _.getEnumerator();
-					},
-
-					(yielder) => {
-						throwIfDisposed(disposed);
-
-						if(enumerator.moveNext())
-						{
-							isFirst = false;
-							return yielder.yieldReturn(enumerator.current);
-						}
-						else if(isFirst)
-						{
-							isFirst = false;
-							return yielder.yieldReturn(defaultValue);
-						}
-						return false;
-					},
-
-					() => {
-						if(enumerator) enumerator.dispose();
-						enumerator = NULL;
-					},
-
-					isEndless
-				);
-			},
-			null,
-
-			isEndless
-		);
-	}
-
-
 	zip<TSecond, TResult>(
-		second:FiniteIEnumerable<TSecond>,
-		resultSelector:(first:T, second:TSecond, index:number) => TResult):LinqEnumerable<TResult>
+		second:FiniteEnumerableOrArrayLike<TSecond>,
+		resultSelector:(first:T, second:TSecond, index:number) => TResult):FiniteLinqEnumerable<TResult>
 	{
 		const _ = this;
 		_.throwIfDisposed();
 
-
-		return new LinqEnumerable<TResult>(
+		return new FiniteLinqEnumerable<TResult>(
 			() => {
 				let firstEnumerator:IEnumerator<T>;
 				let secondEnumerator:IEnumerator<TSecond>;
 				let index:number = 0;
 
-				return new EnumeratorBase<TResult>(
+				return new FiniteEnumeratorBase<TResult>(
 					() => {
 						index = 0;
 						firstEnumerator = _.getEnumerator();
-						secondEnumerator = enumUtil.from<TSecond>(second);
+						secondEnumerator = enumUtil.from(second);
 					},
 
 					(yielder) => firstEnumerator.moveNext()
@@ -1024,9 +796,13 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 		);
 	}
 
-
+	/**
+	 * Rotates through all sets until any set is complete.
+	 * @param second
+	 * @param resultSelector
+	 */
 	zipMultiple<TSecond, TResult>(
-		second:ArrayLike<FiniteLinqEnumerable<TSecond>>,
+		second:FiniteEnumerableOrArrayLike<FiniteEnumerableOrArrayLike<TSecond>>,
 		resultSelector:(
 			first:T,
 			second:TSecond,
@@ -1035,7 +811,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 		const _ = this;
 		_.throwIfDisposed();
 
-		if(!second.length)
+		if(!second || Type.isArrayLike(second) && !second.length)
 			return Enumerable.empty<TResult>();
 
 		return new FiniteLinqEnumerable<TResult>(
@@ -1096,9 +872,6 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 		);
 	}
 
-
-	// #region Join Methods
-
 	join<TInner, TKey, TResult>(
 		inner:FiniteEnumerableOrArrayLike<TInner>,
 		outerKeySelector:Selector<T, TKey>,
@@ -1108,7 +881,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 	{
 
 		const _ = this;
-		return new LinqEnumerable<TResult>(
+		return _._createEnumerable(
 			() => {
 				let outerEnumerator:IEnumerator<T>;
 				let lookup:Lookup<TKey, TInner>;
@@ -1167,7 +940,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 	{
 		const _ = this;
 
-		return new LinqEnumerable<TResult>(
+		return _._createEnumerable(
 			() => {
 				let enumerator:IEnumerator<T>;
 				let lookup:Lookup<TKey, TInner>;
@@ -1198,111 +971,102 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 		);
 	}
 
+}
 
-	merge(enumerables:ArrayLike<FiniteEnumerableOrArrayLike<T>>):TThis
+abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
+	extends IndeterminateLinqEnumerableBase<T>
+{
+	protected constructor(
+		enumeratorFactory:() => IEnumerator<T>,
+		finalizer?:Closure | null)
+	{
+		super(enumeratorFactory, finalizer);
+		// @ts-ignore
+		this._disposableObjectName = "LinqEnumerableBase";
+	}
+
+	protected abstract _createEnumerable<T>(
+		enumeratorFactory:Func<IEnumerator<T>>,
+		finalizer?:Closure | null):any;
+
+	// Return a default (unfiltered) enumerable.
+	abstract asEnumerable():TThis;
+
+	// #region Indexing/Paging methods.
+	skip(count:number):TThis
 	{
 		const _ = this;
+		_.throwIfDisposed();
+
+		if(!isFinite(count)) // +Infinity equals skip all so return empty.
+			return <any> new EndlessLinqEnumerable<T>(getEmptyEnumerator);
+
+		Integer.assert(count, "count");
+
+		return this.where((element, index) => index>=count);
+	}
+	// #endregion
+
+	// #region Projection and Filtering Methods
+	scan(func:(previous:T, current:T, index:number) => T, seed?:T):TThis
+	{
+		const _ = this;
+		_.throwIfDisposed();
+
+		if(!func)
+			throw new ArgumentNullException("func");
+
+		return seed===VOID0
+			? this._filterSelected((value, i) => seed = i ? func(seed!, value, i) : value)
+			: this.select((value, i) => seed = func(seed!, value, i));
+	}
+	// #endregion
+
+	where(predicate:PredicateWithIndex<T>):TThis
+	{
+		return this._filterSelected(Functions.Identity, predicate);
+	}
+
+	filter(predicate:PredicateWithIndex<T>):TThis
+	{
+		return this._filterSelected(Functions.Identity, predicate);
+	}
+
+	nonNull():TThis
+	{
+		return this._filterSelected(isNotNullOrUndefined);
+	}
+
+	except(
+		second:FiniteEnumerableOrArrayLike<T>,
+		compareSelector?:HashSelector<T>):TThis
+	{
+		const _ = this;
+		let disposed = !_.throwIfDisposed();
 		const isEndless = _.isEndless;
 
-		if(!enumerables || enumerables.length==0)
-			return <any>_;
-
-		return <any>createEnumerable(
+		return _._createEnumerable(
 			() => {
 				let enumerator:IEnumerator<T>;
-				let queue:Queue<FiniteEnumerableOrArrayLike<T>>;
+				let keys:Dictionary<T, boolean>;
 
 				return new EnumeratorBase<T>(
 					() => {
-						// 1) First get our values...
+						throwIfDisposed(disposed);
 						enumerator = _.getEnumerator();
-						queue = new Queue<FiniteEnumerableOrArrayLike<T>>(enumerables);
+						keys = new Dictionary<T, boolean>(compareSelector);
+						if(second)
+							enumUtil.forEach(second, key => { keys.addByKeyValue(key, true) });
 					},
 
 					(yielder) => {
-						while(true)
+						throwIfDisposed(disposed);
+						while(enumerator.moveNext())
 						{
-
-							while(!enumerator && queue.tryDequeue(value => {
-								enumerator = enumUtil.from<T>(value); // 4) Keep going and on to step 2.  Else fall through to yieldBreak().
-							}))
-							{ }
-
-							if(enumerator && enumerator.moveNext()) // 2) Keep returning until done.
-								return yielder.yieldReturn(enumerator.current);
-
-							if(enumerator) // 3) Dispose and reset for next.
-							{
-								enumerator.dispose();
-								enumerator = NULL;
-								continue;
-							}
-
-							return yielder.yieldBreak();
-						}
-					},
-
-					() => {
-						if(enumerator) enumerator.dispose();
-						enumerator = NULL;
-						if(queue) queue.dispose();
-						queue = NULL;
-					},
-
-					isEndless
-				);
-			},
-			null,
-			isEndless
-		);
-	}
-
-	concat(...enumerables:Array<FiniteEnumerableOrArrayLike<T>>):TThis
-	{
-		return this.merge(enumerables);
-	}
-
-
-	union(
-		second:FiniteIEnumerable<T>,
-		compareSelector:HashSelector<T> = <any>Functions.Identity):TThis
-	{
-		const _ = this;
-		const isEndless = _.isEndless;
-
-		return <any> createEnumerable(
-			() => {
-				let firstEnumerator:IEnumerator<T>;
-				let secondEnumerator:IEnumerator<T>;
-				let keys:Dictionary<T, any>;
-
-				return new EnumeratorBase<T>(
-					() => {
-						firstEnumerator = _.getEnumerator();
-						keys = new Dictionary<T, any>(compareSelector); // Acting as a HashSet.
-					},
-
-					(yielder) => {
-						let current:T;
-						if(secondEnumerator===VOID0)
-						{
-							while(firstEnumerator.moveNext())
-							{
-								current = <T>firstEnumerator.current;
-								if(!keys.containsKey(current))
-								{
-									keys.addByKeyValue(current, null);
-									return yielder.yieldReturn(current);
-								}
-							}
-							secondEnumerator = enumUtil.from(second);
-						}
-						while(secondEnumerator.moveNext())
-						{
-							current = <T>secondEnumerator.current;
+							let current = <T>enumerator.current;
 							if(!keys.containsKey(current))
 							{
-								keys.addByKeyValue(current, null);
+								keys.addByKeyValue(current, true);
 								return yielder.yieldReturn(current);
 							}
 						}
@@ -1310,20 +1074,131 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 					},
 
 					() => {
-						if(firstEnumerator) firstEnumerator.dispose();
-						if(secondEnumerator) secondEnumerator.dispose();
-						firstEnumerator = NULL;
-						secondEnumerator = NULL;
+						if(enumerator) enumerator.dispose();
+						keys.clear();
 					},
 
 					isEndless
 				);
 			},
-			null,
 
-			isEndless
+			() => {
+				disposed = true;
+			}
 		);
 	}
+
+
+	distinct(compareSelector?:HashSelector<T>):TThis
+	{
+		return this.except(NULL, compareSelector);
+	}
+
+	// [0,0,0,1,1,1,2,2,2,0,0,0,1,1] results in [0,1,2,0,1];
+	distinctUntilChanged(compareSelector:HashSelector<T> = <any>Functions.Identity):TThis
+	{
+
+		const _ = this;
+		let disposed = !_.throwIfDisposed();
+		const isEndless = _.isEndless;
+
+		return _._createEnumerable(
+			() => {
+				let enumerator:IEnumerator<T>;
+				let compareKey:any;
+				let initial:boolean = true;
+
+				return new EnumeratorBase<T>(
+					() => {
+						throwIfDisposed(disposed);
+						enumerator = _.getEnumerator();
+					},
+
+					(yielder) => {
+						throwIfDisposed(disposed);
+						while(enumerator.moveNext())
+						{
+							let key = compareSelector(<T>enumerator.current);
+
+							if(initial)
+							{
+								initial = false;
+							}
+							else if(areEqualValues(compareKey, key))
+							{
+								continue;
+							}
+
+							compareKey = key;
+							return yielder.yieldReturn(enumerator.current);
+						}
+						return false;
+					},
+
+					() => {
+						if(enumerator) enumerator.dispose();
+					},
+
+					isEndless
+				);
+			},
+
+			() => {
+				disposed = true;
+			}
+		);
+	}
+
+	/**
+	 * Returns a single default value if empty.
+	 * @param defaultValue
+	 * @returns {Enumerable}
+	 */
+	defaultIfEmpty(defaultValue?:T):TThis & NotEmptyEnumerable<T>
+	{
+		const _ = this;
+		const disposed:boolean = !_.throwIfDisposed();
+		const isEndless = _.isEndless;
+
+		return _._createEnumerable(
+			() => {
+				let enumerator:IEnumerator<T>;
+				let isFirst:boolean;
+
+				return new EnumeratorBase<T>(
+					() => {
+						isFirst = true;
+						throwIfDisposed(disposed);
+						enumerator = _.getEnumerator();
+					},
+
+					(yielder) => {
+						throwIfDisposed(disposed);
+
+						if(enumerator.moveNext())
+						{
+							isFirst = false;
+							return yielder.yieldReturn(enumerator.current);
+						}
+						else if(isFirst)
+						{
+							isFirst = false;
+							return yielder.yieldReturn(defaultValue);
+						}
+						return false;
+					},
+
+					() => {
+						if(enumerator) enumerator.dispose();
+						enumerator = NULL;
+					},
+
+					isEndless
+				);
+			}
+		);
+	}
+
 
 	insertAt(index:number, other:FiniteIEnumerable<T>):TThis
 	{
@@ -1334,7 +1209,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 		_.throwIfDisposed();
 		const isEndless = _.isEndless;
 
-		return <any> createEnumerable(
+		return _._createEnumerable(
 			() => {
 
 				let firstEnumerator:IEnumerator<T>;
@@ -1379,10 +1254,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 
 					isEndless
 				);
-			},
-			null,
-
-			isEndless
+			}
 		);
 	}
 
@@ -1392,7 +1264,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 		const _ = this;
 		const isEndless = _.isEndless;
 
-		return <any>createEnumerable(
+		return _._createEnumerable(
 			() => {
 				let buffer:T,
 				    mode:EnumerableAction,
@@ -1457,10 +1329,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 
 					isEndless
 				);
-			},
-			null,
-
-			isEndless
+			}
 		);
 	}
 
@@ -1641,7 +1510,7 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 
 
 export class EndlessLinqEnumerable<T>
-	extends LinqEnumerableBase<T, EndlessLinqEnumerable<T>>
+	extends IndeterminateLinqEnumerableBase<T>
 	implements EndlessIEnumerable<T>
 {
 	constructor(
@@ -1680,7 +1549,7 @@ export class LinqEnumerable<T>
 {
 
 	constructor(
-		enumeratorFactory:() => IEnumerator<T>,
+		enumeratorFactory:Func<IEnumerator<T>>,
 		finalizer?:Closure | null,
 		isEndless?:boolean)
 	{
@@ -1859,115 +1728,7 @@ export class LinqEnumerable<T>
 	}
 
 
-	forEach(action:ActionWithIndex<T>, max?:number):number
-	forEach(action:PredicateWithIndex<T>, max?:number):number
-	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>, max:number = Infinity):number
-	{
-		const _ = this;
-		_.throwIfDisposed();
-		if(!action)
-			throw new ArgumentNullException("action");
-		throwIfEndless(_.isEndless);
 
-		/*
-		// It could be just as easy to do the following:
-		return enumUtil.forEach(_, action, max);
-		// But to be more active about checking for disposal, we use this instead:
-		*/
-
-
-		// Return value of action can be anything, but if it is (===) false then the enumUtil.forEach will discontinue.
-		return max>0 ? using(
-			_.getEnumerator(), e => {
-
-				throwIfEndless(!isFinite(max) && e.isEndless);
-
-				let i = 0;
-				// It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
-				while(max>i && _.throwIfDisposed() && e.moveNext())
-				{
-					if(action(<T>e.current, i++)===false)
-						break;
-				}
-				return i;
-			}
-		) : 0;
-	}
-
-	// #region Conversion Methods
-	toArray(predicate?:PredicateWithIndex<T>):T[]
-	{
-		return predicate
-			? this.where(predicate).toArray()
-			: this.copyTo([]);
-	}
-
-	copyTo(target:T[], index:number = 0, count:number = Infinity):T[]
-	{
-		this.throwIfDisposed();
-		if(!target) throw new ArgumentNullException("target");
-		Integer.assertZeroOrGreater(index);
-
-		// If not exposing an action that could cause dispose, then use enumUtil.forEach utility instead.
-		enumUtil.forEach<T>(this, (x, i) => {
-			target[i + index] = x
-		}, count);
-
-		return target;
-	}
-
-
-	toLookup<TKey, TValue>(
-		keySelector:SelectorWithIndex<T, TKey>,
-		elementSelector:SelectorWithIndex<T, TValue> = <any>Functions.Identity,
-		compareSelector:HashSelector<TKey>           = <any>Functions.Identity):Lookup<TKey, TValue>
-	{
-		const dict:Dictionary<TKey, TValue[]> = new Dictionary<TKey, TValue[]>(compareSelector);
-		this.forEach(
-			(x, i) => {
-				let key = keySelector(x, i);
-				let element = elementSelector(x, i);
-
-				let array = dict.getValue(key);
-				if(array!==VOID0) array.push(element);
-				else dict.addByKeyValue(key, [element]);
-			}
-		);
-		return new Lookup<TKey, TValue>(dict);
-	}
-
-	toMap<TResult>(
-		keySelector:SelectorWithIndex<T, string | number | symbol>,
-		elementSelector:SelectorWithIndex<T, TResult>):IMap<TResult>
-	{
-		const obj:IMap<TResult> = {};
-		this.forEach((x, i) => {
-			//@ts-ignore
-			obj[keySelector(x, i)] = elementSelector(x, i);
-		});
-		return obj;
-	}
-
-
-	toDictionary<TKey, TValue>(
-		keySelector:SelectorWithIndex<T, TKey>,
-		elementSelector:SelectorWithIndex<T, TValue>,
-		compareSelector:HashSelector<TKey> = <any>Functions.Identity):IDictionary<TKey, TValue>
-	{
-		const dict:Dictionary<TKey, TValue> = new Dictionary<TKey, TValue>(compareSelector);
-		this.forEach((x, i) => dict.addByKeyValue(keySelector(x, i), elementSelector(x, i)));
-		return dict;
-	}
-
-	toJoinedString(separator:string = "", selector:Selector<T, string> = <any>Functions.Identity)
-	{
-		return this
-			.select(selector)
-			.toArray()
-			.join(separator);
-	}
-
-	// #endregion
 
 
 	takeExceptLast(count:number = 1):this
@@ -2838,7 +2599,7 @@ export class LinqEnumerable<T>
 }
 
 export interface NotEmptyEnumerable<T>
-	extends LinqEnumerable<T>
+	extends FiniteLinqEnumerable<T>
 {
 	aggregate(
 		reduction:(previous:T, current:T, index?:number) => T):T;
@@ -2858,7 +2619,7 @@ export interface NotEmptyEnumerable<T>
 // Provided for type guarding.
 export class FiniteLinqEnumerable<T>
 	extends LinqEnumerableBase<T, FiniteLinqEnumerable<T>>
-	implements FiniteIEnumerable<T>
+	implements FiniteIEnumerable<T>, IEnumerateEach<T>
 {
 	constructor(
 		enumeratorFactory:() => FiniteIEnumerator<T>,
@@ -2867,6 +2628,13 @@ export class FiniteLinqEnumerable<T>
 		super(enumeratorFactory, finalizer);
 		// @ts-ignore
 		this._disposableObjectName = "FiniteLinqEnumerable";
+	}
+
+	protected _createEnumerable<T>(
+		enumeratorFactory:Func<FiniteIEnumerator<T>>,
+		finalizer?:Closure | null | undefined):any
+	{
+		return new FiniteLinqEnumerable<T>(enumeratorFactory, finalizer);
 	}
 
 	get isEndless():false
@@ -2885,10 +2653,259 @@ export class FiniteLinqEnumerable<T>
 		_.throwIfDisposed();
 		return <any> new FiniteLinqEnumerable<T>(() => _.getEnumerator());
 	}
+
+	select<TResult>(selector:SelectorWithIndex<T, TResult>):FiniteLinqEnumerable<TResult>
+	{
+		return this._filterSelected(selector);
+	}
+
+	map<TResult>(selector:SelectorWithIndex<T, TResult>):FiniteLinqEnumerable<TResult>
+	{
+		return this._filterSelected(selector);
+	}
+
+	selectMany<TResult>(
+		collectionSelector:SelectorWithIndex<T, FiniteEnumerableOrArrayLike<TResult> | null | undefined>):FiniteLinqEnumerable<TResult>;
+
+	selectMany<TElement, TResult>(
+		collectionSelector:SelectorWithIndex<T, FiniteEnumerableOrArrayLike<TElement> | null | undefined>,
+		resultSelector:(collection:T, element:TElement) => TResult):FiniteLinqEnumerable<TResult>;
+
+	selectMany<TResult>(
+		collectionSelector:SelectorWithIndex<T, FiniteEnumerableOrArrayLike<any> | null | undefined>,
+		resultSelector?:(collection:T, element:any) => TResult):FiniteLinqEnumerable<TResult>
+	{
+		return this._selectMany(collectionSelector, resultSelector);
+	}
+
+
+	merge(enumerables:FiniteEnumerableOrArrayLike<FiniteEnumerableOrArrayLike<T>>):FiniteLinqEnumerable<T>
+	{
+		const _ = this;
+		if(!enumerables || Type.isArrayLike(enumerables) && !enumerables.length)
+			return <any>_;
+
+		return new FiniteLinqEnumerable<T>(
+			() => {
+				let enumerator:IEnumerator<T>;
+				let queue:Queue<FiniteEnumerableOrArrayLike<T>>;
+
+				return new FiniteEnumeratorBase<T>(
+					() => {
+						// 1) First get our values...
+						enumerator = _.getEnumerator();
+						queue = new Queue<FiniteEnumerableOrArrayLike<T>>(enumerables);
+					},
+
+					(yielder) => {
+						while(true)
+						{
+
+							while(!enumerator && queue.tryDequeue(value => {
+								enumerator = enumUtil.from<T>(value); // 4) Keep going and on to step 2.  Else fall through to yieldBreak().
+							}))
+							{ }
+
+							if(enumerator && enumerator.moveNext()) // 2) Keep returning until done.
+								return yielder.yieldReturn(enumerator.current);
+
+							if(enumerator) // 3) Dispose and reset for next.
+							{
+								enumerator.dispose();
+								enumerator = NULL;
+								continue;
+							}
+
+							return yielder.yieldBreak();
+						}
+					},
+
+					() => {
+						if(enumerator) enumerator.dispose();
+						enumerator = NULL;
+						if(queue) queue.dispose();
+						queue = NULL;
+					}
+				);
+			}
+		);
+	}
+
+	concat(...enumerables:Array<FiniteEnumerableOrArrayLike<T>>):FiniteLinqEnumerable<T>
+	{
+		return this.merge(enumerables);
+	}
+
+	union(
+		second:FiniteEnumerableOrArrayLike<T>,
+		compareSelector:HashSelector<T> = <any>Functions.Identity):FiniteLinqEnumerable<T>
+	{
+		const _ = this;
+		return new FiniteLinqEnumerable<T>(
+			() => {
+				let firstEnumerator:IEnumerator<T>;
+				let secondEnumerator:IEnumerator<T>;
+				let keys:Dictionary<T, any>;
+
+				return new FiniteEnumeratorBase<T>(
+					() => {
+						firstEnumerator = _.getEnumerator();
+						keys = new Dictionary<T, any>(compareSelector); // Acting as a HashSet.
+					},
+
+					(yielder) => {
+						let current:T;
+						if(secondEnumerator===VOID0)
+						{
+							while(firstEnumerator.moveNext())
+							{
+								current = <T>firstEnumerator.current;
+								if(!keys.containsKey(current))
+								{
+									keys.addByKeyValue(current, null);
+									return yielder.yieldReturn(current);
+								}
+							}
+							secondEnumerator = enumUtil.from(second);
+						}
+						while(secondEnumerator.moveNext())
+						{
+							current = <T>secondEnumerator.current;
+							if(!keys.containsKey(current))
+							{
+								keys.addByKeyValue(current, null);
+								return yielder.yieldReturn(current);
+							}
+						}
+						return false;
+					},
+
+					() => {
+						if(firstEnumerator) firstEnumerator.dispose();
+						if(secondEnumerator) secondEnumerator.dispose();
+						firstEnumerator = NULL;
+						secondEnumerator = NULL;
+					}
+				);
+			}
+		);
+	}
+
+
+	// #region Conversion Methods
+	toArray(predicate?:PredicateWithIndex<T>):T[]
+	{
+		return predicate
+			? this.where(predicate).toArray()
+			: this.copyTo([]);
+	}
+
+	copyTo(target:T[], index:number = 0, count:number = Infinity):T[]
+	{
+		this.throwIfDisposed();
+		if(!target) throw new ArgumentNullException("target");
+		Integer.assertZeroOrGreater(index);
+
+		// If not exposing an action that could cause dispose, then use enumUtil.forEach utility instead.
+		enumUtil.forEach<T>(this, (x, i) => {
+			target[i + index] = x
+		}, count);
+
+		return target;
+	}
+
+
+	forEach(action:ActionWithIndex<T>, max?:number):number
+	forEach(action:PredicateWithIndex<T>, max?:number):number
+	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>, max:number = Infinity):number
+	{
+		const _ = this;
+		_.throwIfDisposed();
+		if(!action)
+			throw new ArgumentNullException("action");
+		throwIfEndless(_.isEndless);
+
+		/*
+		// It could be just as easy to do the following:
+		return enumUtil.forEach(_, action, max);
+		// But to be more active about checking for disposal, we use this instead:
+		*/
+
+
+		// Return value of action can be anything, but if it is (===) false then the enumUtil.forEach will discontinue.
+		return max>0 ? using(
+			_.getEnumerator(), e => {
+
+				throwIfEndless(!isFinite(max) && e.isEndless);
+
+				let i = 0;
+				// It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
+				while(max>i && _.throwIfDisposed() && e.moveNext())
+				{
+					if(action(<T>e.current, i++)===false)
+						break;
+				}
+				return i;
+			}
+		) : 0;
+	}
+
+	toLookup<TKey, TValue>(
+		keySelector:SelectorWithIndex<T, TKey>,
+		elementSelector:SelectorWithIndex<T, TValue> = <any>Functions.Identity,
+		compareSelector:HashSelector<TKey>           = <any>Functions.Identity):Lookup<TKey, TValue>
+	{
+		const dict:Dictionary<TKey, TValue[]> = new Dictionary<TKey, TValue[]>(compareSelector);
+		this.forEach(
+			(x, i) => {
+				let key = keySelector(x, i);
+				let element = elementSelector(x, i);
+
+				let array = dict.getValue(key);
+				if(array!==VOID0) array.push(element);
+				else dict.addByKeyValue(key, [element]);
+			}
+		);
+		return new Lookup<TKey, TValue>(dict);
+	}
+
+	toMap<TResult>(
+		keySelector:SelectorWithIndex<T, string | number | symbol>,
+		elementSelector:SelectorWithIndex<T, TResult>):IMap<TResult>
+	{
+		const obj:IMap<TResult> = {};
+		this.forEach((x, i) => {
+			//@ts-ignore
+			obj[keySelector(x, i)] = elementSelector(x, i);
+		});
+		return obj;
+	}
+
+
+	toDictionary<TKey, TValue>(
+		keySelector:SelectorWithIndex<T, TKey>,
+		elementSelector:SelectorWithIndex<T, TValue>,
+		compareSelector:HashSelector<TKey> = <any>Functions.Identity):IDictionary<TKey, TValue>
+	{
+		const dict:Dictionary<TKey, TValue> = new Dictionary<TKey, TValue>(compareSelector);
+		this.forEach((x, i) => dict.addByKeyValue(keySelector(x, i), elementSelector(x, i)));
+		return dict;
+	}
+
+	toJoinedString(separator:string = "", selector:Selector<T, string> = <any>Functions.Identity)
+	{
+		return this
+			.select(selector)
+			.toArray()
+			.join(separator);
+	}
+
+	// #endregion
+
 }
 
 export interface IOrderedEnumerable<T>
-	extends FiniteIEnumerable<T>
+	extends FiniteLinqEnumerable<T>
 {
 	thenBy(keySelector:(value:T) => any):IOrderedEnumerable<T>;
 
@@ -2941,12 +2958,12 @@ export class ArrayEnumerable<T>
 		return enumUtil.toArray(_._source);
 	}
 
-	asEnumerable():this
+	asEnumerable():ArrayEnumerable<T>
 	{
 		const _ = this;
 		_.throwIfDisposed();
 
-		return <any> new ArrayEnumerable<T>(this._source);
+		return new ArrayEnumerable<T>(this._source);
 	}
 
 	// Optimize forEach so that subsequent usage is optimized.

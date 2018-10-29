@@ -17,6 +17,7 @@ import Empty from "./EmptyEnumerator";
 import IIterator from "./IIterator";
 import IteratorEnumerator from "./IteratorEnumerator";
 import FiniteEnumerableOrEnumerator from "./FiniteEnumerableOrEnumerator";
+import EnumerableOrArrayLike from "../EnumerableOrArrayLike";
 
 
 const
@@ -54,8 +55,6 @@ function initArrayFrom(
 }
 
 
-// Could be array, or IEnumerable...
-
 /**
  * Returns the enumerator for the specified collection, enumerator, or iterator.
  * If the source is identified as IEnumerator it will return the source as is.
@@ -64,10 +63,10 @@ function initArrayFrom(
  */
 export function from<T>(source:null | undefined):FiniteIEnumerator<T>
 export function from<T>(source:string):FiniteIEnumerator<T>
-export function from<T>(source:FiniteEnumerableOrEnumerator<T>):FiniteIEnumerator<T>
-export function from<T>(source:InfiniteValueFactory<T> | IIterator<T>):EndlessIEnumerator<T>
-export function from<T>(source:IEnumerator<T>):IEnumerator<T>
-export function from<T>(source:FiniteEnumerableOrEnumerator<T> | InfiniteValueFactory<T> | IIterator<T> | null | undefined):IEnumerator<T>
+export function from<T>(source:FiniteEnumerableOrEnumerator<T> | ArrayLike<T>):FiniteIEnumerator<T>
+export function from<T>(source:EndlessIEnumerator<T> | InfiniteValueFactory<T> | IIterator<T>):EndlessIEnumerator<T>
+export function from<T>(source:EnumerableOrArrayLike<T> | IEnumerator<T>):IEnumerator<T>
+export function from<T>(source:FiniteEnumerableOrArrayLike<T> | EnumerableOrArrayLike<T> | IEnumerator<T> | InfiniteValueFactory<T> | IIterator<T> | null | undefined):IEnumerator<T>
 {
 	// To simplify and prevent null reference exceptions:
 	if(!source)
