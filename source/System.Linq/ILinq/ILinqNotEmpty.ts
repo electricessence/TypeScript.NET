@@ -6,7 +6,7 @@
 import {Selector} from "../../System/FunctionTypes";
 import Primitive from "../../System/Primitive";
 
-export default interface NotEmptyD<T>
+export default interface ILinqNotEmpty<T>
 {
 	aggregate(
 		reduction:(previous:T, current:T, index?:number) => T):T;

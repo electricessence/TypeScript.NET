@@ -4,12 +4,13 @@
  */
 
 import {EnumeratorBase} from "../../System/Collections/Enumeration/EnumeratorBase";
-import {Grouping, GroupingConstructor} from "../Interfaces/Grouping";
+import {GroupingConstructor, IGrouping} from "../ILinq/IGrouping";
 import IDictionary from "../../System/Collections/Dictionaries/IDictionary";
 import IEnumerator from "../../System/Collections/Enumeration/IEnumerator";
 import KeyValuePair from "../../System/KeyValuePair";
+import ILookup from "../ILinq/ILookup";
 
-export class Lookup<TKey, TElement>
+export class Lookup<TKey, TElement> implements ILookup<TKey, TElement>
 {
 	constructor(
 		private _groupingConstructor:GroupingConstructor<TKey,TElement>,
@@ -32,13 +33,13 @@ export class Lookup<TKey, TElement>
 		return this._dictionary.containsKey(key);
 	}
 
-	getEnumerator():IEnumerator<Grouping<TKey, TElement>>
+	getEnumerator():IEnumerator<IGrouping<TKey, TElement>>
 	{
 
 		const _ = this;
 		let enumerator:IEnumerator<KeyValuePair<TKey, TElement[]>>;
 
-		return new EnumeratorBase<Grouping<TKey, TElement>>(
+		return new EnumeratorBase<IGrouping<TKey, TElement>>(
 			() => {
 				enumerator = _._dictionary.getEnumerator();
 			},

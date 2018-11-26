@@ -34,16 +34,8 @@ import ObjectDisposedException from "../System/Disposable/ObjectDisposedExceptio
 import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
 import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
 import ArgumentOutOfRangeException from "../System/Exceptions/ArgumentOutOfRangeException";
-import {
-	EndlessIEnumerator,
-	FiniteIEnumerator,
-	IEnumerator
-} from "../System/Collections/Enumeration/IEnumerator";
-import {
-	EndlessIEnumerable,
-	FiniteIEnumerable,
-	IEnumerable
-} from "../System/Collections/Enumeration/IEnumerable";
+import {FiniteIEnumerator, IEnumerator} from "../System/Collections/Enumeration/IEnumerator";
+import {FiniteIEnumerable, IEnumerable} from "../System/Collections/Enumeration/IEnumerable";
 import {
 	Action,
 	ActionWithIndex,
@@ -1509,33 +1501,6 @@ abstract class LinqEnumerableBase<T, TThis extends IEnumerable<T>>
 }
 
 
-export class EndlessLinqEnumerable<T>
-	extends IndeterminateLinqEnumerableBase<T>
-	implements EndlessIEnumerable<T>
-{
-	constructor(
-		enumeratorFactory:() => IEnumerator<T>,
-		finalizer?:Closure | null)
-	{
-		super(enumeratorFactory, finalizer);
-		//@ts-ignore;
-		this._disposableObjectName = "EndlessLinqEnumerable";
-	}
-
-	get isEndless():true { return true; }
-
-	asEnumerable():this
-	{
-		const _ = this;
-		_.throwIfDisposed();
-		return <any> new EndlessLinqEnumerable<T>(() => _.getEnumerator());
-	}
-
-	getEnumerator():EndlessIEnumerator<T>
-	{
-		return <any>super.getEnumerator();
-	}
-}
 
 /**
  * Enumerable<T> is a wrapper class that allows more primitive enumerables to exhibit LINQ behavior.
@@ -1583,56 +1548,8 @@ export class LinqEnumerable<T>
 		);
 	}
 
-	takeWhile(predicate:PredicateWithIndex<T>):this
-	{
-		this.throwIfDisposed();
 
-		if(!predicate)
-			throw new ArgumentNullException('predicate');
 
-		return <any>this.doAction(
-			(element:T, index:number) =>
-				predicate(element, index)
-					? EnumerableAction.Return
-					: EnumerableAction.Break,
-			null,
-			null // We don't know the state if it is endless or not.
-		);
-	}
-
-	// Is like the inverse of take While with the ability to return the value identified by the predicate.
-	takeUntil(predicate:PredicateWithIndex<T>, includeUntilValue?:boolean):this
-	{
-		this.throwIfDisposed();
-
-		if(!predicate)
-			throw new ArgumentNullException('predicate');
-
-		if(!includeUntilValue)
-			return <any>this.doAction(
-				(element:T, index:number) =>
-					predicate(element, index)
-						? EnumerableAction.Break
-						: EnumerableAction.Return,
-				null,
-				null // We don't know the state if it is endless or not.
-			);
-
-		let found:boolean = false;
-		return <any>this.doAction(
-			(element:T, index:number) => {
-				if(found)
-					return EnumerableAction.Break;
-
-				found = predicate(element, index);
-				return EnumerableAction.Return;
-			},
-			() => {
-				found = false;
-			},
-			null // We don't know the state if it is endless or not.
-		);
-	}
 
 	// Since an infinite enumerable will always end up traversing breadth first, we have this only here for regular enumerable.
 	traverseBreadthFirst(
@@ -2581,14 +2498,7 @@ export class LinqEnumerable<T>
 
 	// #endregion
 
-	memoize():LinqEnumerable<T>
-	{
-		let source = new LazyList(this);
-		return <this>(new LinqEnumerable(() => source.getEnumerator(), () => {
-			source.dispose();
-			source = <any>null
-		}, this.isEndless));
-	}
+
 
 	throwWhenEmpty():NotEmptyEnumerable<T>
 	{
@@ -3296,23 +3206,7 @@ export class OrderedEnumerable<T, TOrderBy extends Comparable>
 
 }
 
-// A private static helper for the weave function.
-function nextEnumerator<T>(queue:Queue<IEnumerator<T>>, e:IEnumerator<T>):IEnumerator<T> | null
-{
-	if(e)
-	{
-		if(e.moveNext())
-		{
-			queue.enqueue(e);
-		}
-		else
-		{
-			if(e) e.dispose();
-			return null;
-		}
-	}
-	return e;
-}
+
 
 /**
  * Recursively builds a SortContext chain.
@@ -3524,85 +3418,6 @@ export module Enumerable
 		return _choice(args);
 	}
 
-	function _cycle<T>(values:T[]):EndlessLinqEnumerable<T>
-	{
-		return new EndlessLinqEnumerable<T>(
-			() => {
-				let index:number = 0;
-				return new EndlessEnumeratorBase<T>(
-					() => {
-						index = 0;
-					}, // Reinitialize the value just in case the enumerator is restarted.
-					(yielder) => {
-						throwIfDisposed(!values);
-						if(index>=values.length) index = 0;
-						return yielder.yieldReturn(values[index++]);
-					}
-				);
-			},
-			() => {
-				values.length = 0;
-				values = NULL;
-			}
-		);
-	}
-
-	export function cycle<T>(values:ArrayLike<T>):EndlessLinqEnumerable<T>
-	{
-		let len = values && values.length;
-		// We could return empty if no length, but that would break the typing and produce unexpected results.
-		// Enforcing that there must be at least 1 choice is key.
-		if(!len || !isFinite(len))
-			throw new ArgumentOutOfRangeException('length', length);
-
-		// Make a copy to avoid modifying the collection as we go.
-		return _cycle(copy(values));
-	}
-
-	export function cycleThrough<T>(arg:T, ...args:T[]):EndlessLinqEnumerable<T>
-	export function cycleThrough<T>(...args:T[]):EndlessLinqEnumerable<T>
-	{
-		// We could return empty if no length, but that would break the typing and produce unexpected results.
-		// Enforcing that there must be at least 1 choice is key.
-		if(!args.length)
-			throw new ArgumentOutOfRangeException('length', length);
-
-		return _cycle(args);
-	}
-
-	export function empty<T>():FiniteLinqEnumerable<T>
-	{
-		// Could be single export function instance, but for safety, we'll make a new one.
-		return new FiniteLinqEnumerable<T>(getEmptyEnumerator);
-	}
-
-	export function repeat<T>(element:T):EndlessLinqEnumerable<T>;
-	export function repeat<T>(element:T, count:number):FiniteLinqEnumerable<T>;
-	export function repeat<T>(element:T, count:number = Infinity):any
-	{
-		if(!(count>0))
-			return Enumerable.empty<T>();
-
-		return isFinite(count) && Integer.assert(count, "count")
-			? new FiniteLinqEnumerable<T>(
-				() => {
-					let c:number = count;
-					let index:number = 0;
-
-					return new FiniteEnumeratorBase<T>(
-						() => { index = 0; },
-						(yielder) => (index++<c) && yielder.yieldReturn(element)
-					);
-				}
-			)
-			: new EndlessLinqEnumerable<T>(
-				() =>
-					new EndlessEnumeratorBase<T>(
-						null,
-						(yielder) => yielder.yieldReturn(element)
-					)
-			);
-	}
 
 	/**
 	 * DEPRECATED This method began to not make sense in so many ways.
@@ -3660,236 +3475,6 @@ export module Enumerable
 	export function make<T>(element:T):FiniteLinqEnumerable<T>
 	{
 		return repeat<T>(element, 1);
-	}
-
-// start and step can be other than integer.
-
-	export function range(
-		start:number,
-		count:number,
-		step:number = 1):FiniteLinqEnumerable<number>
-	{
-		if(!isFinite(start))
-			throw new ArgumentOutOfRangeException("start", start, "Must be a finite number.");
-
-		if(!(count>0))
-			return empty<number>();
-
-		if(!step)
-			throw new ArgumentOutOfRangeException("step", step, "Must be a valid value");
-
-		if(!isFinite(step))
-			throw new ArgumentOutOfRangeException("step", step, "Must be a finite number.");
-
-		Integer.assert(count, "count");
-
-		return new FiniteLinqEnumerable<number>(
-			() => {
-				let value:number;
-				let c:number = count; // Force integer evaluation.
-				let index:number = 0;
-
-				return new FiniteEnumeratorBase<number>(
-					() => {
-						index = 0;
-						value = start;
-					},
-
-					(yielder) => {
-						let result:boolean =
-							    index++<c
-							    && yielder.yieldReturn(value);
-
-						if(result && index<count)
-							value += step;
-
-						return result;
-					}
-				);
-			});
-	}
-
-	export function rangeDown(
-		start:number,
-		count:number,
-		step:number = 1):FiniteLinqEnumerable<number>
-	{
-		step = Math.abs(step)* -1;
-
-		return range(start, count, step);
-	}
-
-// step = -1 behaves the same as toNegativeInfinity;
-	export function toInfinity(
-		start:number = 0,
-		step:number  = 1):EndlessLinqEnumerable<number>
-	{
-		if(!isFinite(start))
-			throw new ArgumentOutOfRangeException("start", start, "Must be a finite number.");
-
-		if(!step)
-			throw new ArgumentOutOfRangeException("step", step, "Must be a valid value");
-
-		if(!isFinite(step))
-			throw new ArgumentOutOfRangeException("step", step, "Must be a finite number.");
-
-		return new EndlessLinqEnumerable<number>(
-			() => {
-				let value:number;
-
-				return new EndlessEnumeratorBase<number>(
-					() => {
-						value = start;
-					},
-
-					(yielder) => {
-						let current:number = value;
-						value += step;
-						return yielder.yieldReturn(current);
-					}
-				);
-			}
-		);
-	}
-
-	export function toNegativeInfinity(
-		start:number = 0,
-		step:number  = 1):EndlessLinqEnumerable<number>
-	{
-		return toInfinity(start, -step);
-	}
-
-	export function rangeTo(
-		start:number,
-		to:number,
-		step:number = 1):FiniteLinqEnumerable<number>
-	{
-		if(isNaN(to) || !isFinite(to))
-			throw new ArgumentOutOfRangeException("to", to, "Must be a finite number.");
-
-		if(step && !isFinite(step))
-			throw new ArgumentOutOfRangeException("step", step, "Must be a finite non-zero number.");
-
-// This way we adjust for the delta from start and to so the user can say +/- step and it will work as expected.
-		step = Math.abs(step);
-
-		return new FiniteLinqEnumerable<number>(
-			() => {
-				let value:number;
-
-				return new FiniteEnumeratorBase<number>(() => { value = start; },
-					start<to
-						? yielder => {
-							let result:boolean = value<=to && yielder.yieldReturn(value);
-
-							if(result)
-								value += step;
-
-							return result;
-						}
-						: yielder => {
-							let result:boolean = value>=to && yielder.yieldReturn(value);
-
-							if(result)
-								value -= step;
-
-							return result;
-						});
-			}
-		);
-	}
-
-	export function matches(
-		input:string, pattern:any,
-		flags:string = ""):FiniteLinqEnumerable<RegExpExecArray>
-	{
-		if(input==null)
-			throw new ArgumentNullException("input");
-		const type = typeof input;
-		if(type!=Type.STRING)
-			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-
-		if(pattern instanceof RegExp)
-		{
-			flags += (pattern.ignoreCase) ? "i" : "";
-			flags += (pattern.multiline) ? "m" : "";
-			pattern = pattern.source;
-		}
-
-		if(flags.indexOf("g")=== -1) flags += "g";
-
-		return new FiniteLinqEnumerable<RegExpExecArray>(
-			() => {
-				let regex:RegExp;
-				return new FiniteEnumeratorBase<RegExpExecArray>(
-					() => {
-						regex = new RegExp(pattern, flags);
-					},
-
-					(yielder) => {
-						// Calling regex.exec consecutively on the same input uses the lastIndex to start the next match.
-						let match = regex.exec(input);
-						return match!=null
-							? yielder.yieldReturn(match)
-							: yielder.yieldBreak();
-					}
-				);
-			}
-		);
-	}
-
-	export function generate<T>(factory:() => T):EndlessLinqEnumerable<T>;
-	export function generate<T>(factory:() => T, count:number):FiniteLinqEnumerable<T>;
-	export function generate<T>(factory:(index:number) => T):EndlessLinqEnumerable<T>;
-	export function generate<T>(factory:(index:number) => T, count:number):FiniteLinqEnumerable<T>;
-	export function generate<T>(
-		factory:Function,
-		count:number = Infinity):any
-	{
-		if(!factory)
-			throw new ArgumentNullException("factory");
-
-		if(isNaN(count) || count<=0)
-			return Enumerable.empty<T>();
-
-		return isFinite(count) && Integer.assert(count, "count")
-			? new FiniteLinqEnumerable<T>(
-				() => {
-					let c:number = count;
-					let index:number = 0;
-
-					return new FiniteEnumeratorBase<T>(
-						() => {
-							index = 0;
-						},
-
-						(yielder) => {
-							throwIfDisposed(!factory);
-							let current:number = index++;
-							return current<c && yielder.yieldReturn(factory(current));
-						}
-					);
-				},
-				() => {
-					factory = NULL;
-				})
-			: new EndlessLinqEnumerable<T>(
-				() => {
-					let index:number = 0;
-					return new EndlessEnumeratorBase<T>(
-						() => {
-							index = 0;
-						},
-
-						(yielder) => {
-							throwIfDisposed(!factory);
-							return yielder.yieldReturn(factory(index++));
-						}
-					);
-				},
-				() => {
-					factory = NULL;
-				});
 	}
 
 
@@ -3992,76 +3577,6 @@ export module Enumerable
 	}
 
 
-	/**
-	 * Takes any set of collections of the same type and weaves them together.
-	 * @param enumerables
-	 * @returns {Enumerable<T>}
-	 */
-	export function weave<T>(
-		enumerables:FiniteEnumerableOrArrayLike<FiniteEnumerableOrArrayLike<T>>):FiniteLinqEnumerable<T>
-	{
-		if(!enumerables)
-			throw new ArgumentNullException('enumerables');
-
-		let disposed = false;
-		return new FiniteLinqEnumerable<T>(
-			() => {
-				let queue:Queue<IEnumerator<T>>;
-				let mainEnumerator:FiniteIEnumerator<FiniteEnumerableOrArrayLike<T>> | null;
-				let index:number;
-
-				return new FiniteEnumeratorBase<T>(
-					() => {
-						throwIfDisposed(disposed);
-						index = 0;
-						queue = new Queue<IEnumerator<T>>();
-						mainEnumerator = enumUtil.from(enumerables);
-					},
-
-					(yielder) => {
-						throwIfDisposed(disposed);
-						let e:IEnumerator<T> | null = null;
-
-						// First pass...
-						if(mainEnumerator)
-						{
-							while(!e && mainEnumerator.moveNext())
-							{
-								let c = mainEnumerator.current;
-								e = nextEnumerator(queue, c ? enumUtil.from(c) : NULL);
-							}
-
-							if(!e)
-								mainEnumerator = null;
-						}
-
-						while(!e && queue.tryDequeue(value => {
-							e = nextEnumerator(queue, enumUtil.from<T>(value));
-						}))
-						{ }
-
-						return e
-							? yielder.yieldReturn(e.current)
-							: yielder.yieldBreak();
-
-					},
-
-					() => {
-						if(queue)
-						{
-							dispose.these.noCopy(queue.dump());
-							queue = NULL;
-						}
-						if(mainEnumerator) mainEnumerator.dispose();
-						mainEnumerator = null;
-					}
-				);
-			},
-			() => {
-				disposed = true;
-			}
-		);
-	}
 
 }
 

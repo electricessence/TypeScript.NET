@@ -25,4 +25,12 @@ export const EmptyEnumerator:FiniteIEnumerator<any> = <any>Object.freeze({
 	isEndless: false
 });
 
+/**
+ * Simplified reusable factor for empty Enumerator.
+ */
+export function getEmptyEnumerator()
+{
+	return EmptyEnumerator;
+}
+
 export default EmptyEnumerator;
