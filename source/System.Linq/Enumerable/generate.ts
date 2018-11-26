@@ -14,7 +14,7 @@ import {
 import {ILinqEndless} from "../ILinq/ILinqEndless";
 import {ILinqFinite} from "../ILinq/ILinqFinite";
 import empty from "./empty";
-import throwObjectDisposed from "./throwObjectDisposed";
+import throwObjectDisposed from "../throwObjectDisposed";
 
 import EndlessLinqEnumerable from "../EndlessLinqEnumerable";
 import FiniteLinqEnumerable from "../FiniteLinqEnumerable";

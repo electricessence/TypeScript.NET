@@ -12,8 +12,8 @@ import {
 	EndlessEnumeratorBase,
 	FiniteEnumeratorBase
 } from "../../System/Collections/Enumeration/EnumeratorBase";
-import FiniteLinqEnumerable from "./FiniteLinqEnumerable";
-import EndlessLinqEnumerable from "./FiniteLinqEnumerable";
+import FiniteLinqEnumerable from "../FiniteLinqEnumerable";
+import EndlessLinqEnumerable from "../FiniteLinqEnumerable";
 import empty from "./empty";
 import {ILinqFinite} from "../ILinq/ILinqFinite";
 import {ILinqEndless} from "../ILinq/ILinqEndless";

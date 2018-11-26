@@ -4,15 +4,8 @@
  */
 
 import {empty} from "./Enumerable/empty";
-import {
-	EndlessEnumerator,
-	InfiniteValueFactory
-} from "../System/Collections/Enumeration/EndlessEnumerator";
 import FiniteEnumerableOrArrayLike from "../System/Collections/FiniteEnumerableOrArrayLike";
-import {Type} from "../System/Types";
 import * as enumUtil from "../System/Collections/Enumeration/Enumerator";
-import {isEnumerable, isEnumerator, isIterator} from "../System/Collections/Enumeration/Enumerator";
-import IteratorEnumerator from "../System/Collections/Enumeration/IteratorEnumerator";
 import {
 	EndlessEnumeratorBase,
 	FiniteEnumeratorBase
@@ -24,7 +17,7 @@ import Integer from "../System/Integer";
 import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
 import Queue from "../System/Collections/Queue";
 import {dispose} from "../System/Disposable/dispose";
-import {ArrayEnumerable, EndlessLinqEnumerable, FiniteLinqEnumerable, LinqEnumerable} from "./Linq";
+import {EndlessLinqEnumerable, FiniteLinqEnumerable} from "./Linq";
 
 export {
 	empty
@@ -33,100 +26,9 @@ export {
 
 export module Enumerable
 {
-	/**
-	 * Universal method for converting a primitive enumerables into a LINQ enabled ones.
-	 *
-	 * Is not limited to TypeScript usages.
-	 */
-	export function from<T>(source:InfiniteValueFactory<T>):EndlessLinqEnumerable<T>
-	export function from<T>(
-		source:FiniteEnumerableOrArrayLike<T>,
-		...additional:Array<FiniteEnumerableOrArrayLike<T>>):FiniteLinqEnumerable<T>
-	export function from<T>(
-		source:FiniteEnumerableOrArrayLike<T> | InfiniteValueFactory<T>,
-		...additional:Array<FiniteEnumerableOrArrayLike<T>>):EndlessLinqEnumerable<T> | FiniteLinqEnumerable<T>
-	{
-		return enumerableFrom(source, additional);
-	}
 
-	export function fromAny<T>(
-		source:InfiniteValueFactory<T>):EndlessLinqEnumerable<T>
 
-	export function fromAny<T>(
-		source:FiniteEnumerableOrArrayLike<T>):FiniteLinqEnumerable<T>
 
-	export function fromAny(
-		source:any):LinqEnumerable<any> | undefined
-
-	export function fromAny<T>(
-		source:FiniteIEnumerable<T>,
-		defaultEnumerable:LinqEnumerable<T>):LinqEnumerable<T>
-
-	export function fromAny<T>(
-		source:any,
-		defaultEnumerable?:LinqEnumerable<T>):LinqEnumerable<T> | EndlessLinqEnumerable<T> | undefined
-	{
-		if(Type.isObject(source) || Type.isString(source))
-		{
-			if(source instanceof EndlessLinqEnumerable)
-				return source;
-
-			if(Type.isArrayLike<T>(source))
-				return new ArrayEnumerable<T>(source);
-
-			if(isEnumerable<T>(source))
-				return new LinqEnumerable<T>(
-					() => source.getEnumerator(),
-					null, source.isEndless);
-
-			if(isEnumerator<T>(source))
-				return new LinqEnumerable<T>(
-					() => source, null, source.isEndless);
-
-			if(isIterator<T>(source))
-				return fromAny(new IteratorEnumerator(source));
-		}
-		else if(Type.isFunction(source))
-		{
-			return new EndlessLinqEnumerable<T>(
-				() => new EndlessEnumerator<T>(source));
-		}
-
-		return defaultEnumerable;
-	}
-
-	export function fromThese<T>(sources:FiniteEnumerableOrArrayLike<T>[]):FiniteLinqEnumerable<T>
-	{
-		switch(sources ? sources.length : 0)
-		{
-			case 0:
-				return empty<T>();
-			case 1:
-				// Allow for validation and throwing...
-				return enumerableFrom(sources[0]);
-			default:
-				return empty<T>().merge(sources);
-		}
-	}
-
-	export function fromOrEmpty<T>(source:FiniteEnumerableOrArrayLike<T>):LinqEnumerable<T>
-	{
-		return fromAny(source) || empty<T>();
-	}
-
-	/**
-	 * Static helper for converting enumerables to an array.
-	 * @param source
-	 * @returns {any}
-	 */
-	export function toArray<T>(source:FiniteEnumerableOrArrayLike<T>):T[]
-	{
-		// noinspection SuspiciousInstanceOfGuard
-		if(source instanceof LinqEnumerable)
-			return source.toArray();
-
-		return enumUtil.toArray(source);
-	}
 
 
 	function _choice<T>(values:T[]):EndlessLinqEnumerable<T>

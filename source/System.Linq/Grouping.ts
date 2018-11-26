@@ -3,10 +3,14 @@
  * Licensing: MIT
  */
 
-import {ArrayEnumerable} from "../Linq";
+import {ArrayEnumerable} from "./Linq";
+import IGrouping from "./ILinq/IGrouping";
+
+export { IGrouping }
 
 export default class Grouping<TKey, TElement>
 	extends ArrayEnumerable<TElement>
+	implements IGrouping<TKey, TElement>
 {
 	constructor(private readonly _groupKey:TKey, elements:TElement[])
 	{

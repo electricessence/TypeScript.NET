@@ -7,8 +7,8 @@
 import {EndlessEnumeratorBase} from "../../System/Collections/Enumeration/EnumeratorBase";
 import ArgumentOutOfRangeException from "../../System/Exceptions/ArgumentOutOfRangeException";
 import copy from "../../System/Collections/Array/copy";
-import EndlessLinqEnumerable, {ILinqEndless} from "./EndlessLinqEnumerable";
-import throwObjectDisposed from "./throwObjectDisposed";
+import EndlessLinqEnumerable, {ILinqEndless} from "../EndlessLinqEnumerable";
+import throwObjectDisposed from "../throwObjectDisposed";
 
 function _cycle<T>(values:T[]):ILinqEndless<T>
 {

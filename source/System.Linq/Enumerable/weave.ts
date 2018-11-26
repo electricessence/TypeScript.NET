@@ -12,7 +12,7 @@ import Queue from "../../System/Collections/Queue";
 import {FiniteEnumeratorBase} from "../../System/Collections/Enumeration/EnumeratorBase";
 import {dispose} from "../../System/Disposable/dispose";
 import {FiniteLinqEnumerable} from "../Linq";
-import throwObjectDisposed from "./throwObjectDisposed";
+import throwObjectDisposed from "../throwObjectDisposed";
 
 /**
  * Takes any set of collections of the same type and weaves them together.

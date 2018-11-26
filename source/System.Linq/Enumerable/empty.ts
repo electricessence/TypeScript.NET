@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 
-import FiniteLinqEnumerable, {ILinqFinite} from "./FiniteLinqEnumerable";
+import FiniteLinqEnumerable, {ILinqFinite} from "../FiniteLinqEnumerable";
 import {getEmptyEnumerator} from "../../System/Collections/Enumeration/EmptyEnumerator";
 
 

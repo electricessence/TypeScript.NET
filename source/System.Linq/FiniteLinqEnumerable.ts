@@ -11,25 +11,25 @@ import {
 	PredicateWithIndex,
 	Selector,
 	SelectorWithIndex
-} from "../../System/FunctionTypes";
-import Functions from "../../System/Functions";
-import Type from "../../System/Types";
-import Integer from "../../System/Integer";
+} from "../System/FunctionTypes";
+import Functions from "../System/Functions";
+import Type from "../System/Types";
+import Integer from "../System/Integer";
 
-import IDictionary, {IMap} from "../../System/Collections/Dictionaries/IDictionary";
-import ILinqFinite, {LinqFinite} from "../ILinq/ILinqFinite";
-import FiniteEnumerableOrArrayLike from "../../System/Collections/FiniteEnumerableOrArrayLike";
-import * as enumUtil from "../../System/Collections/Enumeration/Enumerator";
-import {throwIfEndless} from "../../System/Collections/Enumeration/Enumerator";
-import Queue from "../../System/Collections/Queue";
-import Dictionary from "../../System/Collections/Dictionaries/Dictionary";
-import ArgumentNullException from "../../System/Exceptions/ArgumentNullException";
-import {using} from "../../System/Disposable/dispose";
-import EnumeratorBase, {FiniteEnumeratorBase} from "../../System/Collections/Enumeration/EnumeratorBase";
-import IEnumerator, {FiniteIEnumerator} from "../../System/Collections/Enumeration/IEnumerator";
-import ILookup from "../ILinq/ILookup";
+import IDictionary, {IMap} from "../System/Collections/Dictionaries/IDictionary";
+import ILinqFinite, {LinqFinite} from "./ILinq/ILinqFinite";
+import FiniteEnumerableOrArrayLike from "../System/Collections/FiniteEnumerableOrArrayLike";
+import * as enumUtil from "../System/Collections/Enumeration/Enumerator";
+import {throwIfEndless} from "../System/Collections/Enumeration/Enumerator";
+import Queue from "../System/Collections/Queue";
+import Dictionary from "../System/Collections/Dictionaries/Dictionary";
+import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
+import {using} from "../System/Disposable/dispose";
+import EnumeratorBase, {FiniteEnumeratorBase} from "../System/Collections/Enumeration/EnumeratorBase";
+import IEnumerator, {FiniteIEnumerator} from "../System/Collections/Enumeration/IEnumerator";
+import ILookup from "./ILinq/ILookup";
 import LinqEnumerableBase from "./LinqEnumerableBase";
-import {LinqEnumerable} from "../Linq";
+import {LinqEnumerable} from "./Linq";
 
 export {ILinqFinite, LinqFinite}
 

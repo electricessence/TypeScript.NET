@@ -6,9 +6,9 @@
 import ArgumentNullException from "../../System/Exceptions/ArgumentNullException";
 import {Type} from "../../System/Types";
 import {FiniteEnumeratorBase} from "../../System/Collections/Enumeration/EnumeratorBase";
-import {FiniteLinqEnumerable} from "../Linq";
+import FiniteLinqEnumerable from "../FiniteLinqEnumerable";
 
-export function matches(
+export default function(
 	input:string, pattern:any,
 	flags:string = ""):FiniteLinqEnumerable<RegExpExecArray>
 {

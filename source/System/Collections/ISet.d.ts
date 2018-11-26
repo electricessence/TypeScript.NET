@@ -11,6 +11,12 @@ export interface ISet<T> extends ICollection<T>
 {
 
 	/**
+	 * Attempts to add a new item to the set and returns true if it wasn't there before.
+	 * @param item
+	 */
+	addMissing(item:T):boolean;
+
+	/**
 	 * Removes all elements in the specified collection from the current set.
 	 */
 	exceptWith(

@@ -3,10 +3,10 @@
  * Licensing: MIT
  */
 
-import {ILinqEndless} from "../ILinq/ILinqEndless";
+import {ILinqEndless} from "./ILinq/ILinqEndless";
 import {LinqEnumerableBase} from "./LinqEnumerableBase";
-import IEnumerator, {EndlessIEnumerator} from "../../System/Collections/Enumeration/IEnumerator";
-import {Closure} from "../../System/FunctionTypes";
+import IEnumerator, {EndlessIEnumerator} from "../System/Collections/Enumeration/IEnumerator";
+import {Closure} from "../System/FunctionTypes";
 
 export {ILinqEndless}
 

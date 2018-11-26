@@ -3,12 +3,14 @@
  * Licensing: MIT
  */
 
-import {EnumeratorBase} from "../../System/Collections/Enumeration/EnumeratorBase";
-import {GroupingConstructor, IGrouping} from "../ILinq/IGrouping";
-import IDictionary from "../../System/Collections/Dictionaries/IDictionary";
-import IEnumerator from "../../System/Collections/Enumeration/IEnumerator";
-import KeyValuePair from "../../System/KeyValuePair";
-import ILookup from "../ILinq/ILookup";
+import {EnumeratorBase} from "../System/Collections/Enumeration/EnumeratorBase";
+import {GroupingConstructor, IGrouping} from "./ILinq/IGrouping";
+import IDictionary from "../System/Collections/Dictionaries/IDictionary";
+import IEnumerator from "../System/Collections/Enumeration/IEnumerator";
+import KeyValuePair from "../System/KeyValuePair";
+import ILookup from "./ILinq/ILookup";
+
+export {ILookup}
 
 export class Lookup<TKey, TElement> implements ILookup<TKey, TElement>
 {

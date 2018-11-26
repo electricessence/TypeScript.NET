@@ -50,6 +50,13 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		return this._set ? this._set.unsafeCount : 0;
 	}
 
+	addMissing(item:T):boolean
+	{
+		if(this.contains(item)) return false;
+		this.add(item);
+		return true;
+	}
+
 	exceptWith(other:FiniteEnumerableOrArrayLike<T>):void
 	{
 		const _ = this;

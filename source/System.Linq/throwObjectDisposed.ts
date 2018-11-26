@@ -3,7 +3,7 @@
  * Licensing: MIT
  */
 
-import ObjectDisposedException from "../../System/Disposable/ObjectDisposedException";
+import ObjectDisposedException from "../System/Disposable/ObjectDisposedException";
 
 const ENUMERABLE = "Enumerable";
 

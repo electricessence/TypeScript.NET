@@ -8,7 +8,7 @@
 import EnumerableOrArrayLike from "../../System/Collections/EnumerableOrArrayLike";
 import Functions from "../../System/Functions";
 import EnumeratorBase from "../../System/Collections/Enumeration/EnumeratorBase";
-import throwObjectDisposed from "./throwObjectDisposed";
+import throwObjectDisposed from "../throwObjectDisposed";
 import dispose from "../../System/Disposable/dispose";
 
 traverseDepthFirst(

@@ -12,37 +12,37 @@ import {
 	HashSelector,
 	PredicateWithIndex,
 	SelectorWithIndex
-} from "../../System/FunctionTypes";
+} from "../System/FunctionTypes";
 
-import IEnumerable from "../../System/Collections/Enumeration/IEnumerable";
-import EnumerableOrArrayLike from "../../System/Collections/EnumerableOrArrayLike";
-import IEnumerator from "../../System/Collections/Enumeration/IEnumerator";
+import IEnumerable from "../System/Collections/Enumeration/IEnumerable";
+import EnumerableOrArrayLike from "../System/Collections/EnumerableOrArrayLike";
+import IEnumerator from "../System/Collections/Enumeration/IEnumerator";
 
-import ArgumentNullException from "../../System/Exceptions/ArgumentNullException";
-import EnumeratorBase from "../../System/Collections/Enumeration/EnumeratorBase";
-import EnumerableAction from "../EnumerableAction";
+import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
+import EnumeratorBase from "../System/Collections/Enumeration/EnumeratorBase";
+import EnumerableAction from "./EnumerableAction";
 
-import Functions from "../../System/Functions";
-import * as enumUtil from "../../System/Collections/Enumeration/Enumerator";
+import Functions from "../System/Functions";
+import * as enumUtil from "../System/Collections/Enumeration/Enumerator";
 
-import DisposableBase from "../../System/Disposable/DisposableBase";
-import dispose, {using} from "../../System/Disposable/dispose";
+import DisposableBase from "../System/Disposable/DisposableBase";
+import dispose, {using} from "../System/Disposable/dispose";
 
-import ILinqBase from "../ILinq/ILinqBase";
-import {ILinqFinite} from "../ILinq/ILinqFinite";
-import {ILinqEndless} from "../ILinq/ILinqEndless";
-import ArgumentOutOfRangeException from "../../System/Exceptions/ArgumentOutOfRangeException";
-import Integer from "../../System/Integer";
-import empty from "./empty";
+import ILinqBase from "./ILinq/ILinqBase";
+import {ILinqFinite} from "./ILinq/ILinqFinite";
+import {ILinqEndless} from "./ILinq/ILinqEndless";
+import ArgumentOutOfRangeException from "../System/Exceptions/ArgumentOutOfRangeException";
+import Integer from "../System/Integer";
+import empty from "./Enumerable/empty";
 import throwObjectDisposed from "./throwObjectDisposed";
-import Enumerable, {LinqEnumerable} from "../Linq";
-import LazyList from "../../System/Collections/LazyList";
-import FiniteEnumerableOrArrayLike from "../../System/Collections/FiniteEnumerableOrArrayLike";
-import Dictionary from "../../System/Collections/Dictionaries/Dictionary";
-import {areEqual as areEqualValues} from "../../System/Compare";
-import ArrayEnumerator from "../../System/Collections/Enumeration/ArrayEnumerator";
-import initialize from "../../System/Collections/Array/initialize";
-import ILinqNotEmpty from "../ILinq/ILinqNotEmpty";
+import Enumerable, {LinqEnumerable} from "./Linq";
+import LazyList from "../System/Collections/LazyList";
+import FiniteEnumerableOrArrayLike from "../System/Collections/FiniteEnumerableOrArrayLike";
+import Dictionary from "../System/Collections/Dictionaries/Dictionary";
+import {areEqual as areEqualValues} from "../System/Compare";
+import ArrayEnumerator from "../System/Collections/Enumeration/ArrayEnumerator";
+import initialize from "../System/Collections/Array/initialize";
+import ILinqNotEmpty from "./ILinq/ILinqNotEmpty";
 
 const INVALID_DEFAULT:any = {}; // create a private unique instance for referencing.
 const VOID0:undefined = void 0;

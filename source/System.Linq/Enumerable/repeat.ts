@@ -9,8 +9,8 @@ import {
 	EndlessEnumeratorBase,
 	FiniteEnumeratorBase
 } from "../../System/Collections/Enumeration/EnumeratorBase";
-import EndlessLinqEnumerable, {ILinqEndless} from "./EndlessLinqEnumerable";
-import FiniteLinqEnumerable, {ILinqFinite} from "./FiniteLinqEnumerable";
+import EndlessLinqEnumerable, {ILinqEndless} from "../EndlessLinqEnumerable";
+import FiniteLinqEnumerable, {ILinqFinite} from "../FiniteLinqEnumerable";
 import empty from "./empty";
 
 export function repeat<T>(element:T):ILinqEndless<T>;
