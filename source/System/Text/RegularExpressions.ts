@@ -168,7 +168,7 @@ export class Regex
 			}
 			if(i && _._keys && i<_._keys.length) groupMap[_._keys[i]] = g;
 			groups.push(g);
-			if(i!==0) loc += text.length;
+			if(text && i!==0) loc += text.length;
 		}
 
 		const m = new Match(r[0], first, groups, groupMap);
