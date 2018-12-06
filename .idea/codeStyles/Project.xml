@@ -10,7 +10,7 @@
     </option>
     <option name="RIGHT_MARGIN" value="100" />
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="true" />
-    <JSCodeStyleSettings>
+    <JSCodeStyleSettings version="0">
       <option name="ALIGN_VAR_STATEMENTS" value="1" />
       <option name="SPACE_BEFORE_FUNCTION_LEFT_PARENTH" value="false" />
     </JSCodeStyleSettings>

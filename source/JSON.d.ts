@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import {Primitive} from "./System/Primitive";
-import {IMap} from "./IMap";
+import IMap from "./IMap";
 
 export type JsonEntry = Primitive | JsonArray | JsonMap;
 
@@ -17,4 +17,4 @@ export interface JsonMap extends IMap<JsonEntry>
 
 }
 
-export type JsonData = JsonMap | JsonArray;
+export type JsonData = JsonMap | JsonArray | Primitive;

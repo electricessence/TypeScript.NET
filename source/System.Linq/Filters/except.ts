@@ -15,7 +15,8 @@ export default function<T>(
 {
 	const _ = this;
 	let disposed = !_.throwIfDisposed();
-	const isEndless = _.isEndless;
+	_.
+	const; isEndless = _.isEndless;
 
 	return _._createEnumerable(
 		() => {
