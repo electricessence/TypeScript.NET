@@ -1,4 +1,6 @@
-TypeScript.NET
+MOVED: https://github.com/electricessence/TypeScript.NET-Core
+
+TypeScript.NET (Archive)
 ==============
 
 ### A JavaScript-Friendly .NET Based TypeScript Library
