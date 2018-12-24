@@ -3,10 +3,10 @@
  * Licensing: MIT
  */
 
-import {EqualityComparison, HashSelector} from "../../System/FunctionTypes";
-import {IEnumerableFilter} from "../ILinq/ILinqFilter";
-import HashSet from "../../System/Collections/HashSet";
-import {areEqual} from "../../System/Compare";
+import {EqualityComparison, HashSelector} from "../../../System/FunctionTypes";
+import {IEnumerableFilter} from "../../ILinq/ILinqFilter";
+import HashSet from "../../../System/Collections/HashSet";
+import {areEqual} from "../../../System/Compare";
 import FilterFactory from "./FilterFactory";
 
 class DistinctFilter<T> implements IEnumerableFilter<T>
@@ -20,12 +20,12 @@ class DistinctFilter<T> implements IEnumerableFilter<T>
 
 	private readonly _registry:HashSet<T>;
 
-	allowNext(e:T):boolean | null
+	next(e:T):boolean | null
 	{
 		return this._registry.addMissing(e);
 	}
 
-	dispose()
+	reset()
 	{
 		this._registry.clear();
 	}

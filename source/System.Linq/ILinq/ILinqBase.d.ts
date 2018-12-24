@@ -7,14 +7,11 @@ import FiniteEnumerableOrArrayLike from "../../System/Collections/FiniteEnumerab
 import {IDisposable} from "../../System/Disposable/IDisposable";
 import {Action, Closure, HashSelector, PredicateWithIndex} from "../../System/FunctionTypes";
 import NotEmpty from "./ILinqNotEmpty";
-import ILinqFinite from "./ILinqFinite";
 
 export default interface ILinqBase<T>
 	extends IDisposable
 {
 	force():void
-
-	take(count:number):ILinqFinite<T>
 
 	takeWhile(predicate:PredicateWithIndex<T>):this
 
