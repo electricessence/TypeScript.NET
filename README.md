@@ -1,4 +1,7 @@
-MOVED: https://github.com/electricessence/TypeScript.NET-Core
+# MOVED
+https://github.com/electricessence/TypeScript.NET-Core
+
+For numerous reasons, TypeScript.NET has been archived in favor of breaking it up into more managable pieces that can be improved upon independently.  See the above link for details.
 
 TypeScript.NET (Archive)
 ==============
